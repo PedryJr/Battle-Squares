@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/ClientBehaviour.cs.meta
+guid: a8ff946fa5cca704096e13f75d57ac38
+========
+guid: 32c38bfa3ed6f124494923b3fbef1476
+>>>>>>>> de9f7c2bc2397b0d5ef7c1f2100c5832f6628164:Assets/WorldSwitcher.cs.meta
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
