@@ -23,7 +23,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.2d.aseprite": {
-      "version": "1.1.4",
+      "version": "1.1.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -150,7 +150,7 @@
         "com.unity.2d.spriteshape": "10.0.6",
         "com.unity.2d.tilemap": "1.0.0",
         "com.unity.2d.tilemap.extras": "4.0.2",
-        "com.unity.2d.aseprite": "1.1.4"
+        "com.unity.2d.aseprite": "1.1.5"
       }
     },
     "com.unity.ide.rider": {
@@ -380,6 +380,13 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "jp.lilxyzw.editortoolbox": {
+      "version": "https://github.com/lilxyzw/lilEditorToolbox.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "49d5f929940da3c3327e7bf212fbef8bb4866ec9"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",

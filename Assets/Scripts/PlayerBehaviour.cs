@@ -1,6 +1,5 @@
 using FMOD.Studio;
 using FMODUnity;
-using System.IO;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -25,6 +24,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public bool isLocalPlayer = false;
     public bool newDataAvalible = false;
     public bool newColor = true;
+    public bool ready = false;
 
     public Vector2 position;
     public float rotation;
@@ -47,8 +47,9 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public Rigidbody2D rb;
 
     Transform nozzleTransform;
+    Transform deathChamber;
     public NozzleBehaviour nozzleBehaviour;
-    PlayerController playerController;
+    public PlayerController playerController;
     PlayerSynchronizer playerSynchronizer;
     SpriteRenderer spriteRenderer;
     ScoreManager scoreManager;
@@ -68,6 +69,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     float newNozzlePositionTime;
     Vector2 nozzleReferencePosition;
+
+    public Vector3 spawnPosition;
 
     public Color playerColor;
     public Color playerDarkerColor;
@@ -91,8 +94,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         Color.RGBToHSV(new Color(0.639804f, 0.2080392f, 0.2080392f, 1f), out h, out s, out v);
         h = Random.Range(0f, 1f);
-        playerColor = Color.HSVToRGB(h, 0.85f, 0.5f);
-        playerDarkerColor = Color.HSVToRGB(h, s * 0.9130434f, v * 0.6274509f);
+        playerColor = Color.HSVToRGB(h, s * 1.15f, v * 0.83f);
+        playerDarkerColor = Color.HSVToRGB(h, s * 0.95f, v * 0.95f);
 
         healthbar.color = playerColor;
         spriteRenderer.color = playerDarkerColor;
@@ -105,12 +108,9 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         if (!this.IsDestroyed())
         {
-            playerSynchronizer.UpdateColor();
-            Invoke("DelayedStartInit", 0.5f);
-            Invoke("DelayedStartInit", 0.1f);
-            Invoke("DelayedStartInit", 0.2f);
-            Invoke("DelayedStartInit", 0.3f);
-            Invoke("DelayedStartInit", 0.4f);
+
+            if(!NetworkManager.Singleton.IsHost) ready = false;
+
             if (arg0.name == "GameScene")
             {
                 score = scoreManager.startScore;
@@ -121,10 +121,21 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
             if (!isLocalPlayer) return;
 
-            Vector3 spawnPosition = new Vector3(Random.Range(0.0001f, 0.2001f), Random.Range(0.0001f, 0.2001f), Random.Range(0.0001f, 0.2001f));
+            if (arg0.name == "GameScene")
+            {
+                FindAnyObjectByType<MapInitiator>().InitPresetMap(0, scoreManager.gameMode);
+            }
+
+            spawnPosition = new Vector3(Random.Range(0.0001f, 0.2001f), Random.Range(0.0001f, 0.2001f), Random.Range(0.0001f, 0.2001f));
             spawnPosition += GameObject.FindGameObjectWithTag("Spawn").transform.position;
+            deathChamber = GameObject.FindGameObjectWithTag("Death").transform;
+            playerSynchronizer.UpdateHealth();
+            CancelInvoke("RevivePlayer");
+
             gameObject.GetComponent<Rigidbody2D>().position = spawnPosition;
             healthPoints = 20;
+            rb.simulated = true;
+            RevivePlayer();
 
         }
 
@@ -139,44 +150,47 @@ public sealed class PlayerBehaviour : MonoBehaviour
         {
             playerController = FindAnyObjectByType<PlayerController>();
             GetComponentInChildren<NozzleBehaviour>().SetPlayerController(playerController, this);
-            transform.position = GameObject.Find("LobbyEnvironment").transform.position;
+            transform.position = GameObject.FindGameObjectWithTag("Spawn").transform.position;
             playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
+            deathChamber = GameObject.FindGameObjectWithTag("Death").transform;
         }
-        playerSynchronizer.UpdateColor();
-        Invoke("DelayedStartInit", 0.5f);
-        Invoke("DelayedStartInit", 0.1f);
-        Invoke("DelayedStartInit", 0.2f);
-        Invoke("DelayedStartInit", 0.3f);
-        Invoke("DelayedStartInit", 0.4f);
 
-    }
+        ApplyColors();
 
-    void DelayedStartInit()
-    {
-        playerSynchronizer.UpdateColor();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        if (!collision.gameObject.CompareTag("Objective"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
             hasJump = true;
         }
 
     }
 
-    private void Update()
+    void ApplyColors()
     {
-        oneSecondTimer += Time.deltaTime * 10;
-        dataUpdateHighSpeedTimer += Time.deltaTime * 2;
-        nozzleBehaviour.owningPlayerColor = playerColor;
+
         Color.RGBToHSV(playerColor, out h, out s, out v);
-        playerDarkerColor = Color.HSVToRGB(h, s * 0.9130434f, v * 0.6274509f);
-        hpBarScale = Vector3.one * (healthPoints / maxHealthPoints);
-        nozzlePosition = nozzleTransform.position;
+        playerDarkerColor = Color.HSVToRGB(h, s * 0.96f, v * 0.80f);
+        nozzleBehaviour.owningPlayerColor = playerColor;
+        nozzleBehaviour.owningPlayerDarkerColor = playerDarkerColor;
         spriteRenderer.color = playerDarkerColor;
         healthbar.color = playerColor;
+        newColor = false;
+
+    }
+
+    private void Update()
+    {
+
+        if(newColor) ApplyColors();
+
+        oneSecondTimer += Time.deltaTime * 10;
+        dataUpdateHighSpeedTimer += Time.deltaTime * 2;
+        hpBarScale = Vector3.one * (healthPoints / maxHealthPoints);
+        nozzlePosition = nozzleTransform.position;
         healthbar.transform.localScale = hpBarScale;
 
         if (timeSinceHit < 1) timeSinceHit += Time.deltaTime * 3.5f;
@@ -190,6 +204,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
             fpsCapture = 0;
             oneSecondTimer = 0;
+
         }
         else
         {
@@ -228,6 +243,9 @@ public sealed class PlayerBehaviour : MonoBehaviour
         {
             nozzleTransform.position = transform.position + new Vector3(localNozzlePosition.x, localNozzlePosition.y, 0);
         }
+
+        controlled = playerController;
+
     }
 
     public void KillPlayer()
@@ -238,6 +256,9 @@ public sealed class PlayerBehaviour : MonoBehaviour
             playerSynchronizer.PlayPlayerDeath(transform.position, playerColor);
             SetStats();
             playerController.CancellAllInputs();
+
+            if (isLocalPlayer) rb.simulated = false;
+
         }
         else SetStats();
 
@@ -246,8 +267,9 @@ public sealed class PlayerBehaviour : MonoBehaviour
         void SetStats()
         {
 
-            rb.position = new Vector2(1000, 1000);
-            transform.position = new Vector3(1000, 1000, transform.position.z);
+            if (isLocalPlayer) rb.position = deathChamber.position;
+            if (isLocalPlayer) transform.position = new Vector3(deathChamber.position.x, deathChamber.position.y, transform.position.z);
+            if (isLocalPlayer) playerController.quedInput = true;
             healthPoints = 20;
             climax = 1;
             isDead = true;
@@ -259,29 +281,34 @@ public sealed class PlayerBehaviour : MonoBehaviour
     void RevivePlayer()
     {
 
-        GameObject spawn = GameObject.Find("Spawn");
+        GameObject spawn = GameObject.FindGameObjectWithTag("Spawn");
         if (!spawn) return;
 
-        rb.position = spawn.transform.position;
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = 0;
-        transform.position = spawn.transform.position;
+        if (isLocalPlayer) rb.position = spawn.transform.position;
+        if (isLocalPlayer) rb.linearVelocity = Vector3.zero;
+        if (isLocalPlayer) rb.angularVelocity = 0;
+        if (isLocalPlayer) rb.rotation = 0;
+        if (isLocalPlayer) transform.position = spawn.transform.position;
+        if (isLocalPlayer) rb.simulated = true;
+        if (isLocalPlayer) playerController.quedInput = true;
         isDead = false;
         scoreDeducted = false;
-        healthPoints = 20;
+        if (isLocalPlayer) healthPoints = 20;
         if (playerController) playerController.CancellAllInputs();
+        playerSynchronizer.UpdateHealth();
 
     }
 
     void RespawnPlayer()
     {
 
-        GameObject spawn = GameObject.Find("Spawn");
+        GameObject spawn = GameObject.FindGameObjectWithTag("Spawn");
         if (!spawn) return;
 
         rb.position = spawn.transform.position;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = 0;
+        rb.rotation = 0;
         transform.position = spawn.transform.position;
         if (playerController) playerController.CancellAllInputs();
 
@@ -338,7 +365,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         else
         {
 
-            newNozzlePositionTime = Mathf.Clamp01(newNozzlePositionTime + (Time.deltaTime * 20));
+            newNozzlePositionTime = Mathf.Clamp01(newNozzlePositionTime + (Time.deltaTime * 15));
 
             float nozzleLerp = Mathf.SmoothStep(0, 1, newNozzlePositionTime);
 
@@ -393,42 +420,48 @@ public sealed class PlayerBehaviour : MonoBehaviour
         nozzleInputDirection = playerController.GetDirection();
 
     }
+
+    bool controlled;
+    bool flipFlop;
     private void FixedUpdate()
     {
+        flipFlop = !flipFlop;
+        if (flipFlop) return;
+
+        if (!controlled) return;
 
         SetTargetMovement();
 
         ReAdjustMovementValues();
 
     }
-
+    Vector2 movementDirection = Vector2.zero;
     void SetTargetMovement()
     {
 
-        if (playerController == null) return;
+        movementDirection = Vector2.Lerp(movementDirection, playerController.finalDirection, Time.deltaTime * 100);
 
         float jumpLimiter = Mathf.Clamp(rb.linearVelocityY/2, -5, 10);
 
+        Vector2 jumpDirection = (Vector2.up + (playerController.finalDirection * 0.1f)).normalized;
+
         if (playerController.inputJump)
-            rb.AddForce(Vector2.up * (17.5f - jumpLimiter), ForceMode2D.Impulse);
+            rb.AddForce(jumpDirection * (17.5f - jumpLimiter), ForceMode2D.Impulse);
 
-        /*        rb.AddForce(playerController.finalDirection * 48.5f * MyExtentions.EaseOutQuad(Mathf.Clamp01(1 - (rb.linearVelocity.magnitude / 25))), ForceMode2D.Force);
-        */
-
-        float maxSpeed = 25;
+        float maxSpeed = 23.5f;
 
         Vector2 velParam = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeed, maxSpeed), Mathf.Clamp(rb.linearVelocityY, -maxSpeed, maxSpeed));
-        float xLimiter = Mathf.Clamp01(Mathf.Abs(playerController.finalDirection.x - (velParam.x / maxSpeed)));
-        float yLimiter = Mathf.Clamp01(Mathf.Abs(playerController.finalDirection.y - (velParam.y / maxSpeed)));
+        float xLimiter = Mathf.Clamp01(Mathf.Abs(movementDirection.x - (velParam.x / maxSpeed)));
+        float yLimiter = Mathf.Clamp01(Mathf.Abs(movementDirection.y - (velParam.y / maxSpeed)));
         Vector2 forceLimiter = new Vector2(xLimiter, yLimiter);
 
-        float acceleration = 60f;
-        rb.AddForce(playerController.finalDirection * acceleration * forceLimiter, ForceMode2D.Force);
+        float acceleration = 130f;
+        rb.AddForce(movementDirection * acceleration * forceLimiter, ForceMode2D.Force);
 
 
 
         if (Mathf.Abs(rb.angularVelocity / 360) < 1f)
-            rb.AddTorque(-playerController.finalDirection.x / 0.85f, ForceMode2D.Force);
+            rb.AddTorque(-movementDirection.x / 0.85f, ForceMode2D.Force);
 
         playerController.inputJump = false;
 

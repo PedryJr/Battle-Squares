@@ -53,7 +53,7 @@ PlayerSettings:
   unsupportedMSAAFallback: 0
   m_SpriteBatchVertexThreshold: 300
   m_MTRendering: 1
-  mipStripping: 0
+  mipStripping: 1
   numberOfMipsStripped: 0
   numberOfMipsStrippedPerMipmapLimitGroup: {}
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
@@ -93,13 +93,13 @@ PlayerSettings:
   usePlayerLog: 1
   dedicatedServerOptimizations: 1
   bakeCollisionMeshes: 1
-  forceSingleInstance: 0
+  forceSingleInstance: 1
   useFlipModelSwapchain: 1
   resizableWindow: 1
   useMacAppStoreValidation: 0
   macAppStoreCategory: public.app-category.games
-  gpuSkinning: 0
-  meshDeformation: 0
+  gpuSkinning: 1
+  meshDeformation: 2
   xboxPIXTextureCapture: 0
   xboxEnableAvatar: 0
   xboxEnableKinect: 0
@@ -143,32 +143,106 @@ PlayerSettings:
   tvOSBundleVersion: 1.0
   bundleVersion: 0.5
   preloadedAssets:
-  - {fileID: 2800000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
-  - {fileID: 2800000, guid: 3508881233423d34c86899152231ca89, type: 3}
-  - {fileID: 1734565813996250888, guid: 677884d92a334b44b8e6ee90e44ab35a, type: 3}
-  - {fileID: 8803654477940147399, guid: f01d68b729641f54d9173a2d6767271f, type: 3}
-  - {fileID: 6255123979456777468, guid: 9a3aa35731a9e6446a6200448a7ff5af, type: 3}
-  - {fileID: 6972840790218863405, guid: 54210fd5ae161954f9ed11f45042ab41, type: 3}
-  - {fileID: 2800000, guid: b1a194866dfcc9f45a110ee1c3750ee7, type: 3}
-  - {fileID: 8404699453247211762, guid: 7d3dbb5b21c48bb46b12c34c957eb007, type: 3}
-  - {fileID: 7093417803969706639, guid: c8db65b0af1cc1048b63b243be75aee3, type: 3}
-  - {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  - {fileID: 7289681851009581468, guid: 27f3dd13d0771dc4da1506b4059bb4c2, type: 3}
-  - {fileID: 7289681851009581468, guid: 72f1be016aee4eb469e98f6df7d9f0e4, type: 3}
-  - {fileID: 7289681851009581468, guid: 583089f6a9f1798448c0057490bd76a0, type: 3}
-  - {fileID: 7289681851009581468, guid: e8871a85f02e94e40b1af9470829ebcb, type: 3}
-  - {fileID: 8372111989446119118, guid: ca86f2818031666478def8aae3af5457, type: 3}
+  - {fileID: 398202714198641392, guid: bede7872270fd0a408e5f1ae2b53f379, type: 3}
   - {fileID: 2100000, guid: 36373f57203063e4dae15c1bb968807f, type: 2}
-  - {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
-  - {fileID: 6200000, guid: 176a05e135a7fe543a3e06fb07d512d0, type: 2}
-  - {fileID: 3066612454653962984, guid: e996855feaaebdd44a38ac085247b5c3, type: 3}
-  - {fileID: 3066612454653962984, guid: 60fe5a07722983144bf629b18c3c2728, type: 3}
-  - {fileID: 3066612454653962984, guid: df99116d93bd6da419c716dbcedd5e0b, type: 3}
-  - {fileID: 3066612454653962984, guid: 1484733a76041e247bad07d9e0c99dcc, type: 3}
-  - {fileID: 3066612454653962984, guid: 0e5e809c41fa5344a9148b72c5826481, type: 3}
+  - {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
+  - {fileID: 8372111989446119118, guid: ca86f2818031666478def8aae3af5457, type: 3}
+  - {fileID: 7289681851009581468, guid: e8871a85f02e94e40b1af9470829ebcb, type: 3}
+  - {fileID: 2800000, guid: 1171c9acbd4def3498ea0e39bbc56a77, type: 3}
+  - {fileID: 2800000, guid: 733829b74ba3d6f4a8ccf195e4ed9dc0, type: 3}
+  - {fileID: 2800000, guid: 0632f557ce949434c884e45dc24a7806, type: 3}
+  - {fileID: 2800000, guid: 9a8a19788be8d2848977b48f8aeaeffc, type: 3}
+  - {fileID: 2800000, guid: 4712771f384f8914d9835a532ec39907, type: 3}
+  - {fileID: 2800000, guid: 0a0e8897b2a642541883e8a72036abac, type: 3}
+  - {fileID: 2800000, guid: 6e9ad52791ef2fa45abddb1364f5ec6f, type: 3}
+  - {fileID: 2800000, guid: b1a194866dfcc9f45a110ee1c3750ee7, type: 3}
+  - {fileID: 2800000, guid: 138caba19cb168149bbd0676436ac3fb, type: 3}
+  - {fileID: 2800000, guid: 3508881233423d34c86899152231ca89, type: 3}
+  - {fileID: 2800000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
+  - {fileID: 8404699453247211762, guid: 7d3dbb5b21c48bb46b12c34c957eb007, type: 3}
+  - {fileID: 5681942679721831490, guid: 54210fd5ae161954f9ed11f45042ab41, type: 3}
+  - {fileID: 6255123979456777468, guid: 9a3aa35731a9e6446a6200448a7ff5af, type: 3}
+  - {fileID: 4483224134987301342, guid: f01d68b729641f54d9173a2d6767271f, type: 3}
+  - {fileID: 2403624704633969259, guid: 677884d92a334b44b8e6ee90e44ab35a, type: 3}
+  - {fileID: 8768534918593716892, guid: 08d73433b0a369d459611eb33d8c3b83, type: 3}
   - {fileID: 3066612454653962984, guid: cad4485b5d1f23a40a2d262d07303006, type: 3}
+  - {fileID: 7289681851009581468, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
+  - {fileID: 3066612454653962984, guid: 0e5e809c41fa5344a9148b72c5826481, type: 3}
+  - {fileID: 7289681851009581468, guid: c2f50d2d9a5df5f4b9f0d3e1477fc04a, type: 3}
+  - {fileID: 7289681851009581468, guid: b29b397a02cadfe46adaf535059a9ac4, type: 3}
+  - {fileID: 7289681851009581468, guid: f314d24c6dc858544a9523786afd9469, type: 3}
+  - {fileID: 7289681851009581468, guid: 52b0182cb799a844ea1507d42f4dc90a, type: 3}
+  - {fileID: 3066612454653962984, guid: 76131a323adaf2140bfedbbaaf9b4913, type: 3}
+  - {fileID: 7289681851009581468, guid: 6784c58aca5da3644917ab374eec1c9d, type: 3}
+  - {fileID: 7289681851009581468, guid: 69d34a0ca2a5b48489453ceacfcccbd1, type: 3}
+  - {fileID: 3066612454653962984, guid: 1484733a76041e247bad07d9e0c99dcc, type: 3}
+  - {fileID: 7289681851009581468, guid: 407e4aa50b4ac3246ae54abf626c8b81, type: 3}
+  - {fileID: 3066612454653962984, guid: df99116d93bd6da419c716dbcedd5e0b, type: 3}
+  - {fileID: 7289681851009581468, guid: d8f2373ffb8c1d74b8bafe429c9fa5c6, type: 3}
+  - {fileID: 7289681851009581468, guid: a3af95ee5023af2448bbeea49633f47d, type: 3}
+  - {fileID: 3066612454653962984, guid: 60fe5a07722983144bf629b18c3c2728, type: 3}
+  - {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
+  - {fileID: 7289681851009581468, guid: 93f2f5a12a3373742bc7df3296c08fb1, type: 3}
+  - {fileID: 3066612454653962984, guid: e996855feaaebdd44a38ac085247b5c3, type: 3}
+  - {fileID: 7289681851009581468, guid: 583089f6a9f1798448c0057490bd76a0, type: 3}
+  - {fileID: 7289681851009581468, guid: 72f1be016aee4eb469e98f6df7d9f0e4, type: 3}
+  - {fileID: 7289681851009581468, guid: 27f3dd13d0771dc4da1506b4059bb4c2, type: 3}
+  - {fileID: 7093417803969706639, guid: c8db65b0af1cc1048b63b243be75aee3, type: 3}
+  - {fileID: 6200000, guid: 176a05e135a7fe543a3e06fb07d512d0, type: 2}
   - {fileID: -944628639613478452, guid: caeeeb8e8f605dc42866145ecbfdef4a, type: 3}
+  - {fileID: 11400000, guid: 81dbe62fc17c5b1479dd8111172dff06, type: 2}
+  - {fileID: 6200000, guid: 4c7f0b5ea70cf9441b6cd05ef794cbc8, type: 2}
+  - {fileID: 6200000, guid: 51189edb2d8ae334da03dc087a1d822e, type: 2}
   - {fileID: 6200000, guid: 4b75e048d912cb04a8ca9e1d40223163, type: 2}
+  - {fileID: 12800000, guid: 77ac0548ddd09bb448f64b31bdc0ccfd, type: 3}
+  - {fileID: 11400000, guid: 1697a0517f8925c4d96922f9270f0acc, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 2800000, guid: 13906d6fc89df734f83f3b0b75008551, type: 3}
+  - {fileID: 824723745328106496, guid: 5f3987af2047c4b4ea132a75f4ae108b, type: 3}
+  - {fileID: 4386670900800471581, guid: ac57993d11a77164d92d68726ec74143, type: 3}
+  - {fileID: 4386670900800471581, guid: 1291524b75ade3e4ca0fa9f1e7a2f8e0, type: 3}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -213,7 +287,7 @@ PlayerSettings:
   keepLoadedShadersAlive: 0
   StripUnusedMeshComponents: 1
   strictShaderVariantMatching: 0
-  VertexChannelCompressionMask: 4054
+  VertexChannelCompressionMask: -1
   iPhoneSdkVersion: 988
   iOSSimulatorArchitecture: 0
   iOSTargetOSVersionString: 13.0
@@ -422,7 +496,7 @@ PlayerSettings:
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: WindowsStandaloneSupport
     m_APIs: 02000000
-    m_Automatic: 1
+    m_Automatic: 0
   - m_BuildTarget: LinuxStandaloneSupport
     m_APIs: 1100000015000000
     m_Automatic: 1
@@ -710,7 +784,8 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols: {}
-  additionalCompilerArguments: {}
+  additionalCompilerArguments:
+    Standalone: []
   platformArchitecture: {}
   scriptingBackend:
     Android: 1

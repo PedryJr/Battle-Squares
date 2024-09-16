@@ -27,9 +27,9 @@ MonoBehaviour:
   m_RendererFeatures: []
   m_RendererFeatureMap: 
   m_UseNativeRenderPass: 0
-  m_TransparencySortMode: 0
+  m_TransparencySortMode: 2
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
-  m_HDREmulationScale: 10
+  m_HDREmulationScale: 1
   m_LightRenderTextureScale: 1
   m_LightBlendStyles:
   - name: Multiply
@@ -44,12 +44,12 @@ MonoBehaviour:
   - name: Additive with Mask
     maskTextureChannel: 1
     blendMode: 0
-  m_UseDepthStencilBuffer: 1
+  m_UseDepthStencilBuffer: 0
   m_UseCameraSortingLayersTexture: 0
   m_CameraSortingLayersTextureBound: -1
-  m_CameraSortingLayerDownsamplingMethod: 0
+  m_CameraSortingLayerDownsamplingMethod: 3
   m_MaxLightRenderTextureCount: 30
-  m_MaxShadowRenderTextureCount: 2
+  m_MaxShadowRenderTextureCount: 30
   m_PostProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
-  m_DefaultMaterialType: 0
-  m_DefaultCustomMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_DefaultMaterialType: 2
+  m_DefaultCustomMaterial: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}

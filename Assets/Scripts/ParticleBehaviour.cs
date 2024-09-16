@@ -1,17 +1,16 @@
-using FMOD.Studio;
-using FMODUnity;
 using UnityEngine;
 
 public sealed class ParticleBehaviour : MonoBehaviour
 {
 
-    [SerializeField]
-    new ParticleSystem particleSystem;
+    float timer = 0;
 
     private void Update()
     {
 
-        if (!particleSystem.isPlaying)
+        timer += Time.deltaTime;
+
+        if (timer > 1.4f)
         {
 
             Destroy(gameObject);

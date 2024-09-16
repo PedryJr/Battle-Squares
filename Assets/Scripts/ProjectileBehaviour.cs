@@ -3,21 +3,19 @@ using FMODUnity;
 using System;
 using UnityEngine;
 using static PlayerSynchronizer;
-using static UnityEngine.ParticleSystem;
 
 public sealed class ProjectileBehaviour : MonoBehaviour
 {
 
-    [SerializeField]
     public float initDamage;
 
     [SerializeField]
     Transform boom;
 
-    [SerializeField]
     public float damageScaleOverTime;
 
     public float damage;
+    public float aoeDamage;
 
     public float acceleration;
 
@@ -32,7 +30,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     public ProjectileManager projectileManager;
 
-    [SerializeField]
     public bool holdable;
 
     public float travelDistance;
@@ -44,6 +41,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     public bool destroyed;
 
     public bool instaDestroy = false;
+
+    public bool skipAoeOnHit;
 
     public ulong ownerId;
 
@@ -71,11 +70,21 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     EventInstance shotInstance;
 
+    PlayerBehaviour playerHit;
+    FlagBehaviour flagHit;
+
+    Collider2D projectileCollider;
+
     [SerializeField]
     public ProjectileInitData data;
 
+    float morphLerp;
+    Vector3 startMorph;
+    Vector3 endMorph;
+
     private void Awake()
     {
+        projectileCollider = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         trailParticles = GetComponentInChildren<ParticleSystemRenderer>();
@@ -100,6 +109,14 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     public void InitializeBullet(ProjectileInitData data)
     {
+        
+        initDamage = data.baseDamage;
+        aoeDamage = data.aoeDamage;
+        damageScaleOverTime = data.damageTimeScale;
+        skipAoeOnHit = data.skipAoeOnTargetHit;
+
+        endMorph = data.targetMorph;
+        startMorph = transform.localScale;
 
         data.id++;
 
@@ -125,10 +142,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         if (data.noGravity) rb.gravityScale = 0f;
 
         spriteRenderer.color = data.projectileColor;
-
-        float h, s, v;
-        Color.RGBToHSV(data.projectileColor, out h, out s, out v);
-        generalParticleColor = Color.HSVToRGB(h, s * 0.9130434f, v * 0.6274509f);
+        generalParticleColor = data.projectileDarkerColor;
 
         Material trailParticleMaterial = Instantiate(trailParticles.material);
         trailParticles.material = trailParticleMaterial;
@@ -170,16 +184,31 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     private void Update()
     {
 
+        if (IsLocalProjectile) LocalUpdate();
+
+    }
+
+    private void FixedUpdate()
+    {
+
         damage += (Time.deltaTime * damageScaleOverTime);
         timeAlive += Time.deltaTime;
 
+        if (data.enableMorph)
+        {
+            morphLerp = Mathf.SmoothStep(0, 1, Mathf.Clamp01(timeAlive / data.timeToMorph));
+            transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
+        }
         rb.linearVelocity += rb.linearVelocity * (acceleration * Time.deltaTime);
-
-        if(IsLocalProjectile) LocalUpdate();
 
         travelDistance += (rb.position - lastPos).magnitude;
         lastPos = rb.position;
 
+        rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, data.speedLimit);
+        if(rb.linearVelocity.magnitude < data.minSpeed)
+        {
+            rb.linearVelocity = rb.linearVelocity.normalized * data.minSpeed;
+        }
 
     }
 
@@ -194,18 +223,44 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             if (!instaDestroy)
             {
 
+                
+
                 foreach (PlayerData player in projectileManager.playerSynchronizer.playerIdentities)
                 {
+                    if (player.id == ownerId) continue;
+                    if (Vector2.Distance(rb.position, player.square.rb.position) > data.aoe) continue;
+                    if (Physics2D.Linecast(rb.position, player.square.rb.position, LayerMask.GetMask("Environment")).collider != null) continue;
+                    if (playerHit) if (skipAoeOnHit && player.square == playerHit) continue;
 
                     Vector2 direction = (player.square.rb.position - rb.position).normalized;
 
-                    if (Vector2.Distance(rb.position, player.square.rb.position) < data.aoe)
-                    {
-                        if(player.id == ownerId) continue;
-                        player.square.timeSinceHit = 0.25f;
-                        projectileManager.playerSynchronizer.UpdatePlayerHealth(player.square.id, damage, ownerId, direction * data.knockback);
+                    player.square.timeSinceHit = 0.25f;
+                    projectileManager.playerSynchronizer.UpdatePlayerHealth(player.square.id, aoeDamage, ownerId, direction * data.knockback);
 
+                }
+
+                foreach (FlagBehaviour flag in FindObjectsByType<FlagBehaviour>(FindObjectsSortMode.None))
+                {
+
+                    if (Vector2.Distance(rb.position, flag.rb.position) > data.aoe) continue;
+                    if (Physics2D.Linecast(rb.position, flag.rb.position, LayerMask.GetMask("Environment")).collider != null) continue;
+                    if (flagHit) if (skipAoeOnHit && flag == flagHit) continue;
+
+                    bool skipHit = false;
+
+                    if (flag.activityState == FlagActivityState.Idle)
+                    {
+                        if (flag.ownerId == ownerId) skipHit = true;
                     }
+                    else if (flag.activityState == FlagActivityState.FollowTarget)
+                    {
+                        if (flag.playerBehaviour.id == ownerId) skipHit = true;
+                    }
+                    else skipHit = true;
+
+                    if (skipHit) continue;
+
+                    flag.RegisterHit(this);
 
                 }
 
@@ -219,26 +274,41 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
 
-        CollisionCheck(collision.GetComponent<PlayerBehaviour>());
+        CollisionCheck(collider.gameObject);
 
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        CollisionCheck(collision.gameObject.GetComponent<PlayerBehaviour>());
+        CollisionCheck(collision.gameObject);
 
     }
 
-    void CollisionCheck(PlayerBehaviour playerBehaviour)
+    void CollisionCheck(GameObject collidedWith)
     {
+
+        PlayerBehaviour playerBehaviour = collidedWith.gameObject.GetComponent<PlayerBehaviour>();
+        FlagBehaviour flagBehaviour = collidedWith.GetComponent<FlagBehaviour>();
+        bool environment = collidedWith.layer == LayerMask.NameToLayer("Environment");
 
         if (destroyed) return;
         if (!IsLocalProjectile) return;
-        if(playerBehaviour) if (playerBehaviour.isLocalPlayer) return;
+
+
+        if (playerBehaviour) PlayerCollisionCheck(playerBehaviour);
+        if (flagBehaviour) FlagCollisionCheck(flagBehaviour);
+        if (environment) EnvironmentCollisionCheck();
+
+    }
+
+    void PlayerCollisionCheck(PlayerBehaviour playerBehaviour)
+    {
+        if (playerBehaviour.isLocalPlayer) return;
+        playerHit = playerBehaviour;
 
         if (data.dieOnImpact)
         {
@@ -259,6 +329,50 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         }
 
+    }
+
+    void FlagCollisionCheck(FlagBehaviour flag)
+    {
+
+        bool skipHit = false;
+
+        if (flag.activityState == FlagActivityState.Idle)
+        {
+            if(flag.ownerId == ownerId) skipHit = true;
+        }
+        else if (flag.activityState == FlagActivityState.FollowTarget)
+        {
+            if(flag.playerBehaviour.id == ownerId) skipHit = true;
+        }
+
+        if (skipHit) return;
+
+        flagHit = flag;
+
+        if (data.dieOnImpact)
+        {
+            destroyed = true;
+            spriteRenderer.enabled = false;
+            hit = true;
+        }
+
+        if (data.damageOnImpact)
+        {
+
+            flag.RegisterHit(this);
+
+        }
+
+    }
+
+    void EnvironmentCollisionCheck()
+    {
+        if (data.dieOnImpact)
+        {
+            destroyed = true;
+            spriteRenderer.enabled = false;
+            hit = true;
+        }
     }
 
     public void OnDespawn(bool hit)
@@ -301,6 +415,7 @@ public struct ProjectileInitData
     public Vector2 position;
     public Vector2 direction;
     public Color projectileColor;
+    public Color projectileDarkerColor;
     public uint id;
     public bool IsLocalProjectile;
     public float acceleration;
@@ -312,9 +427,18 @@ public struct ProjectileInitData
     public bool dieOnImpact;
     public bool damageOnImpact;
     public bool sticky;
+    public bool skipAoeOnTargetHit;
     public float aoe;
     public float knockback;
-
+    public float speedLimit;
+    public float minSpeed;
+    public float aoeDamage;
+    public float baseDamage;
+    public float damageTimeScale;
     public float[] burstData;
+
+    public bool enableMorph;
+    public Vector3 targetMorph;
+    public float timeToMorph;
 
 }

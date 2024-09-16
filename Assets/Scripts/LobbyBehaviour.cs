@@ -1,8 +1,6 @@
 using Steamworks;
 using Steamworks.Data;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -168,7 +166,7 @@ public sealed class LobbyBehaviour : MonoBehaviour
 
             borderImage.color = new UnityEngine.Color(0.4627451f, 0.4627451f, 0.4627451f, 1f);
 
-            if (firstLoad)
+            if (firstLoad && !lobbyLoader.lobbyPreview.GetComponent<LobbyBehaviour>().activated)
             {
                 OnClicked();
                 firstLoad = false;

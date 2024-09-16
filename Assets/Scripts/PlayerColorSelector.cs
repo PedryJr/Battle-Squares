@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,6 +42,7 @@ public sealed class PlayerColorSelector : MonoBehaviour
     {
 
         if (!playerSynchronizer) return;
+        if (!playerSynchronizer.localSquare) return;
 
         timer += Time.deltaTime;
 
@@ -66,6 +65,18 @@ public sealed class PlayerColorSelector : MonoBehaviour
         if (animating) return;
 
         selectedColor = playerSynchronizer.UpdatePlayerColor(hue);
+
+        Color baseColor = selectedColor;
+        Vector3 baseNormalized = new Vector3(baseColor.r, baseColor.g, baseColor.b).normalized;
+        Color normalColor = new Color(baseNormalized.x, baseNormalized.y, baseNormalized.z);
+
+        Color cursorColor = normalColor * 0.6f;
+        Color cursorDarkerColor = normalColor * 0.38f;
+
+        CursorBehaviour.SetColor(
+            playerSynchronizer.localSquare.playerColor * 1.5f,
+            playerSynchronizer.localSquare.playerDarkerColor * 0.8f);
+
         selectedColor.r *= 0.8f;
         selectedColor.g *= 0.8f;
         selectedColor.b *= 0.8f;
@@ -81,6 +92,18 @@ public sealed class PlayerColorSelector : MonoBehaviour
         float h, s, v;
 
         selectedColor = playerSynchronizer.localSquare.playerColor;
+
+        Color baseColor = selectedColor;
+        Vector3 baseNormalized = new Vector3(baseColor.r, baseColor.g, baseColor.b).normalized;
+        Color normalColor = new Color(baseNormalized.x, baseNormalized.y, baseNormalized.z);
+
+        Color cursorColor = normalColor * 0.6f;
+        Color cursorDarkerColor = normalColor * 0.38f;
+
+        CursorBehaviour.SetColor(
+            playerSynchronizer.localSquare.playerColor * 1.5f,
+            playerSynchronizer.localSquare.playerDarkerColor * 0.8f);
+
         selectedColor.r *= 0.8f;
         selectedColor.g *= 0.8f;
         selectedColor.b *= 0.8f;

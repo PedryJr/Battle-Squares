@@ -1,7 +1,5 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using static ProjectileManager;
-using static UnityEngine.ParticleSystem;
 
 public sealed class NozzleBehaviour : MonoBehaviour
 {
@@ -21,6 +19,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
     Vector3 shotScale;
 
     public Color owningPlayerColor;
+    public Color owningPlayerDarkerColor;
 
     public float intensity;
 
@@ -77,8 +76,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
 
         intensity = Mathf.Clamp01(intensity - Time.deltaTime / 5f);
 
-        Color.RGBToHSV(owningPlayerColor, out h, out s, out v);
-        Color nozzleColor = Color.HSVToRGB(h, s * 0.9130434f, v * 0.6274509f);
+        Color nozzleColor = owningPlayerDarkerColor;
         Color particleColor = nozzleColor;
 
         spriteRenderer.color = nozzleColor;
@@ -126,9 +124,10 @@ public sealed class NozzleBehaviour : MonoBehaviour
             {
                 playerBehaviour.AnimateNozzle(Vector3.zero, Vector3.zero);
                 projectileManager.SpawnParticles(
-                    playerBehaviour.nozzlePosition - (relativePositionToPlayer / 4),
-                    transform.rotation,
-                    particleColor);
+                    globalNozzleDirection - (relativePositionToPlayer / 3.5f),
+                    Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan2(relativePositionToPlayer.y, relativePositionToPlayer.x)),
+                    particleColor,
+                    primary);
             }
         }
         if (playerController.shootSecondary && secondaryReady)
@@ -137,9 +136,10 @@ public sealed class NozzleBehaviour : MonoBehaviour
             {
                 playerBehaviour.AnimateNozzle(Vector3.zero, Vector3.zero);
                 projectileManager.SpawnParticles(
-                    playerBehaviour.nozzlePosition - (relativePositionToPlayer / 4),
-                    transform.rotation,
-                    particleColor);
+                    globalNozzleDirection - (relativePositionToPlayer / 3.5f),
+                    Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan2(relativePositionToPlayer.y, relativePositionToPlayer.x)),
+                    particleColor,
+                    secondary);
             }
         }
     }
@@ -195,9 +195,10 @@ public sealed class NozzleBehaviour : MonoBehaviour
         if (fire) projectileManager.SpawnProjectile(
                         type,
             globalNozzleDirection,
-            relativePositionToPlayer,
+            relativePositionToPlayer.normalized,
             playerBehaviour,
-            owningPlayerColor);
+            new Vector3(owningPlayerColor.r, owningPlayerColor.g, owningPlayerColor.b) ,
+            new Vector3(owningPlayerDarkerColor.r, owningPlayerDarkerColor.g, owningPlayerDarkerColor.b));
 
         return fire;
 

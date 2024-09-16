@@ -23,7 +23,7 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     Overlay:
-      Value: 1
+      Value: 0
       HasValue: 1
     OverlayPosition:
       Value: 0
@@ -453,8 +453,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: ../../../Documents/FMOD Studio/BattleSquares/BattleSquares.fspro
-  sourceBankPath: ../../../Documents/FMOD Studio/BattleSquares/Build
+  sourceProjectPath: ../../Users/emild/Documents/FMOD Studio/BattleSquares/BattleSquares.fspro
+  sourceBankPath: ../../Users/emild/Documents/FMOD Studio/BattleSquares/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 1
   ShowBankRefreshWindow: 1
@@ -466,7 +466,7 @@ MonoBehaviour:
   TargetAssetPath: FMODBanks
   TargetBankFolder: 
   EventLinkage: 0
-  LoggingLevel: 2
+  LoggingLevel: 1
   SpeakerModeSettings: []
   SampleRateSettings: []
   LiveUpdateSettings: []

@@ -1,4 +1,3 @@
-using FMOD;
 using FMOD.Studio;
 using FMODUnity;
 using System.Collections.Generic;
@@ -13,6 +12,7 @@ public sealed class CameraAnimator : MonoBehaviour
     public float fpsCapture;
     public float oneSecondTimer = 0;
     public float initCameraTimer = 0;
+    public float introTimer = 0;
 
     public float soundUpdateTimer;
 
@@ -38,6 +38,8 @@ public sealed class CameraAnimator : MonoBehaviour
 
     List<Vector3> shakes;
 
+    Transform spawn;
+
     int lastI;
     float transitionTimer;
 
@@ -49,6 +51,7 @@ public sealed class CameraAnimator : MonoBehaviour
         targetPosition = new Vector2();
         aCamera = GetComponent<Camera>();
         scoreManager = FindAnyObjectByType<ScoreManager>();
+        spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
 
         battleThemeInstance = RuntimeManager.CreateInstance(battleThemeReference);
         battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
@@ -77,10 +80,14 @@ public sealed class CameraAnimator : MonoBehaviour
 
         Effects();
 
-        if (initCameraTimer < 1) initCameraTimer += Time.deltaTime * 1.7f;
+        if (initCameraTimer < 1) initCameraTimer += Time.deltaTime * 0.53f;
         else if (initCameraTimer > 1) initCameraTimer = 1;
 
+        if (introTimer < 1) introTimer += Time.deltaTime;
+        else if (introTimer > 1) introTimer = 1;
+
         targetPosition = Vector2.zero;
+
         int i = 0;
         if(playerSynchronizer.playerIdentities != null)
         {
@@ -99,6 +106,13 @@ public sealed class CameraAnimator : MonoBehaviour
             }
         }
 
+
+        if (playerSynchronizer.localSquare.isDead)
+        {
+            targetPosition = spawn.position;
+            i = 1;
+        }
+
         if (transitionTimer < 1.5f)
             transitionTimer += Time.deltaTime * 2f;
         else
@@ -110,15 +124,16 @@ public sealed class CameraAnimator : MonoBehaviour
             transitionTimer = 0;
         }
 
+
         Vector3 toPos = new Vector3(0, 0, -10f);
         if (i != 0) toPos = new Vector3(targetPosition.x / i, targetPosition.y / i, -10f);
-        transform.position = Vector3.Lerp(transform.position, toPos, Time.deltaTime * (1.5f + transitionTimer));
+        transform.position = Vector3.Lerp(transform.position, toPos, Time.deltaTime * (1.5f + transitionTimer) * introTimer);
 
         if (resize)
         {
 
             battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
-            aCamera.orthographicSize = Mathf.Lerp(10, 12, Mathf.SmoothStep(0, 1, initCameraTimer));
+            aCamera.orthographicSize = Mathf.Lerp(26, 12, Mathf.SmoothStep(0, 1, initCameraTimer));
 
         }
 

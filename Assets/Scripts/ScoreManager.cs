@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -88,7 +86,8 @@ public sealed class ScoreManager : NetworkBehaviour
             inGame = true;
             UpdateScoreBoardFunc();
 
-            Cursor.visible = false;
+            /*Cursor.visible = false;*/
+            CursorBehaviour.SetEnabled(false);
             Cursor.lockState = CursorLockMode.Locked;
             foreach (PlayerData player in playerSynchronizer.playerIdentities) player.square.score = 0;
             UpdateScoreBoardFunc();
@@ -102,7 +101,8 @@ public sealed class ScoreManager : NetworkBehaviour
         if (arg0.name.Equals("GameScene"))
         {
             inGame = false;
-            Cursor.visible = true;
+            CursorBehaviour.SetEnabled(true);
+            /*Cursor.visible = true;*/
             Cursor.lockState = CursorLockMode.None;
             scores.Clear();
         }
@@ -201,7 +201,7 @@ public sealed class ScoreManager : NetworkBehaviour
     {
 
         DM,
-        TDM,
+        DT,
         CTF
 
     }

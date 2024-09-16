@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e651dbb3fbac04af2b8f5abf007ddc23, type: 3}
   m_Name: NetworkPrefabs
   m_EditorClassIdentifier: 
-  IsDefault: 0
+  IsDefault: 1
   List: []

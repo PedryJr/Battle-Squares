@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static ProjectileManager;
 
@@ -17,8 +14,17 @@ public sealed class WeaponSelector : MonoBehaviour
     [SerializeField]
     Image secondary;
 
+    Image selectorImage;
+
     [SerializeField]
     ScrollRect scroll;
+
+    private void Awake()
+    {
+        
+        selectorImage = GetComponent<Image>();
+
+    }
 
     public void Select()
     {
@@ -38,6 +44,11 @@ public sealed class WeaponSelector : MonoBehaviour
             ammoCounter.UpdateWeaponType();
         }
 
+    }
+
+    public Sprite GetImage()
+    {
+        return selectorImage.sprite;
     }
 
 }

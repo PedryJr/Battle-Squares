@@ -1,8 +1,6 @@
-using Steamworks;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static PlayerSynchronizer;
 
 public sealed class LoadScores : MonoBehaviour
 {

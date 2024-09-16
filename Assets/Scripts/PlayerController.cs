@@ -28,13 +28,19 @@ public sealed class PlayerController : MonoBehaviour
     public bool shootPrimary = false;
     public bool shootSecondary = false;
 
+    public bool quedInput;
+
     public static float uiRegs = 0;
+
+    public static bool showCursor = true;
 
     float regs;
 
     private void Awake()
     {
+
         DontDestroyOnLoad(this);
+
         inputs = new Inputs();
 
         cancelInputs = new List<InputAction>()
@@ -120,6 +126,7 @@ public sealed class PlayerController : MonoBehaviour
             return;
         }
 
+        quedInput = true;
         action();
 
     }
@@ -151,10 +158,8 @@ public sealed class PlayerController : MonoBehaviour
             leftInputDirection +
             rightInputDirection;
 
-        if(!(downInputDirection == Vector2.zero
-            && upInputDirection == Vector2.zero
-            && leftInputDirection == Vector2.zero
-            && rightInputDirection == Vector2.zero))
+        if(!((downInputDirection + upInputDirection) == Vector2.zero
+            && (leftInputDirection + rightInputDirection) == Vector2.zero))
         {
             projectileDirection =
                 upInputDirection +

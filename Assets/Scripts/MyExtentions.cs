@@ -1,13 +1,9 @@
-using System;
-using System.Collections;
-using UnityEngine;
-using K4os.Compression.LZ4;
-using System.IO;
 using Steamworks;
-using Unity.VisualScripting;
 using Steamworks.Data;
-using System.Threading.Tasks;
+using System;
 using System.IO.Compression;
+using System.IO;
+using UnityEngine;
 
 public static class MyExtentions
 {
@@ -63,14 +59,11 @@ public static class MyExtentions
 
     public static byte[] EncodeRotation(float rotation)
     {
-        // Scale rotation from 0-360 range to 0-65535 range
         int scaledRotation = (int)((rotation / 360.0f) * 65535);
 
-        // Extract high and low bytes
         byte highByte = (byte)((scaledRotation >> 8) & 0xFF);
         byte lowByte = (byte)(scaledRotation & 0xFF);
 
-        // Pack into 2 bytes
         byte[] result = new byte[2];
         result[0] = highByte;
         result[1] = lowByte;
@@ -78,20 +71,16 @@ public static class MyExtentions
         return result;
     }
 
-    // Function to decode rotation angle
     public static float DecodeRotation(byte[] bytes)
     {
         if (bytes.Length != 2)
             throw new ArgumentException("Input must be exactly 2 bytes.");
 
-        // Extract high and low bytes
         int highByte = bytes[0] & 0xFF;
         int lowByte = bytes[1] & 0xFF;
 
-        // Reconstruct the scaled rotation
         int scaledRotation = (highByte << 8) | lowByte;
 
-        // Scale back to the original 0-360 range
         float rotation = (scaledRotation / 65535.0f) * 360.0f;
 
         return rotation;
@@ -99,41 +88,32 @@ public static class MyExtentions
 
     public static byte[] EncodeFloat(float value)
     {
-        // Define the range
         float minValue = -1000.0f;
         float maxValue = 1000.0f;
-        int range = (int)(maxValue - minValue); // 2000
+        int range = (int)(maxValue - minValue);
 
-        // Scale the value to fit into the range of 0 to 16777215
         int scaledValue = (int)(((value - minValue) / range) * 16777215);
 
-        // Ensure the scaledValue is within the valid range
         scaledValue = Math.Max(0, Math.Min(16777215, scaledValue));
 
-        // Extract the three bytes
         byte byte1 = (byte)((scaledValue >> 16) & 0xFF);
         byte byte2 = (byte)((scaledValue >> 8) & 0xFF);
         byte byte3 = (byte)(scaledValue & 0xFF);
 
-        // Pack into 3 bytes
         return new byte[] { byte1, byte2, byte3 };
     }
 
-    // Function to decode float
     public static float DecodeFloat(byte[] bytes)
     {
         if (bytes.Length != 3)
             throw new ArgumentException("Input must be exactly 3 bytes.");
 
-        // Reconstruct the scaled value from the three bytes
         int scaledValue = (bytes[0] << 16) | (bytes[1] << 8) | bytes[2];
 
-        // Define the range
         float minValue = -1000.0f;
         float maxValue = 1000.0f;
-        int range = (int)(maxValue - minValue); // 2000
+        int range = (int)(maxValue - minValue);
 
-        // Convert the scaled value back to the original float range
         float value = minValue + ((scaledValue / 16777215.0f) * range);
 
         return value;
@@ -145,25 +125,20 @@ public static class MyExtentions
         x = Mathf.Clamp(x, -1, 1);
         y = Mathf.Clamp(y, -1, 1);
 
-        // Scale position from -1 to 1 range to 0 to 255 range
         byte scaledX = (byte)((x + 1.0f) * 127.5f);
         byte scaledY = (byte)((y + 1.0f) * 127.5f);
 
-        // Pack x and y into 2 bytes
         return new byte[] { scaledX, scaledY };
     }
 
-    // Function to decode position
     public static (float, float) DecodeNozzlePosition(byte[] bytes)
     {
         if (bytes.Length != 2)
             throw new ArgumentException("Input must be exactly 2 bytes.");
 
-        // Extract x and y bytes
         byte scaledX = bytes[0];
         byte scaledY = bytes[1];
 
-        // Scale back to the -1 to 1 range
         float x = (scaledX / 127.5f) - 1.0f;
         float y = (scaledY / 127.5f) - 1.0f;
 
@@ -197,15 +172,23 @@ public static class MyExtentions
         return 1 - (1 - x) * (1 - x);
     }
 
-    public static async Task<Sprite> GetImageData(SteamId steamId)
+    public static Sprite GetImageData(SteamId steamId)
     {
 
-        Image? image = await SteamFriends.GetLargeAvatarAsync(steamId);
+        Image? image = SteamFriends.GetLargeAvatarAsync(steamId).Result;
+        if (image != null) return SteamImgToSprite(image.Value);
+        else return null;
 
-        byte[] imageData = image.Value.Data;
-        uint imageWidth = image.Value.Width;
-        uint imageHeight = image.Value.Height;
-        Vector2 imageDimentions = new Vector2(image.Value.Width, image.Value.Height);
+    }
+
+    public static Sprite SteamImgToSprite(Image image)
+    {
+
+        byte[] imageData = image.Data;
+        Debug.Log(imageData.Length);
+        uint imageWidth = image.Width;
+        uint imageHeight = image.Height;
+        Vector2 imageDimentions = new Vector2(image.Width, image.Height);
 
         Texture2D spriteTexture = new Texture2D((int)imageWidth, (int)imageHeight, TextureFormat.RGBA32, false, true);
         Rect spriteRect = new Rect(new Vector2(0, 0), imageDimentions);
@@ -216,6 +199,65 @@ public static class MyExtentions
 
         return (Sprite.Create(spriteTexture, spriteRect, spritePivot));
 
+    }
+
+    public static Sprite CreateSpriteFromData(byte[] imageData, uint imageWidth, uint imageHeight)
+    {
+
+        Vector2 imageDimentions = new Vector2(imageWidth, imageHeight);
+
+        Texture2D spriteTexture = new Texture2D((int)imageWidth, (int)imageHeight, TextureFormat.RGBA32, false, true);
+        Rect spriteRect = new Rect(new Vector2(0, 0), imageDimentions);
+        Vector2 spritePivot = imageDimentions / 2;
+
+        spriteTexture.LoadRawTextureData(imageData);
+        spriteTexture.Apply();
+
+        return (Sprite.Create(spriteTexture, spriteRect, spritePivot));
+
+    }
+
+    public static byte[] CompressByteArray(byte[] data)
+    {
+        using (var outputStream = new MemoryStream())
+        {
+            using (var compressionStream = new GZipStream(outputStream, CompressionMode.Compress))
+            {
+                compressionStream.Write(data, 0, data.Length);
+            }
+            return outputStream.ToArray();
+        }
+    }
+
+    public static byte[] DecompressByteArray(byte[] compressedData)
+    {
+        using (var inputStream = new MemoryStream(compressedData))
+        using (var outputStream = new MemoryStream())
+        using (var decompressionStream = new GZipStream(inputStream, CompressionMode.Decompress))
+        {
+            decompressionStream.CopyTo(outputStream);
+            return outputStream.ToArray();
+        }
+    }
+
+    public static byte[] FlattenByteArray(byte[][] jaggedArray)
+    {
+        int length = 0;
+        foreach (byte[] array in jaggedArray)
+        {
+            length += array.Length;
+        }
+
+        byte[] flatArray = new byte[length];
+        int offset = 0;
+
+        foreach (byte[] array in jaggedArray)
+        {
+            Buffer.BlockCopy(array, 0, flatArray, offset, array.Length);
+            offset += array.Length;
+        }
+
+        return flatArray;
     }
 
 }

@@ -1,14 +1,13 @@
-using Netcode.Transports.Facepunch;
 using Steamworks;
 using Steamworks.Data;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 {
+
+    LocalSteamData localSteamData;
 
     public static string playerName;
     public static SteamId playerSteamID;
@@ -18,7 +17,7 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 
     private void Awake()
     {
-
+        localSteamData = GetComponent<LocalSteamData>();
         SetupSteamClient();
         CreateNewLobby();
         SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberDisconnected;
@@ -70,18 +69,18 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
     void SetupSteamClient()
     {
 
+/*        SteamServerStats.SetAchievement();
+        SteamServerStats.GetAchievement();
+        SteamServerStats.ClearAchievement();*/
+
         playerName = SteamClient.Name;
         playerSteamID = SteamClient.SteamId;
 
-        try
-        {
-            SteamClient.Init(252490, false);
-        }
-        catch { }
+        localSteamData.Init(playerSteamID);
 
         try
         {
-            SteamClient.RestartAppIfNecessary(3180450);
+            SteamClient.Init(3180450, false);
         }
         catch { }
 

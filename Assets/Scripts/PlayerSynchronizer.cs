@@ -1,10 +1,14 @@
-using Netcode.Transports.Facepunch;
 using Steamworks;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public sealed class PlayerSynchronizer : NetworkBehaviour
 {
@@ -19,7 +23,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public PlayerBehaviour localSquare;
 
     ProjectileManager projectileManager;
-
+    LocalSteamData localSteamData;
     ScoreManager scoreManager;
 
     float serverUpdateTimer;
@@ -29,21 +33,56 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     public bool hostShutdown = false;
 
+    delegate void UpdatePFPStream();
+    List<UpdatePFPStream> updatePFPStream;
+
     bool stopUpdate;
     private void Awake()
     {
 
         DontDestroyOnLoad(this);
+        updatePFPStream = new List<UpdatePFPStream>();
         networkManager = GameObject.Find("Network").GetComponent<NetworkManager>();
         projectileManager = GetComponent<ProjectileManager>();
+        localSteamData = GetComponent<LocalSteamData>();
         networkManager.OnClientConnectedCallback += SetupNewPlayer;
         networkManager.OnClientDisconnectCallback += DisconnectPlayer;
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
 
-        QualitySettings.vSyncCount = 0;
-
         scoreManager = GetComponent<ScoreManager>();
+
+    }
+
+    public void ForceReset()
+    {
+
+        if (playerIdentities != null)
+        {
+            foreach (PlayerData player in playerIdentities)
+            {
+
+                if (player.square) Destroy(player.square.gameObject);
+
+            }
+
+            playerIdentities = null;
+        }
+
+        foreach (ProjectileBehaviour projectile in projectileManager.projectiles)
+        {
+
+            if (projectile != null) Destroy(projectile.gameObject);
+
+        }
+
+        projectileManager.projectiles.Clear();
+
+        PlayerBehaviour[] remainingPlayers = FindObjectsByType<PlayerBehaviour>(FindObjectsSortMode.None);
+        for (int i = 0; i < remainingPlayers.Length; i++)
+        {
+            Destroy(remainingPlayers[i]);
+        }
 
     }
 
@@ -236,55 +275,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-
-    public void SetupNewPlayer(ulong id)
-    {
-        clrUpdate = 0;
-        if (IsHost)
-        {
-
-            PlayerData playerData = new PlayerData();
-            playerData.id = id;
-            playerData.square = Instantiate(square).GetComponent<PlayerBehaviour>();
-            playerData.square.id = id;
-
-            if (playerIdentities == null)
-            {
-                playerIdentities = new List<PlayerData>();
-                idPairs = new List<IdPair>
-                {
-                    new IdPair { clientId = id, steamId = SteamClient.SteamId }
-                };
-                SceneManager.LoadSceneAsync("LobbyScene", LoadSceneMode.Single);
-
-            }
-
-            playerIdentities.Add(playerData);
-
-            List<ulong> nowPlayers = new List<ulong>();
-            if (playerData.id == NetworkManager.LocalClientId)
-            {
-
-
-                localSquare = playerData.square;
-                FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
-
-            }
-            foreach (PlayerData player in playerIdentities)
-            {
-
-                nowPlayers.Add(player.id);
-
-            }
-
-            SetupNewPlayerClientRpc(nowPlayers.ToArray(), id, scoreManager.gameMode);
-
-            Invoke("SetupPlayerIdsStep1", 0.1f);
-
-        }
-
-    }
-
+/*
     void SetupPlayerIdsStep1()
     {
         SetupPlayerIdsStep1ClientRpc();
@@ -344,11 +335,11 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
                 foreach (IdPair pair in idPairs)
                 {
-                    if (pair.clientId == playerIdentities[i].id)
+                    if (pair.clientId == playerIdentities[i].cId)
                     {
                         PlayerData newData = playerIdentities[i];
 
-                        newData.pfp = MyExtentions.GetImageData(pair.steamId).Result;
+                        newData.pfp = MyExtentions.GetImageData(pair.steamId);
                         foreach (Friend friend in SteamNetwork.currentLobby.Value.Members)
                         {
                             if (friend.Id.Value == pair.steamId.Value) newData.name = friend.Name;
@@ -363,10 +354,169 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         }
 
+    }*/
+    public void SetupNewPlayer(ulong id)
+    {
+        clrUpdate2 = 0;
+        if (IsHost)
+        {
+
+            PlayerData playerData = new PlayerData();
+            playerData.id = id;
+            playerData.square = Instantiate(square).GetComponent<PlayerBehaviour>();
+            playerData.square.id = id;
+            playerData.pfp = MyExtentions.CreateSpriteFromData(localSteamData.pfpData, localSteamData.imageWidth, localSteamData.imageHeight);
+            playerData.texture = playerData.pfp.texture;
+
+            if (playerIdentities == null)
+            {
+                playerIdentities = new List<PlayerData>();
+                idPairs = new List<IdPair>
+                {
+                    new IdPair { clientId = id, steamId = SteamClient.SteamId }
+                };
+                SceneManager.LoadSceneAsync("LobbyScene", LoadSceneMode.Single);
+
+            }
+
+            playerIdentities.Add(playerData);
+
+            List<ulong> nowPlayers = new List<ulong>();
+            List<bool> nowReady = new List<bool>();
+
+            if (playerData.id == NetworkManager.LocalClientId)
+            {
+
+
+                localSquare = playerData.square;
+                FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
+
+            }
+            foreach (PlayerData player in playerIdentities)
+            {
+
+                nowPlayers.Add(player.id);
+                nowReady.Add(player.square.ready);
+
+            }
+
+            SetupNewPlayerClientRpc(nowPlayers.ToArray(), nowReady.ToArray(), id, scoreManager.gameMode);
+
+            FetchPFPDataRpc();
+
+            /*SetupPlayerIdsStep1();*/
+
+        }
+
+    }
+
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void FetchPFPDataRpc()
+    {
+
+        Texture2D texture = localSteamData.pfp.texture;
+
+        // Get the pixel data from the texture
+        byte[] textureData = texture.GetRawTextureData();
+
+        int batchSize = 50;
+        int pixelCount = texture.width * texture.height; // Assuming you want all pixels
+        int pixelIndex = 0;
+
+        while (pixelIndex < pixelCount)
+        {
+            // Prepare batches of pixels (for this example, we assume the texture is in RGBA format, so 4 bytes per pixel)
+            int remainingPixels = pixelCount - pixelIndex;
+            int currentBatchSize = Mathf.Min(batchSize, remainingPixels);
+
+            byte[] rgbBatch = new byte[currentBatchSize * 4]; // 4 bytes per pixel (RGBA)
+            int[] posXBatch = new int[currentBatchSize];
+            int[] posYBatch = new int[currentBatchSize];
+
+            for (int i = 0; i < currentBatchSize; i++)
+            {
+                int pixelPos = pixelIndex + i;
+
+                // Convert pixelPos into x and y coordinates
+                int x = pixelPos % texture.width;
+                int y = pixelPos / texture.width;
+
+                // Store the pixel data and positions
+                Buffer.BlockCopy(textureData, pixelPos * 4, rgbBatch, i * 4, 4);
+                posXBatch[i] = x;
+                posYBatch[i] = y;
+            }
+
+            // Add the batch to the update stream
+            UpdatePFPStream stream = () =>
+            {
+                StreamPFPDataRpc(rgbBatch, posXBatch, posYBatch, NetworkManager.LocalClientId);
+            };
+
+            updatePFPStream.Add(stream);
+
+            pixelIndex += currentBatchSize;
+        }
+
+        // Add final stream to apply data
+        UpdatePFPStream endStream = () =>
+        {
+            ApplyPFPDataRpc(NetworkManager.LocalClientId);
+        };
+        updatePFPStream.Add(endStream);
+
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void StreamPFPDataRpc(byte[] pixelBatch, int[] xBatch, int[] yBatch, ulong id)
+    {
+
+        if(playerIdentities != null)
+        {
+
+            for (int i = 0; i < playerIdentities.Count; i++)
+            {
+
+                if (playerIdentities[i].id == id)
+                {
+                    PlayerData playerData = playerIdentities[i];
+
+                    // Apply the batch of pixel data
+                    for (int j = 0; j < xBatch.Length; j++)
+                    {
+                        playerData.UpdatePFP(xBatch[j], yBatch[j], pixelBatch.Skip(j * 4).Take(4).ToArray()); // RGBA, 4 bytes per pixel
+                    }
+
+                    playerIdentities[i] = playerData;
+                }
+
+            }
+
+        }
+
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void ApplyPFPDataRpc(ulong id)
+    {
+
+        for (int i = 0; i < playerIdentities.Count; i++)
+        {
+
+            if (playerIdentities[i].id == id)
+            {
+
+                playerIdentities[i].ApplyPFP();
+
+            }
+
+        }
+
     }
 
     [ClientRpc]
-    void SetupNewPlayerClientRpc(ulong[] nowPlayers, ulong connectedId, ScoreManager.Mode gameMode)
+    void SetupNewPlayerClientRpc(ulong[] nowPlayers, bool[] nowReady, ulong connectedId, ScoreManager.Mode gameMode)
     {
 
         clrUpdate = 0;
@@ -386,16 +536,41 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 new IdPair { clientId = connectedId, steamId = SteamClient.SteamId }
             };
 
-            foreach (ulong id in nowPlayers)
+            /*            foreach (ulong id in nowPlayers)
+                        {
+
+                            PlayerData playerData = new PlayerData();
+
+                            playerData.square = Instantiate(square).GetComponent<PlayerBehaviour>();
+                            playerData.id = id;
+                            playerData.square.id = id;
+                            playerData.pfp = MyExtentions.CreateSpriteFromData(localSteamData.pfpData, localSteamData.imageWidth, localSteamData.imageHeight);
+                            playerData.texture = playerData.pfp.texture;
+
+                            if (id == NetworkManager.LocalClientId)
+                            {
+
+                                localSquare = playerData.square;
+                                FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
+
+                            }
+
+                            playerIdentities.Add(playerData);
+
+                        }*/
+
+            for (int i = 0; i < nowPlayers.Length; i++)
             {
 
                 PlayerData playerData = new PlayerData();
 
                 playerData.square = Instantiate(square).GetComponent<PlayerBehaviour>();
-                playerData.id = id;
-                playerData.square.id = id;
+                playerData.id = nowPlayers[i];
+                playerData.square.id = nowPlayers[i];
+                playerData.pfp = MyExtentions.CreateSpriteFromData(localSteamData.pfpData, localSteamData.imageWidth, localSteamData.imageHeight);
+                playerData.texture = playerData.pfp.texture;
 
-                if (id == NetworkManager.LocalClientId)
+                if (nowPlayers[i] == NetworkManager.LocalClientId)
                 {
 
                     localSquare = playerData.square;
@@ -416,6 +591,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             playerData.square = Instantiate(square).GetComponent<PlayerBehaviour>();
             playerData.id = connectedId;
             playerData.square.id = connectedId;
+            playerData.pfp = MyExtentions.CreateSpriteFromData(localSteamData.pfpData, localSteamData.imageWidth, localSteamData.imageHeight);
+            playerData.texture = playerData.pfp.texture;
+            playerData.square.ready = false;
 
             if (connectedId == NetworkManager.LocalClientId)
             {
@@ -432,60 +610,68 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     private void FixedUpdate() => UpdatePlayerData();
 
+    private void LateUpdate()
+    {
+
+        if (updatePFPStream.Count > 0)
+        {
+            updatePFPStream[0]();
+            updatePFPStream.RemoveAt(0);
+        }
+
+    }
+
     float rbUpdate, nzlUpdate, hlthUpdate, scrUpdate, clrUpdate, clrUpdate2;
+
 
     void UpdatePlayerData()
     {
+
+        float deltaTime = Time.deltaTime;
 
         if (stopUpdate) return;
         if (localSquare == null) return;
         if (playerIdentities == null) return;
 
-        rbUpdate += Time.deltaTime * 100f;
-        nzlUpdate += Time.deltaTime * 100f;
-        clrUpdate += Time.deltaTime;
-        clrUpdate2 += Time.deltaTime * 20f;
-        /*hlthUpdate += Time.deltaTime * 5;*/
-        /*scrUpdate += Time.deltaTime * 3;*/
+
+        if(localSquare.isLocalPlayer) if (localSquare.playerController.quedInput)
+            {
+                localSquare.playerController.quedInput = false;
+                UpdateRigidBody();
+                rbUpdate = 0;
+            }
 
         if (rbUpdate > 1)
         {
             UpdateRigidBody();
-            rbUpdate = 0;
+            rbUpdate -= 1;
         }
 
         if (nzlUpdate > 1)
         {
             UpdateNozzle();
-            nzlUpdate = 0;
+            nzlUpdate -= 1;
         }
 
-        if (scrUpdate > 1)
-        {
-            UpdateScore();
-            scrUpdate = 0;
-        }
-
-        if (clrUpdate < 8 && clrUpdate2 > 1)
+        if (clrUpdate > 1)
         {
             UpdateColor();
-            clrUpdate2 = 0;
+            clrUpdate = 0;
         }
+        else if (clrUpdate2 < 8)
+        {
+            clrUpdate += deltaTime * 20;
+            clrUpdate2 += deltaTime;
+        }
+
+        nzlUpdate += deltaTime * 100f;
+        rbUpdate += deltaTime * 50f;
 
     }
 
     void UpdateRigidBody()
     {
         ulong sourceId = networkManager.LocalClientId;
-/*        float[] data = new float[]
-            {
-
-                localSquare.position.x, localSquare.position.y,
-                localSquare.rotation,
-                localSquare.velocity.x, localSquare.velocity.y,
-                localSquare.angularVelocity
-
-            };*/
 
         byte[] compPos = MyExtentions.EncodePosition(localSquare.position.x + 64, localSquare.position.y + 64);
         byte[] compVel = MyExtentions.EncodePosition(localSquare.velocity.x + 64, localSquare.velocity.y + 64);
@@ -505,7 +691,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.NotMe, RequireOwnership = false)]
+    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
     void UpdateRigidBodyRpc(byte[] data)
     {
 
@@ -608,10 +794,11 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if (player.id != data[0]) return;
 
         player.square.playerColor = new Color(data[1] / 256f, data[2] / 256f, data[3] / 256f);
+        player.square.newColor = true;
 
     }
 
-    void UpdateHealth()
+    public void UpdateHealth()
     {
         byte sourceId = (byte) networkManager.LocalClientId;
         float[] data = new float[]
@@ -621,7 +808,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         UpdateHealthRpc(sourceId, data);
     }
 
-    [Rpc(SendTo.NotMe, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     void UpdateHealthRpc(byte sourceId, float[] data)
     {
         if ((byte) networkManager.LocalClientId == sourceId) return;
@@ -640,7 +827,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         player.square.healthPoints = data[0];
     }
 
-    void UpdateScore()
+    public void UpdateScore()
     {
         byte sourceId = (byte) networkManager.LocalClientId;
         byte data = (byte) localSquare.score;
@@ -649,7 +836,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.NotMe, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     void UpdateScoreRpc(byte sourceId, byte data)
     {
         if ((byte) networkManager.LocalClientId == sourceId) return;
@@ -667,6 +854,38 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if ((byte) player.id != sourceId) return;
 
         player.square.score = data;
+
+    }
+
+    public void UpdatePlayerReady(bool ready)
+    {
+
+        byte sourceId = (byte)networkManager.LocalClientId;
+        byte data = (byte)localSquare.score;
+
+        UpdatePlayerReadyRpc(sourceId, ready);
+
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void UpdatePlayerReadyRpc(byte sourceId, bool ready)
+    {
+
+        if (playerIdentities == null) return;
+
+        foreach (PlayerData player in playerIdentities)
+        {
+            StorePlayerReady(player, sourceId, ready);
+        }
+
+    }
+
+    void StorePlayerReady(PlayerData player, byte sourceId, bool ready)
+    {
+
+        if ((byte)player.id != sourceId) return;
+
+        player.square.ready = ready;
 
     }
 
@@ -693,7 +912,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     void UpdatePlayerHealthServerRpc(ulong id, float damage, ulong responsibleId, Vector2 knockBack, ulong ignoreId)
     {
 
@@ -705,7 +924,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
+    [ClientRpc(Delivery = RpcDelivery.Reliable)]
     void UpdatePlayerHealthClientRpc(ulong id, float damage, ulong responsibleId, Vector2 knockBack, ulong ignoreId)
     {
 
@@ -776,7 +995,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     void PlayPlayerDeathServerRpc(Vector3 particlePosition, Color particleColor, ulong ignoreId)
     {
 
@@ -788,7 +1007,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [ClientRpc]
+    [ClientRpc(Delivery = RpcDelivery.Reliable)]
     void PlayPlayerDeathClientRpc(Vector3 particlePosition, Color particleColor, ulong ignoreId)
     {
 
@@ -804,9 +1023,13 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         localSquare.deathSoundInstance.start();
 
         GameObject newParticle = Instantiate(deathParticles, particlePosition, Quaternion.Euler(0, 0, 0), null);
-        Material particleMaterial = Instantiate(newParticle.GetComponent<ParticleSystemRenderer>().material);
-        newParticle.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
-        newParticle.GetComponent<ParticleSystemRenderer>().material.color = particleColor;
+
+        foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
+        {
+            Material particleMaterial = Instantiate(particle.material);
+            particle.material = particleMaterial;
+            particle.material.color = particleColor;
+        }
 
     }
 
@@ -816,8 +1039,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         float h, s, v;
         Color.RGBToHSV(localSquare.playerColor, out h, out s, out v);
         h = value;
-
         localSquare.playerColor = Color.HSVToRGB(h, s, v);
+        localSquare.newColor = true;
 
         UpdateColor();
 
@@ -829,9 +1052,23 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
 
         public ulong id;
+        public ulong steamId;
         public PlayerBehaviour square;
         public string name;
+
         public Sprite pfp;
+        public Texture2D texture;
+        public void UpdatePFP(int x, int y, byte[] rgb)
+        {
+            Color pixelColor = new Color(rgb[0] / 256f, rgb[1] / 256f, rgb[2] / 256f, 1f);
+
+            texture.SetPixel(x, y, pixelColor);
+        }
+
+        public void ApplyPFP()
+        {
+            texture.Apply();
+        }
 
     }
 

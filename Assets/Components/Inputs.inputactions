@@ -440,7 +440,7 @@
                     "name": "Submit",
                     "type": "Button",
                     "id": "0cd16509-6ecd-4632-a431-76d8796223e9",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -455,6 +455,54 @@
                     "processors": "",
                     "groups": "",
                     "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Cursor",
+            "id": "ef93b9e9-3792-4cd0-bccf-040cc90f8db2",
+            "actions": [
+                {
+                    "name": "DoLocation",
+                    "type": "Value",
+                    "id": "693bab75-1f01-4e24-847f-b0d8986df11f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "DoClick",
+                    "type": "Button",
+                    "id": "dd76efc4-813d-4bc7-ba84-e999c7dba8d7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "aca8b552-5741-464a-889f-d563f6f531be",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoLocation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "697e9123-1ec8-48b7-ac77-31e064e92836",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

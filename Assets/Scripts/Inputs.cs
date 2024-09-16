@@ -463,7 +463,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""0cd16509-6ecd-4632-a431-76d8796223e9"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -478,6 +478,54 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Cursor"",
+            ""id"": ""ef93b9e9-3792-4cd0-bccf-040cc90f8db2"",
+            ""actions"": [
+                {
+                    ""name"": ""DoLocation"",
+                    ""type"": ""Value"",
+                    ""id"": ""693bab75-1f01-4e24-847f-b0d8986df11f"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""DoClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""dd76efc4-813d-4bc7-ba84-e999c7dba8d7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""aca8b552-5741-464a-889f-d563f6f531be"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DoLocation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""697e9123-1ec8-48b7-ac77-31e064e92836"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DoClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -506,6 +554,10 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         // ChatMaps
         m_ChatMaps = asset.FindActionMap("ChatMaps", throwIfNotFound: true);
         m_ChatMaps_Submit = m_ChatMaps.FindAction("Submit", throwIfNotFound: true);
+        // Cursor
+        m_Cursor = asset.FindActionMap("Cursor", throwIfNotFound: true);
+        m_Cursor_DoLocation = m_Cursor.FindAction("DoLocation", throwIfNotFound: true);
+        m_Cursor_DoClick = m_Cursor.FindAction("DoClick", throwIfNotFound: true);
     }
 
     ~@Inputs()
@@ -514,6 +566,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         Debug.Assert(!m_GameUI.enabled, "This will cause a leak and performance issues, Inputs.GameUI.Disable() has not been called.");
         Debug.Assert(!m_MouseMaps.enabled, "This will cause a leak and performance issues, Inputs.MouseMaps.Disable() has not been called.");
         Debug.Assert(!m_ChatMaps.enabled, "This will cause a leak and performance issues, Inputs.ChatMaps.Disable() has not been called.");
+        Debug.Assert(!m_Cursor.enabled, "This will cause a leak and performance issues, Inputs.Cursor.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -819,6 +872,60 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         }
     }
     public ChatMapsActions @ChatMaps => new ChatMapsActions(this);
+
+    // Cursor
+    private readonly InputActionMap m_Cursor;
+    private List<ICursorActions> m_CursorActionsCallbackInterfaces = new List<ICursorActions>();
+    private readonly InputAction m_Cursor_DoLocation;
+    private readonly InputAction m_Cursor_DoClick;
+    public struct CursorActions
+    {
+        private @Inputs m_Wrapper;
+        public CursorActions(@Inputs wrapper) { m_Wrapper = wrapper; }
+        public InputAction @DoLocation => m_Wrapper.m_Cursor_DoLocation;
+        public InputAction @DoClick => m_Wrapper.m_Cursor_DoClick;
+        public InputActionMap Get() { return m_Wrapper.m_Cursor; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CursorActions set) { return set.Get(); }
+        public void AddCallbacks(ICursorActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CursorActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CursorActionsCallbackInterfaces.Add(instance);
+            @DoLocation.started += instance.OnDoLocation;
+            @DoLocation.performed += instance.OnDoLocation;
+            @DoLocation.canceled += instance.OnDoLocation;
+            @DoClick.started += instance.OnDoClick;
+            @DoClick.performed += instance.OnDoClick;
+            @DoClick.canceled += instance.OnDoClick;
+        }
+
+        private void UnregisterCallbacks(ICursorActions instance)
+        {
+            @DoLocation.started -= instance.OnDoLocation;
+            @DoLocation.performed -= instance.OnDoLocation;
+            @DoLocation.canceled -= instance.OnDoLocation;
+            @DoClick.started -= instance.OnDoClick;
+            @DoClick.performed -= instance.OnDoClick;
+            @DoClick.canceled -= instance.OnDoClick;
+        }
+
+        public void RemoveCallbacks(ICursorActions instance)
+        {
+            if (m_Wrapper.m_CursorActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICursorActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CursorActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CursorActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CursorActions @Cursor => new CursorActions(this);
     public interface ISquareControllerActions
     {
         void OnUp(InputAction.CallbackContext context);
@@ -842,5 +949,10 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     public interface IChatMapsActions
     {
         void OnSubmit(InputAction.CallbackContext context);
+    }
+    public interface ICursorActions
+    {
+        void OnDoLocation(InputAction.CallbackContext context);
+        void OnDoClick(InputAction.CallbackContext context);
     }
 }

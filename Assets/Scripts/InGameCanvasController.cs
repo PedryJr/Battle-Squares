@@ -8,11 +8,11 @@ public sealed class InGameCanvasController : MonoBehaviour
     [SerializeField]
     GameObject gameCanvas;
 
-    bool canvasOn = false;
+    public static bool canvasOn = false;
 
     private void Awake()
     {
-
+        Cursor.visible = false;
         inputs = new Inputs();
 
         inputs.GameUI.ToggleUI.performed += (context) => 
@@ -21,8 +21,10 @@ public sealed class InGameCanvasController : MonoBehaviour
             canvasOn = !canvasOn;
 
             gameCanvas.SetActive(canvasOn);
-            Cursor.visible = canvasOn;
-            Cursor.lockState = Cursor.visible ? CursorLockMode.None : CursorLockMode.Locked;
+            /*Cursor.visible = canvasOn;*/
+            CursorBehaviour.SetEnabled(canvasOn);
+            Cursor.lockState = canvasOn ? CursorLockMode.None : CursorLockMode.Locked;
+            PlayerController.uiRegs = canvasOn ? PlayerController.uiRegs : 0;
 
         };
 

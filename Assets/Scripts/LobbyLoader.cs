@@ -1,6 +1,5 @@
 using Steamworks;
 using Steamworks.Data;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -98,38 +97,53 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach(LobbyBehaviour lobby in Lobbies)
         {
-            lobby.transform.SetParent(transform.parent, true);
+            if (!lobby.IsDestroyed())
+            {
+                lobby.transform.SetParent(transform.parent, true);
+            }
         }
 
         List<LobbyBehaviour> sortedLobbies = new List<LobbyBehaviour>();
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (lobby.ownerId == SteamClient.SteamId.Value)
+            if (!lobby.IsDestroyed())
             {
-                sortedLobbies.Add(lobby);
+                if (lobby.ownerId == SteamClient.SteamId.Value)
+                {
+                    sortedLobbies.Add(lobby);
+                }
             }
         }
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (lobby.lobby.GetData("Avalible").Equals("true"))
+            if (!lobby.IsDestroyed())
             {
-                sortedLobbies.Add(lobby);
+                if (lobby.lobby.GetData("Avalible").Equals("true"))
+                {
+                    sortedLobbies.Add(lobby);
+                }
             }
         }
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (lobby.lobby.GetData("Avalible").Equals("false"))
+            if (!lobby.IsDestroyed())
             {
-                sortedLobbies.Add(lobby);
+                if (lobby.lobby.GetData("Avalible").Equals("false"))
+                {
+                    sortedLobbies.Add(lobby);
+                }
             }
         }
 
         foreach (LobbyBehaviour lobby in sortedLobbies)
         {
-            lobby.transform.SetParent(transform, true);
+            if (!lobby.IsDestroyed())
+            {
+                lobby.transform.SetParent(transform, true);
+            }
         }
 
     }

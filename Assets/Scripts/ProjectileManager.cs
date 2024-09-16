@@ -1,13 +1,9 @@
-using FMODUnity;
-using Steamworks.Data;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-using static UnityEngine.ParticleSystem;
 
 public sealed class ProjectileManager : NetworkBehaviour
 {
@@ -55,14 +51,15 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
-    public void SpawnProjectile(ProjectileType type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer, Vector4 color)
+    public void SpawnProjectile(ProjectileType type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer, Vector3 color, Vector3 darkColor)
     {
 
         ProjectileBehaviour projectileBehaviour = null;
 
         ProjectileInitData data = new ProjectileInitData();
+        uint newId = (uint) new System.Random().Next(0, 2147483640) + (uint) new System.Random().Next(0, 2147483640);
 
-        foreach(Weapon weapon in weapons)
+        foreach (Weapon weapon in weapons)
         {
 
             if(weapon.type == type)
@@ -75,7 +72,7 @@ public sealed class ProjectileManager : NetworkBehaviour
                     burstData[i + 1] = UnityEngine.Random.Range(2.7f, 3.45f); 
                 }
 
-                Span<float> fluctuation = new float[2];
+                Span<float> fluctuation = stackalloc float[2];
                 for (int i = 0; i < fluctuation.Length; i++)
                 {
                     fluctuation[i] = UnityEngine.Random.Range(-weapon.fluctuation, weapon.fluctuation);
@@ -85,12 +82,13 @@ public sealed class ProjectileManager : NetworkBehaviour
 
                 data.projectileManager = this;
                 data.IsLocalProjectile = shootingPlayer.isLocalPlayer;
-                data.id = (uint) new System.Random().Next(0, 2147483640) + (uint) new System.Random().Next(0, 2147483640);
-                data.direction = direction.normalized;
+                data.id = newId;
+                data.direction = direction;
                 data.acceleration = weapon.projectileAcceleration;
                 data.speed = weapon.projectileSpeed;
                 data.position = position;
-                data.projectileColor = color;
+                data.projectileColor = new Color(color.x, color.y, color.z);
+                data.projectileDarkerColor = new Color(darkColor.x, darkColor.y, darkColor.z);
                 data.burst = weapon.burst;
                 data.lifeTime = weapon.lifeTime;
                 data.burstData = burstData.ToArray();
@@ -101,6 +99,15 @@ public sealed class ProjectileManager : NetworkBehaviour
                 data.aoe = weapon.aoe;
                 data.knockback = weapon.knockback;
                 data.sticky = weapon.sticky;
+                data.speedLimit = weapon.speedLimit;
+                data.minSpeed = weapon.minSpeed;
+                data.aoeDamage = weapon.aoeDamage;
+                data.skipAoeOnTargetHit = weapon.skipAoeOnTargetHit;
+                data.baseDamage = weapon.baseDamage;
+                data.damageTimeScale = weapon.damageTimeScale;
+                data.enableMorph = weapon.enableMorph;
+                data.targetMorph = weapon.targetMorph;
+                data.timeToMorph = weapon.timeToMorph;
 
                 projectileBehaviour.ownerId = NetworkManager.LocalClientId;
 
@@ -115,14 +122,14 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (IsHost)
         {
 
-            SpawnProjectileClientRpc(type, position, data.direction, ignoreId, data.id, color, data.burstData, data.fluctuation);
+            SpawnProjectileClientRpc(type, position, direction, (byte) ignoreId, newId, color, darkColor, data.burstData, data.fluctuation);
 
         }
 
         if (!IsHost)
         {
 
-            SpawnProjectileServerRpc(type, position, data.direction, ignoreId, data.id, color, data.burstData, data.fluctuation);
+            SpawnProjectileServerRpc(type, position, direction, (byte) ignoreId, newId, color, darkColor, data.burstData, data.fluctuation);
 
         }
 
@@ -138,8 +145,8 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
-    public void SpawnProjectileServerRpc(ProjectileType type, Vector2 position, Vector2 direction, ulong ignoreId, uint projectileID, Vector4 color, float[] burstData, float[] fluctuation)
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    public void SpawnProjectileServerRpc(ProjectileType type, Vector2 position, Vector2 direction, byte ignoreId, uint projectileID, Vector3 color, Vector3 darkColor, float[] burstData, float[] fluctuation)
     {
 
         if (NetworkManager.LocalClientId == ignoreId) return;
@@ -163,7 +170,8 @@ public sealed class ProjectileManager : NetworkBehaviour
                 data.acceleration = weapon.projectileAcceleration;
                 data.speed = weapon.projectileSpeed;
                 data.position = position;
-                data.projectileColor = color;
+                data.projectileColor = new Color(color.x, color.y, color.z);
+                data.projectileDarkerColor = new Color(darkColor.x, darkColor.y, darkColor.z);
                 data.burst = weapon.burst;
                 data.lifeTime = weapon.lifeTime;
                 data.burstData = burstData;
@@ -174,6 +182,15 @@ public sealed class ProjectileManager : NetworkBehaviour
                 data.aoe = weapon.aoe;
                 data.knockback = weapon.knockback;
                 data.sticky = weapon.sticky;
+                data.speedLimit = weapon.speedLimit;
+                data.minSpeed = weapon.minSpeed;
+                data.aoeDamage = weapon.aoeDamage;
+                data.skipAoeOnTargetHit = weapon.skipAoeOnTargetHit;
+                data.baseDamage = weapon.baseDamage;
+                data.damageTimeScale = weapon.damageTimeScale;
+                data.enableMorph = weapon.enableMorph;
+                data.targetMorph = weapon.targetMorph;
+                data.timeToMorph = weapon.timeToMorph;
 
                 projectileBehaviour.ownerId = ignoreId;
 
@@ -183,17 +200,17 @@ public sealed class ProjectileManager : NetworkBehaviour
 
         }
 
-        SpawnProjectileClientRpc(type, position, data.direction, ignoreId, data.id, color, burstData, fluctuation);
+        SpawnProjectileClientRpc(type, position, data.direction, (byte) ignoreId, data.id, color, darkColor, burstData, fluctuation);
 
         projectileBehaviour.transform.position = position;
         projectileBehaviour.InitializeBullet(data);
     }
 
-    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
-    public void SpawnProjectileClientRpc(ProjectileType type, Vector2 position, Vector2 direction, ulong ignoreId, uint projectileID, Vector4 color, float[] burstData, float[] fluctuation)
+    [ClientRpc(Delivery = RpcDelivery.Reliable)]
+    public void SpawnProjectileClientRpc(ProjectileType type, Vector2 position, Vector2 direction, byte ignoreId, uint projectileID, Vector3 color, Vector3 darkColor, float[] burstData, float[] fluctuation)
     {
 
-        if (NetworkManager.LocalClientId == ignoreId) return;
+        if ((byte) NetworkManager.LocalClientId == ignoreId) return;
 
         ProjectileInitData data = new ProjectileInitData();
 
@@ -216,7 +233,8 @@ public sealed class ProjectileManager : NetworkBehaviour
                 data.acceleration = weapon.projectileAcceleration;
                 data.speed = weapon.projectileSpeed;
                 data.position = position;
-                data.projectileColor = color;
+                data.projectileColor = new Color(color.x, color.y, color.z);
+                data.projectileDarkerColor = new Color(darkColor.x, darkColor.y, darkColor.z);
                 data.burst = weapon.burst;
                 data.lifeTime = weapon.lifeTime;
                 data.burstData = burstData;
@@ -227,6 +245,15 @@ public sealed class ProjectileManager : NetworkBehaviour
                 data.aoe = weapon.aoe;
                 data.knockback = weapon.knockback;
                 data.sticky = weapon.sticky;
+                data.speedLimit = weapon.speedLimit;
+                data.minSpeed = weapon.minSpeed;
+                data.aoeDamage = weapon.aoeDamage;
+                data.skipAoeOnTargetHit = weapon.skipAoeOnTargetHit;
+                data.baseDamage = weapon.baseDamage;
+                data.damageTimeScale = weapon.damageTimeScale;
+                data.enableMorph = weapon.enableMorph;
+                data.targetMorph = weapon.targetMorph;
+                data.timeToMorph = weapon.timeToMorph;
 
                 projectileBehaviour.ownerId = ignoreId;
 
@@ -240,58 +267,82 @@ public sealed class ProjectileManager : NetworkBehaviour
         projectileBehaviour.InitializeBullet(data);
     }
 
-    public void SpawnParticles(Vector3 particlePosition, Quaternion particleRotation, UnityEngine.Color particleColor)
+    GameObject GetNozzleParticle(ProjectileType projectileType)
+    {
+
+        foreach(Weapon weapon in weapons)
+        {
+
+            if(weapon.type == projectileType) return weapon.launchParticle;
+
+        }
+        return null;
+    }
+
+    public void SpawnParticles(Vector3 particlePosition, Quaternion particleRotation, UnityEngine.Color particleColor, ProjectileType projectileType)
     {
 
         ulong ignoreId = NetworkManager.LocalClientId;
 
-        GameObject newParticle = Instantiate(nozzleParticles, particlePosition, particleRotation, null);
-        Material particleMaterial = Instantiate(newParticle.GetComponent<ParticleSystemRenderer>().material);
-        newParticle.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
-        newParticle.GetComponent<ParticleSystemRenderer>().material.color = particleColor;
+        GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+
+        foreach(ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
+        {
+            Material particleMaterial = Instantiate(particle.material);
+            particle.material = particleMaterial;
+            particle.material.color = particleColor;
+        }
 
         if (IsHost)
         {
 
-            SpawnParticlesClientRpc(particlePosition, particleRotation, particleColor, ignoreId);
+            SpawnParticlesClientRpc(particlePosition, particleRotation, particleColor, ignoreId, projectileType);
 
         }
         if (!IsHost)
         {
 
-            SpawnParticlesServerRpc(particlePosition, particleRotation, particleColor, ignoreId);
+            SpawnParticlesServerRpc(particlePosition, particleRotation, particleColor, ignoreId, projectileType);
 
         }
 
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnParticlesServerRpc(Vector3 particlePosition, Quaternion particleRotation, Vector4 particleColor, ulong ignoreId)
+    public void SpawnParticlesServerRpc(Vector3 particlePosition, Quaternion particleRotation, Vector4 particleColor, ulong ignoreId, ProjectileType projectileType)
     {
 
         if (NetworkManager.LocalClientId == ignoreId) return;
 
-        SpawnParticlesClientRpc(particlePosition, particleRotation, particleColor, ignoreId);
+        SpawnParticlesClientRpc(particlePosition, particleRotation, particleColor, ignoreId, projectileType);
 
-        GameObject newParticle = Instantiate(nozzleParticles, particlePosition, particleRotation, null);
-        Material particleMaterial = Instantiate(newParticle.GetComponent<ParticleSystemRenderer>().material);
-        newParticle.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
-        newParticle.GetComponent<ParticleSystemRenderer>().material.color = particleColor;
+        GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+
+        foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
+        {
+            Material particleMaterial = Instantiate(particle.material);
+            particle.material = particleMaterial;
+            particle.material.color = particleColor;
+        }
 
     }
 
     [ClientRpc]
-    public void SpawnParticlesClientRpc(Vector3 particlePosition, Quaternion particleRotation, Vector4 particleColor, ulong ignoreId)
+    public void SpawnParticlesClientRpc(Vector3 particlePosition, Quaternion particleRotation, Vector4 particleColor, ulong ignoreId, ProjectileType projectileType)
     {
 
         if (IsHost) return;
 
         if (NetworkManager.LocalClientId == ignoreId) return;
 
-        GameObject newParticle = Instantiate(nozzleParticles, particlePosition, particleRotation, null);
-        Material particleMaterial = Instantiate(newParticle.GetComponent<ParticleSystemRenderer>().material);
-        newParticle.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
-        newParticle.GetComponent<ParticleSystemRenderer>().material.color = particleColor;
+        GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+
+        foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
+        {
+            Material particleMaterial = Instantiate(particle.material);
+            particle.material = particleMaterial;
+            particle.material.color = particleColor;
+        }
 
     }
 
@@ -394,8 +445,9 @@ public sealed class ProjectileManager : NetworkBehaviour
     public struct Weapon
     {
 
-        public ProjectileType type;
+        public ProjectileType type; 
         public GameObject projectile;
+        public GameObject launchParticle;
         public int projectileAmmo;
         public float reloadTime;
         public float shootingInterval;
@@ -411,7 +463,16 @@ public sealed class ProjectileManager : NetworkBehaviour
         public bool damageOnImpact;
         public bool sticky;
         public float aoe;
+        public bool skipAoeOnTargetHit;
         public float knockback;
+        public float speedLimit;
+        public float minSpeed;
+        public float aoeDamage;
+        public float baseDamage;
+        public float damageTimeScale;
+        public bool enableMorph;
+        public Vector3 targetMorph;
+        public float timeToMorph;
 
     }
 
@@ -423,7 +484,8 @@ public sealed class ProjectileManager : NetworkBehaviour
         Minigun,
         Shotgun,
         Rocket,
-        Granade
+        Granade,
+        Raygun
 
     }
 

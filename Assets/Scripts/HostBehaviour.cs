@@ -1,12 +1,10 @@
 using Netcode.Transports.Facepunch;
 using Steamworks;
-using Steamworks.Data;
-using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using static PlayerSynchronizer;
 using Image = UnityEngine.UI.Image;
 
 public sealed class HostBehaviour : MonoBehaviour
@@ -21,8 +19,6 @@ public sealed class HostBehaviour : MonoBehaviour
 
     [SerializeField]
     LobbyBehaviour defaultLobby;
-
-
 
     private void Awake()
     {
@@ -44,6 +40,9 @@ public sealed class HostBehaviour : MonoBehaviour
         selectedLobby.UpdateAvalible();
 
         if (!selectedLobby.activated) return;
+
+        NetworkManager.Singleton.Shutdown();
+        FindAnyObjectByType<PlayerSynchronizer>().ForceReset();
 
         if (selectedLobby.lobbyId.Value == SteamNetwork.currentLobby.Value.Id)
         {
@@ -98,11 +97,5 @@ public sealed class HostBehaviour : MonoBehaviour
         selectedLobby.activated = defaultLobby.activated;
     }
 
-    public void StartGameEvent()
-    {
-
-        SceneManager.LoadSceneAsync("GameScene");
-
-    }
 
 }
