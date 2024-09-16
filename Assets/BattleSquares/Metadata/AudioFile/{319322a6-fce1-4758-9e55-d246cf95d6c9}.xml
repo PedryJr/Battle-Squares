@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{319322a6-fce1-4758-9e55-d246cf95d6c9}">
+		<property name="assetPath">
+			<value>Snipper2.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.36571428571428571</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{c9a0bd40-629b-48af-94c8-7a5e6ceaffa4}</destination>
+		</relationship>
+	</object>
+</objects>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{108f6407-8ef8-4be8-8add-303282cb4793}">
+		<property name="name">
+			<value>Speed</value>
+		</property>
+		<relationship name="folder">
+			<destination>{93af52ed-e2ac-4054-b8bd-28d45f6cd755}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{864c386c-a403-41a6-a737-cff7fc57f77c}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{864c386c-a403-41a6-a737-cff7fc57f77c}">
+		<property name="parameterType">
+			<value>8</value>
+		</property>
+		<property name="maximum">
+			<value>10</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

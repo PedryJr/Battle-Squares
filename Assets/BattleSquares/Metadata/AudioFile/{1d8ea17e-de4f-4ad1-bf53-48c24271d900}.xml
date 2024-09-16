@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{1d8ea17e-de4f-4ad1-bf53-48c24271d900}">
+		<property name="assetPath">
+			<value>Shotgun2.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.4179591836734694</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{c9a0bd40-629b-48af-94c8-7a5e6ceaffa4}</destination>
+		</relationship>
+	</object>
+</objects>

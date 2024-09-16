@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{e1b405e9-b76c-4d5b-9bd2-388e41dffcb3}">
+		<property name="name">
+			<value>Climax</value>
+		</property>
+		<relationship name="folder">
+			<destination>{93af52ed-e2ac-4054-b8bd-28d45f6cd755}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{157c6dd4-f207-4c89-a3ec-5969c73a9a25}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{157c6dd4-f207-4c89-a3ec-5969c73a9a25}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>10</value>
+		</property>
+	</object>
+</objects>

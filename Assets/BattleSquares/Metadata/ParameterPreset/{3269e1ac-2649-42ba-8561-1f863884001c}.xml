@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{3269e1ac-2649-42ba-8561-1f863884001c}">
+		<property name="name">
+			<value>CameraPositionX</value>
+		</property>
+		<relationship name="folder">
+			<destination>{93af52ed-e2ac-4054-b8bd-28d45f6cd755}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{8d28e13b-12ce-4472-90cb-46144fb87340}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{8d28e13b-12ce-4472-90cb-46144fb87340}">
+		<property name="minimum">
+			<value>-15</value>
+		</property>
+		<property name="maximum">
+			<value>15</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>15</value>
+		</property>
+	</object>
+</objects>

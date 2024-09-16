@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{cfebab10-1643-4bd2-a411-27c539a837ac}">
+		<property name="assetPath">
+			<value>ProjectileHitSound.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.23510204081632652</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{c9a0bd40-629b-48af-94c8-7a5e6ceaffa4}</destination>
+		</relationship>
+	</object>
+</objects>
