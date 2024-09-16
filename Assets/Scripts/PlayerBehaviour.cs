@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public sealed class PlayerBehaviour : MonoBehaviour
 {
-
+    public int selectedMap;
     public ulong id;
 
     public bool hasJump;
@@ -123,7 +123,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
             if (arg0.name == "GameScene")
             {
-                FindAnyObjectByType<MapInitiator>().InitPresetMap(0, scoreManager.gameMode);
+                FindAnyObjectByType<MapInitiator>().InitPresetMap(selectedMap, scoreManager.gameMode);
             }
 
             spawnPosition = new Vector3(Random.Range(0.0001f, 0.2001f), Random.Range(0.0001f, 0.2001f), Random.Range(0.0001f, 0.2001f));

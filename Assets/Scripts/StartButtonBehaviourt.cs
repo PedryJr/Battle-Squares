@@ -33,7 +33,8 @@ public class StartButtonBehaviourt : MonoBehaviour
 
     private void Update()
     {
-
+        if (!playerSynchronizer) return;
+        if (!(playerSynchronizer.playerIdentities != null)) return;
         players = playerSynchronizer.playerIdentities.Count;
         int i = 0;
         foreach (PlayerData player in playerSynchronizer.playerIdentities)

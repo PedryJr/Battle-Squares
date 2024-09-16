@@ -1165,6 +1165,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 902749e28ebb9744283de8dd52468107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapTypes:
+  - maps:
+    - {fileID: 5228839954144026777, guid: 1291524b75ade3e4ca0fa9f1e7a2f8e0, type: 3}
+  - maps: []
+  - maps:
+    - {fileID: 5228839954144026777, guid: ac57993d11a77164d92d68726ec74143, type: 3}
+    - {fileID: 4582851206092352348, guid: 240e775bfe7ada34a8bf00c2f1e779d8, type: 3}
   objectives: {fileID: 0}
   repeat1S: 1
   repeat2S: 2

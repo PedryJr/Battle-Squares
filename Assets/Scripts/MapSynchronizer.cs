@@ -7,6 +7,9 @@ using static PlayerSynchronizer;
 public sealed class MapSynchronizer : NetworkBehaviour
 {
 
+    [SerializeField]
+    public MapTypes[] mapTypes;
+
     public ObjectivesBehaviour objectives;
     PlayerSynchronizer playerSynchronizer;
 
@@ -14,11 +17,13 @@ public sealed class MapSynchronizer : NetworkBehaviour
     public float repeat2S = 2f; 
     public float repeat5S = 5f; 
     public float repeat10S = 10f;
+    public float repeat20S = 20f;
 
     public float pingPong1S = 1f;
     public float pingPong2S = 2f; 
     public float pingPong5S = 5f; 
     public float pingPong10S = 10f;
+    public float pingPong20S = 20f;
 
     private float baseTime;
     private float updateTime;
@@ -30,21 +35,29 @@ public sealed class MapSynchronizer : NetworkBehaviour
 
     }
 
-    private void FixedUpdate()
+
+    private void Update()
     {
 
         baseTime += Time.deltaTime;
-        updateTime += Time.deltaTime;
 
-        repeat1S = Mathf.Repeat(baseTime / 1f, 1f);  
-        repeat2S = Mathf.Repeat(baseTime / 2f, 1f);  
-        repeat5S = Mathf.Repeat(baseTime / 5f, 1f); 
+        repeat1S = Mathf.Repeat(baseTime / 1f, 1f);
+        repeat2S = Mathf.Repeat(baseTime / 2f, 1f);
+        repeat5S = Mathf.Repeat(baseTime / 5f, 1f);
         repeat10S = Mathf.Repeat(baseTime / 10f, 1f);
+        repeat20S = Mathf.Repeat(baseTime / 20f, 1f);
 
-        pingPong1S = Mathf.PingPong(baseTime / 1f, 1f);  
+        pingPong1S = Mathf.PingPong(baseTime / 1f, 1f);
         pingPong2S = Mathf.PingPong(baseTime / 2f, 1f);
         pingPong5S = Mathf.PingPong(baseTime / 5f, 1f);
         pingPong10S = Mathf.PingPong(baseTime / 10f, 1f);
+        pingPong20S = Mathf.PingPong(baseTime / 20f, 1f);
+
+    }
+    private void FixedUpdate()
+    {
+
+        updateTime += Time.deltaTime;
 
         if (IsHost && updateTime > 0.1f)
         {

@@ -889,6 +889,34 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    public void UpdateSelectedMap(int map)
+    {
+
+        if (!IsHost) return;
+        UpdateSelectedMapRpc(map);
+
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void UpdateSelectedMapRpc(int map)
+    {
+
+        if (playerIdentities == null) return;
+
+        foreach (PlayerData player in playerIdentities)
+        {
+            StoreSelectedMap(player, map);
+        }
+
+    }
+
+    void StoreSelectedMap(PlayerData player, int map)
+    {
+
+        player.square.selectedMap = map;
+
+    }
+
     public void UpdatePlayerHealth(ulong id, float modifier, ulong responsibleId, Vector2 knockBack)
     {
 

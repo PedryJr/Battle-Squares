@@ -5,13 +5,17 @@ using static ScoreManager;
 public class MapInitiator : MonoBehaviour
 {
 
-    [SerializeField]
     MapTypes[] mapTypes;
+
+    MapSynchronizer mapSynchronizer;
 
     public MapBehaviour activeMap;
 
     public void InitPresetMap(int index, Mode activeMode)
     {
+
+        mapSynchronizer = FindAnyObjectByType<MapSynchronizer>();
+        mapTypes = mapSynchronizer.mapTypes;
 
         switch (activeMode)
         {
@@ -20,8 +24,8 @@ public class MapInitiator : MonoBehaviour
             case Mode.CTF: break;
         }
 
-        activeMap = activeMode == Mode.DM ? InitDM(index) 
-            : activeMode == Mode.DT ? InitDT(index) 
+        activeMap = activeMode == Mode.DM ? InitDM(index)
+            : activeMode == Mode.DT ? InitDT(index)
             : activeMode == Mode.CTF ? InitCTF(index)
             : null;
         activeMap.gameObject.SetActive(true);

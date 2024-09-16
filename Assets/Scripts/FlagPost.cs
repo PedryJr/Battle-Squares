@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public sealed class FlagPost : MonoBehaviour, IObjective
 {
@@ -8,10 +9,14 @@ public sealed class FlagPost : MonoBehaviour, IObjective
     public FlagBehaviour[] flags;
     MapSynchronizer mapSync;
 
-    float rotation;
+    public float rotation;
 
     [SerializeField]
     Vector3 playerSpawnOffset;
+
+    public bool localFlag = false;
+
+    public Transform spawn;
 
     public void DisableOnLoad()
     {
@@ -40,8 +45,11 @@ public sealed class FlagPost : MonoBehaviour, IObjective
 
         if (player.square.isLocalPlayer)
         {
-            GameObject.FindGameObjectWithTag("Spawn").transform.position = transform.position + playerSpawnOffset;
+            spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
+            spawn.position = transform.position + playerSpawnOffset;
             player.square.transform.position = GameObject.FindGameObjectWithTag("Spawn").transform.position;
+            localFlag = true;
+        
         }
 
         gameObject.SetActive(true);

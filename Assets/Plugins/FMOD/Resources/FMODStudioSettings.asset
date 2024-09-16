@@ -453,8 +453,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: ../../Users/emild/Documents/FMOD Studio/BattleSquares/BattleSquares.fspro
-  sourceBankPath: ../../Users/emild/Documents/FMOD Studio/BattleSquares/Build
+  sourceProjectPath: Assets/BattleSquares/BattleSquares.fspro
+  sourceBankPath: Assets/BattleSquares/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 1
   ShowBankRefreshWindow: 1

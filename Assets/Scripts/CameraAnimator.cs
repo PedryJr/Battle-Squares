@@ -198,7 +198,7 @@ public sealed class CameraAnimator : MonoBehaviour
 
     }
 
-    public void Shake()
+    public void Shake() 
     {
 
         for (int i = 0; i < 10; i++)

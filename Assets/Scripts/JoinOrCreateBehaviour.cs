@@ -12,13 +12,23 @@ public class JoinOrCreateBehaviour : MonoBehaviour
 
     void Update()
     {
-        if(preview.lobbyId == SteamNetwork.currentLobby.Value.Id)
+
+        if(SteamNetwork.currentLobby != null)
         {
-            textField.text = "Create Lobby";
+
+            if (preview.ownerId == SteamNetwork.currentLobby.Value.Owner.Id)
+            {
+                textField.text = "Create Lobby";
+            }
+            else
+            {
+                textField.text = "Join Lobby";
+            }
+
         }
         else
         {
-            textField.text = "Join Lobby";
+            textField.text = "Loading...";
         }
     }
 }

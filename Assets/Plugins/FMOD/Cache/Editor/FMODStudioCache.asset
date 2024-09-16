@@ -1,25 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-9077833629492495369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/VFX.bank
-  m_EditorClassIdentifier: 
-  Path: ../../../../../Documents/FMOD Studio/BattleSquares/Build/Desktop/VFX.bank
-  Name: VFX
-  StudioPath: bank:/VFX
-  lastModified: 638599442930454748
-  FileSizes:
-  - Name: Desktop
-    Value: 49664
-  Exists: 1
 --- !u!114 &-9054258406394060215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39,7 +19,7 @@ MonoBehaviour:
     Data3: -1328977779
     Data4: 26429710
   Banks:
-  - {fileID: -9077833629492495369}
+  - {fileID: 6687703786072549468}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -48,6 +28,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 132
+--- !u!114 &-8610244248640552602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/BattleSquares/Build/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 638620799598598007
+  FileSizes:
+  - Name: Desktop
+    Value: 1036
+  Exists: 1
 --- !u!114 &-8411136910507992444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
     Data3: 1818233730
     Data4: -1518369794
   Banks:
-  - {fileID: -9077833629492495369}
+  - {fileID: 6687703786072549468}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -149,66 +149,6 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &-5050733785191686153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.bank
-  m_EditorClassIdentifier: 
-  Path: ../../../../../Documents/FMOD Studio/BattleSquares/Build/Desktop/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-  lastModified: 638599426764115590
-  FileSizes:
-  - Name: Desktop
-    Value: 1036
-  Exists: 1
---- !u!114 &-3904105694228645873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.strings.bank
-  m_EditorClassIdentifier: 
-  Path: ../../../../../Documents/FMOD Studio/BattleSquares/Build/Desktop/Master.strings.bank
-  Name: Master.strings
-  StudioPath: bank:/Master.strings
-  lastModified: 638599426764123094
-  FileSizes:
-  - Name: Desktop
-    Value: 1402
-  Exists: 1
---- !u!114 &-3300918738179786530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Themes.bank
-  m_EditorClassIdentifier: 
-  Path: ../../../../../Documents/FMOD Studio/BattleSquares/Build/Desktop/Themes.bank
-  Name: Themes
-  StudioPath: bank:/Themes
-  lastModified: 638535095878529342
-  FileSizes:
-  - Name: Desktop
-    Value: 225536
-  Exists: 1
 --- !u!114 &-1720226408084135471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,7 +192,7 @@ MonoBehaviour:
     Data3: 301012907
     Data4: -108581261
   Banks:
-  - {fileID: -3300918738179786530}
+  - {fileID: 484918343714038401}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -300,10 +240,10 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: -3904105694228645873}
-  - {fileID: -5050733785191686153}
-  - {fileID: -3300918738179786530}
-  - {fileID: -9077833629492495369}
+  - {fileID: 1467507890409329574}
+  - {fileID: -8610244248640552602}
+  - {fileID: 484918343714038401}
+  - {fileID: 6687703786072549468}
   EditorEvents:
   - {fileID: -570783720180498379}
   - {fileID: -9054258406394060215}
@@ -314,10 +254,10 @@ MonoBehaviour:
   - {fileID: 6138990007282944406}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -5050733785191686153}
+  - {fileID: -8610244248640552602}
   StringsBanks:
-  - {fileID: -3904105694228645873}
-  cacheTime: 638599442930454748
+  - {fileID: 1467507890409329574}
+  cacheTime: 638620799598618201
   cacheVersion: 131618
 --- !u!114 &450546386737726583
 MonoBehaviour:
@@ -342,6 +282,26 @@ MonoBehaviour:
   Type: 0
   IsGlobal: 0
   Labels: []
+  Exists: 1
+--- !u!114 &484918343714038401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Themes.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/BattleSquares/Build/Desktop/Themes.bank
+  Name: Themes
+  StudioPath: bank:/Themes
+  lastModified: 638620799598618201
+  FileSizes:
+  - Name: Desktop
+    Value: 225536
   Exists: 1
 --- !u!114 &842119699512637735
 MonoBehaviour:
@@ -386,7 +346,7 @@ MonoBehaviour:
     Data3: -832856919
     Data4: 1810325321
   Banks:
-  - {fileID: -9077833629492495369}
+  - {fileID: 6687703786072549468}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -394,6 +354,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &1467507890409329574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/BattleSquares/Build/Desktop/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+  lastModified: 638620799598598007
+  FileSizes:
+  - Name: Desktop
+    Value: 1402
+  Exists: 1
 --- !u!114 &2868924097593082008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,7 +489,7 @@ MonoBehaviour:
     Data3: 226132131
     Data4: 1720554927
   Banks:
-  - {fileID: -9077833629492495369}
+  - {fileID: 6687703786072549468}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -538,7 +518,7 @@ MonoBehaviour:
     Data3: 578809220
     Data4: 361892632
   Banks:
-  - {fileID: -9077833629492495369}
+  - {fileID: 6687703786072549468}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -548,6 +528,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 417
+--- !u!114 &6687703786072549468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/VFX.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/BattleSquares/Build/Desktop/VFX.bank
+  Name: VFX
+  StudioPath: bank:/VFX
+  lastModified: 638620799598618201
+  FileSizes:
+  - Name: Desktop
+    Value: 49664
+  Exists: 1
 --- !u!114 &9179963675208238677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,7 +567,7 @@ MonoBehaviour:
     Data3: -1733238086
     Data4: 1170857750
   Banks:
-  - {fileID: -9077833629492495369}
+  - {fileID: 6687703786072549468}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
