@@ -1168,6 +1168,7 @@ MonoBehaviour:
   mapTypes:
   - maps:
     - {fileID: 5228839954144026777, guid: 1291524b75ade3e4ca0fa9f1e7a2f8e0, type: 3}
+    - {fileID: 4582851206092352348, guid: 1ff387a19ed3a5c4da4f168818160ec8, type: 3}
   - maps: []
   - maps:
     - {fileID: 5228839954144026777, guid: ac57993d11a77164d92d68726ec74143, type: 3}
@@ -1177,10 +1178,12 @@ MonoBehaviour:
   repeat2S: 2
   repeat5S: 5
   repeat10S: 10
+  repeat20S: 20
   pingPong1S: 1
   pingPong2S: 2
   pingPong5S: 5
   pingPong10S: 10
+  pingPong20S: 20
 --- !u!114 &7766882706945389860
 MonoBehaviour:
   m_ObjectHideFlags: 0

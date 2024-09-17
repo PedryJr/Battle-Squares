@@ -43,7 +43,7 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638620799598598007
+  lastModified: 638599426764115590
   FileSizes:
   - Name: Desktop
     Value: 1036
@@ -257,7 +257,7 @@ MonoBehaviour:
   - {fileID: -8610244248640552602}
   StringsBanks:
   - {fileID: 1467507890409329574}
-  cacheTime: 638620799598618201
+  cacheTime: 638599442930454748
   cacheVersion: 131618
 --- !u!114 &450546386737726583
 MonoBehaviour:
@@ -298,7 +298,7 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Themes.bank
   Name: Themes
   StudioPath: bank:/Themes
-  lastModified: 638620799598618201
+  lastModified: 638535095878529342
   FileSizes:
   - Name: Desktop
     Value: 225536
@@ -369,7 +369,7 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638620799598598007
+  lastModified: 638599426764123094
   FileSizes:
   - Name: Desktop
     Value: 1402
@@ -543,7 +543,7 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/VFX.bank
   Name: VFX
   StudioPath: bank:/VFX
-  lastModified: 638620799598618201
+  lastModified: 638599442930454748
   FileSizes:
   - Name: Desktop
     Value: 49664

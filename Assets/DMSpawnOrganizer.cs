@@ -49,6 +49,7 @@ public class DMSpawnOrganizer : MonoBehaviour
             {
 
                 spawn.position = spawns[i].position;
+                spawn.parent = spawns[i].parent;
                 sortedPlayers[i].square.transform.position = spawn.position;
 
             }

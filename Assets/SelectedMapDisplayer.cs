@@ -24,11 +24,11 @@ public class SelectedMapDisplayer : MonoBehaviour
     {
 
         int mapType = (int)scoreManager.gameMode;
-        LoadNewMaps(mapType);
+        ShowCurrentMap(mapType);
 
     }
 
-    void LoadNewMaps(int mapType)
+    void ShowCurrentMap(int mapType)
     {
 
         for (int mapId = 0; mapId < mapSynchronizer.mapTypes[mapType].maps.Length; mapId++)

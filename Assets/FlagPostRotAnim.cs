@@ -14,6 +14,17 @@ public class FlagPostRotAnim : MonoBehaviour
     {
 
         flagPost = flagTransform.GetComponent<FlagPost>();
+        flagTransform.position = transform.position;
+        flagTransform.rotation = Quaternion.Euler(0, 0,
+            transform.rotation.eulerAngles.z
+            + flagPost.rotation
+            );
+        if (flagPost.localFlag)
+        {
+
+            flagPost.spawn.position = child.position;
+
+        }
 
     }
 

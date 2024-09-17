@@ -32,17 +32,21 @@ public class AnimatedSolid : MonoBehaviour
 
     private void Update()
     {
-        if(simulated) UpdateSimulated();
-        else
+        if(!simulated)
         {
-            rotation = mapSynchronizer.repeat20S * 360f;
+            rotation = mapSynchronizer.repeat30S * 360f;
             transform.rotation = Quaternion.Euler(0, 0, rotation);
         }
     }
 
+    private void FixedUpdate()
+    {
+        if(simulated) UpdateSimulated();
+    }
+
     void UpdateSimulated()
     {
-        rotation = mapSynchronizer.repeat20S * 360f;
+        rotation = mapSynchronizer.repeat30S * 360f;
         rb.rotation = rotation;
         rb.angularVelocity = degreesPerSecond;
     }

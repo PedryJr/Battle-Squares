@@ -12,18 +12,21 @@ public sealed class MapSynchronizer : NetworkBehaviour
 
     public ObjectivesBehaviour objectives;
     PlayerSynchronizer playerSynchronizer;
+    ScoreManager scoreManager;
 
     public float repeat1S = 1f; 
     public float repeat2S = 2f; 
     public float repeat5S = 5f; 
     public float repeat10S = 10f;
     public float repeat20S = 20f;
+    public float repeat30S = 30f;
 
     public float pingPong1S = 1f;
     public float pingPong2S = 2f; 
     public float pingPong5S = 5f; 
     public float pingPong10S = 10f;
     public float pingPong20S = 20f;
+    public float pingPong30S = 30f;
 
     private float baseTime;
     private float updateTime;
@@ -31,6 +34,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
     private void Awake()
     {
         
+        scoreManager = FindAnyObjectByType<ScoreManager>();
         playerSynchronizer = FindFirstObjectByType<PlayerSynchronizer>();
 
     }
@@ -39,6 +43,8 @@ public sealed class MapSynchronizer : NetworkBehaviour
     private void Update()
     {
 
+        if (!scoreManager.inGame) return;
+
         baseTime += Time.deltaTime;
 
         repeat1S = Mathf.Repeat(baseTime / 1f, 1f);
@@ -46,12 +52,14 @@ public sealed class MapSynchronizer : NetworkBehaviour
         repeat5S = Mathf.Repeat(baseTime / 5f, 1f);
         repeat10S = Mathf.Repeat(baseTime / 10f, 1f);
         repeat20S = Mathf.Repeat(baseTime / 20f, 1f);
+        repeat30S = Mathf.Repeat(baseTime / 30f, 1f);
 
         pingPong1S = Mathf.PingPong(baseTime / 1f, 1f);
         pingPong2S = Mathf.PingPong(baseTime / 2f, 1f);
         pingPong5S = Mathf.PingPong(baseTime / 5f, 1f);
         pingPong10S = Mathf.PingPong(baseTime / 10f, 1f);
         pingPong20S = Mathf.PingPong(baseTime / 20f, 1f);
+        pingPong30S = Mathf.PingPong(baseTime / 30f, 1f);
 
     }
     private void FixedUpdate()

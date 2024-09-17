@@ -247,7 +247,8 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
     {
 
         Vector2 toSpawn = (Vector2) spawn.transform.position - rb.position;
-        rb.AddForce(Vector2.ClampMagnitude(toSpawn, 2) * force, ForceMode2D.Force);
+        if (toSpawn.magnitude < 2) toSpawn = toSpawn.normalized * 1.5f;
+        rb.AddForce(Vector2.ClampMagnitude(toSpawn, 3f) * force * 1.3f, ForceMode2D.Force);
 
         if (((Vector2) spawn.transform.position - rb.position).magnitude < 0.5f) SetToIdle();
 

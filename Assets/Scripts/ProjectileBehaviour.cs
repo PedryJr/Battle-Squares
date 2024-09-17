@@ -47,6 +47,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     public ulong ownerId;
 
     public bool hit;
+    public bool sync;
 
     bool stuck;
     GameObject stuckTo;
@@ -117,6 +118,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         endMorph = data.targetMorph;
         startMorph = transform.localScale;
+
+        sync = data.sync;
 
         data.id++;
 
@@ -209,6 +212,14 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         {
             rb.linearVelocity = rb.linearVelocity.normalized * data.minSpeed;
         }
+
+        (float posX, float posY) = (rb.position.x, rb.position.y);
+        rb.position = new Vector2(Mathf.Clamp(posX, -64, 64), Mathf.Clamp(posY, -64, 64));
+
+        if (rb.rotation > 360) rb.rotation -= 360;
+        if (rb.rotation < 0) rb.rotation += 360;
+
+        rb.angularVelocity = Mathf.Clamp(rb.angularVelocity, -1000, 1000);
 
     }
 
@@ -440,5 +451,7 @@ public struct ProjectileInitData
     public bool enableMorph;
     public Vector3 targetMorph;
     public float timeToMorph;
+
+    public bool sync;
 
 }

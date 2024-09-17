@@ -133,8 +133,12 @@ public sealed class CameraAnimator : MonoBehaviour
         {
 
             battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
-            aCamera.orthographicSize = Mathf.Lerp(26, 12, Mathf.SmoothStep(0, 1, initCameraTimer));
+            aCamera.orthographicSize = Mathf.Lerp(26, 12.5f, Mathf.SmoothStep(0, 1, initCameraTimer));
 
+        }
+        else
+        {
+            aCamera.orthographicSize = Mathf.Lerp(aCamera.orthographicSize, 12.5f + Mathf.Clamp((i - 1) * 2f, 0, 4), Time.deltaTime * 4);
         }
 
         if (initCameraTimer == 1) resize = false;
