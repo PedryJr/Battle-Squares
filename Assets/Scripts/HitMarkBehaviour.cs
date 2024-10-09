@@ -9,7 +9,7 @@ public class HitMarkBehaviour : MonoBehaviour
 {
 
     public float timer;
-    float timeAlive = 15;
+    float timeAlive = 25;
     public byte ownerId;
     int skipPhysicsSteps;
     bool spawned;
