@@ -1,16 +1,19 @@
+using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Windows;
-
-public class CursorBehaviour : MonoBehaviour
+[BurstCompile]
+public sealed class CursorBehaviour : MonoBehaviour
 {
     [SerializeField]
     Sprite[] anim;
     [SerializeField]
     float[] scales;
 
-    Image image;
+    SpriteRenderer image;
+
 
     [SerializeField]
     float scale;
@@ -18,7 +21,7 @@ public class CursorBehaviour : MonoBehaviour
     Vector2 cursorPos;
     static Color brightColor = Color.white;
     static Color darkColor = Color.gray;
-    Color cursorColor = Color.white;
+    Color cursorColor = Color.gray;
 
     Inputs inputs;
 
@@ -37,12 +40,12 @@ public class CursorBehaviour : MonoBehaviour
     float fadeLerp;
 
     float h, s, v;
-
+    [BurstCompile]
     private void Awake()
     {
-        Cursor.visible = false;
-        DontDestroyOnLoad(transform.parent.parent);
-        image = GetComponent<Image>();
+        Cursor.visible = false;/*
+        DontDestroyOnLoad(gameObject);*/
+        image = GetComponent<SpriteRenderer>();
         image.sprite = anim[0];
 
         inputs = new Inputs();
@@ -62,25 +65,28 @@ public class CursorBehaviour : MonoBehaviour
         SceneManager.sceneLoaded += MenuSceneLoaded;
 
     }
-
+    [BurstCompile]
     private void MenuSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
 
-        if (arg0.name != "MenuScene") return;
+        if(arg0.name == "MenuScene")
+        {
 
-        brightColor = Color.white;
-        darkColor = Color.gray;
-        cursorColor = Color.white;
+            brightColor = Color.white;
+            darkColor = Color.gray;
+            cursorColor = Color.gray;
+
+        }
 
     }
-
+    [BurstCompile]
     private void Start()
     {
 
         inputs.Enable();
 
     }
-
+    [BurstCompile]
     private void Update()
     {
 
@@ -104,7 +110,7 @@ public class CursorBehaviour : MonoBehaviour
             if (animTimer < 0) animTimer = 0;
         }
 
-        animIndex = Mathf.FloorToInt(animTimer * (anim.Length - 1));
+        animIndex = (int) math.floor(animTimer * (anim.Length - 1));
         if (animIndex != lastAnimeIndex)
         {
             lastAnimeIndex = animIndex;
@@ -115,25 +121,26 @@ public class CursorBehaviour : MonoBehaviour
         {
             if(fadeTimer > 0) fadeTimer -= Time.deltaTime * 8.5f;
             if(fadeTimer < 0) fadeTimer = 0;
-            fadeLerp = Mathf.SmoothStep(0, 1, Mathf.Clamp(fadeTimer, 0, 1/3.2f) * 3.2f);
+            fadeLerp = math.smoothstep(0, 1, math.clamp(fadeTimer, 0, 1/3.2f) * 3.2f);
         }
         else
         {
             if (fadeTimer < 1) fadeTimer += Time.deltaTime * 8.5f;
             if (fadeTimer > 1) fadeTimer = 1;
-            fadeLerp = Mathf.SmoothStep(0, 1, fadeTimer);
+            fadeLerp = math.smoothstep(0, 1, fadeTimer);
         }
 
-        transform.position = cursorPos;
+        transform.position = Camera.main.ScreenToWorldPoint(cursorPos) + new Vector3(0, 0, 1);
         image.color = Color.Lerp(darkColor, brightColor, fadeLerp);
 
     }
-
+    [BurstCompile]
     void ApplyImage(Sprite newSprite, float scale)
     {
-        image.sprite = newSprite;
-        transform.localScale = new Vector3(scale, scale, scale) * this.scale;
+        image.sprite = newSprite;/*
+        transform.localScale = new Vector3(scale, scale, scale) * this.scale;*/
     }
+
 
     public static void SetEnabled(bool enable)
     {
@@ -144,6 +151,27 @@ public class CursorBehaviour : MonoBehaviour
     {
         CursorBehaviour.brightColor = brightColor;
         CursorBehaviour.darkColor = darkColor;
+    }
+
+    private void OnDisable()
+    {
+        
+        inputs.Disable();
+
+    }
+
+    private void OnEnable()
+    {
+        
+        inputs.Enable();
+
+    }
+
+    private void OnDestroy()
+    {
+        
+        inputs.Dispose();
+
     }
 
 }

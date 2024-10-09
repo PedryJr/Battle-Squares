@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Unity.Burst;
 using UnityEngine;
 
+[BurstCompile]
 public sealed class PlayerController : MonoBehaviour
 {
 
@@ -9,16 +11,16 @@ public sealed class PlayerController : MonoBehaviour
 
     Inputs inputs;
 
-    Vector2 upInputDirection;
-    Vector2 downInputDirection;
-    Vector2 leftInputDirection;
-    Vector2 rightInputDirection;
+    public Vector2 upInputDirection;
+    public Vector2 downInputDirection;
+    public Vector2 leftInputDirection;
+    public Vector2 rightInputDirection;
 
     delegate void InputAction();
 
-    public Vector2 projectileDirection;
-    public Vector2 finalDirection;
-    public Vector2 aimingDirection;
+    public Vector2 projectileDirection = Vector2.up;
+    public Vector2 finalDirection = Vector2.up;
+    public Vector2 aimingDirection = Vector2.up;
     public Vector2 aimingDirectionSimple;
 
     List<InputAction> cancelInputs;
@@ -28,14 +30,12 @@ public sealed class PlayerController : MonoBehaviour
     public bool shootPrimary = false;
     public bool shootSecondary = false;
 
-    public bool quedInput;
-
     public static float uiRegs = 0;
 
     public static bool showCursor = true;
 
     float regs;
-
+    [BurstCompile]
     private void Awake()
     {
 
@@ -76,13 +76,34 @@ public sealed class PlayerController : MonoBehaviour
         inputs.SquareController.Right.canceled
             += (context) => { InputHandler(() => { rightInputDirection = new Vector2(0, 0); }); };
 
-        inputs.SquareController.Aim.performed
-            += (context) => { InputHandler(() => { aimingDirection = context.ReadValue<Vector2>(); }); };
-        inputs.SquareController.Aim.canceled
-            += (context) => { InputHandler(() => { aimingDirection = new Vector2(0, 0); }); };
-
         inputs.SquareController.Jump.performed
             += (context) => { InputHandler(() => { if (playerBehaviour.hasJump) { inputJump = true; playerBehaviour.hasJump = false; } }); };
+
+        inputs.SquareController.PrimaryConst.performed += (context) =>
+        {
+            InputHandler(() => {
+                shootPrimary = true;
+            });
+        };
+        inputs.SquareController.SecondaryConst.performed += (context) =>
+        {
+            InputHandler(() => {
+                shootSecondary = true;
+            });
+        };
+
+        inputs.SquareController.PrimaryConst.canceled += (context) =>
+        {
+            InputHandler(() => {
+                shootPrimary = false;
+            });
+        };
+        inputs.SquareController.SecondaryConst.canceled += (context) =>
+        {
+            InputHandler(() => {
+                shootSecondary = false;
+            });
+        };
 
         inputs.SquareController.Primary.performed += (context) =>
         {
@@ -116,50 +137,58 @@ public sealed class PlayerController : MonoBehaviour
 
     }
 
-
+    [BurstCompile]
     void InputHandler(InputAction action)
     {
 
         if (!playerBehaviour) return;
+
         if (playerBehaviour.isDead)
         {
             CancellAllInputs();
-            return;
+        }
+        else
+        {
+            action();
         }
 
-        quedInput = true;
-        action();
+        SetFinalInputDirection();
 
     }
-
+    [BurstCompile]
     public void CancellAllInputs()
     {
 
         foreach (InputAction action in cancelInputs) action();
 
     }
-
+    [BurstCompile]
     private void Update()
     {
 
-        SetFinalInputDirection();
-
-        regs = uiRegs;
-
     }
 
+    [BurstCompile]
     void SetFinalInputDirection()
     {
+
+        regs = uiRegs;
 
         if (controllerTarget == null) return;
 
         finalDirection = 
-            (upInputDirection * 0.3f) +
-            (downInputDirection * 0.3f) +
+            Vector2.Lerp(upInputDirection * 0.4f, upInputDirection, Mods.at[9]) +
+            Vector2.Lerp(downInputDirection * 0.3f, downInputDirection, Mods.at[9]) +
             leftInputDirection +
             rightInputDirection;
 
-        if(!((downInputDirection + upInputDirection) == Vector2.zero
+        aimingDirection =
+            upInputDirection +
+            downInputDirection +
+            leftInputDirection +
+            rightInputDirection;
+
+        if (!((downInputDirection + upInputDirection) == Vector2.zero
             && (leftInputDirection + rightInputDirection) == Vector2.zero))
         {
             projectileDirection =
@@ -169,77 +198,8 @@ public sealed class PlayerController : MonoBehaviour
                 rightInputDirection;
         }
 
-        if(aimingDirection == Vector2.zero)
-        {
-            aimingDirectionSimple = Vector2.zero;
-        }
-        else
-        {
-            if(aimingDirection.x > 0.4f && aimingDirection.y > 0.4f)
-            {
-
-                aimingDirectionSimple.x = 0.8f;
-                aimingDirectionSimple.y = 0.8f;
-
-            }
-            else if (aimingDirection.x < -0.4f && aimingDirection.y > 0.4f)
-            {
-
-                aimingDirectionSimple.x = -0.8f;
-                aimingDirectionSimple.y = 0.8f;
-
-            }
-            else if (aimingDirection.x < -0.4f && aimingDirection.y < -0.4f)
-            {
-
-                aimingDirectionSimple.x = -0.8f;
-                aimingDirectionSimple.y = -0.8f;
-
-            }
-            else if (aimingDirection.x > 0.4f && aimingDirection.y < -0.4f)
-            {
-
-                aimingDirectionSimple.x = 0.8f;
-                aimingDirectionSimple.y = -0.8f;
-
-            }
-            else if (aimingDirection.x > -0.4f && Mathf.Abs(aimingDirection.y) < 0.4f)
-            {
-
-                aimingDirectionSimple.x = 1f;
-                aimingDirectionSimple.y = 0f;
-
-            }
-            else if (Mathf.Abs(aimingDirection.x) < 0.4f && aimingDirection.y > -0.4f)
-            {
-
-                aimingDirectionSimple.x = 0f;
-                aimingDirectionSimple.y = 1f;
-
-            }
-            else if (aimingDirection.x < -0.4f && Mathf.Abs(aimingDirection.y) < 0.4f)
-            {
-
-                aimingDirectionSimple.x = -1f;
-                aimingDirectionSimple.y = 0f;
-
-            }
-            else if (Mathf.Abs(aimingDirection.x) < 0.4f && aimingDirection.y < -0.4f)
-            {
-
-                aimingDirectionSimple.x = 0f;
-                aimingDirectionSimple.y = -1f;
-
-            }
-            else
-            {
-                aimingDirectionSimple = Vector2.zero;
-            }
-
-        }
-
     }
-
+    [BurstCompile]
     public void SetTargetController(PlayerBehaviour playerBehaviour)
     {
 
@@ -248,13 +208,23 @@ public sealed class PlayerController : MonoBehaviour
         playerBehaviour.isLocalPlayer = true;
 
     }
-
+    [BurstCompile]
     public Vector2 GetDirection()
     {
 
         if (aimingDirection != Vector2.zero) return aimingDirection;
         else return finalDirection;
 
+    }
+    [BurstCompile]
+    public void EnableController()
+    {
+        inputs.SquareController.Enable();
+    }
+    [BurstCompile]
+    public void DisableController()
+    {
+        inputs.SquareController.Disable();
     }
 
 }

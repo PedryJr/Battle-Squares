@@ -6,35 +6,35 @@ Physics2DSettings:
   serializedVersion: 6
   m_Gravity: {x: 0, y: -12}
   m_DefaultMaterial: {fileID: 6200000, guid: 4b75e048d912cb04a8ca9e1d40223163, type: 2}
-  m_VelocityIterations: 2
-  m_PositionIterations: 2
+  m_VelocityIterations: 5
+  m_PositionIterations: 5
   m_BounceThreshold: 0.2
-  m_MaxLinearCorrection: 0.2
+  m_MaxLinearCorrection: 0.5
   m_MaxAngularCorrection: 8
-  m_MaxTranslationSpeed: 100
+  m_MaxTranslationSpeed: 200
   m_MaxRotationSpeed: 360
   m_BaumgarteScale: 0.2
   m_BaumgarteTimeOfImpactScale: 0.75
   m_TimeToSleep: 0.5
   m_LinearSleepTolerance: 0.01
   m_AngularSleepTolerance: 2
-  m_DefaultContactOffset: 0.001
+  m_DefaultContactOffset: 0.01
   m_ContactThreshold: 0
   m_JobOptions:
     serializedVersion: 2
     useMultithreading: 1
     useConsistencySorting: 0
-    m_InterpolationPosesPerJob: 100
-    m_NewContactsPerJob: 30
-    m_CollideContactsPerJob: 100
-    m_ClearFlagsPerJob: 200
-    m_ClearBodyForcesPerJob: 200
-    m_SyncDiscreteFixturesPerJob: 50
-    m_SyncContinuousFixturesPerJob: 50
-    m_FindNearestContactsPerJob: 100
-    m_UpdateTriggerContactsPerJob: 100
-    m_IslandSolverCostThreshold: 100
-    m_IslandSolverBodyCostScale: 1
+    m_InterpolationPosesPerJob: 3
+    m_NewContactsPerJob: 3
+    m_CollideContactsPerJob: 3
+    m_ClearFlagsPerJob: 3
+    m_ClearBodyForcesPerJob: 3
+    m_SyncDiscreteFixturesPerJob: 3
+    m_SyncContinuousFixturesPerJob: 3
+    m_FindNearestContactsPerJob: 3
+    m_UpdateTriggerContactsPerJob: 3
+    m_IslandSolverCostThreshold: 10
+    m_IslandSolverBodyCostScale: 10
     m_IslandSolverContactCostScale: 10
     m_IslandSolverJointCostScale: 10
     m_IslandSolverBodiesPerJob: 50
@@ -42,15 +42,15 @@ Physics2DSettings:
   m_SimulationMode: 0
   m_SimulationLayers:
     serializedVersion: 2
-    m_Bits: 3008
+    m_Bits: 15296
   m_MaxSubStepCount: 4
   m_MinSubStepFPS: 30
   m_UseSubStepping: 0
   m_UseSubStepContacts: 0
-  m_QueriesHitTriggers: 1
+  m_QueriesHitTriggers: 0
   m_QueriesStartInColliders: 0
   m_CallbacksOnDisable: 0
   m_ReuseCollisionCallbacks: 1
   m_AutoSyncTransforms: 0
   m_GizmoOptions: 31
-  m_LayerCollisionMatrix: 08f0ffff08f0ffff08f0ffffffffffff08f0ffff08f0ffffc8ffffff48fbffffc8f2ffffc8f5ffff48f2ffffc8f0ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  m_LayerCollisionMatrix: 0880ffff0880ffff0880ffffffffffff0880ffff0880ffffc88fffff488bffffc882ffffc895ffff4882ffffc880ffff0892ffff08e0ffff08a0ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff

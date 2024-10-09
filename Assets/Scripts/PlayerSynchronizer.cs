@@ -1,24 +1,27 @@
+using Netcode.Transports.Facepunch;
 using Steamworks;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Unity.Burst;
+using Unity.Mathematics;
 using Unity.Netcode;
-using Unity.VisualScripting;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
-using static UnityEngine.Rendering.DebugUI.Table;
-
+using static PlayerSynchronizer;
+[BurstCompile]
 public sealed class PlayerSynchronizer : NetworkBehaviour
 {
+
+    public float ping;
+    public float rtt;
 
     public List<PlayerData> playerIdentities;
     public List<IdPair> idPairs;
     NetworkManager networkManager;
 
     [SerializeField]
-    GameObject square;
+    public PlayerBehaviour square;
 
     public PlayerBehaviour localSquare;
 
@@ -31,12 +34,17 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     [SerializeField]
     GameObject deathParticles;
 
+    Hunter hunter;
+
     public bool hostShutdown = false;
 
     delegate void UpdatePFPStream();
     List<UpdatePFPStream> updatePFPStream;
 
+    public NetworkList<IdMatch> playerIdList = new NetworkList<IdMatch>(readPerm: NetworkVariableReadPermission.Everyone, writePerm: NetworkVariableWritePermission.Server);
+
     bool stopUpdate;
+    [BurstCompile]
     private void Awake()
     {
 
@@ -49,11 +57,32 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         networkManager.OnClientDisconnectCallback += DisconnectPlayer;
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
-
+        playerIdList.OnListChanged += PlayerIdList_OnListChanged;
+        hunter = GetComponent<Hunter>();
         scoreManager = GetComponent<ScoreManager>();
 
     }
+    [BurstCompile]
+    private void PlayerIdList_OnListChanged(NetworkListEvent<IdMatch> changeEvent)
+    {
 
+        for (int i = 0; i < playerIdentities.Count; i++)
+        {
+
+            for(int j = 0; j < playerIdList.Count; j++)
+            {
+
+                if (playerIdList[j].clientId == playerIdentities[i].id)
+                {
+                    playerIdentities[i].square.AssertSteamDataAvalible(playerIdList[j].steamId);
+                }
+
+            }
+
+        }
+
+    }
+    [BurstCompile]
     public void ForceReset()
     {
 
@@ -85,7 +114,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-
+    [BurstCompile]
     private void SceneManager_sceneUnloaded(Scene arg0)
     {
 
@@ -96,6 +125,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [BurstCompile]
     void LateHudInit()
     {
 
@@ -108,6 +138,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [BurstCompile]
     private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
 
@@ -120,6 +151,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         {
             Invoke("LateHudInit", 0.3f);
             stopUpdate = false;
+            FindAnyObjectByType<PlayerController>().EnableController();
         }
 
         PlayerController.uiRegs = 0;
@@ -132,6 +164,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [BurstCompile]
     [ClientRpc]
     void LoadSceneOnPlayersClientRpc(int sceneIndex)
     {
@@ -143,6 +176,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [BurstCompile]
     public void DisconnectPlayer(ulong id)
     {
 
@@ -155,6 +189,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [BurstCompile]
     void DisconnectPlayerRemotely(ulong id)
     {
 
@@ -174,7 +209,15 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             foreach (PlayerData player in playerIdentities)
             {
 
-                if (player.id == id) playerToRemove = player;
+                if (player.id == id)
+                {
+                    playerToRemove = player;
+
+                    IdMatch idMatch = new IdMatch();
+                    idMatch.clientId = player.id;
+                    idMatch.steamId = player.steamId;
+
+                }
                 else refreshedIdentities.Add(player);
 
             }
@@ -201,6 +244,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
+
+    [BurstCompile]
 
     [ClientRpc]
     public void DisconnectPlayerRemotelyClientRpc(ulong id)
@@ -246,6 +291,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [BurstCompile]
     public void DisconnectPlayerLocally()
     {
 
@@ -275,109 +321,34 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-/*
-    void SetupPlayerIdsStep1()
-    {
-        SetupPlayerIdsStep1ClientRpc();
-    }
 
-    [ClientRpc]
-    void SetupPlayerIdsStep1ClientRpc()
-    {
-
-        foreach (IdPair pair in idPairs)
-        {
-            SetupPlayerIdsStep1ServerRpc(pair.clientId, pair.steamId);
-        }
-
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void SetupPlayerIdsStep1ServerRpc(ulong clientId, ulong steamId)
-    {
-
-        bool addId = true;
-        foreach (IdPair pair in idPairs)
-        {
-            if (pair.clientId == clientId) addId = false;
-        }
-        if (addId)
-        {
-            idPairs.Add(new IdPair { clientId = clientId, steamId = new SteamId { Value = steamId } });
-        }
-
-        foreach (IdPair pair in idPairs)
-        {
-            SetupPlayerIdsStep2ClientRpc(pair.clientId, pair.steamId);
-        }
-
-    }
-
-    [ClientRpc]
-    void SetupPlayerIdsStep2ClientRpc(ulong clientId, ulong steamId)
-    {
-
-        bool addId = true;
-        foreach (IdPair pair in idPairs)
-        {
-            if (pair.clientId == clientId) addId = false;
-        }
-        if (addId)
-        {
-            idPairs.Add(new IdPair { clientId = clientId, steamId = new SteamId { Value = steamId } });
-        }
-
-        for (int i = 0; i < playerIdentities.Count; i++)
-        {
-
-            if (playerIdentities[i].pfp == null)
-            {
-
-                foreach (IdPair pair in idPairs)
-                {
-                    if (pair.clientId == playerIdentities[i].cId)
-                    {
-                        PlayerData newData = playerIdentities[i];
-
-                        newData.pfp = MyExtentions.GetImageData(pair.steamId);
-                        foreach (Friend friend in SteamNetwork.currentLobby.Value.Members)
-                        {
-                            if (friend.Id.Value == pair.steamId.Value) newData.name = friend.Name;
-                        }
-
-                        playerIdentities[i] = newData;
-
-                    }
-                }
-
-            }
-
-        }
-
-    }*/
+    [BurstCompile]
     public void SetupNewPlayer(ulong id)
     {
+
         clrUpdate2 = 0;
         if (IsHost)
         {
 
-            PlayerData playerData = new PlayerData();
-            playerData.id = id;
-            playerData.square = Instantiate(square).GetComponent<PlayerBehaviour>();
-            playerData.square.id = id;
-            playerData.pfp = MyExtentions.CreateSpriteFromData(localSteamData.pfpData, localSteamData.imageWidth, localSteamData.imageHeight);
-            playerData.texture = playerData.pfp.texture;
+            bool freshHost = false;
 
             if (playerIdentities == null)
             {
+
                 playerIdentities = new List<PlayerData>();
                 idPairs = new List<IdPair>
                 {
                     new IdPair { clientId = id, steamId = SteamClient.SteamId }
                 };
-                SceneManager.LoadSceneAsync("LobbyScene", LoadSceneMode.Single);
+                freshHost = true;
 
             }
+
+
+            PlayerData playerData = new PlayerData();
+            playerData.square = Instantiate(square);
+            playerData.square.id = id;
+            playerData.id = id;
 
             playerIdentities.Add(playerData);
 
@@ -387,11 +358,11 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             if (playerData.id == NetworkManager.LocalClientId)
             {
 
-
                 localSquare = playerData.square;
                 FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
 
             }
+
             foreach (PlayerData player in playerIdentities)
             {
 
@@ -402,94 +373,26 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
             SetupNewPlayerClientRpc(nowPlayers.ToArray(), nowReady.ToArray(), id, scoreManager.gameMode);
 
-            FetchPFPDataRpc();
+            scoreManager.UpdateModeAsHost(scoreManager.gameMode);
+            UpdateSelectedMap(localSquare.selectedMap);
+            SendModsDataRpc(Mods.at);
 
-            /*SetupPlayerIdsStep1();*/
-
-        }
-
-    }
-
-
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void FetchPFPDataRpc()
-    {
-
-        Texture2D texture = localSteamData.pfp.texture;
-
-        // Get the pixel data from the texture
-        byte[] textureData = texture.GetRawTextureData();
-
-        int batchSize = 50;
-        int pixelCount = texture.width * texture.height; // Assuming you want all pixels
-        int pixelIndex = 0;
-
-        while (pixelIndex < pixelCount)
-        {
-            // Prepare batches of pixels (for this example, we assume the texture is in RGBA format, so 4 bytes per pixel)
-            int remainingPixels = pixelCount - pixelIndex;
-            int currentBatchSize = Mathf.Min(batchSize, remainingPixels);
-
-            byte[] rgbBatch = new byte[currentBatchSize * 4]; // 4 bytes per pixel (RGBA)
-            int[] posXBatch = new int[currentBatchSize];
-            int[] posYBatch = new int[currentBatchSize];
-
-            for (int i = 0; i < currentBatchSize; i++)
+            if (freshHost)
             {
-                int pixelPos = pixelIndex + i;
-
-                // Convert pixelPos into x and y coordinates
-                int x = pixelPos % texture.width;
-                int y = pixelPos / texture.width;
-
-                // Store the pixel data and positions
-                Buffer.BlockCopy(textureData, pixelPos * 4, rgbBatch, i * 4, 4);
-                posXBatch[i] = x;
-                posYBatch[i] = y;
+                playerIdList.Clear();
+                playerIdList.Add(new IdMatch { clientId = id, steamId = SteamClient.SteamId });
             }
 
-            // Add the batch to the update stream
-            UpdatePFPStream stream = () =>
-            {
-                StreamPFPDataRpc(rgbBatch, posXBatch, posYBatch, NetworkManager.LocalClientId);
-            };
+            playerData.square.SpawnEffect();
+/*
+            DontDestroyOnLoad(playerData.square);*/
 
-            updatePFPStream.Add(stream);
 
-            pixelIndex += currentBatchSize;
-        }
 
-        // Add final stream to apply data
-        UpdatePFPStream endStream = () =>
-        {
-            ApplyPFPDataRpc(NetworkManager.LocalClientId);
-        };
-        updatePFPStream.Add(endStream);
-
-    }
-
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void StreamPFPDataRpc(byte[] pixelBatch, int[] xBatch, int[] yBatch, ulong id)
-    {
-
-        if(playerIdentities != null)
-        {
-
-            for (int i = 0; i < playerIdentities.Count; i++)
+            foreach (PlayerData player in playerIdentities)
             {
 
-                if (playerIdentities[i].id == id)
-                {
-                    PlayerData playerData = playerIdentities[i];
-
-                    // Apply the batch of pixel data
-                    for (int j = 0; j < xBatch.Length; j++)
-                    {
-                        playerData.UpdatePFP(xBatch[j], yBatch[j], pixelBatch.Skip(j * 4).Take(4).ToArray()); // RGBA, 4 bytes per pixel
-                    }
-
-                    playerIdentities[i] = playerData;
-                }
+                SyncPlayerDataClientRpc((byte)player.id, player.square.isDead);
 
             }
 
@@ -497,24 +400,32 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void ApplyPFPDataRpc(ulong id)
+    [ClientRpc]
+    void SyncPlayerDataClientRpc(byte id, bool isDead)
     {
 
-        for (int i = 0; i < playerIdentities.Count; i++)
+        foreach (PlayerData player in playerIdentities)
         {
 
-            if (playerIdentities[i].id == id)
+            if((byte) player.id == id)
             {
 
-                playerIdentities[i].ApplyPFP();
+                player.square.isDead = isDead;
+
+                if(IsHost) player.square.ready = true;
+                UpdatePlayerReady(player.square.ready);
 
             }
 
         }
 
+        UpdateColor();
+        UpdateNozzle();
+        UpdateHealth();
+
     }
 
+    [BurstCompile]
     [ClientRpc]
     void SetupNewPlayerClientRpc(ulong[] nowPlayers, bool[] nowReady, ulong connectedId, ScoreManager.Mode gameMode)
     {
@@ -536,45 +447,21 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 new IdPair { clientId = connectedId, steamId = SteamClient.SteamId }
             };
 
-            /*            foreach (ulong id in nowPlayers)
-                        {
-
-                            PlayerData playerData = new PlayerData();
-
-                            playerData.square = Instantiate(square).GetComponent<PlayerBehaviour>();
-                            playerData.id = id;
-                            playerData.square.id = id;
-                            playerData.pfp = MyExtentions.CreateSpriteFromData(localSteamData.pfpData, localSteamData.imageWidth, localSteamData.imageHeight);
-                            playerData.texture = playerData.pfp.texture;
-
-                            if (id == NetworkManager.LocalClientId)
-                            {
-
-                                localSquare = playerData.square;
-                                FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
-
-                            }
-
-                            playerIdentities.Add(playerData);
-
-                        }*/
-
             for (int i = 0; i < nowPlayers.Length; i++)
             {
 
                 PlayerData playerData = new PlayerData();
 
-                playerData.square = Instantiate(square).GetComponent<PlayerBehaviour>();
+                playerData.square = Instantiate(square);
                 playerData.id = nowPlayers[i];
                 playerData.square.id = nowPlayers[i];
-                playerData.pfp = MyExtentions.CreateSpriteFromData(localSteamData.pfpData, localSteamData.imageWidth, localSteamData.imageHeight);
-                playerData.texture = playerData.pfp.texture;
 
                 if (nowPlayers[i] == NetworkManager.LocalClientId)
                 {
 
                     localSquare = playerData.square;
                     FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
+                    localSquare.SpawnEffect();
 
                 }
 
@@ -582,25 +469,19 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
             }
 
+            RequestAddPlayerServerRpc(connectedId, SteamNetwork.playerSteamID);
+
         }
         else
         {
 
             PlayerData playerData = new PlayerData();
 
-            playerData.square = Instantiate(square).GetComponent<PlayerBehaviour>();
+            playerData.square = Instantiate(square);
             playerData.id = connectedId;
             playerData.square.id = connectedId;
-            playerData.pfp = MyExtentions.CreateSpriteFromData(localSteamData.pfpData, localSteamData.imageWidth, localSteamData.imageHeight);
-            playerData.texture = playerData.pfp.texture;
             playerData.square.ready = false;
-
-            if (connectedId == NetworkManager.LocalClientId)
-            {
-                localSquare = playerData.square;
-                FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
-
-            }
+            playerData.square.SpawnEffect();
 
             playerIdentities.Add(playerData);
 
@@ -608,8 +489,51 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [BurstCompile]
+    [Rpc(SendTo.Everyone)]
+    public void SendModsDataRpc(float[] mods)
+    {
+
+        if (IsHost) return;
+
+        for (int i = 0; i < mods.Length; i++)
+        {
+
+            Mods.at[i] = mods[i];
+
+        }
+
+
+    }
+
+    [BurstCompile]
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestAddPlayerServerRpc(ulong clientId, ulong steamId)
+    {
+
+        if (!IsHost) return;
+
+        IdMatch newIdMatch = new IdMatch { clientId = clientId, steamId = steamId };
+        bool addNewId = true;
+
+        for (int i = 0; i < playerIdList.Count; i++)
+        {
+            if (playerIdList[i].clientId == clientId)
+            {
+                playerIdList[i] = newIdMatch;
+                addNewId = false;
+            }
+        }
+
+        if(addNewId) playerIdList.Add(new IdMatch { clientId = clientId, steamId = steamId });
+
+    }
+    [BurstCompile]
     private void FixedUpdate() => UpdatePlayerData();
 
+    float miniTimer;
+
+    [BurstCompile]
     private void LateUpdate()
     {
 
@@ -621,9 +545,18 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    float rbUpdate, nzlUpdate, hlthUpdate, scrUpdate, clrUpdate, clrUpdate2;
+    private void Update()
+    {
+
+        rtt = (float) (NetworkManager.LocalTime.Time - NetworkManager.ServerTime.Time);
+        ping = rtt / 2;
+
+    }
 
 
+    float rbUpdate, scrUpdate, clrUpdate, clrUpdate2;
+
+    [BurstCompile]
     void UpdatePlayerData()
     {
 
@@ -633,24 +566,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if (localSquare == null) return;
         if (playerIdentities == null) return;
 
-
-        if(localSquare.isLocalPlayer) if (localSquare.playerController.quedInput)
-            {
-                localSquare.playerController.quedInput = false;
-                UpdateRigidBody();
-                rbUpdate = 0;
-            }
-
         if (rbUpdate > 1)
         {
             UpdateRigidBody();
             rbUpdate -= 1;
-        }
-
-        if (nzlUpdate > 1)
-        {
-            UpdateNozzle();
-            nzlUpdate -= 1;
         }
 
         if (clrUpdate > 1)
@@ -663,12 +582,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             clrUpdate += deltaTime * 20;
             clrUpdate2 += deltaTime;
         }
-
-        nzlUpdate += deltaTime * 100f;
-        rbUpdate += deltaTime * 50f;
+        rbUpdate += deltaTime * 100f;
 
     }
-
+    [BurstCompile]
     void UpdateRigidBody()
     {
         ulong sourceId = networkManager.LocalClientId;
@@ -678,8 +595,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         byte[] compRot = MyExtentions.EncodeRotation(localSquare.rotation);
         byte[] compRotVel = MyExtentions.EncodeFloat(localSquare.angularVelocity);
 
-        byte[] data = new byte[14] 
-        { 
+        byte[] data = new byte[14]
+        {
             compPos[0], compPos[1], compPos[2], compPos[3],
             compVel[0], compVel[1], compVel[2], compVel[3],
             compRot[0], compRot[1],
@@ -690,6 +607,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         UpdateRigidBodyRpc(data);
 
     }
+    [BurstCompile]
 
     [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
     void UpdateRigidBodyRpc(byte[] data)
@@ -705,12 +623,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         }
     }
-
+    [BurstCompile]
     void StorePlayerRigidBodyData(PlayerData player, byte[] data)
     {
 
-        if ((byte) player.id != data[13]) return;
-
+        if ((byte)player.id != data[13]) return;
+        if (player.square.isDead) return;
 
         byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
         byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
@@ -733,11 +651,14 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         player.square.rb.angularVelocity = rotVel;
 
     }
-    void UpdateNozzle()
+    [BurstCompile]
+    public void UpdateNozzle()
     {
         ulong sourceId = networkManager.LocalClientId;
-        byte[] compPos = MyExtentions.EncodeNozzlePosition(localSquare.localNozzlePosition.x, localSquare.localNozzlePosition.y);
-        byte[] data = new byte[3] { (byte) sourceId, compPos[0], compPos[1] };
+        byte[] compFromPos = MyExtentions.EncodeNozzlePosition(localSquare.fromPos.x, localSquare.fromPos.y);
+        byte[] compToPos = MyExtentions.EncodeNozzlePosition(localSquare.toPos.x, localSquare.toPos.y);
+
+        byte[] data = new byte[5] { (byte)sourceId, compFromPos[0], compFromPos[1], compToPos[0], compToPos[1] };
 
         UpdateNozzleRpc(data);
 
@@ -754,25 +675,29 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             StoreNozzleData(player, data);
         }
     }
-
+    [BurstCompile]
     void StoreNozzleData(PlayerData player, byte[] comp)
     {
-        if ((byte) player.id != comp[0]) return;
+        if ((byte)player.id != comp[0]) return;
 
-        (float x, float y) = MyExtentions.DecodeNozzlePosition(new byte[2] { comp[1], comp[2] });
+        (float fromX, float fromY) = MyExtentions.DecodeNozzlePosition(new byte[2] { comp[1], comp[2] });
+        (float toX, float toY) = MyExtentions.DecodeNozzlePosition(new byte[2] { comp[3], comp[4] });
 
-        player.square.localNozzlePosition = new Vector2(x, y);
+        player.square.fromPos = new Vector2(fromX, fromY);
+        player.square.toPos = new Vector2(toX, toY);
+        player.square.newNozzleLerp = 0;
+
     }
-
+    [BurstCompile]
     public void UpdateColor()
     {
         ulong sourceId = networkManager.LocalClientId;
         byte[] data = new byte[4]
         {
             (byte) sourceId,
-            (byte) Mathf.RoundToInt(localSquare.playerColor.r * 256),
-            (byte) Mathf.RoundToInt(localSquare.playerColor.g * 256),
-            (byte) Mathf.RoundToInt(localSquare.playerColor.b * 256)
+            (byte) math.round(localSquare.playerColor.r * 256),
+            (byte) math.round(localSquare.playerColor.g * 256),
+            (byte) math.round(localSquare.playerColor.b * 256)
         };
         UpdateColortRpc(data);
     }
@@ -788,7 +713,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             StoreColorData(player, data);
         }
     }
-
+    [BurstCompile]
     void StoreColorData(PlayerData player, byte[] data)
     {
         if (player.id != data[0]) return;
@@ -797,21 +722,17 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         player.square.newColor = true;
 
     }
-
+    [BurstCompile]
     public void UpdateHealth()
     {
-        byte sourceId = (byte) networkManager.LocalClientId;
-        float[] data = new float[]
-        {
-        localSquare.healthPoints
-        };
-        UpdateHealthRpc(sourceId, data);
+        byte sourceId = (byte)networkManager.LocalClientId;
+        UpdateHealthRpc(sourceId, localSquare.healthPoints);
     }
 
     [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void UpdateHealthRpc(byte sourceId, float[] data)
+    void UpdateHealthRpc(byte sourceId, float data)
     {
-        if ((byte) networkManager.LocalClientId == sourceId) return;
+        if ((byte)networkManager.LocalClientId == sourceId) return;
         if (playerIdentities == null) return;
 
         foreach (PlayerData player in playerIdentities)
@@ -819,18 +740,18 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             StoreHealthData(player, sourceId, data);
         }
     }
-
-    void StoreHealthData(PlayerData player, byte sourceId, float[] data)
+    [BurstCompile]
+    void StoreHealthData(PlayerData player, byte sourceId, float data)
     {
-        if ((byte) player.id != sourceId) return;
+        if ((byte)player.id != sourceId) return;
 
-        player.square.healthPoints = data[0];
+        player.square.healthPoints = data;
     }
-
+    [BurstCompile]
     public void UpdateScore()
     {
-        byte sourceId = (byte) networkManager.LocalClientId;
-        byte data = (byte) localSquare.score;
+        byte sourceId = (byte)networkManager.LocalClientId;
+        byte data = (byte)localSquare.score;
 
         UpdateScoreRpc(sourceId, data);
 
@@ -839,7 +760,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     void UpdateScoreRpc(byte sourceId, byte data)
     {
-        if ((byte) networkManager.LocalClientId == sourceId) return;
+        if ((byte)networkManager.LocalClientId == sourceId) return;
         if (playerIdentities == null) return;
 
         foreach (PlayerData player in playerIdentities)
@@ -848,15 +769,17 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
     }
 
+    [BurstCompile]
     void StoreScoreData(PlayerData player, byte sourceId, byte data)
     {
 
-        if ((byte) player.id != sourceId) return;
+        if ((byte)player.id != sourceId) return;
 
         player.square.score = data;
 
     }
 
+    [BurstCompile]
     public void UpdatePlayerReady(bool ready)
     {
 
@@ -867,6 +790,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [BurstCompile]
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     void UpdatePlayerReadyRpc(byte sourceId, bool ready)
     {
@@ -880,6 +804,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [BurstCompile]
     void StorePlayerReady(PlayerData player, byte sourceId, bool ready)
     {
 
@@ -888,7 +813,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         player.square.ready = ready;
 
     }
-
+    [BurstCompile]
     public void UpdateSelectedMap(int map)
     {
 
@@ -896,7 +821,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         UpdateSelectedMapRpc(map);
 
     }
-
+    [BurstCompile]
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     void UpdateSelectedMapRpc(int map)
     {
@@ -909,14 +834,15 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-
+    [BurstCompile]
     void StoreSelectedMap(PlayerData player, int map)
     {
 
         player.square.selectedMap = map;
 
     }
-
+    /*
+    [BurstCompile]
     public void UpdatePlayerHealth(ulong id, float modifier, ulong responsibleId, Vector2 knockBack)
     {
 
@@ -939,7 +865,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         EndUpdatePlayerHealth(id, modifier, responsibleId, knockBack);
 
     }
-
+    [BurstCompile]
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     void UpdatePlayerHealthServerRpc(ulong id, float damage, ulong responsibleId, Vector2 knockBack, ulong ignoreId)
     {
@@ -951,7 +877,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         EndUpdatePlayerHealth(id, damage, responsibleId, knockBack);
 
     }
-
+    [BurstCompile]
     [ClientRpc(Delivery = RpcDelivery.Reliable)]
     void UpdatePlayerHealthClientRpc(ulong id, float damage, ulong responsibleId, Vector2 knockBack, ulong ignoreId)
     {
@@ -963,9 +889,11 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         EndUpdatePlayerHealth(id, damage, responsibleId, knockBack);
 
     }
-
+    [BurstCompile]
     void EndUpdatePlayerHealth(ulong id, float damage, ulong responsibleId, Vector2 knockBack)
     {
+
+        bool kill = false;
 
         foreach (PlayerData player in playerIdentities)
         {
@@ -981,9 +909,13 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             if (player.square.healthPoints > 0) continue;
 
             player.square.KillPlayer();
+            kill = true;
 
-            if (player.square.id == responsibleId) continue;
-            if (scoreManager.gameMode != ScoreManager.Mode.DM) continue;
+        }
+
+        if (kill && scoreManager.gameMode == ScoreManager.Mode.DM)
+        {
+
             foreach (PlayerData data in playerIdentities)
             {
 
@@ -993,59 +925,101 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 scoreManager.UpdateScoreBoard();
 
             }
-
         }
 
         UpdateHealth();
         UpdateScore();
 
-    }
-
-    public void PlayPlayerDeath(Vector3 particlePosition, Color particleColor)
+    }*/
+    [BurstCompile]
+    public void UpdatePlayerHealth(byte id, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
 
-        ulong ignoreId = NetworkManager.LocalClientId;
+        UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
+        UpdatePlayerHealthRpc(id, damage, slowDownAmount, responsibleId, knockBack);
 
-        if (IsHost)
+    }
+    [BurstCompile]
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    public void UpdatePlayerHealthRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
+    {
+
+        if ((byte) localSquare.id == responsibleId) return;
+        UpdatePlayerHealthFunc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
+        
+    }
+    [BurstCompile]
+
+    void UpdatePlayerHealthFunc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
+    {
+
+        bool kill = false;
+
+        foreach (PlayerData player in playerIdentities)
         {
 
-            PlayPlayerDeathClientRpc(particlePosition, particleColor, ignoreId);
+            if ((byte) player.id == affectedId)
+            {
+
+                player.square.rb.AddForce(knockBack, ForceMode2D.Impulse);
+                player.square.healthPoints -= damage;
+                player.square.healthPoints = math.clamp(player.square.healthPoints, 0, player.square.maxHealthPoints);
+
+                player.square.rb.linearDamping = math.clamp(player.square.rb.linearDamping + slowDownAmount, 0.1f, 100f);
+                player.square.rb.angularDamping = math.clamp(player.square.rb.angularDamping + slowDownAmount, 0.1f, 100f);
+
+                if (player.square.healthPoints == 0 && !player.square.isDead)
+                {
+
+                    foreach (PlayerData player1 in playerIdentities) if ((byte) player1.id == responsibleId) player.square.killStreak++;
+
+                    kill = true;
+                    PlayerDeathEffect(player.square.rb.position, player.square.playerDarkerColor);
+                    hunter.Kill(affectedId, responsibleId);
+                    player.square.KillPlayer();
+
+                }
+
+            }
 
         }
-        if (!IsHost)
+
+        UpdateScore();
+
+        if (kill && scoreManager.gameMode == ScoreManager.Mode.DM && responsibleId == NetworkManager.Singleton.LocalClientId)
         {
 
-            PlayPlayerDeathServerRpc(particlePosition, particleColor, ignoreId);
+            foreach (PlayerData player in playerIdentities)
+            {
+
+                if ((byte) player.id == responsibleId)
+                {
+
+                    player.square.score++;
+
+                }
+
+            }
 
         }
 
-        PlayerDeathEffect(particlePosition, particleColor);
+        if (affectedId == (byte) localSquare.id)
+        {
+
+            UpdateHealth();
+
+        }
+
+        if (responsibleId == (byte) localSquare.id)
+        {
+
+            UpdateScore();
+
+        }
 
     }
 
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void PlayPlayerDeathServerRpc(Vector3 particlePosition, Color particleColor, ulong ignoreId)
-    {
-
-        if (NetworkManager.LocalClientId == ignoreId) return;
-
-        PlayPlayerDeathClientRpc(particlePosition, particleColor, ignoreId);
-
-        PlayerDeathEffect(particlePosition, particleColor);
-
-    }
-
-    [ClientRpc(Delivery = RpcDelivery.Reliable)]
-    void PlayPlayerDeathClientRpc(Vector3 particlePosition, Color particleColor, ulong ignoreId)
-    {
-
-        if (NetworkManager.LocalClientId == ignoreId) return;
-
-        PlayerDeathEffect(particlePosition, particleColor);
-
-    }
-
-    void PlayerDeathEffect(Vector3 particlePosition, Color particleColor)
+    public void PlayerDeathEffect(Vector3 particlePosition, Color particleColor)
     {
 
         localSquare.deathSoundInstance.start();
@@ -1060,7 +1034,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-
+    [BurstCompile]
     public Color UpdatePlayerColor(float value)
     {
 
@@ -1075,7 +1049,57 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         return localSquare.playerColor;
 
     }
+    [BurstCompile]
+    public void SpreadInGameMessage(string message)
+    {
 
+        byte playerId = (byte) localSquare.id;
+        string sanetizedMessage = MyExtentions.SanitizeMessage(message);
+
+        SpreadInGameMessageRpc(sanetizedMessage, playerId);
+
+    }
+    [BurstCompile]
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    public void SpreadInGameMessageRpc(string message, byte playerId)
+    {
+
+        PlayerBehaviour source = null;
+        MessageRecieverBehaviour messageReciever = null;
+
+        foreach(PlayerData player in playerIdentities)
+        {
+
+            if (player.id == playerId) source = player.square;
+
+        }
+
+        messageReciever = FindAnyObjectByType<MessageRecieverBehaviour>();
+
+        if (!source) return;
+        if (!messageReciever) return;
+
+        messageReciever.CreateNewMessage(message, source);
+
+    }
+    [BurstCompile]
+    public void SyncMods(int index, float value)
+    {
+
+        if (!IsHost) return;
+
+        SyncModsRpc(index, value);
+
+    }
+    [BurstCompile]
+    [Rpc(SendTo.Everyone)]
+    void SyncModsRpc(int index, float value)
+    {
+
+        Mods.at[index] = value;
+
+    }
+    [BurstCompile]
     public struct PlayerData
     {
 
@@ -1099,11 +1123,45 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-
+    [BurstCompile]
     public struct IdPair
     {
         public ulong clientId;
         public SteamId steamId;
     }
 
+}
+[BurstCompile]
+public struct IdMatch : INetworkSerializable, IEquatable<IdMatch>
+{
+    public ulong clientId;
+    public ulong steamId;
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref clientId);
+        serializer.SerializeValue(ref steamId);
+    }
+    public bool Equals(IdMatch other)
+    {
+        return clientId == other.clientId && steamId == other.steamId;
+    }
+    public override bool Equals(object obj)
+    {
+        return obj is IdMatch other && Equals(other);
+    }
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (clientId.GetHashCode() * 397) ^ steamId.GetHashCode();
+        }
+    }
+    public static bool operator ==(IdMatch left, IdMatch right)
+    {
+        return left.Equals(right);
+    }
+    public static bool operator !=(IdMatch left, IdMatch right)
+    {
+        return !(left == right);
+    }
 }

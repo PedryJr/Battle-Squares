@@ -23,11 +23,15 @@ public sealed class ScoreManager : NetworkBehaviour
     public Mode gameMode;
 
     public int startScore = 0;
+    public int endScore = 10;
+
+    Hunter hunter;
 
     private void Awake()
     {
         
         scores = new List<ScoreBoard>();
+        hunter = GetComponent<Hunter>();
         SceneManager.sceneLoaded += LoadGameScene;
         SceneManager.sceneUnloaded += UnloadGameScene;
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
@@ -52,6 +56,7 @@ public sealed class ScoreManager : NetworkBehaviour
             {
 
                 UpdateScoreBoardFunc();
+                timer = 0;
 
             }
 
@@ -72,7 +77,10 @@ public sealed class ScoreManager : NetworkBehaviour
     void CheckScore(ScoreBoard scoreboard)
     {
         if (!IsHost) return;
-        if (scoreboard.playerData.square.score >= 10) SceneManager.LoadSceneAsync("GameOver");
+        if (scoreboard.playerData.square.score >= endScore)
+        {
+            SceneManager.LoadSceneAsync("GameOver");
+        }
     }
 
     public void LoadGameScene(Scene arg0, LoadSceneMode arg1)
@@ -86,7 +94,6 @@ public sealed class ScoreManager : NetworkBehaviour
             inGame = true;
             UpdateScoreBoardFunc();
 
-            /*Cursor.visible = false;*/
             CursorBehaviour.SetEnabled(false);
             Cursor.lockState = CursorLockMode.Locked;
             foreach (PlayerData player in playerSynchronizer.playerIdentities) player.square.score = 0;
@@ -100,9 +107,9 @@ public sealed class ScoreManager : NetworkBehaviour
 
         if (arg0.name.Equals("GameScene"))
         {
+            hunter.GameEnd();
             inGame = false;
             CursorBehaviour.SetEnabled(true);
-            /*Cursor.visible = true;*/
             Cursor.lockState = CursorLockMode.None;
             scores.Clear();
         }
@@ -152,6 +159,9 @@ public sealed class ScoreManager : NetworkBehaviour
 
         if(playerSynchronizer.playerIdentities != null)
         {
+
+            if (playerSynchronizer.playerIdentities.Count < 2) return;
+
             foreach (PlayerData player in playerSynchronizer.playerIdentities)
             {
 

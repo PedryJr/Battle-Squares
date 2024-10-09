@@ -2,7 +2,10 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 using static PlayerSynchronizer;
+using static Unity.VisualScripting.Member;
 
 public sealed class MapSynchronizer : NetworkBehaviour
 {
@@ -13,6 +16,8 @@ public sealed class MapSynchronizer : NetworkBehaviour
     public ObjectivesBehaviour objectives;
     PlayerSynchronizer playerSynchronizer;
     ScoreManager scoreManager;
+
+    public List<SolidMoverBehaviour> solidMovers;
 
     public float repeat1S = 1f; 
     public float repeat2S = 2f; 
@@ -28,24 +33,53 @@ public sealed class MapSynchronizer : NetworkBehaviour
     public float pingPong20S = 20f;
     public float pingPong30S = 30f;
 
-    private float baseTime;
+    public float baseTime;
+    public float localTime;
+    public float localTimeWithPing;
+
     private float updateTime;
+
+    int sync10Times = 10;
 
     private void Awake()
     {
         
         scoreManager = FindAnyObjectByType<ScoreManager>();
         playerSynchronizer = FindFirstObjectByType<PlayerSynchronizer>();
+        dogTags = new List<DogTagBehaviour>();
+        solidMovers = new List<SolidMoverBehaviour>();
+        SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
 
     }
 
+    private void SceneManager_sceneUnloaded(Scene arg0)
+    {
+
+        if(arg0.name == "GameScene")
+        {
+            dogTags.Clear();
+            solidMovers.Clear();
+        }
+
+        if (arg0.name == "LobbyScene")
+        {
+
+            localTime = 0;
+            baseTime = 0;
+
+        }
+
+    }
 
     private void Update()
     {
 
-        if (!scoreManager.inGame) return;
+        float deltaTime = Time.deltaTime;
 
-        baseTime += Time.deltaTime;
+        localTime += deltaTime;
+        baseTime += deltaTime;
+
+        localTime = Mathf.Lerp(localTime, baseTime + playerSynchronizer.rtt, deltaTime * 4);
 
         repeat1S = Mathf.Repeat(baseTime / 1f, 1f);
         repeat2S = Mathf.Repeat(baseTime / 2f, 1f);
@@ -61,17 +95,30 @@ public sealed class MapSynchronizer : NetworkBehaviour
         pingPong20S = Mathf.PingPong(baseTime / 20f, 1f);
         pingPong30S = Mathf.PingPong(baseTime / 30f, 1f);
 
+
     }
     private void FixedUpdate()
     {
 
+        if (!NetworkManager.IsListening) return;
+
         updateTime += Time.deltaTime;
 
-        if (IsHost && updateTime > 0.1f)
+        if (updateTime > 0.1f)
         {
-            updateTime = 0;
-            SyncWorldParams();
+
+            Debug.Log(playerSynchronizer.ping);
+
+            if (IsHost)
+            {
+
+                updateTime = 0;
+                SyncWorldParams();
+
+            }
+
         }
+
     }
 
     #region Params
@@ -90,6 +137,20 @@ public sealed class MapSynchronizer : NetworkBehaviour
     }
     #endregion Params
 
+
+    [Rpc(SendTo.Everyone)]
+    public void UpdateFromToPosRpc(byte id, float data)
+    {
+
+        foreach(SolidMoverBehaviour solidMover in solidMovers)
+        {
+
+            if (solidMover.id != id) continue;
+            solidMover.UpdateFromToPos(data);
+
+        }
+
+    }
 
     public void FlagStateChange(FlagActivityState newActivityState, int oId, ulong pId, bool condition)
     {
@@ -122,6 +183,115 @@ public sealed class MapSynchronizer : NetworkBehaviour
             }
 
         }
+
+    }
+
+    List<DogTagBehaviour> dogTags;
+    [SerializeField]
+    DogTagBehaviour dogTagRef;
+    public void SpawnDogTag(byte playerId, Vector2 position, float rotation, Vector2 velocity)
+    {
+        if (!scoreManager.inGame) return;
+        if (scoreManager.gameMode != ScoreManager.Mode.DT) return;
+
+        SpawnDogTagRpc(playerId, position, rotation, velocity, Random.Range(int.MinValue, int.MaxValue));
+
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void SpawnDogTagRpc(byte playerId, Vector2 position, float rotation, Vector2 velocity, int id)
+    {
+        DogTagBehaviour dogTag =
+            Instantiate(dogTagRef, position, Quaternion.Euler(0, 0, rotation), null);
+        dogTag.Init(playerId, velocity, id);
+        dogTags.Add(dogTag);
+
+    }
+
+    public void SyncDogTags(int id, Rigidbody2D rb)
+    {
+        byte ignoreId = (byte) NetworkManager.Singleton.LocalClientId;
+
+        byte[] compPos = MyExtentions.EncodePosition(rb.position.x + 64, rb.position.y + 64);
+        byte[] compVel = MyExtentions.EncodePosition(rb.linearVelocity.x + 64, rb.linearVelocity.y + 64);
+        byte[] compRot = MyExtentions.EncodeRotation(rb.rotation);
+        byte[] compRotVel = MyExtentions.EncodeFloat(rb.angularVelocity);
+
+        byte[] data = new byte[14]
+        {
+            compPos[0], compPos[1], compPos[2], compPos[3],
+            compVel[0], compVel[1], compVel[2], compVel[3],
+            compRot[0], compRot[1],
+            compRotVel[0], compRotVel[1], compRotVel[2],
+            ignoreId
+        };
+
+        SyncDogTagsRpc(id, data);
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+    public void SyncDogTagsRpc(int id, byte[] data)
+    {
+
+        if ((byte)playerSynchronizer.localSquare.id == data[13]) return;
+
+        DogTagBehaviour dogTagToSync = null;
+
+        foreach(DogTagBehaviour dogTag in dogTags)
+        {
+            if (dogTag.dogTagId == id) dogTagToSync = dogTag; break;
+        }
+
+        if (!dogTagToSync) return;
+
+        byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
+        byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
+        byte[] compRot = new byte[2] { data[8], data[9] };
+        byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
+
+
+        (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
+        xPos -= 64;
+        yPos -= 64;
+        (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
+        xVel -= 64;
+        yVel -= 64;
+        float rot = MyExtentions.DecodeRotation(compRot);
+        float rotVel = MyExtentions.DecodeFloat(compRotVel);
+
+        dogTagToSync.rb.position = new Vector2(xPos, yPos);
+        dogTagToSync.rb.rotation = rot;
+        dogTagToSync.rb.linearVelocity = new Vector2(xVel, yVel);
+        dogTagToSync.rb.angularVelocity = rotVel;
+    }
+
+    public void CollectDogTag(int id, byte collectorId)
+    {
+
+        CollectDogTagRpc(id, collectorId);
+
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    public void CollectDogTagRpc(int id, byte collectorId)
+    {
+
+        DogTagBehaviour dogTagToCollect = null;
+
+        foreach(DogTagBehaviour dogTag in dogTags)
+        {
+            if(dogTag.dogTagId == id) dogTagToCollect = dogTag;
+        }
+
+        dogTags.Remove(dogTagToCollect);
+        dogTagToCollect.RunCollected(collectorId);
+
+        if (collectorId != NetworkManager.Singleton.LocalClientId) return;
+
+        if (collectorId == dogTagToCollect.owningPlayer.id) return;
+
+        playerSynchronizer.localSquare.score++;
+        playerSynchronizer.UpdateScore();
 
     }
 

@@ -1,6 +1,5 @@
 using Steamworks;
 using System.Collections;
-using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 
@@ -29,7 +28,7 @@ public sealed class ChatInputBehaviour : MonoBehaviour
         if(GetComponent<TMP_InputField>().text != "")
         {
 
-            string context = SanitizeMessage(inputContext.text);
+            string context = MyExtentions.SanitizeMessage(inputContext.text);
 
             ChatManager chatManager = GameObject.FindGameObjectWithTag("Sync").GetComponent<ChatManager>();
             chatManager.SpreadMessage(context, SteamClient.SteamId);
@@ -51,15 +50,6 @@ public sealed class ChatInputBehaviour : MonoBehaviour
     {
         yield return new WaitForEndOfFrame(); // Wait for the end of the current frame
         inputField.enabled = true;            // Re-enable the input field
-    }
-
-    string SanitizeMessage(string message)
-    {
-        message = message.Length > 120 ? message.Substring(0, 120) : message;
-
-        message = Regex.Replace(message, @"[^a-zA-Z0-9\s.,!?;:'""\-\(\)]", string.Empty);
-
-        return message;
     }
 
     private void OnDestroy()

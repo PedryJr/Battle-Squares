@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3230000773134604271}
   - component: {fileID: -3438963122069973725}
   - component: {fileID: -3148651319717881892}
+  - component: {fileID: 4394144770466933651}
   m_Layer: 7
   m_Name: Rocket
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 0, z: 3}
-  m_LocalScale: {x: 0.45, y: 0.29999998, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4162028720614635499}
@@ -109,10 +110,12 @@ MonoBehaviour:
   damageScaleOverTime: 0
   damage: 0
   aoeDamage: 0
-  acceleration: 0
+  syncTimer: 0
+  speedModifier: 0
   projectileID: 0
   IsLocalProjectile: 0
   rb: {fileID: 0}
+  owningPlayer: {fileID: 0}
   timeAlive: 0
   fullTimeAlive: 0
   projectileManager: {fileID: 0}
@@ -120,11 +123,17 @@ MonoBehaviour:
   travelDistance: 0
   recoil: 7.6
   destroyed: 0
+  returnToSender: 0
+  stickToSender: 0
   instaDestroy: 0
   skipAoeOnHit: 0
   ownerId: 0
+  melee: 0
   hit: 0
+  sync: 0
+  flipFlop: 0
   impactParticle: {fileID: 7289681851009581468, guid: 72f1be016aee4eb469e98f6df7d9f0e4, type: 3}
+  hitMark: {fileID: 7378723969388511367, guid: 74bba82f2db5ad547879bdc78ddd8ac3, type: 3}
   shotReference:
     Guid:
       Data1: 1840774806
@@ -141,6 +150,7 @@ MonoBehaviour:
     Path: event:/VFX/Base/Gun Hit
   data:
     projectileManager: {fileID: 0}
+    owningPlayer: {fileID: 0}
     position: {x: 0, y: 0}
     direction: {x: 0, y: 0}
     projectileColor: {r: 0, g: 0, b: 0, a: 0}
@@ -165,9 +175,36 @@ MonoBehaviour:
     baseDamage: 0
     damageTimeScale: 0
     burstData: []
+    retornToSender: 0
+    stickToSender: 0
+    melee: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    oneTimeHit: 0
+    meleeRotation: 0
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     enableMorph: 0
     targetMorph: {x: 0, y: 0, z: 0}
     timeToMorph: 0
+    morhpAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sync: 0
+  projectileTrailBehaviour: {fileID: 0}
 --- !u!50 &-3438963122069973725
 Rigidbody2D:
   serializedVersion: 5
@@ -191,7 +228,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 0
@@ -240,6 +277,52 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!61 &4394144770466933651
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066612454653962984}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 15863
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -1.5, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 2, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &6487271758529186225
 GameObject:

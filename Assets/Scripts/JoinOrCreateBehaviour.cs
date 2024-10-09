@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class JoinOrCreateBehaviour : MonoBehaviour
+public sealed class JoinOrCreateBehaviour : MonoBehaviour
 {
 
     [SerializeField]

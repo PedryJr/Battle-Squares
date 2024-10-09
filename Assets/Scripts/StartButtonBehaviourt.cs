@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static PlayerSynchronizer;
 
-public class StartButtonBehaviourt : MonoBehaviour
+public sealed class StartButtonBehaviourt : MonoBehaviour
 {
 
     [SerializeField]
@@ -18,7 +18,7 @@ public class StartButtonBehaviourt : MonoBehaviour
     int players;
     int readyPlayers;
 
-    private void Awake()
+    private void Start()
     {
         if (NetworkManager.Singleton.IsHost)
         {

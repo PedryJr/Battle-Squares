@@ -20,8 +20,8 @@ public sealed class LoadScores : MonoBehaviour
         for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++)
         {
 
-            string playerName = playerSynchronizer.playerIdentities[i].name;
-            Sprite playerSprite = playerSynchronizer.playerIdentities[i].pfp;
+            string playerName = playerSynchronizer.playerIdentities[i].square.playerName;
+            Sprite playerSprite = playerSynchronizer.playerIdentities[i].square.pfp;
             int playerScore = playerSynchronizer.playerIdentities[i].square.score;
 
             ScoreContent scoreContent = Instantiate(this.scoreContent, transform);

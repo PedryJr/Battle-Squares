@@ -1,6 +1,7 @@
 using FMOD.Studio;
 using FMODUnity;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static PlayerSynchronizer;
@@ -13,10 +14,9 @@ public sealed class CameraAnimator : MonoBehaviour
     public float oneSecondTimer = 0;
     public float initCameraTimer = 0;
     public float introTimer = 0;
+    float z = -20;
 
     public float soundUpdateTimer;
-
-    bool resize = true;
 
     [SerializeField]
     Volume processVolume;
@@ -33,6 +33,10 @@ public sealed class CameraAnimator : MonoBehaviour
 
     PlayerSynchronizer playerSynchronizer;
     Camera aCamera;
+    Transform cameraTransform;
+
+    [SerializeField]
+    AnimationCurve cameraAnimation;
 
     ScoreManager scoreManager;
 
@@ -42,9 +46,13 @@ public sealed class CameraAnimator : MonoBehaviour
 
     int lastI;
     float transitionTimer;
+    float fromOrthoSize;
+    float toOrthoSize;
 
     void Start()
     {
+
+        cameraTransform = transform;
         shakes = new List<Vector3>();
         playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
         startPosition = transform.position;
@@ -60,7 +68,6 @@ public sealed class CameraAnimator : MonoBehaviour
         initCameraTimer = 0;
         oneSecondTimer = 0;
         soundUpdateTimer = 0;
-        resize = true;
 
     }
 
@@ -70,6 +77,13 @@ public sealed class CameraAnimator : MonoBehaviour
         battleThemeInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
     }
+
+    float xDif;
+    float yDif;
+    int i;
+    float offset;
+    float cameraLerp;
+    Vector3 toPos;
 
     void Update()
     {
@@ -81,21 +95,21 @@ public sealed class CameraAnimator : MonoBehaviour
         Effects();
 
         if (initCameraTimer < 1) initCameraTimer += Time.deltaTime * 0.53f;
-        else if (initCameraTimer > 1) initCameraTimer = 1;
+        if (initCameraTimer > 1) initCameraTimer = 1;
 
         if (introTimer < 1) introTimer += Time.deltaTime;
-        else if (introTimer > 1) introTimer = 1;
+        if (introTimer > 1) introTimer = 1;
 
         targetPosition = Vector2.zero;
 
-        int i = 0;
+        i = 0;
         if(playerSynchronizer.playerIdentities != null)
         {
 
             foreach (PlayerData playerData in playerSynchronizer.playerIdentities)
             {
-                float xDif = Mathf.Abs(playerData.square.rb.position.x - playerSynchronizer.localSquare.rb.position.x);
-                float yDif = Mathf.Abs(playerData.square.rb.position.y - playerSynchronizer.localSquare.rb.position.y);
+                xDif = Mathf.Abs(playerData.square.rb.position.x - playerSynchronizer.localSquare.rb.position.x);
+                yDif = Mathf.Abs(playerData.square.rb.position.y - playerSynchronizer.localSquare.rb.position.y);
                 if (xDif > 31) continue;
                 if (yDif > 19) continue;
                 if (playerData.square.isDead) continue;
@@ -113,50 +127,54 @@ public sealed class CameraAnimator : MonoBehaviour
             i = 1;
         }
 
-        if (transitionTimer < 1.5f)
-            transitionTimer += Time.deltaTime * 2f;
-        else
-            transitionTimer = 1.5f;
+        if (transitionTimer < 1)
+            transitionTimer += Time.deltaTime * 1.5f;
+        if (transitionTimer > 1) transitionTimer = 1;
+
+        offset = 0.2f;
 
         if (lastI != i)
         {
             lastI = i;
             transitionTimer = 0;
+            fromOrthoSize = aCamera.orthographicSize;
+            toOrthoSize = 12.5f + Mathf.Clamp((i - 1) * 2f, 0, 4);
+            multiplier1 = 0.1f;
         }
 
+        cameraLerp = cameraAnimation.Evaluate(transitionTimer);
 
-        Vector3 toPos = new Vector3(0, 0, -10f);
-        if (i != 0) toPos = new Vector3(targetPosition.x / i, targetPosition.y / i, -10f);
-        transform.position = Vector3.Lerp(transform.position, toPos, Time.deltaTime * (1.5f + transitionTimer) * introTimer);
+        multiplier1 = Mathf.Lerp(multiplier1, Mathf.SmoothStep(offset, 1f, Mathf.Clamp01(Mathf.Clamp(playerSynchronizer.localSquare.rb.linearVelocity.magnitude / 55f, 0, 1f)) + offset), Time.deltaTime * 1.75f);
 
-        if (resize)
+        if (playerSynchronizer.localSquare.rb.linearVelocityY < 0) multiplier2 = Mathf.Lerp(multiplier2, -Mathf.Abs(playerSynchronizer.localSquare.rb.linearVelocityY / 10.5f), Time.deltaTime * 2);
+        else multiplier2 = Mathf.Lerp(multiplier2, 0, Time.deltaTime * 2);        
+
+        if (i == 1)
         {
-
-            battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
-            aCamera.orthographicSize = Mathf.Lerp(26, 12.5f, Mathf.SmoothStep(0, 1, initCameraTimer));
-
-        }
-        else
-        {
-            aCamera.orthographicSize = Mathf.Lerp(aCamera.orthographicSize, 12.5f + Mathf.Clamp((i - 1) * 2f, 0, 4), Time.deltaTime * 4);
+            targetPosition = Vector2.Lerp(targetPosition + new Vector2(0, 3.5f), targetPosition, Mathf.Abs(multiplier2));
         }
 
-        if (initCameraTimer == 1) resize = false;
+        if (i != 0) (toPos.x, toPos.y, toPos.z) = (targetPosition.x / i, targetPosition.y / i, z);
 
+        cameraTransform.position = Vector3.Lerp(cameraTransform.position, toPos, Time.deltaTime * 6.5f * multiplier1);
+        aCamera.orthographicSize = math.lerp(aCamera.orthographicSize, Mathf.Lerp(fromOrthoSize, toOrthoSize, cameraLerp), Time.deltaTime * 10);
 
     }
+
+    float multiplier1;
+    float multiplier2;
 
     void Effects()
     {
 
         shakeTimer += Time.deltaTime;
 
-        if(shakeTimer > 0.011f)
+        if(shakeTimer > 0.035f)
         {
             shakeTimer = 0;
             if (shakes.Count > 0)
             {
-                transform.position += shakes[0] * (shakes.Count / 4f);
+                cameraTransform.position += shakes[0] * (shakes.Count / 2f);
                 shakes.RemoveAt(0);
             }
         }
@@ -202,13 +220,16 @@ public sealed class CameraAnimator : MonoBehaviour
 
     }
 
+    Vector3 randomShake = new Vector3();
+
     public void Shake() 
     {
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 4; i++)
         {
-            if (shakes.Count >= 25) return;
-            shakes.Add(new Vector3(Random.Range(-0.014f, 0.014f), Random.Range(-0.014f, 0.014f), 0));
+            if (shakes.Count >= 8) return;
+            (randomShake.x, randomShake.y, randomShake.z) = (UnityEngine.Random.Range(-0.05f, 0.05f), UnityEngine.Random.Range(-0.05f, 0.05f), 0);
+            shakes.Add(randomShake);
         }
 
     }

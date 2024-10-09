@@ -1,0 +1,112 @@
+
+    public void SpawnProjectile(ProjectileType type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
+    {
+
+        Weapon weapon = new Weapon();
+        uint projectileId = (uint)new System.Random().Next(0, 2147483640) + (uint)new System.Random().Next(0, 2147483640);
+
+
+        foreach (Weapon usedWeapon in weapons)
+        {
+            if (usedWeapon.type == type) { weapon = usedWeapon; break; }
+        }
+
+        Span<float> burstData = stackalloc float[weapon.burst * 2];
+        for (int i = 0; i < burstData.Length; i += 2)
+        {
+            burstData[i] = UnityEngine.Random.Range(2.7f, 3.45f);
+            burstData[i + 1] = UnityEngine.Random.Range(2.7f, 3.45f);
+        }
+
+        Span<float> fluctuation = stackalloc float[2];
+        for (int i = 0; i < fluctuation.Length; i++)
+        {
+            fluctuation[i] = UnityEngine.Random.Range(-weapon.fluctuation, weapon.fluctuation);
+        }
+
+        SpawnProjectileRpc((byte) shootingPlayer.id, projectileId, type, position, direction, burstData.ToArray(), fluctuation.ToArray());
+        SpawnProjectileEvent((byte)shootingPlayer.id, projectileId, type, position, direction, burstData.ToArray(), fluctuation.ToArray());
+
+    }
+
+    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void SpawnProjectileRpc(byte sourceId, uint projectileID, ProjectileType type, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation)
+    {
+        if (sourceId == playerSynchronizer.localSquare.id) return;
+        SpawnProjectileEvent(sourceId, projectileID, type, position, direction, burstData, fluctuation);
+    }
+
+    void SpawnProjectileEvent(byte sourceId, uint projectileID, ProjectileType type, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation)
+    {
+
+        ProjectileBehaviour projectileBehaviour = null;
+        PlayerBehaviour owningPlayer = null;
+
+        Weapon weapon = new();
+        ProjectileInitData data = new();
+        Vector2 forceToAdd = new();
+
+        float multiplier1, multiplier2;
+
+        foreach (Weapon usedWeapon in weapons) if (usedWeapon.type == type) { weapon = usedWeapon; break; }
+        foreach (PlayerData playerData in playerSynchronizer.playerIdentities) { if (playerData.id == sourceId) owningPlayer = playerData.square; break; }
+
+        projectileBehaviour = Instantiate(weapon.projectile).GetComponent<ProjectileBehaviour>();
+
+        if (!owningPlayer || !projectileBehaviour) { Debug.Log("Projectile failed to construct!"); return; }
+
+        data = WeaponToProjectileData(weapon, projectileID, position, direction, burstData, fluctuation, owningPlayer);
+
+        projectileBehaviour.ownerId = NetworkManager.LocalClientId;
+        projectileBehaviour.InitializeBullet(data);
+
+        multiplier1 = projectileBehaviour.recoil;
+        multiplier2 = MyExtentions.EaseOutQuad(Mathf.Clamp01(1 - (playerSynchronizer.localSquare.rb.linearVelocity.magnitude / 28)));
+
+        forceToAdd = -direction.normalized * multiplier1 * multiplier2;
+        owningPlayer.rb.AddForce(forceToAdd, ForceMode2D.Impulse);
+
+    }
+
+    ProjectileInitData WeaponToProjectileData(Weapon weapon, uint projectileID, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, PlayerBehaviour owningPlayer)
+    {
+
+        return new() 
+        {
+
+            projectileManager = this,
+            owningPlayer = owningPlayer,
+            IsLocalProjectile = owningPlayer.isLocalPlayer,
+            id = projectileID,
+            direction = direction,
+            acceleration = weapon.projectileAcceleration,
+            speed = weapon.projectileSpeed,
+            position = position,
+            projectileColor = owningPlayer.playerColor,
+            projectileDarkerColor = owningPlayer.playerDarkerColor,
+            burst = weapon.burst,
+            lifeTime = weapon.lifeTime,
+            burstData = burstData,
+            fluctuation = fluctuation,
+            noGravity = weapon.noGravity,
+            dieOnImpact = weapon.dieOnImpact,
+            damageOnImpact = weapon.damageOnImpact,
+            aoe = weapon.aoe,
+            knockback = weapon.knockback,
+            sticky = weapon.sticky,
+            speedLimit = weapon.speedLimit,
+            minSpeed = weapon.minSpeed,
+            aoeDamage = weapon.aoeDamage,
+            skipAoeOnTargetHit = weapon.skipAoeOnTargetHit,
+            baseDamage = weapon.baseDamage,
+            damageTimeScale = weapon.damageTimeScale,
+            enableMorph = weapon.enableMorph,
+            targetMorph = weapon.targetMorph,
+            timeToMorph = weapon.timeToMorph,
+            sync = weapon.sync,
+            retornToSender = weapon.returnToSender,
+            stickToSender = weapon.stickToSender,
+
+        };
+
+    }

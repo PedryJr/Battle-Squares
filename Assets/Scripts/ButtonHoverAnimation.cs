@@ -1,9 +1,11 @@
 using TMPro;
+using Unity.Burst;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[BurstCompile]
 public sealed class ButtonHoverAnimation : MonoBehaviour
 {
 
@@ -58,10 +60,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
     [SerializeField]
     AnimationType animationType;
-
-    const float c1 = 1.70158f;
-    const float c3 = c1 + 1;
-
+    [BurstCompile]
     private void Awake()
     {
 
@@ -107,6 +106,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
             scrollRect.velocity = capturedVelocity;
 
+
         };
 
         if (!rectTransform) rectTransform = GetComponent<RectTransform>();
@@ -130,12 +130,13 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         onHoveredSize += animationType == AnimationType.Expand ? offsetSizeExpand : offsetSizeStretch;
         onClickedSize -= animationType == AnimationType.Expand ? offsetSizeClickedExpand : offsetSizeClickedStretch;
 
-        SetupEventTriggers();
-
     }
-
+    [BurstCompile]
     private void OnEnable()
     {
+
+        SetupEventTriggers();
+
         rectTransform.sizeDelta = offHoveredSize;
         if (tmp)
         {
@@ -146,7 +147,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         ExitHover();
 
     }
-
+    [BurstCompile]
     private void Update()
     {
 
@@ -154,10 +155,19 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
         ApplyAnimation();
 
+        if (!isHovering) PlayerController.uiRegs = 0;
+
+    }
+
+    private void LateUpdate()
+    {
+        
+        if(isHovering) PlayerController.uiRegs = 1;
+
     }
 
     #region Setup
-
+    [BurstCompile]
     void OnHover()
     {
 
@@ -188,7 +198,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         }
 
     }
-
+    [BurstCompile]
     void ExitHover()
     {
 
@@ -220,7 +230,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         }
 
     }
-
+    [BurstCompile]
     void ButtonClick()
     {
 
@@ -232,7 +242,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         toSize = onClickedSize;
 
     }
-
+    [BurstCompile]
     void Animate()
     {
 
@@ -246,7 +256,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
                 animationTimer < 1 ? animationTimer + (Time.deltaTime / exitHoverTransitionTime) : 1;
 
     }
-
+    [BurstCompile]
     void SetupEventTriggers()
     {
 
@@ -267,7 +277,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         eventTrigger.triggers.Add(pointerClickEntry);
 
     }
-
+    [BurstCompile]
     private void OnDestroy()
     {
 
@@ -283,10 +293,19 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
             input.Dispose();
         }
 
+        clickEvent.RemoveAllListeners();
+
+    }
+
+    private void OnDisable()
+    {
+
+        clickEvent.RemoveAllListeners();
+
     }
 
     #endregion
-
+    [BurstCompile]
     void ApplyAnimation()
     {
 
@@ -296,7 +315,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
             float lerp;
 
-            lerp = EaseOnClick(animationTimer);
+            lerp = MyExtentions.EaseOnClick(animationTimer);
             currentSize = Vector2.LerpUnclamped(fromSize, toSize, lerp);
 
             if(animationTimer > 1) RunClickEvent();
@@ -305,7 +324,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         else
         {
             float lerp;
-            lerp = isHovering ? EaseOnHover(animationTimer) : EaseOffHover(animationTimer);
+            lerp = isHovering ? MyExtentions.EaseOnHover(animationTimer) : MyExtentions.EaseOutQuad(animationTimer);
             currentSize = Vector2.LerpUnclamped(fromSize, toSize, lerp);
 
             if (animateColor)
@@ -320,7 +339,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         rectTransform.sizeDelta = currentSize;
 
     }
-
+    [BurstCompile]
     void RunClickEvent()
     {
 
@@ -330,37 +349,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         animatingClick = false;
 
         clickEvent?.Invoke();
-
-    }
-
-    float EaseOnHover(float x) 
-    {
-        
-        return 1 - Mathf.Pow(1 - x, 5);
-
-    }
-
-    float EaseOffHover(float x)
-    {
-
-        float f1, f2, sum;
-        float a, b;
-        a = 4.1f;
-        b = -3.8f;
-
-        f1 = c3 * x * x * x - c1 * x * x;
-        f2 = Mathf.Exp(-a * x) * Mathf.Sin(b * x);
-
-        sum = f1 + f2;
-
-        return sum;
-
-    }
-
-    float EaseOnClick(float x)
-    {
-
-        return 1 - Mathf.Pow(1 - x, 5);
 
     }
 

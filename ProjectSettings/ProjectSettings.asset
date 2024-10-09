@@ -51,12 +51,13 @@ PlayerSettings:
   m_StereoRenderingPath: 0
   m_ActiveColorSpace: 0
   unsupportedMSAAFallback: 0
+  m_SpriteBatchMaxVertexCount: 65535
   m_SpriteBatchVertexThreshold: 300
   m_MTRendering: 1
   mipStripping: 1
   numberOfMipsStripped: 0
   numberOfMipsStrippedPerMipmapLimitGroup: {}
-  m_StackTraceTypes: 010000000100000001000000010000000100000001000000
+  m_StackTraceTypes: 000000000000000000000000000000000000000001000000
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
   iosUseCustomAppBackgroundBehavior: 0
@@ -143,28 +144,24 @@ PlayerSettings:
   tvOSBundleVersion: 1.0
   bundleVersion: 0.5
   preloadedAssets:
-  - {fileID: 398202714198641392, guid: bede7872270fd0a408e5f1ae2b53f379, type: 3}
+  - {fileID: 2100000, guid: 24693aaa8bf9e3b4dbdaaaa1c354b00e, type: 2}
   - {fileID: 2100000, guid: 36373f57203063e4dae15c1bb968807f, type: 2}
   - {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  - {fileID: 8372111989446119118, guid: ca86f2818031666478def8aae3af5457, type: 3}
+  - {fileID: 7742243288628483763, guid: 0e7d01f8e78ec0949bce1e2a2184658a, type: 3}
+  - {fileID: 7289681851009581468, guid: 88caa892ab2db574196836cab72f1686, type: 3}
+  - {fileID: 11400000, guid: 9f9517ba231b4dc449c71e490f4a8238, type: 2}
   - {fileID: 7289681851009581468, guid: e8871a85f02e94e40b1af9470829ebcb, type: 3}
-  - {fileID: 2800000, guid: 1171c9acbd4def3498ea0e39bbc56a77, type: 3}
-  - {fileID: 2800000, guid: 733829b74ba3d6f4a8ccf195e4ed9dc0, type: 3}
-  - {fileID: 2800000, guid: 0632f557ce949434c884e45dc24a7806, type: 3}
-  - {fileID: 2800000, guid: 9a8a19788be8d2848977b48f8aeaeffc, type: 3}
-  - {fileID: 2800000, guid: 4712771f384f8914d9835a532ec39907, type: 3}
-  - {fileID: 2800000, guid: 0a0e8897b2a642541883e8a72036abac, type: 3}
-  - {fileID: 2800000, guid: 6e9ad52791ef2fa45abddb1364f5ec6f, type: 3}
-  - {fileID: 2800000, guid: b1a194866dfcc9f45a110ee1c3750ee7, type: 3}
-  - {fileID: 2800000, guid: 138caba19cb168149bbd0676436ac3fb, type: 3}
-  - {fileID: 2800000, guid: 3508881233423d34c86899152231ca89, type: 3}
   - {fileID: 2800000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   - {fileID: 8404699453247211762, guid: 7d3dbb5b21c48bb46b12c34c957eb007, type: 3}
   - {fileID: 5681942679721831490, guid: 54210fd5ae161954f9ed11f45042ab41, type: 3}
   - {fileID: 6255123979456777468, guid: 9a3aa35731a9e6446a6200448a7ff5af, type: 3}
   - {fileID: 4483224134987301342, guid: f01d68b729641f54d9173a2d6767271f, type: 3}
+  - {fileID: 6394383206107408866, guid: 3fe7bf162ff42fc48ac79fcd08f68b74, type: 3}
   - {fileID: 2403624704633969259, guid: 677884d92a334b44b8e6ee90e44ab35a, type: 3}
   - {fileID: 8768534918593716892, guid: 08d73433b0a369d459611eb33d8c3b83, type: 3}
+  - {fileID: 3066612454653962984, guid: 069c25ee8449356448d40969e5a37f42, type: 3}
+  - {fileID: 7289681851009581468, guid: 88f1cfe0c09d9fc4a8f356131abb5b7d, type: 3}
+  - {fileID: 7289681851009581468, guid: 270cdce96f1445d4b896d3355042f4e8, type: 3}
   - {fileID: 3066612454653962984, guid: cad4485b5d1f23a40a2d262d07303006, type: 3}
   - {fileID: 7289681851009581468, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
   - {fileID: 3066612454653962984, guid: 0e5e809c41fa5344a9148b72c5826481, type: 3}
@@ -187,62 +184,68 @@ PlayerSettings:
   - {fileID: 7289681851009581468, guid: 583089f6a9f1798448c0057490bd76a0, type: 3}
   - {fileID: 7289681851009581468, guid: 72f1be016aee4eb469e98f6df7d9f0e4, type: 3}
   - {fileID: 7289681851009581468, guid: 27f3dd13d0771dc4da1506b4059bb4c2, type: 3}
+  - {fileID: 3066612454653962984, guid: d6c3af4a7b2d3304192974fb3d513631, type: 3}
+  - {fileID: 7289681851009581468, guid: 10af522d604c7374a8a7d24e280de81d, type: 3}
+  - {fileID: 7289681851009581468, guid: c78d43acd23136a4fa0d89eb96c4c4ec, type: 3}
   - {fileID: 7093417803969706639, guid: c8db65b0af1cc1048b63b243be75aee3, type: 3}
-  - {fileID: 6200000, guid: 176a05e135a7fe543a3e06fb07d512d0, type: 2}
+  - {fileID: 4386670900800471581, guid: 7908390172f7c6549aab1e0cbc7ff307, type: 3}
+  - {fileID: 4386670900800471581, guid: e39ccd4ee28359448b4110c44d998f89, type: 3}
+  - {fileID: 4386670900800471581, guid: 327ffea9fbbf1d1409a467fdc0c40200, type: 3}
+  - {fileID: 2800000, guid: cb733c92c5d447e4eb14c15ee68da5b3, type: 3}
+  - {fileID: 4386670900800471581, guid: 17f2e6b683f64f84eb390934a4e446ca, type: 3}
+  - {fileID: 4386670900800471581, guid: 2aa39ccb8aa29e64c88d7de9b1ed9dc2, type: 3}
+  - {fileID: 4386670900800471581, guid: 550c5b1e192944543a3d33621da06c8a, type: 3}
+  - {fileID: 2800000, guid: c7b4fff6f484b7e4782c7a20ee6112ad, type: 3}
+  - {fileID: 2458467251749210880, guid: 240e775bfe7ada34a8bf00c2f1e779d8, type: 3}
+  - {fileID: 2458467251749210880, guid: 1ff387a19ed3a5c4da4f168818160ec8, type: 3}
+  - {fileID: 2458467251749210880, guid: 57c683e56ba8c5844bf358f80f9d5446, type: 3}
+  - {fileID: 2800000, guid: f19e27b881a7fbe44bd269fcdd0080cd, type: 3}
+  - {fileID: 5304042636532818160, guid: f8f038f17b5fd254faf7e985b7e3146c, type: 3}
+  - {fileID: 2800000, guid: f9d50cca915291e40a3619359b2e3d4f, type: 3}
+  - {fileID: 4386670900800471581, guid: 78814cd00307c2d48bf805d81edcde7e, type: 3}
+  - {fileID: 4386670900800471581, guid: ca007a8f4e78d614f82a54f19d12d6ec, type: 3}
+  - {fileID: 4386670900800471581, guid: 1938b7671183ebf4a97fe482444b7e97, type: 3}
+  - {fileID: 2800000, guid: 9e0d2a774bab54e4e861668669e20067, type: 3}
+  - {fileID: 4386670900800471581, guid: 2e50a487dfbfa134fb0c17f3aab01b49, type: 3}
+  - {fileID: 4386670900800471581, guid: b41299497ea7c094b8a98efc1ad4f7b4, type: 3}
+  - {fileID: 4386670900800471581, guid: 589def38b6b1be14b83afa455358eb8d, type: 3}
+  - {fileID: 2800000, guid: 833c95bc291a1d849b0594de037f1228, type: 3}
+  - {fileID: 2800000, guid: 93ef37666873c4344a378ca519a597c6, type: 3}
+  - {fileID: 5353389494767546828, guid: b7309d4061fd2d24595d018c9d96d408, type: 3}
+  - {fileID: 3066612454653962984, guid: 84a724dfa7aa2e1418b752caf7241c5a, type: 3}
+  - {fileID: 6372967502296238417, guid: 37355a4853eb6da44a3b58497bc7e425, type: 3}
+  - {fileID: 7289681851009581468, guid: f6535d4c1c04976418fdf3b57c915dfb, type: 3}
+  - {fileID: 7289681851009581468, guid: 83e84455d9b7f5d42a66ef25458f72ca, type: 3}
+  - {fileID: 2356671053784825279, guid: 0ffb1af5b6b5bef4fb141b5b841b7c6e, type: 3}
+  - {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 6372967502296238417, guid: dec702cdf478ab647b20dd837eb9d885, type: 3}
+  - {fileID: 6372967502296238417, guid: 869fbb138c650cb48a0b354f79013de4, type: 3}
+  - {fileID: 6372967502296238417, guid: 74bba82f2db5ad547879bdc78ddd8ac3, type: 3}
+  - {fileID: 6372967502296238417, guid: 8cec5e615eff25d4783f982df3926e9f, type: 3}
+  - {fileID: 6372967502296238417, guid: b69d48afc63464d4da29f850eb7b34ee, type: 3}
+  - {fileID: 6372967502296238417, guid: 4881170d60918d54e9aff5bb4332aff9, type: 3}
+  - {fileID: 6372967502296238417, guid: db1fac817b12bcc4eac9cf90dd30d019, type: 3}
+  - {fileID: 7289681851009581468, guid: b2a48de864b3698409c05db869923d0a, type: 3}
+  - {fileID: 7289681851009581468, guid: 085cf986ebf02ba4e9d2be6607b3df70, type: 3}
+  - {fileID: 6372967502296238417, guid: a1be8ca50524944469fb519e82fae55f, type: 3}
+  - {fileID: 8176140768580813388, guid: 523bc30e379c2c14ca135b3e7ce48ab5, type: 3}
+  - {fileID: 3066612454653962984, guid: 232b889b82dd47146853b21ab9905dfb, type: 3}
   - {fileID: -944628639613478452, guid: caeeeb8e8f605dc42866145ecbfdef4a, type: 3}
-  - {fileID: 11400000, guid: 81dbe62fc17c5b1479dd8111172dff06, type: 2}
-  - {fileID: 6200000, guid: 4c7f0b5ea70cf9441b6cd05ef794cbc8, type: 2}
-  - {fileID: 6200000, guid: 51189edb2d8ae334da03dc087a1d822e, type: 2}
-  - {fileID: 6200000, guid: 4b75e048d912cb04a8ca9e1d40223163, type: 2}
-  - {fileID: 12800000, guid: 77ac0548ddd09bb448f64b31bdc0ccfd, type: 3}
-  - {fileID: 11400000, guid: 1697a0517f8925c4d96922f9270f0acc, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 2800000, guid: 13906d6fc89df734f83f3b0b75008551, type: 3}
-  - {fileID: 824723745328106496, guid: 5f3987af2047c4b4ea132a75f4ae108b, type: 3}
-  - {fileID: 4386670900800471581, guid: ac57993d11a77164d92d68726ec74143, type: 3}
-  - {fileID: 4386670900800471581, guid: 1291524b75ade3e4ca0fa9f1e7a2f8e0, type: 3}
+  - {fileID: 11400000, guid: b7b47f3acca291845b09de5e59848083, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -284,7 +287,7 @@ PlayerSettings:
   ForceSDCardPermission: 0
   CreateWallpaper: 0
   androidSplitApplicationBinary: 0
-  keepLoadedShadersAlive: 0
+  keepLoadedShadersAlive: 1
   StripUnusedMeshComponents: 1
   strictShaderVariantMatching: 0
   VertexChannelCompressionMask: -1
@@ -490,7 +493,11 @@ PlayerSettings:
       m_Kind: 0
       m_SubKind: 
   m_BuildTargetBatching: []
-  m_BuildTargetShaderSettings: []
+  m_BuildTargetShaderSettings:
+  - m_BuildTarget: Standalone
+    m_ChunkSizeInMB: 16
+    m_MaxChunks: 0
+    m_OverrideDefaultSettings: 0
   m_BuildTargetGraphicsJobs: []
   m_BuildTargetGraphicsJobMode: []
   m_BuildTargetGraphicsAPIs:
@@ -522,6 +529,7 @@ PlayerSettings:
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
   actionOnDotNetUnhandledException: 1
+  editorGfxJobOverride: 1
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
@@ -783,7 +791,8 @@ PlayerSettings:
   webGLWebAssemblyBigInt: 0
   webGLCloseOnQuit: 0
   webWasm2023: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Standalone: UNITY_PHYSICS_DISABLE_INTEGRITY_CHECKS
   additionalCompilerArguments:
     Standalone: []
   platformArchitecture: {}
@@ -896,7 +905,7 @@ PlayerSettings:
   hmiCpuConfiguration: 
   hmiLogStartupTiming: 0
   qnxGraphicConfPath: 
-  apiCompatibilityLevel: 6
+  apiCompatibilityLevel: 3
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0

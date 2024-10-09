@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class StepperBehaviour : MonoBehaviour
+public sealed class StepperBehaviour : MonoBehaviour
 {
 
     public float rayDistance = 0.05f; // Distance of the raycast

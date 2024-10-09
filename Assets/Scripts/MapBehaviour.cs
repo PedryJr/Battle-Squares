@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class MapBehaviour : MonoBehaviour
+public sealed class MapBehaviour : MonoBehaviour
 {
 
     [SerializeField]
@@ -9,6 +9,12 @@ public class MapBehaviour : MonoBehaviour
 
     [SerializeField]
     Transform lightPos;
+
+    [SerializeField]
+    public string arenaName;
+
+    public string size;
+    public string difficulty;
 
     private void Awake()
     {

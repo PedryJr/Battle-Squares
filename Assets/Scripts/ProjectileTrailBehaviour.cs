@@ -1,7 +1,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
-public class ProjectileTrailBehaviour : MonoBehaviour
+public sealed class ProjectileTrailBehaviour : MonoBehaviour
 {
 
     [SerializeField]
@@ -10,15 +11,20 @@ public class ProjectileTrailBehaviour : MonoBehaviour
     [SerializeField]
     ParticleSystem attatchedParticles;
 
+    TrailModule trails;
+
     float lifeTime;
     bool stateCheck;
     bool deadProjectile;
 
     private void Start()
     {
+        trails = attatchedParticles.trails;
+        if(trails.enabled) trails.colorOverTrail = GetComponentInParent<ProjectileBehaviour>().owningPlayer.playerDarkerColor;
         transform.SetParent(null, true);
         transform.position = target.position;
         attatchedParticles.Play();
+
     }
 
     private void LateUpdate()

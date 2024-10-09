@@ -41,12 +41,13 @@ public sealed class HostBehaviour : MonoBehaviour
 
         if (!selectedLobby.activated) return;
 
-        NetworkManager.Singleton.Shutdown();
+        NetworkManager.Singleton.Shutdown(true);
         FindAnyObjectByType<PlayerSynchronizer>().ForceReset();
 
         if (selectedLobby.lobbyId.Value == SteamNetwork.currentLobby.Value.Id)
         {
 
+            await SceneManager.LoadSceneAsync("LobbyScene", LoadSceneMode.Single);
             SteamNetwork.currentLobby?.SetData("Avalible", "true");
             NetworkManager.Singleton.StartHost();
             await SteamNetwork.currentLobby?.Join();
@@ -54,8 +55,8 @@ public sealed class HostBehaviour : MonoBehaviour
         }
         else
         {
-
-            if (selectedLobby.lobby.GetData("Avalible").Equals("false")) return;
+/*
+            if (selectedLobby.lobby.GetData("Avalible").Equals("false")) return;*/
 
             RoomEnter status = await selectedLobby.lobby.Join();
 
@@ -68,8 +69,6 @@ public sealed class HostBehaviour : MonoBehaviour
 
             SteamNetwork.currentLobby?.Leave();
 
-            //await SteamMatchmaking.JoinLobbyAsync(selectedLobby.lobbyId);
-
             GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>().targetSteamId = selectedLobby.lobby.Owner.Id;
 
             NetworkManager.Singleton.StartClient();
@@ -80,7 +79,7 @@ public sealed class HostBehaviour : MonoBehaviour
 
     }
 
-    void ApplyDefaultLobby()
+    public void ApplyDefaultLobby()
     {
         selectedLobby.lobbyId = defaultLobby.lobbyId;
         selectedLobby.ownerId = defaultLobby.ownerId;

@@ -5,7 +5,15 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static PlayerSynchronizer;
+using static ProjectileManager;
+using Random = System.Random;
+using System.Security.Cryptography;
+using Unity.Mathematics;
+using static Unity.VisualScripting.Member;
+using Unity.Burst;
 
+[BurstCompile]
 public sealed class ProjectileManager : NetworkBehaviour
 {
 
@@ -23,7 +31,7 @@ public sealed class ProjectileManager : NetworkBehaviour
     public PlayerSynchronizer playerSynchronizer;
 
     float timer;
-
+    [BurstCompile]
     private void Awake()
     {
 
@@ -32,14 +40,14 @@ public sealed class ProjectileManager : NetworkBehaviour
         SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 
     }
-
+    [BurstCompile]
     private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
     {
 
         projectiles.Clear();
 
     }
-
+    [BurstCompile]
     private void Update()
     {
 
@@ -51,226 +59,146 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
 
     }
+    [BurstCompile]
+    public void SpawnProjectile(ProjectileType type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
+    {
 
-    public void SpawnProjectile(ProjectileType type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer, Vector3 color, Vector3 darkColor)
+        Weapon weapon = new Weapon();
+        uint projectileId = (uint)new System.Random().Next(0, 2147483640) + (uint)new System.Random().Next(0, 2147483640);
+
+        foreach (Weapon usedWeapon in weapons)
+        {
+            if (usedWeapon.type == type) { weapon = usedWeapon; break; }
+        }
+
+        float[] burstData = new float[weapon.burst * 2];
+        for (int i = 0; i < burstData.Length; i += 2)
+        {
+            burstData[i] = UnityEngine.Random.Range(2.7f, 3.45f);
+            burstData[i + 1] = UnityEngine.Random.Range(2.7f, 3.45f);
+        }
+
+        float[] fluctuation = new float[2];
+        for (int i = 0; i < fluctuation.Length; i++)
+        {
+            fluctuation[i] = UnityEngine.Random.Range(-weapon.fluctuation, weapon.fluctuation);
+        }
+
+        if (weapon.flipFlop) shootingPlayer.nozzleBehaviour.flipFlop = !shootingPlayer.nozzleBehaviour.flipFlop;
+
+        SpawnProjectileRpc((byte) NetworkManager.LocalClientId, projectileId, type, position, direction, burstData, fluctuation, shootingPlayer.nozzleBehaviour.flipFlop);
+        SpawnProjectileEvent((byte) NetworkManager.LocalClientId, projectileId, type, position, direction, burstData, fluctuation, shootingPlayer.nozzleBehaviour.flipFlop);
+
+    }
+    [BurstCompile]
+    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void SpawnProjectileRpc(byte sourceId, uint projectileID, ProjectileType type, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, bool flipFlop)
+    {
+        if (sourceId == (byte) NetworkManager.LocalClientId) return;
+        SpawnProjectileEvent(sourceId, projectileID, type, position, direction, burstData, fluctuation, flipFlop);
+    }
+    [BurstCompile]
+    void SpawnProjectileEvent(byte sourceId, uint projectileID, ProjectileType type, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, bool flipFlop)
     {
 
         ProjectileBehaviour projectileBehaviour = null;
+        PlayerBehaviour owningPlayer = null;
 
-        ProjectileInitData data = new ProjectileInitData();
-        uint newId = (uint)new System.Random().Next(0, 2147483640) + (uint)new System.Random().Next(0, 2147483640);
-
-        foreach (Weapon weapon in weapons)
-        {
-
-            if (weapon.type == type)
-            {
-
-                Span<float> burstData = stackalloc float[weapon.burst * 2];
-                for (int i = 0; i < burstData.Length; i += 2)
-                {
-                    burstData[i] = UnityEngine.Random.Range(2.7f, 3.45f);
-                    burstData[i + 1] = UnityEngine.Random.Range(2.7f, 3.45f);
-                }
-
-                Span<float> fluctuation = stackalloc float[2];
-                for (int i = 0; i < fluctuation.Length; i++)
-                {
-                    fluctuation[i] = UnityEngine.Random.Range(-weapon.fluctuation, weapon.fluctuation);
-                }
-
-                projectileBehaviour = Instantiate(weapon.projectile).GetComponent<ProjectileBehaviour>();
-
-                data.projectileManager = this;
-                data.IsLocalProjectile = shootingPlayer.isLocalPlayer;
-                data.id = newId;
-                data.direction = direction;
-                data.acceleration = weapon.projectileAcceleration;
-                data.speed = weapon.projectileSpeed;
-                data.position = position;
-                data.projectileColor = new Color(color.x, color.y, color.z);
-                data.projectileDarkerColor = new Color(darkColor.x, darkColor.y, darkColor.z);
-                data.burst = weapon.burst;
-                data.lifeTime = weapon.lifeTime;
-                data.burstData = burstData.ToArray();
-                data.fluctuation = fluctuation.ToArray();
-                data.noGravity = weapon.noGravity;
-                data.dieOnImpact = weapon.dieOnImpact;
-                data.damageOnImpact = weapon.damageOnImpact;
-                data.aoe = weapon.aoe;
-                data.knockback = weapon.knockback;
-                data.sticky = weapon.sticky;
-                data.speedLimit = weapon.speedLimit;
-                data.minSpeed = weapon.minSpeed;
-                data.aoeDamage = weapon.aoeDamage;
-                data.skipAoeOnTargetHit = weapon.skipAoeOnTargetHit;
-                data.baseDamage = weapon.baseDamage;
-                data.damageTimeScale = weapon.damageTimeScale;
-                data.enableMorph = weapon.enableMorph;
-                data.targetMorph = weapon.targetMorph;
-                data.timeToMorph = weapon.timeToMorph;
-                data.sync = weapon.sync;
-
-                projectileBehaviour.ownerId = NetworkManager.LocalClientId;
-
-                break;
-
-            }
-
-        }
-
-        ulong ignoreId = NetworkManager.LocalClientId;
-
-        if (IsHost)
-        {
-
-            SpawnProjectileClientRpc(type, position, direction, (byte)ignoreId, newId, color, darkColor, data.burstData, data.fluctuation);
-
-        }
-
-        if (!IsHost)
-        {
-
-            SpawnProjectileServerRpc(type, position, direction, (byte)ignoreId, newId, color, darkColor, data.burstData, data.fluctuation);
-
-        }
-
-        projectileBehaviour.InitializeBullet(data);
+        Weapon weapon = new();
+        ProjectileInitData data = new();
+        Vector2 forceToAdd = new();
 
         float multiplier1, multiplier2;
-        multiplier1 = projectileBehaviour.recoil;
-        multiplier2 = MyExtentions.EaseOutQuad(Mathf.Clamp01(1 - (playerSynchronizer.localSquare.rb.linearVelocity.magnitude / 28)));
 
-        Vector2 forceToAdd = -direction.normalized * multiplier1 * multiplier2;
+        foreach (Weapon usedWeapon in weapons) if (usedWeapon.type == type) { weapon = usedWeapon; break; }
+        foreach (PlayerData playerData in playerSynchronizer.playerIdentities) if ((byte)playerData.square.id == sourceId) { owningPlayer = playerData.square; break; }
 
-        shootingPlayer.rb.AddForce(forceToAdd, ForceMode2D.Impulse);
+        projectileBehaviour = Instantiate(weapon.projectile, position, Quaternion.identity, null).GetComponent<ProjectileBehaviour>();
+        projectileBehaviour.flipFlop = flipFlop;
+
+        data = WeaponToProjectileData(weapon, projectileID, position, direction, burstData, fluctuation, owningPlayer);
+
+        projectileBehaviour.ownerId = owningPlayer.id;
+        projectileBehaviour.InitializeBullet(data);
+
+        multiplier1 = weapon.recoil * Mods.at[13];
+        multiplier2 = MyExtentions.EaseOutQuad(math.clamp(1 - (playerSynchronizer.localSquare.rb.linearVelocity.magnitude / 28), 0, 1));
+
+        forceToAdd = -direction.normalized * multiplier1 * multiplier2;
+        owningPlayer.rb.AddForce(forceToAdd, ForceMode2D.Impulse);
 
     }
-
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    public void SpawnProjectileServerRpc(ProjectileType type, Vector2 position, Vector2 direction, byte ignoreId, uint projectileID, Vector3 color, Vector3 darkColor, float[] burstData, float[] fluctuation)
+    [BurstCompile]
+    ProjectileInitData WeaponToProjectileData(Weapon weapon, uint projectileID, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, PlayerBehaviour owningPlayer)
     {
 
-        if (NetworkManager.LocalClientId == ignoreId) return;
-
-        ProjectileInitData data = new ProjectileInitData();
-
-        ProjectileBehaviour projectileBehaviour = null;
-
-        foreach (Weapon weapon in weapons)
+        return new() 
         {
 
-            if (weapon.type == type)
-            {
+            projectileManager = this,
+            owningPlayer = owningPlayer,
+            IsLocalProjectile = owningPlayer.isLocalPlayer,
+            id = projectileID,
+            direction = direction,
+            acceleration = weapon.projectileAcceleration,
+            speed = weapon.projectileSpeed,
+            position = position,
+            projectileColor = owningPlayer.playerColor,
+            projectileDarkerColor = owningPlayer.playerDarkerColor,
+            burst = weapon.burst,
+            lifeTime = weapon.lifeTime,
+            burstData = burstData,
+            fluctuation = fluctuation,
+            noGravity = weapon.noGravity,
+            dieOnImpact = weapon.dieOnImpact,
+            damageOnImpact = weapon.damageOnImpact,
+            aoe = weapon.aoe,
+            knockback = weapon.knockback,
+            sticky = weapon.sticky,
+            speedLimit = weapon.speedLimit,
+            minSpeed = weapon.minSpeed,
+            aoeDamage = weapon.aoeDamage,
+            skipAoeOnTargetHit = weapon.skipAoeOnTargetHit,
+            baseDamage = weapon.baseDamage,
+            damageTimeScale = weapon.damageTimeScale,
+            enableMorph = weapon.enableMorph,
+            targetMorph = weapon.targetMorph,
+            timeToMorph = weapon.timeToMorph,
+            sync = weapon.sync,
+            retornToSender = weapon.returnToSender,
+            stickToSender = weapon.stickToSender,
+            morhpAnimation = weapon.morphAnimation,
+            melee = weapon.melee,
+            meleeRange = weapon.meleeRange,
+            swingDegrees = weapon.swingDegrees,
+            meleePosAnimation = weapon.meleePosAnimation,
+            oneTimeHit = weapon.oneTimeHit,
+            meleeRotAnimation = weapon.meleeRotAnimation,
+            meleeRotation = weapon.meleeRotation,
+            homing = weapon.homing,
+            spinSpeed = weapon.spinSpeed,
+            homingStrength = weapon.homingStrength,
+            homingDistance = weapon.homingDistance,
+            syncSpeed = weapon.syncSpeed,
+            rotationFlipOnImpact = weapon.rotationFlipOnImpact,
+            dieFromProjectiles = weapon.dieFromProjectiles,
+            dontBlockProjectiles = weapon.dontBlockProjectiles,
+            bounceOfPlayers = weapon.bounceOfPlayers,
+            slowDownAmount = weapon.slowDownAmount,
 
-                projectileBehaviour = Instantiate(weapon.projectile).GetComponent<ProjectileBehaviour>();
+        };
 
-                data.projectileManager = this;
-                data.IsLocalProjectile = false;
-                data.id = projectileID;
-                data.direction = direction.normalized;
-                data.acceleration = weapon.projectileAcceleration;
-                data.speed = weapon.projectileSpeed;
-                data.position = position;
-                data.projectileColor = new Color(color.x, color.y, color.z);
-                data.projectileDarkerColor = new Color(darkColor.x, darkColor.y, darkColor.z);
-                data.burst = weapon.burst;
-                data.lifeTime = weapon.lifeTime;
-                data.burstData = burstData;
-                data.fluctuation = fluctuation;
-                data.noGravity = weapon.noGravity;
-                data.dieOnImpact = weapon.dieOnImpact;
-                data.damageOnImpact = weapon.damageOnImpact;
-                data.aoe = weapon.aoe;
-                data.knockback = weapon.knockback;
-                data.sticky = weapon.sticky;
-                data.speedLimit = weapon.speedLimit;
-                data.minSpeed = weapon.minSpeed;
-                data.aoeDamage = weapon.aoeDamage;
-                data.skipAoeOnTargetHit = weapon.skipAoeOnTargetHit;
-                data.baseDamage = weapon.baseDamage;
-                data.damageTimeScale = weapon.damageTimeScale;
-                data.enableMorph = weapon.enableMorph;
-                data.targetMorph = weapon.targetMorph;
-                data.timeToMorph = weapon.timeToMorph;
-                data.sync = weapon.sync;
-
-                projectileBehaviour.ownerId = ignoreId;
-
-                break;
-
-            }
-
-        }
-
-        SpawnProjectileClientRpc(type, position, data.direction, (byte)ignoreId, data.id, color, darkColor, burstData, fluctuation);
-
-        projectileBehaviour.transform.position = position;
-        projectileBehaviour.InitializeBullet(data);
     }
 
-    [ClientRpc(Delivery = RpcDelivery.Reliable)]
-    public void SpawnProjectileClientRpc(ProjectileType type, Vector2 position, Vector2 direction, byte ignoreId, uint projectileID, Vector3 color, Vector3 darkColor, float[] burstData, float[] fluctuation)
+    #region otherSyncs
+    [BurstCompile]
+    public uint GenerateRandomUInt()
     {
-
-        if ((byte)NetworkManager.LocalClientId == ignoreId) return;
-
-        ProjectileInitData data = new ProjectileInitData();
-
-        if (IsHost) return;
-
-        ProjectileBehaviour projectileBehaviour = null;
-
-        foreach (Weapon weapon in weapons)
-        {
-
-            if (weapon.type == type)
-            {
-
-                projectileBehaviour = Instantiate(weapon.projectile).GetComponent<ProjectileBehaviour>();
-
-                data.projectileManager = this;
-                data.IsLocalProjectile = false;
-                data.id = projectileID;
-                data.direction = direction.normalized;
-                data.acceleration = weapon.projectileAcceleration;
-                data.speed = weapon.projectileSpeed;
-                data.position = position;
-                data.projectileColor = new Color(color.x, color.y, color.z);
-                data.projectileDarkerColor = new Color(darkColor.x, darkColor.y, darkColor.z);
-                data.burst = weapon.burst;
-                data.lifeTime = weapon.lifeTime;
-                data.burstData = burstData;
-                data.fluctuation = fluctuation;
-                data.noGravity = weapon.noGravity;
-                data.dieOnImpact = weapon.dieOnImpact;
-                data.damageOnImpact = weapon.damageOnImpact;
-                data.aoe = weapon.aoe;
-                data.knockback = weapon.knockback;
-                data.sticky = weapon.sticky;
-                data.speedLimit = weapon.speedLimit;
-                data.minSpeed = weapon.minSpeed;
-                data.aoeDamage = weapon.aoeDamage;
-                data.skipAoeOnTargetHit = weapon.skipAoeOnTargetHit;
-                data.baseDamage = weapon.baseDamage;
-                data.damageTimeScale = weapon.damageTimeScale;
-                data.enableMorph = weapon.enableMorph;
-                data.targetMorph = weapon.targetMorph;
-                data.timeToMorph = weapon.timeToMorph;
-                data.sync = weapon.sync;
-
-                projectileBehaviour.ownerId = ignoreId;
-
-                break;
-
-            }
-
-        }
-
-        projectileBehaviour.transform.position = position;
-        projectileBehaviour.InitializeBullet(data);
+        byte[] buffer = new byte[4];
+        new Random().NextBytes(buffer);
+        return BitConverter.ToUInt32(buffer, 0);
     }
-
+    [BurstCompile]
     GameObject GetNozzleParticle(ProjectileType projectileType)
     {
 
@@ -282,7 +210,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
         return null;
     }
-
+    [BurstCompile]
     public void SpawnParticles(Vector3 particlePosition, Quaternion particleRotation, UnityEngine.Color particleColor, ProjectileType projectileType)
     {
 
@@ -311,7 +239,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
 
     }
-
+    [BurstCompile]
     [ServerRpc(RequireOwnership = false)]
     public void SpawnParticlesServerRpc(Vector3 particlePosition, Quaternion particleRotation, Vector4 particleColor, ulong ignoreId, ProjectileType projectileType)
     {
@@ -330,7 +258,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
 
     }
-
+    [BurstCompile]
     [ClientRpc]
     public void SpawnParticlesClientRpc(Vector3 particlePosition, Quaternion particleRotation, Vector4 particleColor, ulong ignoreId, ProjectileType projectileType)
     {
@@ -349,7 +277,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
 
     }
-
+    [BurstCompile]
     public void DespawnProjectile(uint projectileID, bool hit)
     {
 
@@ -388,7 +316,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
 
     }
-
+    [BurstCompile]
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void DespawnProjectileServerRpc(uint projectileID, bool hit)
     {
@@ -416,7 +344,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
 
     }
-
+    [BurstCompile]
     [ClientRpc(Delivery = RpcDelivery.Reliable)]
     public void DespawnProjectileClientRpc(uint projectileID, bool hit)
     {
@@ -444,56 +372,155 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
 
     }
-
-
-    public void UpdateProjectiles()
+    [BurstCompile]
+    public void HitRegProjectile(uint projectileID)
     {
+
+        if (IsHost)
+        {
+
+            HitRegProjectileClientRpc(projectileID);
+
+        }
+
+        if (!IsHost)
+        {
+
+            HitRegProjectileServerRpc(projectileID);
+
+        }
 
         foreach (ProjectileBehaviour instance in projectiles)
         {
 
-            if (instance.IsDestroyed()) continue;
-            if (!instance.IsLocalProjectile) continue;
-            if (!instance.sync) continue;
+            if (instance.projectileID == projectileID)
+            {
 
-            Vector2 pos, vel;
-            float rot, ang;
+                if (!instance.IsDestroyed()) instance.HitReg();
 
-            byte[] position,
-                rotation,
-                velocity,
-                angularVelocity;
+                break;
 
-            pos = instance.rb.position;
-            vel = instance.rb.linearVelocity;
-            rot = instance.rb.rotation;
-            ang = instance.rb.angularVelocity;
+            }
 
-            UpdateProjectileRpc(
-                (byte)NetworkManager.Singleton.LocalClientId,
-                instance.projectileID,
-                MyExtentions.EncodePosition(pos.x, pos.y),
-                MyExtentions.EncodeRotation(rot),
-                MyExtentions.EncodePosition(vel.x, vel.y),
-                MyExtentions.EncodeFloat(ang));
+        }
+
+    }
+    [BurstCompile]
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    public void HitRegProjectileServerRpc(uint projectileID)
+    {
+
+        HitRegProjectileClientRpc(projectileID);
+
+        foreach (ProjectileBehaviour instance in projectiles)
+        {
+
+            if (instance.projectileID == projectileID)
+            {
+
+                if (!instance.IsDestroyed()) instance.HitReg();
+
+                break;
+
+            }
+
+        }
+
+    }
+    [BurstCompile]
+    [ClientRpc(Delivery = RpcDelivery.Reliable)]
+    public void HitRegProjectileClientRpc(uint projectileID)
+    {
+
+        if (IsHost) return;
+
+        foreach (ProjectileBehaviour instance in projectiles)
+        {
+
+            if (instance.projectileID == projectileID)
+            {
+
+                if (!instance.IsDestroyed()) instance.HitReg();
+
+                break;
+
+            }
 
         }
 
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
-    public void UpdateProjectileRpc(byte ignoreId, uint projectileId, byte[] position, byte[] rotation, byte[] velocity, byte[] angularVelocity)
+    [BurstCompile]
+    public void UpdateProjectile(ProjectileBehaviour instance)
     {
 
+        Vector2 pos, vel;
+        float rot, ang;
+
+        pos = instance.rb.position;
+        vel = instance.rb.linearVelocity;
+        rot = instance.rb.rotation;
+        ang = instance.rb.angularVelocity;
+
+        byte[] compPos = MyExtentions.EncodePosition(pos.x + 64, pos.y + 64);
+        byte[] compVel = MyExtentions.EncodePosition(vel.x + 64, vel.y + 64);
+        byte[] compRot = MyExtentions.EncodeRotation(rot);
+        byte[] compRotVel = MyExtentions.EncodeFloat(ang);
+
+        byte[] data = new byte[14]
+        {
+            compPos[0], compPos[1], compPos[2], compPos[3],
+            compVel[0], compVel[1], compVel[2], compVel[3],
+            compRot[0], compRot[1],
+            compRotVel[0], compRotVel[1], compRotVel[2],
+            (byte) NetworkManager.Singleton.LocalClientId
+        };
+
+        NewUpdateProjectileRpc(data, instance.projectileID);
+
+    }
+    [BurstCompile]
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+    public void NewUpdateProjectileRpc(byte[] data, uint projectileId)
+    {
+
+        if ((byte) playerSynchronizer.localSquare.id == data[13]) return;
+
+        ProjectileBehaviour projectileToSync = null;
         foreach (ProjectileBehaviour instance in projectiles)
         {
             if (!(projectileId == instance.projectileID)) continue;
-
+            projectileToSync = instance;
+            break;
         }
+
+        if (!projectileToSync) return;
+
+        byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
+        byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
+        byte[] compRot = new byte[2] { data[8], data[9] };
+        byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
+
+
+        (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
+        xPos -= 64;
+        yPos -= 64;
+        (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
+        xVel -= 64;
+        yVel -= 64;
+        float rot = MyExtentions.DecodeRotation(compRot);
+        float rotVel = MyExtentions.DecodeFloat(compRotVel);
+
+        projectileToSync.rb.position = new Vector2(xPos, yPos);
+        projectileToSync.rb.rotation = rot;
+        projectileToSync.rb.linearVelocity = new Vector2(xVel, yVel);
+        projectileToSync.rb.angularVelocity = rotVel;
 
     }
 
 
+    #endregion
+    [BurstCompile]
     [Serializable]
     public struct Weapon
     {
@@ -523,10 +550,32 @@ public sealed class ProjectileManager : NetworkBehaviour
         public float aoeDamage;
         public float baseDamage;
         public float damageTimeScale;
+        public float recoil;
         public bool enableMorph;
         public Vector3 targetMorph;
         public float timeToMorph;
+        public AnimationCurve morphAnimation;
         public bool sync;
+        public float syncSpeed;
+        public bool returnToSender;
+        public bool stickToSender;
+        public bool melee;
+        public bool oneTimeHit;
+        public float meleeRange;
+        public float swingDegrees;
+        public float meleeRotation;
+        public AnimationCurve meleePosAnimation;
+        public AnimationCurve meleeRotAnimation;
+        public bool flipFlop;
+        public bool homing;
+        public float homingStrength;
+        public float homingDistance;
+        public float spinSpeed;
+        public bool rotationFlipOnImpact;
+        public bool dieFromProjectiles;
+        public bool dontBlockProjectiles;
+        public bool bounceOfPlayers;
+        public float slowDownAmount;
 
     }
 
@@ -539,7 +588,11 @@ public sealed class ProjectileManager : NetworkBehaviour
         Shotgun,
         Rocket,
         Granade,
-        Raygun
+        Raygun,
+        Charge,
+        Katana,
+        Boomerang,
+        Hailmaker
 
     }
 

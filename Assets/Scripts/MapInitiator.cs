@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using static ScoreManager;
 
-public class MapInitiator : MonoBehaviour
+public sealed class MapInitiator : MonoBehaviour
 {
 
     MapTypes[] mapTypes;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public sealed class ParticleBehaviour : MonoBehaviour
 {

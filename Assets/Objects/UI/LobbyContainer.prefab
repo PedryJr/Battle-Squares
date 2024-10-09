@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7921569, g: 0.7921569, b: 0.7921569, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -339,8 +339,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 259.7, y: 0.69999695}
-  m_SizeDelta: {x: 285, y: 40}
+  m_AnchoredPosition: {x: 259.7, y: 2}
+  m_SizeDelta: {x: 285, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9160118966415413325
 CanvasRenderer:
@@ -372,8 +372,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Pedry
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1697a0517f8925c4d96922f9270f0acc, type: 2}
-  m_sharedMaterial: {fileID: 648057634111872941, guid: 1697a0517f8925c4d96922f9270f0acc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
+  m_sharedMaterial: {fileID: -607137550700216403, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -397,7 +397,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.85
+  m_fontSize: 45.45
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

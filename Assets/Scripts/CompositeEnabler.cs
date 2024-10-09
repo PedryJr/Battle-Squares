@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CompositeEnabler : MonoBehaviour
+public sealed class CompositeEnabler : MonoBehaviour
 {
 
     CompositeCollider2D compositeCollider;

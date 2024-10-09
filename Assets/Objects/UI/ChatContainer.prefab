@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: God damnit..
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1697a0517f8925c4d96922f9270f0acc, type: 2}
-  m_sharedMaterial: {fileID: 648057634111872941, guid: 1697a0517f8925c4d96922f9270f0acc, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
+  m_sharedMaterial: {fileID: -607137550700216403, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

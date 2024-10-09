@@ -43,7 +43,7 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638599426764115590
+  lastModified: 638637621525185345
   FileSizes:
   - Name: Desktop
     Value: 1036
@@ -125,6 +125,54 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-5522852104335975654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Shot/CameraPositionX
+  m_EditorClassIdentifier: 
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-5274057293598614325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Shot/CameraPositionX
+  m_EditorClassIdentifier: 
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-5174570398748984334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,6 +197,61 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-3580429345772102378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Hailmaker/Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Hailmaker/Shot
+  Guid:
+    Data1: -1092076263
+    Data2: 1119341843
+    Data3: -2074649164
+    Data4: -1205273768
+  Banks:
+  - {fileID: 6687703786072549468}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 469
+--- !u!114 &-2742016566797694500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Minigun/Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Minigun/Shot
+  Guid:
+    Data1: 1515475320
+    Data2: 1113045789
+    Data3: 960461999
+    Data4: -769046721
+  Banks:
+  - {fileID: 6687703786072549468}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -5274057293598614325}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 132
 --- !u!114 &-1720226408084135471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,12 +355,15 @@ MonoBehaviour:
   - {fileID: 9179963675208238677}
   - {fileID: 5208885096205294333}
   - {fileID: 6138990007282944406}
+  - {fileID: 7436012682555213570}
+  - {fileID: -2742016566797694500}
+  - {fileID: -3580429345772102378}
   EditorParameters: []
   MasterBanks:
   - {fileID: -8610244248640552602}
   StringsBanks:
   - {fileID: 1467507890409329574}
-  cacheTime: 638599442930454748
+  cacheTime: 638637643921961961
   cacheVersion: 131618
 --- !u!114 &450546386737726583
 MonoBehaviour:
@@ -369,10 +475,10 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638599426764123094
+  lastModified: 638637621525195341
   FileSizes:
   - Name: Desktop
-    Value: 1402
+    Value: 1532
   Exists: 1
 --- !u!114 &2868924097593082008
 MonoBehaviour:
@@ -543,11 +649,39 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/VFX.bank
   Name: VFX
   StudioPath: bank:/VFX
-  lastModified: 638599442930454748
+  lastModified: 638637643921961961
   FileSizes:
   - Name: Desktop
-    Value: 49664
+    Value: 66080
   Exists: 1
+--- !u!114 &7436012682555213570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Katana/Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Katana/Shot
+  Guid:
+    Data1: -198327085
+    Data2: 1243631254
+    Data3: 514360735
+    Data4: -1938883303
+  Banks:
+  - {fileID: 6687703786072549468}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -5522852104335975654}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 203
 --- !u!114 &9179963675208238677
 MonoBehaviour:
   m_ObjectHideFlags: 0

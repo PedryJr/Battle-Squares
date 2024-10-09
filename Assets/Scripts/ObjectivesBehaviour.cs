@@ -1,7 +1,7 @@
 using UnityEngine;
 using static PlayerSynchronizer;
 
-public class ObjectivesBehaviour : MonoBehaviour
+public sealed class ObjectivesBehaviour : MonoBehaviour
 {
 
     public FlagBehaviour[] flags;

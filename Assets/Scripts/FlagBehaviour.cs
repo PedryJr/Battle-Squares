@@ -1,6 +1,8 @@
+using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 using static PlayerSynchronizer;
-
+[BurstCompile]
 public sealed class FlagBehaviour : MonoBehaviour, ISync
 {
 
@@ -43,7 +45,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
     Rigidbody2D following;
     Transform post;
     Transform child;
-    public new ParticleSystem particleSystem;
+    public ParticleSystem flagParticleSystem;
     public FlagBehaviour follower;
 
     float normalMultiplier = 2;
@@ -65,15 +67,15 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
     public FlagActivityState activityState = FlagActivityState.Idle;
 
     public ObjectiveType objectiveType = ObjectiveType.flag;
-
+    [BurstCompile]
     private void Awake()
     {
 
         spawn = new GameObject("Spawn - " + name).GetComponent<Transform>();
         id = ((transform.parent.GetSiblingIndex() + 1) * transform.parent.childCount) - (transform.GetSiblingIndex() + 1);
         child = transform.GetChild(0);
-        particleSystem = child.GetComponent<ParticleSystem>();
-        mainParticleModule = particleSystem.main;
+        flagParticleSystem = child.GetComponent<ParticleSystem>();
+        mainParticleModule = flagParticleSystem.main;
         post = transform.parent;
         collider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -85,13 +87,13 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         toSize = idleSize;
 
     }
-
+    [BurstCompile]
     void Start()
     {
         spawn.SetParent(transform.parent, true);
         spawn.transform.localPosition = transform.localPosition;
     }
-
+    [BurstCompile]
     private void Update()
     {
 
@@ -128,7 +130,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
 
         void LerpSize()
         {
-            transform.localScale = Vector3.Lerp(fromSize, toSize, Mathf.SmoothStep(0, 1, sizeStateTimer));
+            transform.localScale = Vector3.Lerp(fromSize, toSize, math.smoothstep(0, 1, sizeStateTimer));
         }
 
         if (!appliedColor)
@@ -140,8 +142,8 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
 
         if (activityState == FlagActivityState.Idle)
         {
-            rotation = (Mathf.SmoothStep(0, 1, mapSync.pingPong2S) - 0.5f) * 30;
-            float rotationToPost = Mathf.Rad2Deg * Mathf.Atan2((transform.position - post.position).y, (transform.position - post.position).x);
+            rotation = (math.smoothstep(0, 1, mapSync.pingPong2S) - 0.5f) * 30;
+            float rotationToPost = math.degrees(math.atan2((transform.position - post.position).y, (transform.position - post.position).x));
             transform.rotation = Quaternion.Euler(0, 0, rotationToPost + rotation - 90);
 
         }
@@ -151,10 +153,10 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
             if (timer > emissionDelta)
             {
                 timer = 0;
-                particleSystem.Emit(1);
+                flagParticleSystem.Emit(1);
             }
 
-            float rotationToTarget = Mathf.Rad2Deg * Mathf.Atan2((rb.linearVelocity.normalized).y, (rb.linearVelocity.normalized).x);
+            float rotationToTarget = math.degrees(math.atan2((rb.linearVelocity.normalized).y, (rb.linearVelocity.normalized).x));
             child.rotation = Quaternion.Euler(0, 0, rotationToTarget + 90);
 
         }
@@ -185,6 +187,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         }
 
     }
+    [BurstCompile]
     private void FixedUpdate()
     {
 
@@ -197,22 +200,23 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         SetLimiters();
 
     }
-
+    [BurstCompile]
     void SetLimiters()
     {
 
-        rb.angularVelocity = Mathf.Clamp(rb.angularVelocity, -127, 127);
-        rb.linearVelocityX = Mathf.Clamp(rb.linearVelocityX, -60, 60);
-        rb.linearVelocityY = Mathf.Clamp(rb.linearVelocityY, -60, 60);
-        rb.rotation = Mathf.Repeat(rb.rotation, 360);
+        rb.angularVelocity = math.clamp(rb.angularVelocity, -127, 127);
+        rb.linearVelocityX = math.clamp(rb.linearVelocityX, -60, 60);
+        rb.linearVelocityY = math.clamp(rb.linearVelocityY, -60, 60);
+        if (rb.rotation > 360) rb.rotation -= 360f;
+        if (rb.rotation < 0) rb.rotation += 360f;
 
     }
-
+    [BurstCompile]
     void UpdateGeneralParameters()
     {
-        timer += Mathf.Clamp(Time.deltaTime * rb.linearVelocity.magnitude * 0.6f, 0, 0.055f);
+        timer += math.clamp(Time.deltaTime * rb.linearVelocity.magnitude * 0.6f, 0, 0.055f);
     }
-
+    [BurstCompile]
     void UpdateForState()
     {
         switch (activityState)
@@ -222,7 +226,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
             case FlagActivityState.ReturnToSpawn: UpdateReturnToSpawn(); break;
         }
     }
-
+    [BurstCompile]
     void UpdateFollowTarget()
     {
 
@@ -242,7 +246,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         }
 
     }
-
+    [BurstCompile]
     void UpdateReturnToSpawn()
     {
 
@@ -253,7 +257,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         if (((Vector2) spawn.transform.position - rb.position).magnitude < 0.5f) SetToIdle();
 
     }
-
+    [BurstCompile]
     public void SetToIdle()
     {
         activityState = FlagActivityState.Idle;
@@ -263,21 +267,21 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         transform.position = spawn.position;
 
         transform.rotation = Quaternion.Euler(0, 0, 0);
-        particleSystem.transform.rotation = Quaternion.Euler(0, 0, 0);
+        flagParticleSystem.transform.rotation = Quaternion.Euler(0, 0, 0);
 
-        rotation = (Mathf.SmoothStep(0, 1, mapSync.pingPong2S) - 0.5f) * 30;
-        float rotationToPost = Mathf.Rad2Deg * Mathf.Atan2((transform.position - post.position).y, (transform.position - post.position).x);
+        rotation = (math.smoothstep(0, 1, mapSync.pingPong2S) - 0.5f) * 30;
+        float rotationToPost = math.degrees(math.atan2((transform.position - post.position).y, (transform.position - post.position).x));
         transform.rotation = Quaternion.Euler(0, 0, rotationToPost + rotation - 90);
 
         sizeState = SizeState.idle;
         score = false;
         normalMultiplier = 2f;
-        particleSystem.Play();
+        flagParticleSystem.Play();
         collected = false;
         spriteRenderer.color = color;
         mainParticleModule.startColor = darkColor;
     }
-
+    [BurstCompile]
     public void SetToFollowTarget(PlayerBehaviour playerBehaviour, bool remote)
     {
 
@@ -296,7 +300,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         emissionDelta = 1f;
         playerBehaviour.flag = this;
         sizeState = SizeState.flying;
-        particleSystem.Stop();
+        flagParticleSystem.Stop();
         transform.SetParent(transform.parent.parent, true);
         this.playerBehaviour = playerBehaviour;
         activityState = FlagActivityState.FollowTarget;
@@ -305,7 +309,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         mapSync.FlagStateChange(FlagActivityState.FollowTarget, id, playerBehaviour.id, false);
 
     }
-
+    [BurstCompile]
     public void SetToReturnToSpawnChain(bool chain, bool remote)
     {
         spriteRenderer.color = Color.white;
@@ -317,6 +321,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         if (chain) Chain();
         else Single();
 
+        [BurstCompile]
         void Chain()
         {
             if (playerBehaviour)
@@ -327,6 +332,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
             following = null;
         }
 
+        [BurstCompile]
         void Single()
         {
             if (follower)
@@ -349,7 +355,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
 
 
     }
-
+    [BurstCompile]
     public FlagBehaviour GetAndSetFollower(FlagBehaviour newFollower)
     {
         if(follower != null)
@@ -362,7 +368,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
             return this;
         }
     }
-
+    [BurstCompile]
     public void RegisterHit(ProjectileBehaviour projectileBehaviour)
     {
 
@@ -392,7 +398,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         }
 
     }
-
+    [BurstCompile]
     void CollectFlag(ProjectileBehaviour projectileBehaviour)
     {
 
@@ -405,7 +411,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
 
         }
     }
-
+    [BurstCompile]
     public void SyncRigidBody(SyncData updatedPosition)
     {
 
@@ -425,7 +431,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         rb.angularVelocity = angVel;
 
     }
-
+    [BurstCompile]
     public SyncData FetchRigidBody()
     {
 
@@ -440,14 +446,14 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         return syncData;
 
     }
-
+    [BurstCompile]
     public int GetId()
     {
 
         return id;
 
     }
-
+    [BurstCompile]
     public bool ShouldSync()
     {
 
@@ -456,7 +462,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         return false;
 
     }
-
+    [BurstCompile]
     public void DoSync()
     {
         mapSync.FlagPositionUpdate(this, id);
@@ -477,6 +483,7 @@ public enum FlagActivityState
     Idle
 }
 
+[BurstCompile]
 public struct SyncData
 {
     public float posX, posY, velX, velY, angVel, ang;

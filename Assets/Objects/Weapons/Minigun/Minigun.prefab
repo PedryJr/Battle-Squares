@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 2164880302232175362}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.485, y: 0, z: 0}
+  m_LocalPosition: {x: 0.4, y: 0, z: 0}
   m_LocalScale: {x: 1.7391303, y: 1.7391303, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -61,7 +61,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 0, z: 3}
-  m_LocalScale: {x: 0.24, y: 0.24, z: 1}
+  m_LocalScale: {x: 0.28, y: 0.28, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2345000804440483264}
@@ -140,10 +140,12 @@ MonoBehaviour:
   damageScaleOverTime: 0
   damage: 0
   aoeDamage: 0
-  acceleration: 0
+  syncTimer: 0
+  speedModifier: 0
   projectileID: 0
   IsLocalProjectile: 0
   rb: {fileID: 0}
+  owningPlayer: {fileID: 0}
   timeAlive: 0
   fullTimeAlive: 0
   projectileManager: {fileID: 0}
@@ -151,18 +153,24 @@ MonoBehaviour:
   travelDistance: 0
   recoil: 4
   destroyed: 0
+  returnToSender: 0
+  stickToSender: 0
   instaDestroy: 0
   skipAoeOnHit: 0
   ownerId: 0
+  melee: 0
   hit: 0
+  sync: 0
+  flipFlop: 0
   impactParticle: {fileID: 7289681851009581468, guid: b29b397a02cadfe46adaf535059a9ac4, type: 3}
+  hitMark: {fileID: 7378723969388511367, guid: 4881170d60918d54e9aff5bb4332aff9, type: 3}
   shotReference:
     Guid:
-      Data1: -78626531
-      Data2: 1167885873
-      Data3: 1818233730
-      Data4: -1518369794
-    Path: event:/VFX/Sniper/Shot
+      Data1: 1515475320
+      Data2: 1113045789
+      Data3: 960461999
+      Data4: -769046721
+    Path: event:/VFX/Minigun/Shot
   hitSoundReference:
     Guid:
       Data1: 533881192
@@ -172,6 +180,7 @@ MonoBehaviour:
     Path: event:/VFX/Base/Gun Hit
   data:
     projectileManager: {fileID: 0}
+    owningPlayer: {fileID: 0}
     position: {x: 0, y: 0}
     direction: {x: 0, y: 0}
     projectileColor: {r: 0, g: 0, b: 0, a: 0}
@@ -196,9 +205,46 @@ MonoBehaviour:
     baseDamage: 0
     damageTimeScale: 0
     burstData: []
+    retornToSender: 0
+    stickToSender: 0
+    melee: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    oneTimeHit: 0
+    meleeRotation: 0
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     enableMorph: 0
     targetMorph: {x: 0, y: 0, z: 0}
     timeToMorph: 0
+    morhpAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    homing: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    sync: 0
+    syncSpeed: 0
+  projectileTrailBehaviour: {fileID: 0}
+  externalTrailRef: {fileID: 0}
 --- !u!61 &1066894796322893754
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -268,7 +314,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 0

@@ -1,6 +1,9 @@
+using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 using static ProjectileManager;
 
+[BurstCompile]
 public sealed class NozzleBehaviour : MonoBehaviour
 {
 
@@ -42,8 +45,11 @@ public sealed class NozzleBehaviour : MonoBehaviour
 
     public bool secondaryHoldable = false;
 
+    public bool flipFlop;
+
     float h, s, v;
 
+    [BurstCompile]
     public void Awake()
     {
 
@@ -56,7 +62,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
 
 
     }
-
+    [BurstCompile]
     public NozzleBehaviour SetPlayerController(PlayerController playerController, PlayerBehaviour playerBehaviour)
     {
 
@@ -70,11 +76,11 @@ public sealed class NozzleBehaviour : MonoBehaviour
         return this;
 
     }
-
+    [BurstCompile]
     private void Update()
     {
 
-        intensity = Mathf.Clamp01(intensity - Time.deltaTime / 5f);
+        intensity = math.clamp(intensity - Time.deltaTime / 5f, 0, 1);
 
         Color nozzleColor = owningPlayerDarkerColor;
         Color particleColor = nozzleColor;
@@ -104,11 +110,9 @@ public sealed class NozzleBehaviour : MonoBehaviour
         }
 
         if (!playerController.shootPrimary && !playerController.shootSecondary) return;
-
-        /*relativePositionToPlayer = transform.position - playerBehaviour.transform.position;
-        globalNozzleDirection = playerBehaviour.position + relativePositionToPlayer.normalized * 1.5f;*/
-        relativePositionToPlayer = playerController.projectileDirection;
-        globalNozzleDirection = playerBehaviour.transform.position + (Vector3)playerController.projectileDirection;
+        
+        relativePositionToPlayer = playerBehaviour.toPos;
+        globalNozzleDirection = playerBehaviour.transform.position + (Vector3) playerBehaviour.toPos;
 
         bool primaryReady, secondaryReady;
 
@@ -125,7 +129,8 @@ public sealed class NozzleBehaviour : MonoBehaviour
                 playerBehaviour.AnimateNozzle(Vector3.zero, Vector3.zero);
                 projectileManager.SpawnParticles(
                     globalNozzleDirection - (relativePositionToPlayer / 3.5f),
-                    Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan2(relativePositionToPlayer.y, relativePositionToPlayer.x)),
+                    Quaternion.Euler(0, 0, 
+                    math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
                     particleColor,
                     primary);
             }
@@ -137,13 +142,13 @@ public sealed class NozzleBehaviour : MonoBehaviour
                 playerBehaviour.AnimateNozzle(Vector3.zero, Vector3.zero);
                 projectileManager.SpawnParticles(
                     globalNozzleDirection - (relativePositionToPlayer / 3.5f),
-                    Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan2(relativePositionToPlayer.y, relativePositionToPlayer.x)),
+                    Quaternion.Euler(0, 0, math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
                     particleColor,
                     secondary);
             }
         }
     }
-
+    [BurstCompile]
     bool ShootWeapon(ProjectileType type)
     {
 
@@ -192,20 +197,36 @@ public sealed class NozzleBehaviour : MonoBehaviour
 
         }
 
-        if (fire) projectileManager.SpawnProjectile(
-                        type,
-            globalNozzleDirection,
-            relativePositionToPlayer.normalized,
-            playerBehaviour,
-            new Vector3(owningPlayerColor.r, owningPlayerColor.g, owningPlayerColor.b) ,
-            new Vector3(owningPlayerDarkerColor.r, owningPlayerDarkerColor.g, owningPlayerDarkerColor.b));
-
+        if (fire)
+        {
+            projectileManager.SpawnProjectile(
+                type,
+                globalNozzleDirection,
+                relativePositionToPlayer.normalized,
+                playerBehaviour);
+            playerBehaviour.ApplyRecoil();
+        }
         return fire;
 
     }
-
+    [BurstCompile]
     public void UpdateWeaponTypes(ProjectileType newWeapon)
     {
+        intensity = 0;
+        primaryAmmo = 0;
+        secondaryAmmo = 0;
+        primaryShots = 0;
+        secondaryShots = 0;
+        primaryTimeSinceShot = 0;
+        primaryFireTime = 0;
+        secondaryTimeSinceShot = 0;
+        secondaryFireTime = 0;
+        primaryTimeSinceEmpty = 0;
+        primaryReloadTime = 0;
+        secondaryTimeSinceEmpty = 0;
+        secondaryReloadTime = 0;
+        primaryHoldable = false;
+        secondaryHoldable = false;
 
         if (newWeapon == primary) return;
 

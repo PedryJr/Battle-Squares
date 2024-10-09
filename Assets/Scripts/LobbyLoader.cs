@@ -57,11 +57,14 @@ public sealed class LobbyLoader : MonoBehaviour
 
     async Task LoadLobbies()
     {
-        LobbyQuery lobbyQuery = SteamMatchmaking.LobbyList;
-        lobbyQuery.FilterDistanceWorldwide();
-        lobbyQuery.WithKeyValue("Variant", "BattleSquares");
 
-        Lobby[] fetchedGreenLobbies = await lobbyQuery.RequestAsync();
+        List<LobbyBehaviour> lobbiesToRemove = new List<LobbyBehaviour>();
+
+        LobbyQuery lobbyQuery1 = SteamMatchmaking.LobbyList;
+        lobbyQuery1.FilterDistanceWorldwide();
+        lobbyQuery1.WithKeyValue("Variant", "BattleSquares");
+
+        Lobby[] fetchedGreenLobbies = await lobbyQuery1.RequestAsync();
 
         if (this != null)
         {
@@ -70,11 +73,11 @@ public sealed class LobbyLoader : MonoBehaviour
                 foreach (Lobby lobby in fetchedGreenLobbies)
                 {
                     bool exist = false;
-                    foreach(LobbyBehaviour lb in Lobbies)
+                    foreach (LobbyBehaviour lb in Lobbies)
                     {
-                        if(lb.lobby.Id == lobby.Id) exist = true;
+                        if (lb.lobby.Id == lobby.Id) exist = true;
                     }
-                    if(exist) continue;
+                    if (exist) continue;
                     Lobbies.Add(Instantiate(lobbyTemplate, transform).Initialize(lobby, this));
                 }
             }
@@ -85,9 +88,120 @@ public sealed class LobbyLoader : MonoBehaviour
             bool exist = false;
             foreach (Lobby lb in fetchedGreenLobbies)
             {
-                if(lobby.lobby.Id == lb.Id) exist = true;
+                if (lobby.lobby.Id == lb.Id) exist = true;
             }
-            if(exist) continue;
+            if (exist) continue;
+            if (!lobby.IsDestroyed())
+            {
+                lobbiesToRemove.Add(lobby);
+            }
+        }
+
+        foreach (LobbyBehaviour lobby in Lobbies)
+        {
+            if (!lobby.IsDestroyed())
+            {
+                lobby.transform.SetParent(transform.parent, true);
+            }
+        }
+
+        List<LobbyBehaviour> sortedLobbies = new List<LobbyBehaviour>();
+
+        foreach (LobbyBehaviour lobby in Lobbies)
+        {
+            if (!lobby.IsDestroyed())
+            {
+                if (lobby.ownerId == SteamClient.SteamId.Value)
+                {
+                    sortedLobbies.Add(lobby);
+                }
+            }
+        }
+
+        foreach (LobbyBehaviour lobby in Lobbies)
+        {
+            if (!lobby.IsDestroyed())
+            {
+                if (lobby.lobby.GetData("Avalible").Equals("true"))
+                {
+                    sortedLobbies.Add(lobby);
+                }
+            }
+        }
+
+        foreach (LobbyBehaviour lobby in Lobbies)
+        {
+            if (!lobby.IsDestroyed())
+            {
+                if (lobby.lobby.GetData("Avalible").Equals("false"))
+                {
+                    if (lobby.lobby.GetData("OwnerId").Equals(SteamClient.SteamId.Value.ToString()))
+                    {
+                        sortedLobbies.Add(lobby);
+                    }
+                    else
+                    {
+                        lobbiesToRemove.Add(lobby);
+                    }
+                }
+            }
+        }
+
+        foreach (LobbyBehaviour lobby in sortedLobbies)
+        {
+            if (!lobby.IsDestroyed())
+            {
+                lobby.transform.SetParent(transform, true);
+            }
+        }
+
+        foreach (LobbyBehaviour lobby in lobbiesToRemove)
+        {
+
+            Lobbies.Remove(lobby);
+            try
+            {
+                Destroy(lobby.gameObject);
+            } catch { }
+
+        }
+
+    }
+
+    async Task LoadOwn()
+    {
+
+        LobbyQuery lobbyQuery1 = SteamMatchmaking.LobbyList;
+        lobbyQuery1.WithKeyValue("Variant", "BattleSquares");
+        lobbyQuery1.WithKeyValue("OwnerId", SteamClient.SteamId.Value.ToString());
+
+        Lobby[] fetchedGreenLobbies = await lobbyQuery1.RequestAsync();
+
+        if (this != null)
+        {
+            if (fetchedGreenLobbies != null)
+            {
+                foreach (Lobby lobby in fetchedGreenLobbies)
+                {
+                    bool exist = false;
+                    foreach (LobbyBehaviour lb in Lobbies)
+                    {
+                        if (lb.lobby.Id == lobby.Id) exist = true;
+                    }
+                    if (exist) continue;
+                    Lobbies.Add(Instantiate(lobbyTemplate, transform).Initialize(lobby, this));
+                }
+            }
+        }
+
+        foreach (LobbyBehaviour lobby in Lobbies)
+        {
+            bool exist = false;
+            foreach (Lobby lb in fetchedGreenLobbies)
+            {
+                if (lobby.lobby.Id == lb.Id) exist = true;
+            }
+            if (exist) continue;
             if (!lobby.IsDestroyed())
             {
                 Lobbies.Remove(lobby);
@@ -95,7 +209,7 @@ public sealed class LobbyLoader : MonoBehaviour
             }
         }
 
-        foreach(LobbyBehaviour lobby in Lobbies)
+        foreach (LobbyBehaviour lobby in Lobbies)
         {
             if (!lobby.IsDestroyed())
             {

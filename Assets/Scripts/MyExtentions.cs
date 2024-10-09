@@ -4,7 +4,11 @@ using System;
 using System.IO.Compression;
 using System.IO;
 using UnityEngine;
-
+using Unity.VisualScripting;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using Unity.Burst;
+using Unity.Mathematics;
 public static class MyExtentions
 {
 
@@ -94,7 +98,7 @@ public static class MyExtentions
 
         int scaledValue = (int)(((value - minValue) / range) * 16777215);
 
-        scaledValue = Math.Max(0, Math.Min(16777215, scaledValue));
+        scaledValue = math.max(0, math.min(16777215, scaledValue));
 
         byte byte1 = (byte)((scaledValue >> 16) & 0xFF);
         byte byte2 = (byte)((scaledValue >> 8) & 0xFF);
@@ -122,8 +126,8 @@ public static class MyExtentions
     public static byte[] EncodeNozzlePosition(float x, float y)
     {
 
-        x = Mathf.Clamp(x, -1, 1);
-        y = Mathf.Clamp(y, -1, 1);
+        x = math.clamp(x, -1, 1);
+        y = math.clamp(y, -1, 1);
 
         byte scaledX = (byte)((x + 1.0f) * 127.5f);
         byte scaledY = (byte)((y + 1.0f) * 127.5f);
@@ -133,8 +137,6 @@ public static class MyExtentions
 
     public static (float, float) DecodeNozzlePosition(byte[] bytes)
     {
-        if (bytes.Length != 2)
-            throw new ArgumentException("Input must be exactly 2 bytes.");
 
         byte scaledX = bytes[0];
         byte scaledY = bytes[1];
@@ -153,13 +155,13 @@ public static class MyExtentions
         }
         else
         {
-            return 1 - (float) Math.Pow(-2 * x + 2, 3) / 2;
+            return 1 - (float) math.pow(-2 * x + 2, 3) / 2;
         }
     }
 
     public static float EaseInExpo(float x)
     {
-        return x == 0 ? 0 : (float) Math.Pow(2, 10 * x - 10);
+        return x == 0 ? 0 : (float) math.pow(2, 10 * x - 10);
     }
 
     public static float EaseInQuad(float x)
@@ -178,6 +180,27 @@ public static class MyExtentions
         Image? image = SteamFriends.GetLargeAvatarAsync(steamId).Result;
         if (image != null) return SteamImgToSprite(image.Value);
         else return null;
+
+    }
+
+    public static async Task<Sprite> GetImageFromSteam(SteamId steamId)
+    {
+
+        Image? image = await SteamFriends.GetLargeAvatarAsync(steamId);
+
+        byte[] imageData = image.Value.Data;
+        uint imageWidth = image.Value.Width;
+        uint imageHeight = image.Value.Height;
+        Vector2 imageDimentions = new Vector2(image.Value.Width, image.Value.Height);
+
+        Texture2D spriteTexture = new Texture2D((int)imageWidth, (int)imageHeight, TextureFormat.RGBA32, false, true);
+        Rect spriteRect = new Rect(new Vector2(0, 0), imageDimentions);
+        Vector2 spritePivot = imageDimentions / 2;
+
+        spriteTexture.LoadRawTextureData(imageData);
+        spriteTexture.Apply();
+
+        return Sprite.Create(spriteTexture, spriteRect, spritePivot);
 
     }
 
@@ -258,6 +281,60 @@ public static class MyExtentions
         }
 
         return flatArray;
+    }
+
+    public static Vector2 AngleToNormalizedCoordinate(float angle)
+    {
+        float radians = math.radians(angle);
+
+        float x = math.cos(radians);
+        float y = math.sin(radians);
+
+        return new Vector2(x, y).normalized;
+    }
+    public static string SanitizeMessage(string message)
+    {
+        // Truncate the message to 120 characters if it's longer
+        message = message.Length > 120 ? message.Substring(0, 120) : message;
+
+        // Regular expression to match allowed characters
+        message = Regex.Replace(message,
+            @"[^\p{L}\p{N}\p{Sc}\p{Sm}\p{Mn}\p{Pc}\p{Pd}\p{Zs}.,<>{}|_+=!?;:'""\-\(\)]",
+            string.Empty);
+
+        return message;
+    }
+
+
+    public static float EaseOnHover(float x)
+    {
+
+        return 1 - math.pow(1 - x, 5);
+
+    }
+
+    public static float EaseOffHover(float x)
+    {
+
+        float f1, f2, sum;
+        float a, b;
+        a = 4.1f;
+        b = -3.8f;
+
+        f1 = (1.70158f + 1) * x * x * x - 1.70158f * x * x;
+        f2 = math.exp(-a * x) * math.sin(b * x);
+
+        sum = f1 + f2;
+
+        return sum;
+
+    }
+
+    public static float EaseOnClick(float x)
+    {
+
+        return 1 - math.pow(1 - x, 5);
+
     }
 
 }

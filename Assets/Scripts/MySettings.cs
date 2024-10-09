@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public sealed class MySettings : MonoBehaviour
@@ -10,12 +12,21 @@ public sealed class MySettings : MonoBehaviour
     public static int fullscreen = 0;
     public static bool postProcessing = true;
 
+    public static int wins = 0;
+    public static int maxWinStreak = 0;
+    public static int maxLobbyKills = 0;
+    public static int kills = 0;
+    public static int deaths = 0;
+
     private static string settingsFilePath;
+    private static string statsFilePath;
 
     public static void Init()
     {
         settingsFilePath = Path.Combine(Application.persistentDataPath, "settings.json");
+        statsFilePath = Path.Combine(Application.persistentDataPath, "stats.json");
         LoadSettings();
+        LoadStats();
     }
 
     public static void SaveSettings()
@@ -26,11 +37,28 @@ public sealed class MySettings : MonoBehaviour
             vsync = vsync,
             fps = fps,
             fullscreen = fullscreen,
-            postProcessing = postProcessing
+            postProcessing = postProcessing,
         };
 
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(settingsFilePath, json);
+    }
+
+    public static void SaveStats()
+    {
+
+        UserStatsData data = new UserStatsData
+        {
+            wins = wins,
+            maxWinStreak = maxWinStreak,
+            maxLobbyKills = maxLobbyKills,
+            kills = kills,
+            deaths = deaths,
+        };
+
+        string json = JsonUtility.ToJson(data, true);
+        File.WriteAllText(statsFilePath, json);
+
     }
 
     public static void LoadSettings()
@@ -48,6 +76,25 @@ public sealed class MySettings : MonoBehaviour
         }
 
         ApplySettings();
+
+    }
+
+    public static void LoadStats()
+    {
+
+        if (File.Exists(statsFilePath))
+        {
+
+            string json = File.ReadAllText(statsFilePath);
+            UserStatsData data = JsonUtility.FromJson<UserStatsData>(json);
+
+            wins = data.wins;
+            maxWinStreak = data.maxWinStreak;
+            maxLobbyKills = data.maxLobbyKills;
+            kills = data.kills;
+            deaths = data.deaths;
+
+        }
 
     }
 
@@ -79,7 +126,6 @@ public sealed class MySettings : MonoBehaviour
         SaveSettings();
 
     }
-
 }
 
 
@@ -90,4 +136,15 @@ public class SettingsData
     public int fps = 0;
     public int fullscreen = 0;
     public bool postProcessing = true;
+}
+
+public class UserStatsData
+{
+
+    public int wins = 0;
+    public int maxWinStreak = 0;
+    public int maxLobbyKills = 0;
+    public int kills;
+    public int deaths;
+
 }

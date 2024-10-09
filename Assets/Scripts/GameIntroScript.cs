@@ -1,5 +1,7 @@
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public sealed class GameIntroScript : MonoBehaviour
@@ -43,6 +45,8 @@ public sealed class GameIntroScript : MonoBehaviour
         time = 0;
         fadeImage.color = start;
 
+        FindAnyObjectByType<PlayerController>().DisableController();
+
     }
 
     private void OnEnable()
@@ -65,7 +69,8 @@ public sealed class GameIntroScript : MonoBehaviour
             time = 1;
         }
 
-        fadeImage.color = Color.Lerp(start, end, Mathf.SmoothStep(0, 1, time));
+        fadeImage.color = Color.Lerp(start, end, 
+            math.smoothstep(0, 1, time));
 
         if(additionalImages != null)
         {
@@ -73,7 +78,7 @@ public sealed class GameIntroScript : MonoBehaviour
             {
                 for (int i = 0; i < additionalImages.Length; i++)
                 {
-                    additionalImages[i].color = Color.Lerp(start, additionalColorsI[i], Mathf.SmoothStep(0, 1, time));
+                    additionalImages[i].color = Color.Lerp(start, additionalColorsI[i], math.smoothstep(0, 1, time));
                 }
             }
         }
@@ -84,7 +89,7 @@ public sealed class GameIntroScript : MonoBehaviour
             {
                 for (int i = 0; i < additionalTexts.Length; i++)
                 {
-                    additionalTexts[i].color = Color.Lerp(start, additionalColorsT[i], Mathf.SmoothStep(0, 1, time));
+                    additionalTexts[i].color = Color.Lerp(start, additionalColorsT[i], math.smoothstep(0, 1, time));
                 }
             }
         }
@@ -93,6 +98,21 @@ public sealed class GameIntroScript : MonoBehaviour
         {
             if (shouldDestroy) Destroy(gameObject);
             else stop = true;
+        }
+
+    }
+
+    private void OnDestroy()
+    {
+
+        PlayerController controller = FindAnyObjectByType<PlayerController>();
+        if (controller) controller.EnableController();
+
+        if (SceneManager.GetActiveScene().name.Equals("GameScene"))
+        {
+            PlayerSynchronizer playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
+            if (playerSynchronizer) playerSynchronizer.localSquare.spawnBuffer = false;
+
         }
 
     }

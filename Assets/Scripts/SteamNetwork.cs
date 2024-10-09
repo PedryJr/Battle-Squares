@@ -3,9 +3,12 @@ using Steamworks.Data;
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 {
+
+    ScoreManager scoreManager;
 
     LocalSteamData localSteamData;
 
@@ -15,16 +18,50 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
     public static Lobby? currentLobby;
     public ulong? lastLobbyId;
 
+    int playerCount = -2;
+
+    float activePlayersTimer;
     private void Awake()
     {
         localSteamData = GetComponent<LocalSteamData>();
         SetupSteamClient();
         CreateNewLobby();
         SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberDisconnected;
+        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+        SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
+
+        scoreManager = GetComponent<ScoreManager>();
+    }
+
+    private void SceneManager_sceneUnloaded(Scene arg0)
+    {
+
+        if (arg0.name == "GameScene" && NetworkManager.Singleton.IsHost)
+        {
+
+            if (LobbyStateBehaviour.access) currentLobby?.SetData("Avalible", "true");
+            else currentLobby?.SetData("Avalible", "false");
+
+        }
+
+    }
+
+    private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+
+        if (arg0.name == "GameScene" && NetworkManager.Singleton.IsHost)
+        {
+
+            currentLobby?.SetData("Avalible", "false");
+
+        }
+
     }
 
     private void Update()
     {
+
+        if(!scoreManager.inGame) activePlayersTimer += Time.deltaTime;
 
         SteamClient.RunCallbacks();
 
@@ -35,6 +72,16 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 
         }
 
+        if (activePlayersTimer > 5) UpdatePlayerCount();
+        if (activePlayersTimer > 5) activePlayersTimer = 0;
+
+    }
+
+    async void UpdatePlayerCount()
+    {
+
+        playerCount = await SteamUserStats.PlayerCountAsync();
+
     }
 
     private void SteamMatchmaking_OnLobbyMemberDisconnected(Lobby arg1, Friend arg2)
@@ -43,7 +90,7 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
         if( ulong.Parse(currentLobby.Value.GetData("OwnerId")) == arg2.Id)
         {
 
-            SteamNetwork.currentLobby?.Leave();
+            currentLobby?.Leave();
 
             CreateNewLobby();
 
@@ -76,8 +123,6 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
         playerName = SteamClient.Name;
         playerSteamID = SteamClient.SteamId;
 
-        localSteamData.Init(playerSteamID);
-
         try
         {
             SteamClient.Init(3180450, false);
@@ -101,6 +146,7 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
         currentLobby?.SetData("Name", SteamClient.Name);
         currentLobby?.SetData("OwnerId", SteamClient.SteamId.Value.ToString());
         currentLobby?.SetData("Variant", "BattleSquares");
+        currentLobby?.SetData("Code", "INVALID");
 
     }
 

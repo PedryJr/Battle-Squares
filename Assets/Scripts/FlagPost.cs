@@ -18,6 +18,11 @@ public sealed class FlagPost : MonoBehaviour, IObjective
 
     public Transform spawn;
 
+    [SerializeField]
+    bool transformSpawnPos;
+    [SerializeField]
+    Transform potential;
+
     public void DisableOnLoad()
     {
 
@@ -38,15 +43,24 @@ public sealed class FlagPost : MonoBehaviour, IObjective
 
             flag.rb.simulated = true;
             flag.spriteRenderer.enabled = true;
-            flag.particleSystem.Play();
+            flag.flagParticleSystem.Play();
         }
 
         ownerId = player.id;
 
         if (player.square.isLocalPlayer)
         {
-            spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
-            spawn.position = transform.position + playerSpawnOffset;
+            if (transformSpawnPos)
+            {
+                spawn.position = potential.position;
+            }
+            else
+            {
+
+                spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
+                spawn.position = transform.position + playerSpawnOffset;
+
+            }
             player.square.transform.position = GameObject.FindGameObjectWithTag("Spawn").transform.position;
             localFlag = true;
         

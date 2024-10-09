@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static PlayerSynchronizer;
 
-public class ReadyUpButton : MonoBehaviour
+public sealed class ReadyUpButton : MonoBehaviour
 {
 
     [SerializeField]
@@ -46,7 +46,10 @@ public class ReadyUpButton : MonoBehaviour
 
     private void Update()
     {
-        
+
+        if (!playerSynchronizer) return;
+        if (!playerSynchronizer.localSquare) return;
+
         players = playerSynchronizer.playerIdentities.Count;
 
         int i = 0;

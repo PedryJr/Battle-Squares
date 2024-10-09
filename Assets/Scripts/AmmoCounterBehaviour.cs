@@ -1,6 +1,8 @@
+using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
-
+[BurstCompile]
 public sealed class AmmoCounterBehaviour : MonoBehaviour
 {
 
@@ -22,6 +24,7 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
 
     Color emptyColor;
 
+    [BurstCompile]
     public void UnitHUD()
     {
 
@@ -51,7 +54,7 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         }
 
     }
-
+    [BurstCompile]
     private void Update()
     {
 
@@ -59,7 +62,7 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         else UpdateSecondary();
 
     }
-
+    [BurstCompile]
     public void UpdatePrimary()
     {
 
@@ -67,7 +70,7 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         if (!nozzleBehaviour) return;
         Color color;
         primaryRemaining = nozzleBehaviour.primaryAmmo - nozzleBehaviour.primaryShots;
-        float lerp = Mathf.Clamp(nozzleBehaviour.primaryTimeSinceShot, 0, nozzleBehaviour.primaryReloadTime) / nozzleBehaviour.primaryReloadTime;
+        float lerp = math.clamp(nozzleBehaviour.primaryTimeSinceShot, 0, nozzleBehaviour.primaryReloadTime) / nozzleBehaviour.primaryReloadTime;
         lerp = MyExtentions.EaseInQuad( MyExtentions.EaseInExpo(lerp));
 
         if (primaryRemaining != recordPrimaryRemaining)
@@ -90,12 +93,12 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
             if (ammoVisualizers[i].transition2) ammoVisualizers[i].timer = lerp;
             else if (ammoVisualizers[i].transition) ammoVisualizers[i].timer -= Time.deltaTime * 8;
 
-            ammoVisualizers[i].timer = Mathf.Clamp01(ammoVisualizers[i].timer);
+            ammoVisualizers[i].timer = math.clamp(ammoVisualizers[i].timer, 0, 1);
             if (ammoVisualizers[i].timer == 0) ammoVisualizers[i].transition2 = true;
 
             if (ammoVisualizers[i].transition2)
             {
-                color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, Mathf.SmoothStep(0, 1, ammoVisualizers[i].timer));
+                color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, math.smoothstep(0, 1, ammoVisualizers[i].timer));
 
             }
             else
@@ -112,14 +115,14 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         }
 
     }
-
+    [BurstCompile]
     public void UpdateSecondary()
     {
 
         if (!nozzleBehaviour) return;
         Color color;
         secondaryRemaining = nozzleBehaviour.secondaryAmmo - nozzleBehaviour.secondaryShots;
-        float lerp = Mathf.Clamp(nozzleBehaviour.secondaryTimeSinceShot, 0, nozzleBehaviour.secondaryReloadTime) / nozzleBehaviour.secondaryReloadTime;
+        float lerp = math.clamp(nozzleBehaviour.secondaryTimeSinceShot, 0, nozzleBehaviour.secondaryReloadTime) / nozzleBehaviour.secondaryReloadTime;
         lerp = MyExtentions.EaseInQuad(MyExtentions.EaseInExpo(lerp));
         if (secondaryRemaining != recordSecondaryRemaining)
         {
@@ -139,14 +142,14 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         for (int i = 0; i < ammoVisualizers.Length; i++)
         {
             if (ammoVisualizers[i].transition2) ammoVisualizers[i].timer = lerp;
-            else if (ammoVisualizers[i].transition) ammoVisualizers[i].timer -= Time.deltaTime * 8;
+            else if (ammoVisualizers[i].transition) ammoVisualizers[i].timer -= Time.deltaTime * 6.5f;
 
-            ammoVisualizers[i].timer = Mathf.Clamp01(ammoVisualizers[i].timer);
+            ammoVisualizers[i].timer = math.clamp(ammoVisualizers[i].timer, 0, 1);
 
             if (ammoVisualizers[i].timer == 0) ammoVisualizers[i].transition2 = true;
             if (ammoVisualizers[i].transition2)
             {
-                color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, Mathf.SmoothStep(0, 1, ammoVisualizers[i].timer));
+                color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, math.smoothstep(0, 1, ammoVisualizers[i].timer));
 
             }
             else
@@ -163,7 +166,7 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         }
 
     }
-
+    [BurstCompile]
     public void UpdateWeaponType()
     {
 
@@ -198,6 +201,17 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
 
     }
 
+    private void OnEnable()
+    {
+        UpdateWeaponType();
+    }
+
+    private void OnDisable()
+    {
+        UpdateWeaponType();
+    }
+
+    [BurstCompile]
     struct VisualElement
     {
 

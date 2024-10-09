@@ -24,6 +24,11 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
 
     private void Start()
     {
+
+        if (!playerSynchronizer) return;
+        if (!playerSynchronizer.localSquare) return;
+        if (!playerSynchronizer.localSquare.nozzleBehaviour) return;
+
         weapons = weaponSelectorContent.GetComponentsInChildren<WeaponSelector>();
         if (previewType == WeaponPreviewType.Primary)
         {
@@ -49,8 +54,12 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
 
     private void Update()
     {
-        
-        image.color = playerSynchronizer.localSquare.playerColor;
+
+        if (!playerSynchronizer) return;
+        if (!playerSynchronizer.localSquare) return;
+        if (!playerSynchronizer.localSquare.nozzleBehaviour) return;
+
+        image.color = playerSynchronizer.localSquare.playerColor * 1.2f;
 
     }
 

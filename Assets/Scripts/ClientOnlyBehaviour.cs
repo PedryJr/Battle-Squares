@@ -3,16 +3,25 @@ using UnityEngine;
 
 public sealed class ClientOnlyBehaviour : MonoBehaviour
 {
-    private void OnEnable()
+
+    [SerializeField]
+    bool destroy;
+
+    private void Start()
     {
 
         bool host = NetworkManager.Singleton.IsHost;
 
         if (host)
         {
-            gameObject.SetActive(false);
+            if (destroy)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
-
     }
-
 }

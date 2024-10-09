@@ -13,6 +13,7 @@ TagManager:
   - Objective
   - Death
   - World
+  - PlayerConstructor
   layers:
   - Default
   - TransparentFX
@@ -26,9 +27,9 @@ TagManager:
   - Environment
   - Stepping
   - Objectives
-  - 
-  - 
-  - 
+  - DogTags
+  - HitMark
+  - OldHitMark
   - 
   - 
   - 
