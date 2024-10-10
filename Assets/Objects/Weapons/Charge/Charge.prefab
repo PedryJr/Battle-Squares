@@ -163,6 +163,7 @@ MonoBehaviour:
   sync: 0
   flipFlop: 0
   impactParticle: {fileID: 7289681851009581468, guid: 270cdce96f1445d4b896d3355042f4e8, type: 3}
+  hitMark: {fileID: 0}
   shotReference:
     Guid:
       Data1: 1840774806
@@ -232,8 +233,22 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    homing: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
     sync: 0
+    syncSpeed: 0
+    slowDownAmount: 0
   projectileTrailBehaviour: {fileID: 0}
+  externalTrailRef: {fileID: 0}
+  multiplySpawnrateByLifetime: 0
+  lifeTimeMultiplier: 0
+  externalTrailSpawnRate: 0
 --- !u!50 &-3438963122069973725
 Rigidbody2D:
   serializedVersion: 5

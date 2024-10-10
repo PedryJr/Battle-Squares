@@ -987,6 +987,8 @@ MonoBehaviour:
   playerName: 
   h: 0
   isDead: 1
+  kills: 0
+  killStreak: 0
   scoreDeducted: 0
   steamDataAvalible: 0
   steamDataApplied: 0
@@ -994,4 +996,5 @@ MonoBehaviour:
   fromPos: {x: 0, y: 0}
   toPos: {x: 0, y: 0}
   nozzlePosOffset: {x: 0, y: 0}
+  spawnBuffer: 0
   newMods: 0

@@ -7,7 +7,7 @@ public class GeneratePointsInSpriteShape : MonoBehaviour
     SpriteShapeController spriteShapeController;
     PolygonCollider2D polygonCollider;
 
-    void Awake()
+    void Start()
     {
         spriteShapeController = GetComponent<SpriteShapeController>();
         polygonCollider = gameObject.AddComponent<PolygonCollider2D>();
@@ -16,6 +16,8 @@ public class GeneratePointsInSpriteShape : MonoBehaviour
         List<Vector2> shapePoints = GetSpriteShapePoints();
 
         polygonCollider.SetPath(0, shapePoints.ToArray());
+        polygonCollider.useDelaunayMesh = true;
+
     }
 
     List<Vector2> GetSpriteShapePoints()

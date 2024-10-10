@@ -21811,6 +21811,8 @@ MonoBehaviour:
   icon: {fileID: -5322691566557524574, guid: 833c95bc291a1d849b0594de037f1228, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Tripple X
+  size: 
+  difficulty: 
 --- !u!1 &4425849860357091364
 GameObject:
   m_ObjectHideFlags: 0

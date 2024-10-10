@@ -93,8 +93,6 @@ public class HitMarkBehaviour : MonoBehaviour
             Destroy(gameObject);
         }
 
-        transform.position = new Vector3(transform.position.x, transform.position.y, timer);
-
     }
 
     [BurstCompile]

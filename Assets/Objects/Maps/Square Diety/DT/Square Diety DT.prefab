@@ -2030,6 +2030,8 @@ MonoBehaviour:
   icon: {fileID: -2837455272834653360, guid: f19e27b881a7fbe44bd269fcdd0080cd, type: 3}
   lightPos: {fileID: 7094376858307215321}
   arenaName: Square Diety
+  size: 
+  difficulty: 
 --- !u!1 &2671946738515479378
 GameObject:
   m_ObjectHideFlags: 0

@@ -65,6 +65,8 @@ MonoBehaviour:
   solid: {fileID: 493593700403697516}
   id: 0
   timeBetweenPoints: 1
+  offset: 0
+  siblingOffset: 0
 --- !u!1 &290126026675849961
 GameObject:
   m_ObjectHideFlags: 0
@@ -3044,6 +3046,8 @@ MonoBehaviour:
   icon: {fileID: -1701036748956469758, guid: c7b4fff6f484b7e4782c7a20ee6112ad, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Perfect Sanctum
+  size: 
+  difficulty: 
 --- !u!1 &4403414678169782263
 GameObject:
   m_ObjectHideFlags: 0
@@ -6566,6 +6570,8 @@ MonoBehaviour:
   solid: {fileID: 8764376328382707089}
   id: 0
   timeBetweenPoints: 1
+  offset: 0
+  siblingOffset: 0
 --- !u!1 &9171337950958830351
 GameObject:
   m_ObjectHideFlags: 0
