@@ -37,6 +37,9 @@ public class ConvertSolidToMesh : MonoBehaviour
         }
 
         mesh.CombineMeshes(meshes, true, true);
+        mesh.Optimize();
+        mesh.OptimizeIndexBuffers();
+        mesh.OptimizeReorderVertexBuffer();
 
         meshFilter.mesh = mesh;
 

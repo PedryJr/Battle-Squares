@@ -107,8 +107,6 @@ public sealed class MapSynchronizer : NetworkBehaviour
         if (updateTime > 0.1f)
         {
 
-            Debug.Log(playerSynchronizer.ping);
-
             if (IsHost)
             {
 

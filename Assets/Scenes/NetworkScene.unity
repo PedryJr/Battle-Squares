@@ -278,6 +278,7 @@ MonoBehaviour:
   - 6
   - 6
   scale: 0.01625
+  forceEnable: 0
 --- !u!222 &133719621
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -823,6 +824,7 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 1
     projectile: {fileID: 3066612454653962984, guid: e996855feaaebdd44a38ac085247b5c3, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
@@ -889,6 +891,7 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 2
     projectile: {fileID: 3066612454653962984, guid: 0e5e809c41fa5344a9148b72c5826481, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: c2f50d2d9a5df5f4b9f0d3e1477fc04a, type: 3}
@@ -955,6 +958,7 @@ MonoBehaviour:
     dontBlockProjectiles: 1
     bounceOfPlayers: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 3
     projectile: {fileID: 3066612454653962984, guid: 60fe5a07722983144bf629b18c3c2728, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: d8f2373ffb8c1d74b8bafe429c9fa5c6, type: 3}
@@ -1048,6 +1052,7 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 4
     projectile: {fileID: 3066612454653962984, guid: df99116d93bd6da419c716dbcedd5e0b, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 407e4aa50b4ac3246ae54abf626c8b81, type: 3}
@@ -1114,6 +1119,7 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 5
     projectile: {fileID: 3066612454653962984, guid: cad4485b5d1f23a40a2d262d07303006, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
@@ -1180,6 +1186,7 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 6
     projectile: {fileID: 3066612454653962984, guid: 76131a323adaf2140bfedbbaaf9b4913, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: f314d24c6dc858544a9523786afd9469, type: 3}
@@ -1203,11 +1210,11 @@ MonoBehaviour:
     speedLimit: 100
     minSpeed: 17
     aoeDamage: 4
-    baseDamage: 7.5
+    baseDamage: 6.66
     damageTimeScale: 0
     recoil: 7
     enableMorph: 1
-    targetMorph: {x: 0.18, y: 0.4, z: 1}
+    targetMorph: {x: 0.18, y: 0.45, z: 1}
     timeToMorph: 0.33
     morphAnimation:
       serializedVersion: 2
@@ -1264,15 +1271,16 @@ MonoBehaviour:
     dontBlockProjectiles: 1
     bounceOfPlayers: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 7
     projectile: {fileID: 3066612454653962984, guid: 069c25ee8449356448d40969e5a37f42, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 88f1cfe0c09d9fc4a8f356131abb5b7d, type: 3}
     projectileAmmo: 1
     reloadTime: 2.1
     shootingInterval: 0.04
-    projectileSpeed: 0.5
-    projectileAcceleration: 20
-    lifeTime: 0.43
+    projectileSpeed: 4
+    projectileAcceleration: 7.5
+    lifeTime: 0.45
     holdable: 0
     burst: 0
     bounces: 0
@@ -1292,7 +1300,7 @@ MonoBehaviour:
     recoil: 0
     enableMorph: 1
     targetMorph: {x: 1.56, y: 1.56, z: 1}
-    timeToMorph: 0.43
+    timeToMorph: 0.45
     morphAnimation:
       serializedVersion: 2
       m_Curve:
@@ -1315,7 +1323,7 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.75
+        time: 0.73
         value: 0.45
         inSlope: 0
         outSlope: 0
@@ -1375,6 +1383,7 @@ MonoBehaviour:
     dontBlockProjectiles: 1
     bounceOfPlayers: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 8
     projectile: {fileID: 3066612454653962984, guid: d6c3af4a7b2d3304192974fb3d513631, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 10af522d604c7374a8a7d24e280de81d, type: 3}
@@ -1522,6 +1531,7 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 9
     projectile: {fileID: 3066612454653962984, guid: 232b889b82dd47146853b21ab9905dfb, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 085cf986ebf02ba4e9d2be6607b3df70, type: 3}
@@ -1588,6 +1598,7 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 1
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   - type: 10
     projectile: {fileID: 3066612454653962984, guid: 84a724dfa7aa2e1418b752caf7241c5a, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: f6535d4c1c04976418fdf3b57c915dfb, type: 3}
@@ -1596,7 +1607,7 @@ MonoBehaviour:
     shootingInterval: 0.055
     projectileSpeed: 50
     projectileAcceleration: -4
-    lifeTime: 0.6
+    lifeTime: 0.7
     holdable: 1
     burst: 0
     bounces: 0
@@ -1672,6 +1683,7 @@ MonoBehaviour:
     dontBlockProjectiles: 1
     bounceOfPlayers: 0
     slowDownAmount: 20
+    senderSpeedOnDeath: 0
   nozzleParticles: {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
   projectiles: []
   localNozzle: {fileID: 0}
@@ -1793,6 +1805,8 @@ MonoBehaviour:
     - {fileID: 5228839954144026777, guid: ca007a8f4e78d614f82a54f19d12d6ec, type: 3}
     - {fileID: 5228839954144026777, guid: b41299497ea7c094b8a98efc1ad4f7b4, type: 3}
     - {fileID: 5228839954144026777, guid: 353650d9beb4b7a43bb852d3b8a6de00, type: 3}
+    - {fileID: 5228839954144026777, guid: a40df42fee6f983439d8261be594a3d3, type: 3}
+    - {fileID: 5228839954144026777, guid: e12cbaf63080268438d5820867b806d9, type: 3}
   - maps:
     - {fileID: 5228839954144026777, guid: 550c5b1e192944543a3d33621da06c8a, type: 3}
     - {fileID: 4582851206092352348, guid: 57c683e56ba8c5844bf358f80f9d5446, type: 3}
@@ -1800,6 +1814,8 @@ MonoBehaviour:
     - {fileID: 5228839954144026777, guid: 1938b7671183ebf4a97fe482444b7e97, type: 3}
     - {fileID: 5228839954144026777, guid: 589def38b6b1be14b83afa455358eb8d, type: 3}
     - {fileID: 5228839954144026777, guid: d0bcf0ace0ee51e4081157d20a55e831, type: 3}
+    - {fileID: 5228839954144026777, guid: 0f96d764894d99e49b5cac0d8b7dab35, type: 3}
+    - {fileID: 5228839954144026777, guid: 46a55622cd479fc429abe806f9bbb2ea, type: 3}
   - maps:
     - {fileID: 5228839954144026777, guid: 17f2e6b683f64f84eb390934a4e446ca, type: 3}
     - {fileID: 4582851206092352348, guid: 240e775bfe7ada34a8bf00c2f1e779d8, type: 3}
@@ -1807,6 +1823,8 @@ MonoBehaviour:
     - {fileID: 5228839954144026777, guid: 78814cd00307c2d48bf805d81edcde7e, type: 3}
     - {fileID: 5228839954144026777, guid: 2e50a487dfbfa134fb0c17f3aab01b49, type: 3}
     - {fileID: 5228839954144026777, guid: 1781a16744733134eb12c9b5c31b01fe, type: 3}
+    - {fileID: 5228839954144026777, guid: 8aedbf4f43ebfa4458d07d319a65feed, type: 3}
+    - {fileID: 5228839954144026777, guid: 1e9ce7636d4de8f47abc8f498e06315e, type: 3}
   objectives: {fileID: 0}
   solidMovers: []
   repeat1S: 1

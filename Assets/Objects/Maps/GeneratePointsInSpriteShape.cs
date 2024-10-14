@@ -18,6 +18,9 @@ public class GeneratePointsInSpriteShape : MonoBehaviour
         polygonCollider.SetPath(0, shapePoints.ToArray());
         polygonCollider.useDelaunayMesh = true;
 
+        Destroy(this);
+
+
     }
 
     List<Vector2> GetSpriteShapePoints()

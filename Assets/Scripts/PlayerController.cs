@@ -166,13 +166,13 @@ public sealed class PlayerController : MonoBehaviour
     private void Update()
     {
 
+        regs = uiRegs;
+
     }
 
     [BurstCompile]
     void SetFinalInputDirection()
     {
-
-        regs = uiRegs;
 
         if (controllerTarget == null) return;
 

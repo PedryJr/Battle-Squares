@@ -154,15 +154,16 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         Animate();
 
         ApplyAnimation();
-
-        if (!isHovering) PlayerController.uiRegs = 0;
+/*
+        if (!isHovering) PlayerController.uiRegs = 0;*/
 
     }
 
     private void LateUpdate()
     {
-        
+        /*
         if(isHovering) PlayerController.uiRegs = 1;
+        else PlayerController.uiRegs = 0;*/
 
     }
 

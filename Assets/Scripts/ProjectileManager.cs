@@ -185,6 +185,7 @@ public sealed class ProjectileManager : NetworkBehaviour
             dontBlockProjectiles = weapon.dontBlockProjectiles,
             bounceOfPlayers = weapon.bounceOfPlayers,
             slowDownAmount = weapon.slowDownAmount,
+            senderSpeedOnDeath = weapon.senderSpeedOnDeath,
 
         };
 
@@ -576,6 +577,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         public bool dontBlockProjectiles;
         public bool bounceOfPlayers;
         public float slowDownAmount;
+        public float senderSpeedOnDeath;
 
     }
 

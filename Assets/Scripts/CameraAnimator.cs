@@ -61,13 +61,13 @@ public sealed class CameraAnimator : MonoBehaviour
         scoreManager = FindAnyObjectByType<ScoreManager>();
         spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
 
-        battleThemeInstance = RuntimeManager.CreateInstance(battleThemeReference);
-        battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
-        battleThemeInstance.start();
-
         initCameraTimer = 0;
         oneSecondTimer = 0;
         soundUpdateTimer = 0;
+
+        battleThemeInstance = RuntimeManager.CreateInstance(battleThemeReference);
+        battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
+        battleThemeInstance.start();
 
     }
 
@@ -138,7 +138,7 @@ public sealed class CameraAnimator : MonoBehaviour
             lastI = i;
             transitionTimer = 0;
             fromOrthoSize = aCamera.orthographicSize;
-            toOrthoSize = 12.5f + Mathf.Clamp((i - 1) * 2f, 0, 4);
+            toOrthoSize = 12.5f + Mathf.Clamp((i - 1) * 2f, 0, 2.8f);
             multiplier1 = 0.1f;
         }
 
@@ -188,6 +188,7 @@ public sealed class CameraAnimator : MonoBehaviour
 
     void SoundUpdates()
     {
+        battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
 
         soundUpdateTimer = 0;
         if (!playerSynchronizer.localSquare) return;

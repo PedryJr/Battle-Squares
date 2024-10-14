@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnTime: 0
-  growSpeed: 6
+  growSpeed: 10
   growTarget: {x: 1, y: 1, z: 1}
   growFrom: {x: 0, y: 0, z: 0}
   guaranteeds: []

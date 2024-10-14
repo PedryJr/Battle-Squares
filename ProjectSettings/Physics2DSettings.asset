@@ -6,8 +6,8 @@ Physics2DSettings:
   serializedVersion: 6
   m_Gravity: {x: 0, y: -12}
   m_DefaultMaterial: {fileID: 6200000, guid: 4b75e048d912cb04a8ca9e1d40223163, type: 2}
-  m_VelocityIterations: 5
-  m_PositionIterations: 5
+  m_VelocityIterations: 3
+  m_PositionIterations: 3
   m_BounceThreshold: 0.2
   m_MaxLinearCorrection: 0.5
   m_MaxAngularCorrection: 8
@@ -24,15 +24,15 @@ Physics2DSettings:
     serializedVersion: 2
     useMultithreading: 1
     useConsistencySorting: 0
-    m_InterpolationPosesPerJob: 3
-    m_NewContactsPerJob: 3
-    m_CollideContactsPerJob: 3
-    m_ClearFlagsPerJob: 3
-    m_ClearBodyForcesPerJob: 3
-    m_SyncDiscreteFixturesPerJob: 3
-    m_SyncContinuousFixturesPerJob: 3
-    m_FindNearestContactsPerJob: 3
-    m_UpdateTriggerContactsPerJob: 3
+    m_InterpolationPosesPerJob: 10
+    m_NewContactsPerJob: 10
+    m_CollideContactsPerJob: 10
+    m_ClearFlagsPerJob: 10
+    m_ClearBodyForcesPerJob: 10
+    m_SyncDiscreteFixturesPerJob: 10
+    m_SyncContinuousFixturesPerJob: 10
+    m_FindNearestContactsPerJob: 10
+    m_UpdateTriggerContactsPerJob: 10
     m_IslandSolverCostThreshold: 10
     m_IslandSolverBodyCostScale: 10
     m_IslandSolverContactCostScale: 10

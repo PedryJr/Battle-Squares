@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using static ProjectileManager;
 
 public sealed class WeaponPreviewBehaviour : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
     Image image;
 
     PlayerSynchronizer playerSynchronizer;
+
+    public ProjectileType weaponType;
 
     private void OnEnable()
     {
@@ -37,6 +40,7 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
                 if (weaponSelector.weaponType == playerSynchronizer.localSquare.nozzleBehaviour.primary)
                 {
                     image.sprite = weaponSelector.GetImage();
+                    weaponType = weaponSelector.weaponType;
                 }
             }
         }
@@ -47,6 +51,7 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
                 if (weaponSelector.weaponType == playerSynchronizer.localSquare.nozzleBehaviour.secondary)
                 {
                     image.sprite = weaponSelector.GetImage();
+                    weaponType = weaponSelector.weaponType;
                 }
             }
         }
@@ -59,7 +64,32 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
         if (!playerSynchronizer.localSquare) return;
         if (!playerSynchronizer.localSquare.nozzleBehaviour) return;
 
-        image.color = playerSynchronizer.localSquare.playerColor * 1.2f;
+        if (previewType == WeaponPreviewType.Primary)
+        {
+            foreach (WeaponSelector weaponSelector in weapons)
+            {
+                if (weaponSelector.weaponType == playerSynchronizer.localSquare.nozzleBehaviour.primary)
+                {
+                    weaponType = weaponSelector.weaponType;
+                }
+            }
+        }
+        else
+        {
+            foreach (WeaponSelector weaponSelector in weapons)
+            {
+                if (weaponSelector.weaponType == playerSynchronizer.localSquare.nozzleBehaviour.secondary)
+                {
+                    weaponType = weaponSelector.weaponType;
+                }
+            }
+        }
+
+        Color colorReference = playerSynchronizer.localSquare.playerColor;
+        Vector3 colorVector = new Vector3(colorReference.r, colorReference.g, colorReference.b).normalized;
+        Color displayColor = new Color(colorVector.x, colorVector.y, colorVector.z, 1);
+
+        image.color = displayColor;
 
     }
 

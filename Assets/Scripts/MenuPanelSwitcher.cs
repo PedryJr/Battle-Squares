@@ -15,10 +15,13 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
     [SerializeField]
     TMP_Text[] initButtons;
 
+    [SerializeField]
+    bool ignoreInit;
+
     private void Awake()
     {
 
-        MySettings.Init();
+        if(!ignoreInit) MySettings.Init();
         string value;
 
         initButtons[0].text = $"Volume: {Mathf.RoundToInt(MySettings.volume * 10)}";

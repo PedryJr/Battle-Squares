@@ -746,6 +746,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     void DestroyThisProjectile(bool hit)
     {
 
+        if(data.senderSpeedOnDeath > 0)
+        {
+            owningPlayer.rb.linearVelocity = rb.linearVelocity.normalized * data.senderSpeedOnDeath;
+        }
+
         bool aoe = data.aoe > 0;
 
         if (hit || aoe)
@@ -920,5 +925,7 @@ public struct ProjectileInitData
     public float syncSpeed;
 
     public float slowDownAmount;
+    public float senderSpeedOnDeath;
+
 
 }

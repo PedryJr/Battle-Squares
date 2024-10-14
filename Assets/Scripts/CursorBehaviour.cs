@@ -18,6 +18,9 @@ public sealed class CursorBehaviour : MonoBehaviour
     [SerializeField]
     float scale;
 
+    [SerializeField]
+    bool forceEnable;
+
     Vector2 cursorPos;
     static Color brightColor = Color.white;
     static Color darkColor = Color.gray;
@@ -43,8 +46,7 @@ public sealed class CursorBehaviour : MonoBehaviour
     [BurstCompile]
     private void Awake()
     {
-        Cursor.visible = false;/*
-        DontDestroyOnLoad(gameObject);*/
+        Cursor.visible = false;
         image = GetComponent<SpriteRenderer>();
         image.sprite = anim[0];
 
@@ -84,6 +86,7 @@ public sealed class CursorBehaviour : MonoBehaviour
     {
 
         inputs.Enable();
+        if(forceEnable) SetEnabled(true);
 
     }
     [BurstCompile]
@@ -119,13 +122,13 @@ public sealed class CursorBehaviour : MonoBehaviour
 
         if(PlayerController.uiRegs <= 0)
         {
-            if(fadeTimer > 0) fadeTimer -= Time.deltaTime * 8.5f;
+            if(fadeTimer > 0) fadeTimer -= Time.deltaTime * 6f;
             if(fadeTimer < 0) fadeTimer = 0;
-            fadeLerp = math.smoothstep(0, 1, math.clamp(fadeTimer, 0, 1/3.2f) * 3.2f);
+            fadeLerp = math.smoothstep(0, 1, fadeTimer);
         }
         else
         {
-            if (fadeTimer < 1) fadeTimer += Time.deltaTime * 8.5f;
+            if (fadeTimer < 1) fadeTimer += Time.deltaTime * 6f;
             if (fadeTimer > 1) fadeTimer = 1;
             fadeLerp = math.smoothstep(0, 1, fadeTimer);
         }
