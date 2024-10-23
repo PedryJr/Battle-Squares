@@ -1231,6 +1231,13 @@ MonoBehaviour:
   icon: {fileID: -4712846450385580888, guid: b87e36e19ba4fea46a2cd8bbc5bd6200, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Moai
+  battleThemeReference:
+    Guid:
+      Data1: -751826246
+      Data2: 1134526964
+      Data3: 301012907
+      Data4: -108581261
+    Path: event:/BattleThemes/The Factory
   size: 
   difficulty: 
 --- !u!114 &4699130747252042145

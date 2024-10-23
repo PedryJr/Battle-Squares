@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{3b2237cc-030d-4c3e-be77-5018405e8c3c}">
 		<property name="assetPath">
 			<value>BattleSquaresBattleThemeRelaxed.wav</value>

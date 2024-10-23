@@ -72,7 +72,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
 
             if(playerSynchronizer.localSquare.id == owningPlayer.id)
             {
-                if (toTarget.magnitude < 0.5f && !isCollected)
+                if (toTarget.magnitude < 0.6f && !isCollected)
                 {
                     mapSynchronizer.CollectDogTag(dogTagId, (byte) player.id);
                     isCollected = true;

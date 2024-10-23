@@ -13,6 +13,8 @@ using static PlayerSynchronizer;
 public sealed class PlayerSynchronizer : NetworkBehaviour
 {
 
+    public bool[] skin;
+
     public float ping;
     public float rtt;
 
@@ -361,6 +363,22 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 localSquare = playerData.square;
                 FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
 
+                bool[] bodySkin = new bool[100];
+                bool[] nozzleSkin = new bool[16];
+
+                for (int i = 0; i < 100; i++)
+                {
+                    bodySkin[i] = skin[i];
+                }
+
+                for (int i = 0; i < 16; i++)
+                {
+                    nozzleSkin[i] = skin[100 + i];
+                }
+
+                localSquare.CreateTextureFromBoolArray10BY10(bodySkin);
+                localSquare.CreateTextureFromBoolArray4BY4(bodySkin);
+
             }
 
             foreach (PlayerData player in playerIdentities)
@@ -432,60 +450,66 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         clrUpdate = 0;
 
-        if (IsHost) return;
-
-        if (playerIdentities == null)
+        if (!IsHost)
         {
 
-            GameModeDisplayBehaviour modeDisplay = FindAnyObjectByType<GameModeDisplayBehaviour>();
-            scoreManager.gameMode = gameMode;
-            if (modeDisplay) modeDisplay.DisplayGameMode(gameMode);
+            if (playerIdentities == null)
+            {
 
-            playerIdentities = new List<PlayerData>();
-            idPairs = new List<IdPair>
+                GameModeDisplayBehaviour modeDisplay = FindAnyObjectByType<GameModeDisplayBehaviour>();
+                scoreManager.gameMode = gameMode;
+                if (modeDisplay) modeDisplay.DisplayGameMode(gameMode);
+
+                playerIdentities = new List<PlayerData>();
+                idPairs = new List<IdPair>
             {
                 new IdPair { clientId = connectedId, steamId = SteamClient.SteamId }
             };
 
-            for (int i = 0; i < nowPlayers.Length; i++)
+                for (int i = 0; i < nowPlayers.Length; i++)
+                {
+
+                    PlayerData playerData = new PlayerData();
+
+                    playerData.square = Instantiate(square);
+                    playerData.id = nowPlayers[i];
+                    playerData.square.id = nowPlayers[i];
+
+                    if (nowPlayers[i] == NetworkManager.LocalClientId)
+                    {
+
+                        localSquare = playerData.square;
+                        FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
+                        localSquare.SpawnEffect();
+
+                    }
+
+                    playerIdentities.Add(playerData);
+
+                }
+
+                RequestAddPlayerServerRpc(connectedId, SteamNetwork.playerSteamID);
+
+            }
+            else
             {
 
                 PlayerData playerData = new PlayerData();
 
                 playerData.square = Instantiate(square);
-                playerData.id = nowPlayers[i];
-                playerData.square.id = nowPlayers[i];
-
-                if (nowPlayers[i] == NetworkManager.LocalClientId)
-                {
-
-                    localSquare = playerData.square;
-                    FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
-                    localSquare.SpawnEffect();
-
-                }
+                playerData.id = connectedId;
+                playerData.square.id = connectedId;
+                playerData.square.ready = false;
+                playerData.square.SpawnEffect();
 
                 playerIdentities.Add(playerData);
 
             }
 
-            RequestAddPlayerServerRpc(connectedId, SteamNetwork.playerSteamID);
 
         }
-        else
-        {
 
-            PlayerData playerData = new PlayerData();
-
-            playerData.square = Instantiate(square);
-            playerData.id = connectedId;
-            playerData.square.id = connectedId;
-            playerData.square.ready = false;
-            playerData.square.SpawnEffect();
-
-            playerIdentities.Add(playerData);
-
-        }
+        RequestSkinUpdateServerRpc((byte)localSquare.id, skin);
 
     }
 
@@ -528,6 +552,46 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if(addNewId) playerIdList.Add(new IdMatch { clientId = clientId, steamId = steamId });
 
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestSkinUpdateServerRpc(byte id, bool[] skin)
+    {
+
+        RequestSkinUpdateClientRpc(id, skin);
+
+    }
+
+    [ClientRpc]
+    public void RequestSkinUpdateClientRpc(byte id, bool[] skin)
+    {
+
+        bool[] bodySkin = new bool[100];
+        bool[] nozzleSkin = new bool[16];
+
+        for (int i = 0; i < 100; i++)
+        {
+            bodySkin[i] = skin[i];
+        }
+
+        for (int i = 0; i < 16; i++)
+        {
+            nozzleSkin[i] = skin[100 + i];
+        }
+
+        foreach (PlayerData player in playerIdentities)
+        {
+            if((byte) player.square.id == id)
+            {
+
+                player.square.CreateTextureFromBoolArray10BY10(bodySkin);
+                player.square.CreateTextureFromBoolArray4BY4(nozzleSkin);
+
+            }
+
+        }
+
+    }
+
     [BurstCompile]
     private void FixedUpdate() => UpdatePlayerData();
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{fb50411d-8631-459c-820b-606cfe837fa5}">
 		<property name="name">
 			<value>Shot</value>
@@ -96,8 +96,8 @@
 	</object>
 	<object class="Timeline" id="{b15b3ef3-0386-47a2-a8a8-c4403391eac2}">
 		<relationship name="modules">
-			<destination>{ab3803d1-87c0-4dd7-9277-a1bf342dd92a}</destination>
 			<destination>{6acc7ec7-cd86-4faa-8b95-25975ab2c6c6}</destination>
+			<destination>{ab3803d1-87c0-4dd7-9277-a1bf342dd92a}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{41b6aec2-3535-43ce-a590-2e6553ceaef7}">
@@ -592,8 +592,8 @@
 			<destination>{317a6996-acea-4b87-aafe-279056ff5bd8}</destination>
 		</relationship>
 		<relationship name="automationPoints">
-			<destination>{f80e61cd-296f-414c-82ae-ccf05718b3ec}</destination>
 			<destination>{d8e51296-5b6d-4f7a-bd23-6fb687b855ad}</destination>
+			<destination>{f80e61cd-296f-414c-82ae-ccf05718b3ec}</destination>
 		</relationship>
 	</object>
 	<object class="AutomationPoint" id="{d7f1a06c-7b3c-45e3-b607-009f5b3bf677}">
@@ -660,20 +660,20 @@
 			<value>-25.5</value>
 		</property>
 	</object>
-	<object class="AutomationPoint" id="{f80e61cd-296f-414c-82ae-ccf05718b3ec}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="value">
-			<value>-22.8571434</value>
-		</property>
-	</object>
 	<object class="AutomationPoint" id="{d8e51296-5b6d-4f7a-bd23-6fb687b855ad}">
 		<property name="position">
 			<value>1</value>
 		</property>
 		<property name="value">
 			<value>-16</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{f80e61cd-296f-414c-82ae-ccf05718b3ec}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="value">
+			<value>-22.8571434</value>
 		</property>
 	</object>
 </objects>

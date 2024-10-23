@@ -1,5 +1,6 @@
 using FMOD.Studio;
 using FMODUnity;
+using MathNet.Numerics;
 using Steamworks;
 using Unity.Burst;
 using Unity.Mathematics;
@@ -42,6 +43,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public float healthPoints = 20;
     public float maxHealthPoints = 20;
     public Vector3 hpBarScale;
+
+    float slapIntensity;
 
     public int score;
 
@@ -169,19 +172,10 @@ public sealed class PlayerBehaviour : MonoBehaviour
                     score = scoreManager.startScore;
                     
                 }
-/*
-                SceneManager.MoveGameObjectToScene(gameObject, arg0);
-                DontDestroyOnLoad(gameObject);*/
 
                 spawnPosition = new Vector3(UnityEngine.Random.Range(0.0001f, 0.2001f), UnityEngine.Random.Range(0.0001f, 0.2001f), UnityEngine.Random.Range(0.0001f, 0.2001f));
-/*                spawnPosition += GameObject.FindGameObjectWithTag("Spawn").transform.position;*/
-/*                deathChamber = GameObject.FindGameObjectWithTag("Death").transform;*/
                 playerSynchronizer.UpdateHealth();
                 CancelInvoke("RevivePlayer");
-
-/*                gameObject.GetComponent<Rigidbody2D>().position = spawnPosition;
-                healthPoints = maxHealthPoints;
-                rb.simulated = true;*/
 
             }
             else
@@ -193,9 +187,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
                 {
                     score = scoreManager.startScore;
                 }
-                /*
-                SceneManager.MoveGameObjectToScene(gameObject, arg0);
-                DontDestroyOnLoad(gameObject);*/
 
             }
 
@@ -256,7 +247,11 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         ApplyColors();
 
+        playerSlapSound = RuntimeManager.CreateInstance(playerSlap);
+
     }
+
+    float speedParticleTimer;
 
     public void SpawnEffect()
     {
@@ -274,6 +269,10 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
+    [SerializeField]
+    EventReference playerSlap;
+    EventInstance playerSlapSound;
+
     [BurstCompile]
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -281,10 +280,125 @@ public sealed class PlayerBehaviour : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Environment") ||
             collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+
+            if (!hasJump) slapTimer = 0f;
+
+            if(slapTimer == 0)
+            {
+                if (!isLocalPlayer || SceneManager.GetActiveScene().name.Equals("LobbyScene"))
+                {
+
+                    Vector2 toCam = Camera.main.transform.position - transform.position;
+                    float soundDirection = ConvertVector2ToAngle(toCam.normalized);
+                    float distance = toCam.magnitude;
+
+                    Debug.Log(distance);
+                    Debug.Log(soundDirection);
+
+                    playerSlapSound.setParameterByName("Direction", soundDirection);
+                    playerSlapSound.setParameterByName("Distance", distance);
+
+                }
+                else
+                {
+
+                    playerSlapSound.setParameterByName("Direction", 0);
+                    playerSlapSound.setParameterByName("Distance", 0);
+
+                }
+
+                playerSlapSound.setParameterByName("Player Speed", slapIntensity);
+                playerSlapSound.start();
+                slapTimer = 0.27f;
+
+            }
+
             hasJump = true;
+            slapIntensity = 0;
         }
 
     }
+
+    public float ConvertVector2ToAngle(Vector2 direction)
+    {
+        float angleInRadians = Mathf.Atan2(direction.x, -direction.y);
+
+        float angleInDegrees = -(angleInRadians * Mathf.Rad2Deg);
+
+        if (angleInDegrees > 180)
+        {
+            angleInDegrees -= 360;
+        }
+
+        return angleInDegrees;
+    }
+
+    public void CreateTextureFromBoolArray10BY10(bool[] boolArray)
+    {
+
+        bool[] rotatedArray = new bool[100];
+
+        for (int i = 0; i < 100; i++)
+        {
+            rotatedArray[i] = boolArray[99 - i]; // Flip the array
+        }
+
+        Texture2D texture = new Texture2D(10, 10, TextureFormat.ARGB32, false);
+        texture.filterMode = FilterMode.Point;
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                int index = i * 10 + j;
+
+                Color color = rotatedArray[index] ? Color.white : Color.clear;
+                texture.SetPixel(j, i, color);
+            }
+        }
+
+        texture.Apply();
+        spriteRenderer.sprite = Sprite.Create(texture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 0.5f), 10);
+    }
+
+    public void CreateTextureFromBoolArray4BY4(bool[] boolArray)
+    {
+
+        bool[] rotatedArray = new bool[16];
+
+        rotatedArray[0] = boolArray[3];
+        rotatedArray[1] = boolArray[7];
+        rotatedArray[2] = boolArray[11];
+        rotatedArray[3] = boolArray[15];
+        rotatedArray[4] = boolArray[2];
+        rotatedArray[5] = boolArray[6];
+        rotatedArray[6] = boolArray[10];
+        rotatedArray[7] = boolArray[14];
+        rotatedArray[8] = boolArray[1];
+        rotatedArray[9] = boolArray[5];
+        rotatedArray[10] = boolArray[9];
+        rotatedArray[11] = boolArray[13];
+        rotatedArray[12] = boolArray[0];
+        rotatedArray[13] = boolArray[4];
+        rotatedArray[14] = boolArray[8];
+        rotatedArray[15] = boolArray[12];
+
+        Texture2D texture = new Texture2D(4, 4, TextureFormat.ARGB32, false);
+        texture.filterMode = FilterMode.Point;
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                int index = i * 4 + j;
+
+                Color color = rotatedArray[index] ? Color.white : Color.clear;
+                texture.SetPixel(j, i, color);
+            }
+        }
+
+        texture.Apply();
+        nozzleBehaviour.spriteRenderer.sprite = Sprite.Create(texture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
+    }
+
     [BurstCompile]
     void ApplyColors()
     {
@@ -332,6 +446,12 @@ public sealed class PlayerBehaviour : MonoBehaviour
         pfp = Sprite.Create(spriteTexture, spriteRect, spritePivot);
 
     }
+
+    [SerializeField]
+    ParticleColorApplicant[] speedParticles;
+
+    int speedParticleSwitcher;
+
     [BurstCompile]
     private void Update()
     {
@@ -345,6 +465,18 @@ public sealed class PlayerBehaviour : MonoBehaviour
         hpBarScale = Vector3.one * (healthPoints / maxHealthPoints);
         nozzlePosition = nozzleTransform.position;
         healthbar.transform.localScale = hpBarScale;
+
+/*        speedParticleTimer += Time.deltaTime * Mathf.Clamp((rb.linearVelocity.magnitude - 15) * 2f, 0, 20);
+        if(speedParticleTimer > 1)
+        {
+
+            Vector2 speedParticleDirection = rb.linearVelocity.normalized;
+            float speedParticleAngle = Mathf.Rad2Deg * Mathf.Atan2(speedParticleDirection.y, speedParticleDirection.x);
+            int particleIndex = speedParticleSwitcher++ % speedParticles.Length;
+            Instantiate(speedParticles[particleIndex], transform.position, Quaternion.Euler(0, 0, speedParticleAngle), null).Applycolor(this);
+
+            speedParticleTimer = 0;
+        }*/
 
         if (timeSinceHit < 1) timeSinceHit += Time.deltaTime * 3.5f;
         else if (timeSinceHit > 1) timeSinceHit = 1;
@@ -389,8 +521,13 @@ public sealed class PlayerBehaviour : MonoBehaviour
         if (rb.linearDamping < 0.1f) rb.linearDamping = 0.1f;
         if (rb.angularDamping < 0.1f) rb.angularDamping = 0.1f;
 
+        slapIntensity = Mathf.Lerp(slapIntensity, rb.linearVelocity.magnitude + Mathf.Abs(rb.angularVelocity / 40f), Time.deltaTime * 10);
+        slapTimer -= Time.deltaTime;
+        if(slapTimer < 0) slapTimer = 0;
+
     }
 
+    float slapTimer;
     bool lastDeathState = false;
     float deathTimer;
     public bool spawnBuffer = false;
@@ -494,8 +631,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         killStreak = 0;
         hunter.Die((byte)id);
-/*
-        deathChamber = GameObject.FindGameObjectWithTag("Death").transform;*/
 
         if (isLocalPlayer)
         {
@@ -524,8 +659,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         spawnBuffer = false;
 
         hunter.Spawn((byte)id);
-/*
-        GameObject spawn = GameObject.FindGameObjectWithTag("Spawn");*/
+
         if (!spawn)
         {
 

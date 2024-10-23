@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{bee83d19-cd13-42b7-b45d-578458fb28b8}">
 		<property name="name">
 			<value>Shot</value>
@@ -83,8 +83,8 @@
 	</object>
 	<object class="Timeline" id="{67e160f9-0fd3-4d08-bf83-76ba610a0ab4}">
 		<relationship name="modules">
-			<destination>{d27ddc39-0060-4250-b130-05787972abac}</destination>
 			<destination>{fb1fbf60-c4de-4ac6-85be-35ee1937112e}</destination>
+			<destination>{d27ddc39-0060-4250-b130-05787972abac}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{432e1d3e-0c77-4b1d-9d0e-10b37d1f9921}">
@@ -125,7 +125,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{acb25234-6bbd-4503-a378-545c58a9fd50}">
 		<property name="volume">
-			<value>10</value>
+			<value>7</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -161,7 +161,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{d0af12cb-b391-435f-a487-e58b0900228b}">
 		<property name="volume">
-			<value>10</value>
+			<value>9</value>
 		</property>
 		<property name="name">
 			<value>Audio 3</value>
@@ -227,9 +227,9 @@
 			<destination>{67e160f9-0fd3-4d08-bf83-76ba610a0ab4}</destination>
 		</relationship>
 		<relationship name="automationPoints">
-			<destination>{78f49a80-533a-47b1-bcfd-86d60b5a6ef5}</destination>
-			<destination>{1357e1d1-a2a1-4c4c-8542-816f830e0e22}</destination>
 			<destination>{d8623dfe-8ffa-455a-a1dd-eac7aaf62680}</destination>
+			<destination>{1357e1d1-a2a1-4c4c-8542-816f830e0e22}</destination>
+			<destination>{78f49a80-533a-47b1-bcfd-86d60b5a6ef5}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{325d82e3-0bd5-471e-8039-966c56d83539}" />
@@ -297,8 +297,8 @@
 		</relationship>
 		<relationship name="automationPoints">
 			<destination>{cc05b605-bcba-416c-a789-c0215a4cb8f5}</destination>
-			<destination>{7a3789a5-d342-43db-a5fe-59c529a0f82a}</destination>
 			<destination>{5171c892-27d5-41b1-97a9-1888a99ba010}</destination>
+			<destination>{7a3789a5-d342-43db-a5fe-59c529a0f82a}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{26b19e2e-e62b-43d4-8f08-ef0bd5e11b3f}" />
@@ -360,15 +360,12 @@
 			<value>1</value>
 		</property>
 	</object>
-	<object class="AutomationPoint" id="{78f49a80-533a-47b1-bcfd-86d60b5a6ef5}">
+	<object class="AutomationPoint" id="{d8623dfe-8ffa-455a-a1dd-eac7aaf62680}">
 		<property name="position">
-			<value>0</value>
+			<value>0.34000000000000002</value>
 		</property>
 		<property name="value">
 			<value>-80</value>
-		</property>
-		<property name="curveShape">
-			<value>-0.808887243</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{1357e1d1-a2a1-4c4c-8542-816f830e0e22}">
@@ -382,12 +379,15 @@
 			<value>0.754117131</value>
 		</property>
 	</object>
-	<object class="AutomationPoint" id="{d8623dfe-8ffa-455a-a1dd-eac7aaf62680}">
+	<object class="AutomationPoint" id="{78f49a80-533a-47b1-bcfd-86d60b5a6ef5}">
 		<property name="position">
-			<value>0.34000000000000002</value>
+			<value>0</value>
 		</property>
 		<property name="value">
 			<value>-80</value>
+		</property>
+		<property name="curveShape">
+			<value>-0.808887243</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{cc05b605-bcba-416c-a789-c0215a4cb8f5}">
@@ -401,6 +401,14 @@
 			<value>1</value>
 		</property>
 	</object>
+	<object class="AutomationPoint" id="{5171c892-27d5-41b1-97a9-1888a99ba010}">
+		<property name="position">
+			<value>0.51500000000000001</value>
+		</property>
+		<property name="value">
+			<value>-80</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{7a3789a5-d342-43db-a5fe-59c529a0f82a}">
 		<property name="position">
 			<value>0.26500000000000001</value>
@@ -410,14 +418,6 @@
 		</property>
 		<property name="curveShape">
 			<value>1</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{5171c892-27d5-41b1-97a9-1888a99ba010}">
-		<property name="position">
-			<value>0.51500000000000001</value>
-		</property>
-		<property name="value">
-			<value>-80</value>
 		</property>
 	</object>
 </objects>

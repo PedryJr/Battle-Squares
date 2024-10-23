@@ -135,11 +135,11 @@ MonoBehaviour:
   hitMark: {fileID: 7378723969388511367, guid: b69d48afc63464d4da29f850eb7b34ee, type: 3}
   shotReference:
     Guid:
-      Data1: 1840774806
-      Data2: 1158770082
-      Data3: 226132131
-      Data4: 1720554927
-    Path: event:/VFX/Base/Gun Shot
+      Data1: -374525801
+      Data2: 1330882879
+      Data3: 131294904
+      Data4: 910647932
+    Path: event:/VFX/Raygun/Shot
   hitSoundReference:
     Guid:
       Data1: 533881192
@@ -213,6 +213,7 @@ MonoBehaviour:
     sync: 0
     syncSpeed: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0

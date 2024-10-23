@@ -136,11 +136,11 @@ MonoBehaviour:
   hitMark: {fileID: 7378723969388511367, guid: 74bba82f2db5ad547879bdc78ddd8ac3, type: 3}
   shotReference:
     Guid:
-      Data1: 1840774806
-      Data2: 1158770082
-      Data3: 226132131
-      Data4: 1720554927
-    Path: event:/VFX/Base/Gun Shot
+      Data1: -1080802597
+      Data2: 1213032831
+      Data3: -2093597511
+      Data4: 375597960
+    Path: event:/VFX/Rocket/Shot
   hitSoundReference:
     Guid:
       Data1: 533881192
@@ -214,6 +214,7 @@ MonoBehaviour:
     sync: 0
     syncSpeed: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0
@@ -500,7 +501,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.4
+      scalar: 0.6
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1379,8 +1380,8 @@ ParticleSystem:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.15978679
-          value: 0.6223759
+          time: 0.16450939
+          value: 0.7124676
           inSlope: 2.728451
           outSlope: 2.728451
           tangentMode: 0
@@ -1388,13 +1389,22 @@ ParticleSystem:
           inWeight: 0.11146237
           outWeight: 0.0976139
         - serializedVersion: 3
-          time: 1
-          value: 0
-          inSlope: 0
-          outSlope: 0
+          time: 0.59897625
+          value: 0.51723254
+          inSlope: 0.15651175
+          outSlope: 0.15651175
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0
+          inWeight: 0.33333334
+          outWeight: 0.29958954
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: -3.3014057
+          outSlope: -3.3014057
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.26878482
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -2418,7 +2428,7 @@ ParticleSystem:
     speedModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 15
+      scalar: 10
       minScalar: 1
       maxCurve:
         serializedVersion: 2

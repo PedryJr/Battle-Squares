@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{1fd26168-5655-4bb7-bae2-b09816dfc945}">
 		<property name="name">
 			<value>Gun Hit</value>
@@ -221,17 +221,9 @@
 			<destination>{8d28e13b-12ce-4472-90cb-46144fb87340}</destination>
 		</relationship>
 		<relationship name="automationPoints">
-			<destination>{bf558d61-5f78-4e0c-b646-e8abdc7e59ec}</destination>
 			<destination>{b9108328-c7da-4fad-8164-4d4ad6b8ded0}</destination>
+			<destination>{bf558d61-5f78-4e0c-b646-e8abdc7e59ec}</destination>
 		</relationship>
-	</object>
-	<object class="AutomationPoint" id="{bf558d61-5f78-4e0c-b646-e8abdc7e59ec}">
-		<property name="position">
-			<value>-14.903121636167922</value>
-		</property>
-		<property name="value">
-			<value>-35</value>
-		</property>
 	</object>
 	<object class="AutomationPoint" id="{b9108328-c7da-4fad-8164-4d4ad6b8ded0}">
 		<property name="position">
@@ -239,6 +231,14 @@
 		</property>
 		<property name="value">
 			<value>35</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{bf558d61-5f78-4e0c-b646-e8abdc7e59ec}">
+		<property name="position">
+			<value>-14.903121636167922</value>
+		</property>
+		<property name="value">
+			<value>-35</value>
 		</property>
 	</object>
 </objects>

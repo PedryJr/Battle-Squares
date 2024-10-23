@@ -27,8 +27,6 @@ public sealed class CameraAnimator : MonoBehaviour
 
     float shakeTimer;
 
-    [SerializeField]
-    EventReference battleThemeReference;
     EventInstance battleThemeInstance;
 
     PlayerSynchronizer playerSynchronizer;
@@ -64,6 +62,11 @@ public sealed class CameraAnimator : MonoBehaviour
         initCameraTimer = 0;
         oneSecondTimer = 0;
         soundUpdateTimer = 0;
+
+    }
+
+    public void PlayTheme(EventReference battleThemeReference)
+    {
 
         battleThemeInstance = RuntimeManager.CreateInstance(battleThemeReference);
         battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);

@@ -2924,6 +2924,13 @@ MonoBehaviour:
   icon: {fileID: 5131357165463381645, guid: be72d42da9594744a945bae51700ce8b, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Noob Sanctum
+  battleThemeReference:
+    Guid:
+      Data1: -751826246
+      Data2: 1134526964
+      Data3: 301012907
+      Data4: -108581261
+    Path: event:/BattleThemes/The Factory
   size: 
   difficulty: 
 --- !u!114 &3514514181773940763

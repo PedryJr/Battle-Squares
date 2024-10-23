@@ -943,11 +943,16 @@ namespace FMODUnity
 
                 // Release 2.1 layout
                 new MoveRecord() { source = FMODRoot + "/src/Runtime/fmod_static_plugin_support.h", destination = "obsolete" },
+                new MoveRecord() { source = FMODRoot + "/src/Runtime/CodeGeneration.cs", destination = "src/Editor" },
 
                 // Release 2.2 layout
                 new MoveRecord() { source = FMODRoot + "/src/fmodplugins.cpp", destination = "obsolete" },
                 new MoveRecord() { source = FMODRoot + "/src/fmod_static_plugin_support.h", destination = "obsolete" },
                 new MoveRecord() { source = FMODSource + "/CodeGeneration.cs", destination = "src/Editor" },
+
+                // Release 2.3 layout
+                new MoveRecord() { source = FMODRoot + "/platforms/html5/lib/libfmodstudiounityplugin.bc", destination = "obsolete" },
+                new MoveRecord() { source = FMODRoot + "/platforms/html5/lib/libfmodstudiounitypluginL.bc", destination = "obsolete" },
             };
 
             private static readonly string[] fmodFoldersToCleanUp = {

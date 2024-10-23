@@ -12,7 +12,7 @@ public sealed class CursorBehaviour : MonoBehaviour
     [SerializeField]
     float[] scales;
 
-    SpriteRenderer image;
+    public SpriteRenderer image;
 
 
     [SerializeField]
@@ -22,8 +22,8 @@ public sealed class CursorBehaviour : MonoBehaviour
     bool forceEnable;
 
     Vector2 cursorPos;
-    static Color brightColor = Color.white;
-    static Color darkColor = Color.gray;
+    public static Color brightColor = Color.white;
+    public static Color darkColor = Color.gray;
     Color cursorColor = Color.gray;
 
     Inputs inputs;
@@ -34,7 +34,7 @@ public sealed class CursorBehaviour : MonoBehaviour
     static bool isEnabled = true;
     bool lastEnable = true;
 
-    bool click;
+    public bool click;
 
     int animIndex;
     int lastAnimeIndex;
@@ -89,6 +89,9 @@ public sealed class CursorBehaviour : MonoBehaviour
         if(forceEnable) SetEnabled(true);
 
     }
+
+    public bool skipColorManip;
+
     [BurstCompile]
     private void Update()
     {
@@ -134,7 +137,7 @@ public sealed class CursorBehaviour : MonoBehaviour
         }
 
         transform.position = Camera.main.ScreenToWorldPoint(cursorPos) + new Vector3(0, 0, 1);
-        image.color = Color.Lerp(darkColor, brightColor, fadeLerp);
+        if(!skipColorManip) image.color = Color.Lerp(darkColor, brightColor, fadeLerp);
 
     }
     [BurstCompile]

@@ -399,6 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
   attenuationObject: {fileID: 0}
 --- !u!114 &1094648577
 MonoBehaviour:
@@ -684,6 +685,8 @@ GameObject:
   - component: {fileID: 7766882706945389859}
   - component: {fileID: 7766882706945389860}
   - component: {fileID: 7766882706945389861}
+  - component: {fileID: 7766882706945389862}
+  - component: {fileID: 7766882706945389863}
   m_Layer: 0
   m_Name: Synchronizer
   m_TagString: Sync
@@ -1880,6 +1883,32 @@ MonoBehaviour:
   dieTime: 0
   winStreak: 0
   wins: 0
+--- !u!114 &7766882706945389862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faef5f1e8010df043bbddf61b5907e19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  voiceNetworker: {fileID: 7156736933559847997, guid: 8656103aff92122479268930233d0332, type: 3}
+--- !u!114 &7766882706945389863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c629967c4b4e84c4baad690db35c9ddb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeSkin: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

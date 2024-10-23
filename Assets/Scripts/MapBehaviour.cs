@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -12,6 +13,9 @@ public sealed class MapBehaviour : MonoBehaviour
 
     [SerializeField]
     public string arenaName;
+
+    [SerializeField]
+    public EventReference battleThemeReference;
 
     public string size;
     public string difficulty;

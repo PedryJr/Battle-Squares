@@ -55,6 +55,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &265253100334472759
 GameObject:
   m_ObjectHideFlags: 0
@@ -724,6 +731,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &789201986074251436
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,6 +824,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &801986207433881459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,6 +1422,13 @@ MonoBehaviour:
   timeBetweenPoints: 10
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1140718369005274507
 GameObject:
   m_ObjectHideFlags: 0
@@ -3273,6 +3301,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2951587513733541309
 GameObject:
   m_ObjectHideFlags: 0
@@ -3328,6 +3363,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2958415745197193870
 GameObject:
   m_ObjectHideFlags: 0
@@ -4447,6 +4489,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4087297132589775637
 GameObject:
   m_ObjectHideFlags: 0
@@ -5592,6 +5641,13 @@ MonoBehaviour:
   icon: {fileID: 4147366561876006544, guid: d44fa77acfaa7e845a7c22b132d590c3, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Four Trigon
+  battleThemeReference:
+    Guid:
+      Data1: -751826246
+      Data2: 1134526964
+      Data3: 301012907
+      Data4: -108581261
+    Path: event:/BattleThemes/The Factory
   size: 
   difficulty: 
 --- !u!114 &4699130747252042145
@@ -5702,6 +5758,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4576382538908074111
 GameObject:
   m_ObjectHideFlags: 0
@@ -7280,6 +7343,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5329253209106035624
 GameObject:
   m_ObjectHideFlags: 0
@@ -8249,6 +8319,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6551277393511424781
 GameObject:
   m_ObjectHideFlags: 0
@@ -8308,6 +8385,13 @@ MonoBehaviour:
   timeBetweenPoints: 10
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6886087472856822967
 GameObject:
   m_ObjectHideFlags: 0
@@ -12329,6 +12413,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8752535395091940176
 GameObject:
   m_ObjectHideFlags: 0
@@ -12384,6 +12475,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8763006654811368666
 GameObject:
   m_ObjectHideFlags: 0
@@ -12439,6 +12537,13 @@ MonoBehaviour:
   timeBetweenPoints: 1.3
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8906929261298663516
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{9e0e2765-cc20-466d-9b6f-51e76a325d80}">
+		<property name="name">
+			<value>Funny Voice</value>
+		</property>
+		<relationship name="folder">
+			<destination>{93af52ed-e2ac-4054-b8bd-28d45f6cd755}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{40639fb7-cde9-439d-a2d0-c23aa2f6cc27}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{40639fb7-cde9-439d-a2d0-c23aa2f6cc27}">
+		<property name="initialValue">
+			<value>0.80000000000000004</value>
+		</property>
+	</object>
+</objects>

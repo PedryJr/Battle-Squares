@@ -425,6 +425,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
+  currentColor: {r: 0, g: 0, b: 0, a: 0}
+  fromColor: {r: 0, g: 0, b: 0, a: 0}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   isHovering: 0
   animateColor: 1
@@ -1348,6 +1352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
   attenuationObject: {fileID: 0}
 --- !u!114 &635070892
 MonoBehaviour:
@@ -1369,13 +1374,6 @@ MonoBehaviour:
   soundUpdateTimer: 0
   processVolume: {fileID: 3358764917152979022}
   aberration: 0
-  battleThemeReference:
-    Guid:
-      Data1: -751826246
-      Data2: 1134526964
-      Data3: 301012907
-      Data4: -108581261
-    Path: event:/BattleThemes/MainBattleTheme
   cameraAnimation:
     serializedVersion: 2
     m_Curve:
@@ -1770,6 +1768,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
+  currentColor: {r: 0, g: 0, b: 0, a: 0}
+  fromColor: {r: 0, g: 0, b: 0, a: 0}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   isHovering: 0
   animateColor: 1
@@ -2090,8 +2092,11 @@ MonoBehaviour:
   - 8
   - 6
   - 6
+  image: {fileID: 0}
   scale: 0.01625
   forceEnable: 0
+  click: 0
+  skipColorManip: 0
 --- !u!222 &1175814364
 CanvasRenderer:
   m_ObjectHideFlags: 0

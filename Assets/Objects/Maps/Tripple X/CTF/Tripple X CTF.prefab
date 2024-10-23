@@ -7137,6 +7137,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1329404496954722370
 GameObject:
   m_ObjectHideFlags: 0
@@ -7904,6 +7911,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1864629480279659366
 GameObject:
   m_ObjectHideFlags: 0
@@ -23308,6 +23322,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2547911023205807535
 GameObject:
   m_ObjectHideFlags: 0
@@ -25609,6 +25630,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2891793650745137964
 GameObject:
   m_ObjectHideFlags: 0
@@ -55720,6 +55748,13 @@ MonoBehaviour:
   icon: {fileID: -5322691566557524574, guid: 833c95bc291a1d849b0594de037f1228, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Tripple X
+  battleThemeReference:
+    Guid:
+      Data1: -751826246
+      Data2: 1134526964
+      Data3: 301012907
+      Data4: -108581261
+    Path: event:/BattleThemes/The Factory
   size: 
   difficulty: 
 --- !u!114 &7878051186770335134
@@ -56477,6 +56512,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4605129205276506824
 GameObject:
   m_ObjectHideFlags: 0
@@ -56937,6 +56979,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4698696110917066528
 GameObject:
   m_ObjectHideFlags: 0
@@ -58287,6 +58336,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4869176473585209978
 GameObject:
   m_ObjectHideFlags: 0
@@ -58536,6 +58592,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5061051799110913703
 GameObject:
   m_ObjectHideFlags: 0
@@ -70965,6 +71028,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6590750629886488774
 GameObject:
   m_ObjectHideFlags: 0
@@ -77647,6 +77717,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6770537542484364662
 GameObject:
   m_ObjectHideFlags: 0
@@ -79134,6 +79211,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7069213049978367168
 GameObject:
   m_ObjectHideFlags: 0
@@ -100052,6 +100136,13 @@ MonoBehaviour:
   timeBetweenPoints: 2
   offset: 0
   siblingOffset: 0.1666
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8640770994625719542
 GameObject:
   m_ObjectHideFlags: 0

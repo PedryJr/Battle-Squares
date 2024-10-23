@@ -34,17 +34,26 @@ public sealed class MapInitiator : MonoBehaviour
 
     MapBehaviour InitDM(int index)
     {
+
+        FindAnyObjectByType<CameraAnimator>().PlayTheme(mapTypes[0].maps[index].battleThemeReference);
         return Instantiate(mapTypes[0].maps[index]);
+
     }
 
     MapBehaviour InitDT(int index)
     {
+
+        FindAnyObjectByType<CameraAnimator>().PlayTheme(mapTypes[1].maps[index].battleThemeReference);
         return Instantiate(mapTypes[1].maps[index]);
+
     }
 
     MapBehaviour InitCTF(int index)
     {
+
+        FindAnyObjectByType<CameraAnimator>().PlayTheme(mapTypes[2].maps[index].battleThemeReference);
         return Instantiate(mapTypes[2].maps[index]);
+
     }
 
 }

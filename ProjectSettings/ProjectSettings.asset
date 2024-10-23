@@ -218,15 +218,15 @@ PlayerSettings:
   - {fileID: 7289681851009581468, guid: 83e84455d9b7f5d42a66ef25458f72ca, type: 3}
   - {fileID: 2356671053784825279, guid: 0ffb1af5b6b5bef4fb141b5b841b7c6e, type: 3}
   - {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4386670900800471581, guid: 8aedbf4f43ebfa4458d07d319a65feed, type: 3}
+  - {fileID: 4386670900800471581, guid: a40df42fee6f983439d8261be594a3d3, type: 3}
+  - {fileID: 4386670900800471581, guid: 0f96d764894d99e49b5cac0d8b7dab35, type: 3}
+  - {fileID: 4386670900800471581, guid: 1781a16744733134eb12c9b5c31b01fe, type: 3}
+  - {fileID: 4386670900800471581, guid: 353650d9beb4b7a43bb852d3b8a6de00, type: 3}
+  - {fileID: 4386670900800471581, guid: d0bcf0ace0ee51e4081157d20a55e831, type: 3}
+  - {fileID: 4386670900800471581, guid: 1e9ce7636d4de8f47abc8f498e06315e, type: 3}
+  - {fileID: 4386670900800471581, guid: e12cbaf63080268438d5820867b806d9, type: 3}
+  - {fileID: 4386670900800471581, guid: 46a55622cd479fc429abe806f9bbb2ea, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -798,7 +798,7 @@ PlayerSettings:
   platformArchitecture: {}
   scriptingBackend:
     Android: 1
-    Standalone: 0
+    Standalone: 1
   il2cppCompilerConfiguration:
     Standalone: 2
   il2cppCodeGeneration: {}

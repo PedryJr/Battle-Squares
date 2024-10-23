@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{ea0eb094-8ba0-4613-8de3-50ad3fc3fe0f}">
+		<property name="name">
+			<value>SidechainTest</value>
+		</property>
+		<relationship name="folder">
+			<destination>{93af52ed-e2ac-4054-b8bd-28d45f6cd755}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{30e34cc4-6cc7-4e86-9ca4-b7dd791175a4}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{30e34cc4-6cc7-4e86-9ca4-b7dd791175a4}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="isReadOnly">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

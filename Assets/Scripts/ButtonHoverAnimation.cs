@@ -37,10 +37,10 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     Vector2 tmpPos;
     Vector2 tmpSize;
 
-    Color offHoveredColor;
-    Color currentColor;
-    Color fromColor;
-    Color toColor;
+    public Color offHoveredColor;
+    public Color currentColor;
+    public Color fromColor;
+    public Color toColor;
     public Color onHoveredColor;
 
     public bool isHovering;
@@ -147,6 +147,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         ExitHover();
 
     }
+
     [BurstCompile]
     private void Update()
     {
@@ -154,16 +155,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         Animate();
 
         ApplyAnimation();
-/*
-        if (!isHovering) PlayerController.uiRegs = 0;*/
-
-    }
-
-    private void LateUpdate()
-    {
-        /*
-        if(isHovering) PlayerController.uiRegs = 1;
-        else PlayerController.uiRegs = 0;*/
 
     }
 
@@ -200,7 +191,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
     }
     [BurstCompile]
-    void ExitHover()
+    public void ExitHover()
     {
 
         input.Disable();
@@ -209,8 +200,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
         PlayerController.uiRegs -= 1;
         if (PlayerController.uiRegs < 0) PlayerController.uiRegs = 0;
-
-        if (animatingClick) return;
 
         animationTimer = 0;
         fromSize = rectTransform.sizeDelta;
@@ -230,9 +219,11 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
             }
         }
 
+        if (animatingClick) RunClickEvent();
+
     }
     [BurstCompile]
-    void ButtonClick()
+    public void ButtonClick()
     {
 
         if (animatingClick) return;
@@ -341,7 +332,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
     }
     [BurstCompile]
-    void RunClickEvent()
+    public void RunClickEvent()
     {
 
         fromSize = rectTransform.sizeDelta;

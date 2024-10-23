@@ -1401,7 +1401,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1914247854171480559}
   - component: {fileID: 5934898740092265222}
-  - component: {fileID: 3576608094562343774}
   - component: {fileID: 8372823755717404555}
   - component: {fileID: 1885416229372139042}
   m_Layer: 9
@@ -1462,309 +1461,6 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 7
---- !u!66 &3576608094562343774
-CompositeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1443158369337550864}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 6200000, guid: 4b75e048d912cb04a8ca9e1d40223163, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
-  m_GenerationType: 1
-  m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 4742399552907932862}
-    m_ColliderPaths:
-    - - X: -22500000
-        Y: -182500000
-      - X: -12500000
-        Y: -182500000
-      - X: -7500000
-        Y: -177500000
-      - X: 7500000
-        Y: -177500000
-      - X: 12500000
-        Y: -182500000
-      - X: 22500000
-        Y: -182500000
-      - X: 27500000
-        Y: -187500000
-      - X: 42500000
-        Y: -187500000
-      - X: 47436300
-        Y: -182563712
-      - X: 47500000
-        Y: -177500000
-      - X: 40000000
-        Y: -170000000
-      - X: 30000000
-        Y: -170000000
-      - X: 25000000
-        Y: -165000000
-      - X: 17500000
-        Y: -165000000
-      - X: 10000000
-        Y: -157500000
-      - X: 10000000
-        Y: -150000000
-      - X: 5000000
-        Y: -145000000
-      - X: -5000000
-        Y: -145000000
-      - X: -10000000
-        Y: -150000000
-      - X: -10000000
-        Y: -157500000
-      - X: -17500000
-        Y: -165000000
-      - X: -25000000
-        Y: -165000000
-      - X: -30000000
-        Y: -170000000
-      - X: -40000000
-        Y: -170000000
-      - X: -47500000
-        Y: -177500000
-      - X: -47500004
-        Y: -182436288
-      - X: -42500000
-        Y: -187500000
-      - X: -27500000
-        Y: -187500000
-  - m_Collider: {fileID: 8561217004113482086}
-    m_ColliderPaths:
-    - - X: 15000000
-        Y: -122500000
-      - X: 25000000
-        Y: -122500000
-      - X: 37500000
-        Y: -110000000
-      - X: 67500000
-        Y: -110000000
-      - X: 80000000
-        Y: -97500000
-      - X: 80000000
-        Y: -87627408
-      - X: 77531856
-        Y: -85031856
-      - X: 72500000
-        Y: -85000000
-      - X: 60000000
-        Y: -95000000
-      - X: 12500000
-        Y: -95000000
-      - X: 10000000
-        Y: -92500000
-      - X: -10000000
-        Y: -92500000
-      - X: -12500000
-        Y: -95000000
-      - X: -60000000
-        Y: -95000000
-      - X: -72500000
-        Y: -85000000
-      - X: -77436296
-        Y: -85000000
-      - X: -79968152
-        Y: -87468144
-      - X: -80000000
-        Y: -97500000
-      - X: -67500000
-        Y: -110000000
-      - X: -37500000
-        Y: -110000000
-      - X: -25000000
-        Y: -122500000
-      - X: -15000000
-        Y: -122500000
-      - X: -10000000
-        Y: -127500000
-      - X: 10000000
-        Y: -127500000
-  - m_Collider: {fileID: 3141228432193410503}
-    m_ColliderPaths:
-    - - X: -19785858
-        Y: -32922978
-      - X: -19718284
-        Y: -29364924
-      - X: -25021582
-        Y: -24016572
-      - X: -42699252
-        Y: -24016556
-      - X: -65680200
-        Y: -1035563
-      - X: -78054568
-        Y: 732215
-      - X: -95732224
-        Y: 18409900
-      - X: -95732216
-        Y: 29016502
-      - X: -122248688
-        Y: 55533028
-      - X: -122248672
-        Y: 69675168
-      - X: -129319744
-        Y: 76746240
-      - X: -136300720
-        Y: 76746248
-      - X: -139926336
-        Y: 73210720
-      - X: -139926384
-        Y: 37855376
-      - X: -120480960
-        Y: 18409924
-      - X: -120527432
-        Y: 1506300
-      - X: -95732256
-        Y: -24016504
-      - X: -88751280
-        Y: -24016514
-      - X: -85170696
-        Y: -20526028
-      - X: -78054584
-        Y: -20480986
-      - X: -60376932
-        Y: -38158676
-      - X: -25021592
-        Y: -38158708
-  - m_Collider: {fileID: 2766141295292918104}
-    m_ColliderPaths:
-    - - X: 60377080
-        Y: -38158804
-      - X: 78054664
-        Y: -20481058
-      - X: 85170784
-        Y: -20526070
-      - X: 88751376
-        Y: -24016544
-      - X: 95732352
-        Y: -24016512
-      - X: 120527432
-        Y: 1506382
-      - X: 120480896
-        Y: 18410006
-      - X: 139926240
-        Y: 37855528
-      - X: 139926096
-        Y: 73210872
-      - X: 136300448
-        Y: 76746384
-      - X: 129319480
-        Y: 76746352
-      - X: 122248440
-        Y: 69675248
-      - X: 122248496
-        Y: 55533120
-      - X: 95732120
-        Y: 29016494
-      - X: 95732168
-        Y: 18409894
-      - X: 78054568
-        Y: 732146
-      - X: 65680208
-        Y: -1035676
-      - X: 42699340
-        Y: -24016750
-      - X: 25021678
-        Y: -24016828
-      - X: 19718394
-        Y: -29365196
-      - X: 19785982
-        Y: -32923254
-      - X: 25021740
-        Y: -38158960
-  - m_Collider: {fileID: 8441803109562674350}
-    m_ColliderPaths:
-    - - X: 20000000
-        Y: 87500000
-      - X: 20000000
-        Y: 95000000
-      - X: 27436296
-        Y: 102436296
-      - X: 32436300
-        Y: 102500000
-      - X: 37500000
-        Y: 107500000
-      - X: 45000000
-        Y: 107500000
-      - X: 49936300
-        Y: 112436296
-      - X: 50000004
-        Y: 114740000
-      - X: 47531852
-        Y: 117468144
-      - X: 35159260
-        Y: 117500000
-      - X: 32531856
-        Y: 119968144
-      - X: 25000000
-        Y: 120000000
-      - X: 7500000
-        Y: 105000000
-      - X: -7500000
-        Y: 105000000
-      - X: -25000000
-        Y: 120000000
-      - X: -32404446
-        Y: 120000000
-      - X: -34968148
-        Y: 117531856
-      - X: -47340744
-        Y: 117500000
-      - X: -49740004
-        Y: 115260000
-      - X: -50000000
-        Y: 112531856
-      - X: -45000000
-        Y: 107500000
-      - X: -37500000
-        Y: 107500000
-      - X: -32563706
-        Y: 102563704
-      - X: -27500000
-        Y: 102500000
-      - X: -20000000
-        Y: 95000000
-      - X: -20000000
-        Y: 87500000
-      - X: -5000000
-        Y: 70000000
-      - X: 5000000
-        Y: 70000000
-  m_CompositePaths:
-    m_Paths: []
-  m_VertexDistance: 0.5
-  m_OffsetDistance: 0
-  m_UseDelaunayMesh: 0
-  m_CompositeGameObject: {fileID: 1443158369337550864}
 --- !u!114 &8372823755717404555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1835,8 +1531,8 @@ GameObject:
   - component: {fileID: 5032107454289545110}
   - component: {fileID: 7164623087357210409}
   - component: {fileID: 2294821488212494630}
-  - component: {fileID: 2766141295292918104}
   - component: {fileID: 7009710557737849963}
+  - component: {fileID: 6765837552508210742}
   m_Layer: 9
   m_Name: Solid (26)
   m_TagString: Untagged
@@ -2299,76 +1995,6 @@ MonoBehaviour:
     - rid: 393367090030444814
       type: {class: ShadowShape2DProvider_SpriteShape, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
---- !u!60 &2766141295292918104
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2050957605172087223}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 1
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -5.5, y: 2}
-      - {x: -1.75, y: 2}
-      - {x: -1, y: 1.25}
-      - {x: 1.5, y: 1.25}
-      - {x: 2.5, y: 2}
-      - {x: 5.75, y: 2}
-      - {x: 7, y: 3.25}
-      - {x: 7.7531853, y: 3.246815}
-      - {x: 8, y: 2.9904444}
-      - {x: 8, y: 2.25}
-      - {x: 5.5, y: -0.25}
-      - {x: 3, y: -0.25}
-      - {x: 2.5, y: -0.75637037}
-      - {x: 2.49363, y: -1.2563704}
-      - {x: 2, y: -1.75}
-      - {x: -1.5580182, y: -1.6985517}
-      - {x: -2.75, y: -0.5}
-      - {x: -5.5, y: -0.5}
-      - {x: -8, y: 2}
-      - {x: -7.9936295, y: 2.5063703}
-      - {x: -7.5, y: 3}
-      - {x: -6.5, y: 3}
-      - {x: -5.5, y: 2}
-  m_UseDelaunayMesh: 0
 --- !u!331 &7009710557737849963
 SpriteMask:
   m_ObjectHideFlags: 0
@@ -2424,6 +2050,18 @@ SpriteMask:
   m_IsCustomRangeActive: 1
   m_SpriteSortPoint: 0
   m_MaskSource: 1
+--- !u!114 &6765837552508210742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2050957605172087223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed7ba716a60f4c4a83ac819fa07dbd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2458467251749210880
 GameObject:
   m_ObjectHideFlags: 0
@@ -2477,6 +2115,13 @@ MonoBehaviour:
   icon: {fileID: -2837455272834653360, guid: eec4f7cb2b0ab22409ca549452aff64b, type: 3}
   lightPos: {fileID: 7094376858307215321}
   arenaName: Square Deity
+  battleThemeReference:
+    Guid:
+      Data1: -2128725640
+      Data2: 1242723049
+      Data3: -40543318
+      Data4: 319593330
+    Path: event:/BattleThemes/Square Deity
   size: 
   difficulty: 
 --- !u!1 &3030772336222051228
@@ -5282,8 +4927,8 @@ GameObject:
   - component: {fileID: 5223935271713862235}
   - component: {fileID: 4957817345044124451}
   - component: {fileID: 2433607329855825712}
-  - component: {fileID: 3141228432193410503}
   - component: {fileID: 3833232307941142408}
+  - component: {fileID: 2151686450731802452}
   m_Layer: 9
   m_Name: Solid (25)
   m_TagString: Untagged
@@ -5746,76 +5391,6 @@ MonoBehaviour:
     - rid: 393367090030444814
       type: {class: ShadowShape2DProvider_SpriteShape, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
---- !u!60 &3141228432193410503
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5493463772154163249}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 1
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -5.5, y: 2}
-      - {x: -1.75, y: 2}
-      - {x: -1, y: 1.25}
-      - {x: 1.5, y: 1.25}
-      - {x: 2.5, y: 2}
-      - {x: 5.75, y: 2}
-      - {x: 7, y: 3.25}
-      - {x: 7.7531853, y: 3.246815}
-      - {x: 8, y: 2.9904444}
-      - {x: 8, y: 2.25}
-      - {x: 5.5, y: -0.25}
-      - {x: 3, y: -0.25}
-      - {x: 2.5, y: -0.75637037}
-      - {x: 2.49363, y: -1.2563704}
-      - {x: 2, y: -1.75}
-      - {x: -1.5580182, y: -1.6985517}
-      - {x: -2.75, y: -0.5}
-      - {x: -5.5, y: -0.5}
-      - {x: -8, y: 2}
-      - {x: -7.9936295, y: 2.5063703}
-      - {x: -7.5, y: 3}
-      - {x: -6.5, y: 3}
-      - {x: -5.5, y: 2}
-  m_UseDelaunayMesh: 0
 --- !u!331 &3833232307941142408
 SpriteMask:
   m_ObjectHideFlags: 0
@@ -5871,6 +5446,18 @@ SpriteMask:
   m_IsCustomRangeActive: 1
   m_SpriteSortPoint: 0
   m_MaskSource: 1
+--- !u!114 &2151686450731802452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5493463772154163249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed7ba716a60f4c4a83ac819fa07dbd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6309572825702059257
 GameObject:
   m_ObjectHideFlags: 0
@@ -6851,8 +6438,8 @@ GameObject:
   - component: {fileID: 2079210432072326421}
   - component: {fileID: 2507190246569304842}
   - component: {fileID: 1562812952115253263}
-  - component: {fileID: 8441803109562674350}
   - component: {fileID: 986830846518735164}
+  - component: {fileID: 2175608001143056339}
   m_Layer: 9
   m_Name: Solid (22)
   m_TagString: Untagged
@@ -7395,82 +6982,6 @@ MonoBehaviour:
     - rid: 393367090030444814
       type: {class: ShadowShape2DProvider_SpriteShape, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
---- !u!60 &8441803109562674350
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6432595592777017233}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 1
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.75, y: 1.25}
-      - {x: 0.75, y: 1.25}
-      - {x: 2.5, y: 2.75}
-      - {x: 3.2531855, y: 2.7468147}
-      - {x: 3.5159261, y: 2.5}
-      - {x: 4.7531853, y: 2.496815}
-      - {x: 5.0000005, y: 2.2240002}
-      - {x: 4.99363, y: 1.9936296}
-      - {x: 4.5, y: 1.5}
-      - {x: 3.75, y: 1.5}
-      - {x: 3.24363, y: 1}
-      - {x: 2.7436297, y: 0.9936297}
-      - {x: 2, y: 0.25}
-      - {x: 2, y: -0.5}
-      - {x: 0.5, y: -2.25}
-      - {x: -0.5, y: -2.25}
-      - {x: -2, y: -0.5}
-      - {x: -2, y: 0.25}
-      - {x: -2.75, y: 1}
-      - {x: -3.2563705, y: 1.0063703}
-      - {x: -3.75, y: 1.5}
-      - {x: -4.5, y: 1.5}
-      - {x: -5, y: 2.0031853}
-      - {x: -4.9740005, y: 2.2760003}
-      - {x: -4.7340746, y: 2.5}
-      - {x: -3.496815, y: 2.5031853}
-      - {x: -3.2404447, y: 2.75}
-      - {x: -2.5, y: 2.75}
-      - {x: -0.75, y: 1.25}
-  m_UseDelaunayMesh: 0
 --- !u!331 &986830846518735164
 SpriteMask:
   m_ObjectHideFlags: 0
@@ -7526,6 +7037,18 @@ SpriteMask:
   m_IsCustomRangeActive: 1
   m_SpriteSortPoint: 0
   m_MaskSource: 1
+--- !u!114 &2175608001143056339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6432595592777017233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed7ba716a60f4c4a83ac819fa07dbd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6858345977159378790
 GameObject:
   m_ObjectHideFlags: 0
@@ -8624,8 +8147,8 @@ GameObject:
   - component: {fileID: 5798940055462434055}
   - component: {fileID: 8506564293115194508}
   - component: {fileID: 4146543091200374691}
-  - component: {fileID: 4742399552907932862}
   - component: {fileID: 4373726678250407207}
+  - component: {fileID: 5707041481145360124}
   m_Layer: 9
   m_Name: Solid (21)
   m_TagString: Untagged
@@ -9160,82 +8683,6 @@ MonoBehaviour:
     - rid: 393367090030444814
       type: {class: ShadowShape2DProvider_SpriteShape, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
---- !u!60 &4742399552907932862
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7184434772270521752}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 1
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.5, y: 1}
-      - {x: 0.5, y: 1}
-      - {x: 1, y: 0.5}
-      - {x: 1, y: -0.25}
-      - {x: 1.75, y: -1}
-      - {x: 2.5, y: -1}
-      - {x: 3, y: -1.5}
-      - {x: 4, y: -1.5}
-      - {x: 4.75, y: -2.25}
-      - {x: 4.74363, y: -2.7563703}
-      - {x: 4.25, y: -3.25}
-      - {x: 2.75, y: -3.25}
-      - {x: 2.25, y: -2.75}
-      - {x: 1.25, y: -2.75}
-      - {x: 0.75, y: -2.25}
-      - {x: -0.75, y: -2.25}
-      - {x: -1.25, y: -2.75}
-      - {x: -2.25, y: -2.75}
-      - {x: -2.75, y: -3.25}
-      - {x: -4.25, y: -3.25}
-      - {x: -4.7500005, y: -2.7436297}
-      - {x: -4.75, y: -2.25}
-      - {x: -4, y: -1.5}
-      - {x: -3, y: -1.5}
-      - {x: -2.5, y: -1}
-      - {x: -1.75, y: -1}
-      - {x: -1, y: -0.25}
-      - {x: -1, y: 0.5}
-      - {x: -0.5, y: 1}
-  m_UseDelaunayMesh: 0
 --- !u!331 &4373726678250407207
 SpriteMask:
   m_ObjectHideFlags: 0
@@ -9291,6 +8738,18 @@ SpriteMask:
   m_IsCustomRangeActive: 1
   m_SpriteSortPoint: 0
   m_MaskSource: 1
+--- !u!114 &5707041481145360124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7184434772270521752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed7ba716a60f4c4a83ac819fa07dbd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7238859600461542327
 GameObject:
   m_ObjectHideFlags: 0
@@ -9927,8 +9386,8 @@ GameObject:
   - component: {fileID: 5225328837505157098}
   - component: {fileID: 7568972931264574309}
   - component: {fileID: 772654219723928705}
-  - component: {fileID: 8561217004113482086}
   - component: {fileID: 5002095349214841575}
+  - component: {fileID: 9100660604789859647}
   m_Layer: 9
   m_Name: Solid (20)
   m_TagString: Untagged
@@ -10431,78 +9890,6 @@ MonoBehaviour:
     - rid: 393367090030444814
       type: {class: ShadowShape2DProvider_SpriteShape, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
---- !u!60 &8561217004113482086
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7731371148530641227}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 1
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -6, y: 2.25}
-      - {x: -1.25, y: 2.25}
-      - {x: -1, y: 2.5}
-      - {x: 1, y: 2.5}
-      - {x: 1.25, y: 2.25}
-      - {x: 6, y: 2.25}
-      - {x: 7.25, y: 3.25}
-      - {x: 7.7531853, y: 3.246815}
-      - {x: 8, y: 2.9872594}
-      - {x: 8, y: 2}
-      - {x: 6.75, y: 0.75}
-      - {x: 3.75, y: 0.75}
-      - {x: 2.5, y: -0.5}
-      - {x: 1.5, y: -0.5}
-      - {x: 1, y: -1}
-      - {x: -1, y: -1}
-      - {x: -1.5, y: -0.5}
-      - {x: -2.5, y: -0.5}
-      - {x: -3.75, y: 0.75}
-      - {x: -6.75, y: 0.75}
-      - {x: -8, y: 2}
-      - {x: -7.996815, y: 3.003185}
-      - {x: -7.74363, y: 3.2500002}
-      - {x: -7.25, y: 3.25}
-      - {x: -6, y: 2.25}
-  m_UseDelaunayMesh: 0
 --- !u!331 &5002095349214841575
 SpriteMask:
   m_ObjectHideFlags: 0
@@ -10558,6 +9945,18 @@ SpriteMask:
   m_IsCustomRangeActive: 1
   m_SpriteSortPoint: 0
   m_MaskSource: 1
+--- !u!114 &9100660604789859647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7731371148530641227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed7ba716a60f4c4a83ac819fa07dbd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7981822376854064548
 GameObject:
   m_ObjectHideFlags: 0

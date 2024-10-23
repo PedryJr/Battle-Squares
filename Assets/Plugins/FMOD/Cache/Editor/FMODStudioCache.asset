@@ -1,230 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-9054258406394060215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/VFX/Player/Death/BasicDeath
-  m_EditorClassIdentifier: 
-  Path: event:/VFX/Player/Death/BasicDeath
-  Guid:
-    Data1: 626443750
-    Data2: 1189152592
-    Data3: -1328977779
-    Data4: 26429710
-  Banks:
-  - {fileID: 6687703786072549468}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters:
-  - {fileID: -1720226408084135471}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 132
---- !u!114 &-8610244248640552602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.bank
-  m_EditorClassIdentifier: 
-  Path: Assets/BattleSquares/Build/Desktop/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-  lastModified: 638637621525185345
-  FileSizes:
-  - Name: Desktop
-    Value: 1036
-  Exists: 1
---- !u!114 &-8411136910507992444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/VFX/Sniper/Shot
-  m_EditorClassIdentifier: 
-  Path: event:/VFX/Sniper/Shot
-  Guid:
-    Data1: -78626531
-    Data2: 1167885873
-    Data3: 1818233730
-    Data4: -1518369794
-  Banks:
-  - {fileID: 6687703786072549468}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters:
-  - {fileID: 3650831546528724502}
-  - {fileID: 842119699512637735}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 391
---- !u!114 &-6973046785635460373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Gun Shot/CameraPositionX
-  m_EditorClassIdentifier: 
-  Name: CameraPositionX
-  StudioPath: 
-  Min: -15
-  Max: 15
-  Default: 0
-  ID:
-    data1: 566106688
-    data2: 978960363
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-6755979522222284400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/MainBattleTheme/Climax
-  m_EditorClassIdentifier: 
-  Name: Climax
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 4019113442
-    data2: 3476276034
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-5522852104335975654
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Shot/CameraPositionX
-  m_EditorClassIdentifier: 
-  Name: CameraPositionX
-  StudioPath: 
-  Min: -15
-  Max: 15
-  Default: 0
-  ID:
-    data1: 566106688
-    data2: 978960363
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-5274057293598614325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Shot/CameraPositionX
-  m_EditorClassIdentifier: 
-  Name: CameraPositionX
-  StudioPath: 
-  Min: -15
-  Max: 15
-  Default: 0
-  ID:
-    data1: 566106688
-    data2: 978960363
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-5174570398748984334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/MainBattleTheme/Intensity
-  m_EditorClassIdentifier: 
-  Name: Intensity
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 2935720071
-    data2: 1046895765
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-3580429345772102378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/VFX/Hailmaker/Shot
-  m_EditorClassIdentifier: 
-  Path: event:/VFX/Hailmaker/Shot
-  Guid:
-    Data1: -1092076263
-    Data2: 1119341843
-    Data3: -2074649164
-    Data4: -1205273768
-  Banks:
-  - {fileID: 6687703786072549468}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 469
---- !u!114 &-2742016566797694500
+--- !u!114 &-8611192865831150065
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -243,16 +19,16 @@ MonoBehaviour:
     Data3: 960461999
     Data4: -769046721
   Banks:
-  - {fileID: 6687703786072549468}
+  - {fileID: 7096212720880033483}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
   Parameters:
-  - {fileID: -5274057293598614325}
+  - {fileID: -6163062173220661443}
   MinDistance: 1
   MaxDistance: 20
   Length: 132
---- !u!114 &-1720226408084135471
+--- !u!114 &-7128761368538611185
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -262,154 +38,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/BasicDeath/CameraPositionX
+  m_Name: parameter:/PlayerStep/Direction
   m_EditorClassIdentifier: 
-  Name: CameraPositionX
+  Name: Direction
   StudioPath: 
-  Min: -15
-  Max: 15
+  Min: -180
+  Max: 180
   Default: 0
   ID:
-    data1: 566106688
-    data2: 978960363
+    data1: 1590958221
+    data2: 3902426561
   Type: 0
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &-570783720180498379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/BattleThemes/MainBattleTheme
-  m_EditorClassIdentifier: 
-  Path: event:/BattleThemes/MainBattleTheme
-  Guid:
-    Data1: -751826246
-    Data2: 1134526964
-    Data3: 301012907
-    Data4: -108581261
-  Banks:
-  - {fileID: 484918343714038401}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 0
-  Parameters:
-  - {fileID: -5174570398748984334}
-  - {fileID: -6755979522222284400}
-  - {fileID: 450546386737726583}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 14942
---- !u!114 &-347785052037645193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Shot/CameraPositionX
-  m_EditorClassIdentifier: 
-  Name: CameraPositionX
-  StudioPath: 
-  Min: -15
-  Max: 15
-  Default: 0
-  ID:
-    data1: 566106688
-    data2: 978960363
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
-  m_Name: FMODStudioCache
-  m_EditorClassIdentifier: 
-  EditorBanks:
-  - {fileID: 1467507890409329574}
-  - {fileID: -8610244248640552602}
-  - {fileID: 484918343714038401}
-  - {fileID: 6687703786072549468}
-  EditorEvents:
-  - {fileID: -570783720180498379}
-  - {fileID: -9054258406394060215}
-  - {fileID: -8411136910507992444}
-  - {fileID: 992489701166160527}
-  - {fileID: 9179963675208238677}
-  - {fileID: 5208885096205294333}
-  - {fileID: 6138990007282944406}
-  - {fileID: 7436012682555213570}
-  - {fileID: -2742016566797694500}
-  - {fileID: -3580429345772102378}
-  EditorParameters: []
-  MasterBanks:
-  - {fileID: -8610244248640552602}
-  StringsBanks:
-  - {fileID: 1467507890409329574}
-  cacheTime: 638644392624492806
-  cacheVersion: 131618
---- !u!114 &450546386737726583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/MainBattleTheme/CameraPositionX
-  m_EditorClassIdentifier: 
-  Name: CameraPositionX
-  StudioPath: 
-  Min: -15
-  Max: 15
-  Default: 0
-  ID:
-    data1: 566106688
-    data2: 978960363
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &484918343714038401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Themes.bank
-  m_EditorClassIdentifier: 
-  Path: Assets/BattleSquares/Build/Desktop/Themes.bank
-  Name: Themes
-  StudioPath: bank:/Themes
-  lastModified: 638644392624492806
-  FileSizes:
-  - Name: Desktop
-    Value: 138528
-  Exists: 1
---- !u!114 &842119699512637735
+--- !u!114 &-6412907120951020982
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -433,7 +76,126 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &992489701166160527
+--- !u!114 &-6163062173220661443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Shot/CameraPositionX
+  m_EditorClassIdentifier: 
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-6076681454377724465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Player.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/BattleSquares/Build/Desktop/Player.bank
+  Name: Player
+  StudioPath: bank:/Player
+  lastModified: 638648071642094325
+  FileSizes:
+  - Name: Desktop
+    Value: 13280
+  Exists: 1
+--- !u!114 &-5976928713244360149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Square Deity/Intensity
+  m_EditorClassIdentifier: 
+  Name: Intensity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2935720071
+    data2: 1046895765
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-5824616420194226882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Hailmaker/Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Hailmaker/Shot
+  Guid:
+    Data1: -1092076263
+    Data2: 1119341843
+    Data3: -2074649164
+    Data4: -1205273768
+  Banks:
+  - {fileID: 7096212720880033483}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 469
+--- !u!114 &-5793382701393897840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Voice Chat/Funny Voice
+  m_EditorClassIdentifier: 
+  Name: Funny Voice
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0.8
+  ID:
+    data1: 841180310
+    data2: 1568663689
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-5763645532698245140
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -452,7 +214,7 @@ MonoBehaviour:
     Data3: -832856919
     Data4: 1810325321
   Banks:
-  - {fileID: 6687703786072549468}
+  - {fileID: 7096212720880033483}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -460,7 +222,31 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &1467507890409329574
+--- !u!114 &-5576685461494715885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/The Factory/CameraPositionX
+  m_EditorClassIdentifier: 
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-5230284171643110809
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -475,12 +261,297 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638637621525195341
+  lastModified: 638648045215352709
   FileSizes:
   - Name: Desktop
-    Value: 1532
+    Value: 2072
   Exists: 1
---- !u!114 &2868924097593082008
+--- !u!114 &-3858178114869651658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/BattleSquares/Build/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 638648045215342676
+  FileSizes:
+  - Name: Desktop
+    Value: 4528
+  Exists: 1
+--- !u!114 &-3474264015751686721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/PlayerStep/Distance
+  m_EditorClassIdentifier: 
+  Name: Distance
+  StudioPath: 
+  Min: 0
+  Max: 35
+  Default: 0
+  ID:
+    data1: 2424152862
+    data2: 3155324299
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-3364857708303110998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BattleThemes/Square Deity
+  m_EditorClassIdentifier: 
+  Path: event:/BattleThemes/Square Deity
+  Guid:
+    Data1: -2128725640
+    Data2: 1242723049
+    Data3: -40543318
+    Data4: 319593330
+  Banks:
+  - {fileID: 6063943717218973278}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -1512261145043008662}
+  - {fileID: 3053614709836959599}
+  - {fileID: -5976928713244360149}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 66246
+--- !u!114 &-3194765753783543456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Player/Death/BasicDeath
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Player/Death/BasicDeath
+  Guid:
+    Data1: 626443750
+    Data2: 1189152592
+    Data3: -1328977779
+    Data4: 26429710
+  Banks:
+  - {fileID: 7096212720880033483}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 1273568147337170834}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 132
+--- !u!114 &-2776500238362204184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Voice Chat
+  m_EditorClassIdentifier: 
+  Path: event:/Voice Chat
+  Guid:
+    Data1: 1004798843
+    Data2: 1161090848
+    Data3: -346070891
+    Data4: 417515367
+  Banks:
+  - {fileID: -3858178114869651658}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -5793382701393897840}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1000
+--- !u!114 &-2650377291453377841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Shot/Power
+  m_EditorClassIdentifier: 
+  Name: Power
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1223703397
+    data2: 2627426102
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-1981023143369193802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BattleThemes/The Factory
+  m_EditorClassIdentifier: 
+  Path: event:/BattleThemes/The Factory
+  Guid:
+    Data1: -751826246
+    Data2: 1134526964
+    Data3: 301012907
+    Data4: -108581261
+  Banks:
+  - {fileID: 6063943717218973278}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 6337742966284777977}
+  - {fileID: -1107351024012103650}
+  - {fileID: -5576685461494715885}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 66664
+--- !u!114 &-1512261145043008662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Square Deity/CameraPositionX
+  m_EditorClassIdentifier: 
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-1420922606371791508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Base/Gun Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Base/Gun Shot
+  Guid:
+    Data1: 1840774806
+    Data2: 1158770082
+    Data3: 226132131
+    Data4: 1720554927
+  Banks:
+  - {fileID: 7096212720880033483}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 3667690904054000154}
+  - {fileID: 8663722654109579014}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 156
+--- !u!114 &-1220666489223329230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/SidechainTest
+  m_EditorClassIdentifier: 
+  Name: SidechainTest
+  StudioPath: parameter:/SidechainTest
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2912215529
+    data2: 3873333950
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &-1107351024012103650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/The Factory/Climax
+  m_EditorClassIdentifier: 
+  Name: Climax
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 4019113442
+    data2: 3476276034
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-975245365296833348
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -504,7 +575,78 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &3650831546528724502
+--- !u!114 &-283124996120933337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Shotgun/Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Shotgun/Shot
+  Guid:
+    Data1: 185777487
+    Data2: 1315586080
+    Data3: 578809220
+    Data4: 361892632
+  Banks:
+  - {fileID: 7096212720880033483}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 3942372773023115695}
+  - {fileID: -6412907120951020982}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 417
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
+  m_Name: FMODStudioCache
+  m_EditorClassIdentifier: 
+  EditorBanks:
+  - {fileID: -5230284171643110809}
+  - {fileID: -3858178114869651658}
+  - {fileID: 6063943717218973278}
+  - {fileID: 7096212720880033483}
+  - {fileID: -6076681454377724465}
+  EditorEvents:
+  - {fileID: -2776500238362204184}
+  - {fileID: -5824616420194226882}
+  - {fileID: 310826890629701482}
+  - {fileID: -5763645532698245140}
+  - {fileID: -283124996120933337}
+  - {fileID: 5353522096239671094}
+  - {fileID: -8611192865831150065}
+  - {fileID: -1420922606371791508}
+  - {fileID: 3135683685405963606}
+  - {fileID: 7757829048736075428}
+  - {fileID: -3194765753783543456}
+  - {fileID: -3364857708303110998}
+  - {fileID: -1981023143369193802}
+  - {fileID: 1905300714482433479}
+  - {fileID: 7640860689419993278}
+  EditorParameters:
+  - {fileID: -1220666489223329230}
+  MasterBanks:
+  - {fileID: -3858178114869651658}
+  StringsBanks:
+  - {fileID: -5230284171643110809}
+  cacheTime: 638648132090784720
+  cacheVersion: 131843
+--- !u!114 &102241271348088986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -528,7 +670,36 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &4091762232050697204
+--- !u!114 &310826890629701482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Sniper/Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Sniper/Shot
+  Guid:
+    Data1: -78626531
+    Data2: 1167885873
+    Data3: 1818233730
+    Data4: -1518369794
+  Banks:
+  - {fileID: 7096212720880033483}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 102241271348088986}
+  - {fileID: -2650377291453377841}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 391
+--- !u!114 &1273568147337170834
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -538,21 +709,123 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Shot/Power
+  m_Name: parameter:/BasicDeath/CameraPositionX
   m_EditorClassIdentifier: 
-  Name: Power
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &1905300714482433479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Rocket/Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Rocket/Shot
+  Guid:
+    Data1: -1080802597
+    Data2: 1213032831
+    Data3: -2093597511
+    Data4: 375597960
+  Banks:
+  - {fileID: 7096212720880033483}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 600
+--- !u!114 &2658810102696043300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/PlayerStep/Player Speed
+  m_EditorClassIdentifier: 
+  Name: Player Speed
+  StudioPath: 
+  Min: 0
+  Max: 30
+  Default: 0
+  ID:
+    data1: 1477047240
+    data2: 2531787743
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &3053614709836959599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Square Deity/Climax
+  m_EditorClassIdentifier: 
+  Name: Climax
   StudioPath: 
   Min: 0
   Max: 1
   Default: 0
   ID:
-    data1: 1223703397
-    data2: 2627426102
+    data1: 4019113442
+    data2: 3476276034
   Type: 0
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &4831504281778358195
+--- !u!114 &3135683685405963606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Raygun/Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Raygun/Shot
+  Guid:
+    Data1: -374525801
+    Data2: 1330882879
+    Data3: 131294904
+    Data4: 910647932
+  Banks:
+  - {fileID: 7096212720880033483}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 313
+--- !u!114 &3667690904054000154
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -576,7 +849,7 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &5208885096205294333
+--- !u!114 &3942372773023115695
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -585,76 +858,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/VFX/Base/Gun Shot
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Shot/CameraPositionX
   m_EditorClassIdentifier: 
-  Path: event:/VFX/Base/Gun Shot
-  Guid:
-    Data1: 1840774806
-    Data2: 1158770082
-    Data3: 226132131
-    Data4: 1720554927
-  Banks:
-  - {fileID: 6687703786072549468}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters:
-  - {fileID: 4831504281778358195}
-  - {fileID: -6973046785635460373}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 156
---- !u!114 &6138990007282944406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/VFX/Shotgun/Shot
-  m_EditorClassIdentifier: 
-  Path: event:/VFX/Shotgun/Shot
-  Guid:
-    Data1: 185777487
-    Data2: 1315586080
-    Data3: 578809220
-    Data4: 361892632
-  Banks:
-  - {fileID: 6687703786072549468}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters:
-  - {fileID: -347785052037645193}
-  - {fileID: 4091762232050697204}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 417
---- !u!114 &6687703786072549468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/VFX.bank
-  m_EditorClassIdentifier: 
-  Path: Assets/BattleSquares/Build/Desktop/VFX.bank
-  Name: VFX
-  StudioPath: bank:/VFX
-  lastModified: 638637643921961961
-  FileSizes:
-  - Name: Desktop
-    Value: 66080
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
   Exists: 1
---- !u!114 &7436012682555213570
+--- !u!114 &4994903501389816384
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -663,26 +882,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/VFX/Katana/Shot
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Shot/CameraPositionX
   m_EditorClassIdentifier: 
-  Path: event:/VFX/Katana/Shot
-  Guid:
-    Data1: -198327085
-    Data2: 1243631254
-    Data3: 514360735
-    Data4: -1938883303
-  Banks:
-  - {fileID: 6687703786072549468}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters:
-  - {fileID: -5522852104335975654}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 203
---- !u!114 &9179963675208238677
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &5353522096239671094
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -701,12 +916,158 @@ MonoBehaviour:
     Data3: -1733238086
     Data4: 1170857750
   Banks:
-  - {fileID: 6687703786072549468}
+  - {fileID: 7096212720880033483}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
   Parameters:
-  - {fileID: 2868924097593082008}
+  - {fileID: -975245365296833348}
   MinDistance: 1
   MaxDistance: 20
   Length: 235
+--- !u!114 &6063943717218973278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Themes.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/BattleSquares/Build/Desktop/Themes.bank
+  Name: Themes
+  StudioPath: bank:/Themes
+  lastModified: 638647987899797123
+  FileSizes:
+  - Name: Desktop
+    Value: 1806400
+  Exists: 1
+--- !u!114 &6337742966284777977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/The Factory/Intensity
+  m_EditorClassIdentifier: 
+  Name: Intensity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2935720071
+    data2: 1046895765
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &7096212720880033483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/VFX.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/BattleSquares/Build/Desktop/VFX.bank
+  Name: VFX
+  StudioPath: bank:/VFX
+  lastModified: 638648132090784720
+  FileSizes:
+  - Name: Desktop
+    Value: 91136
+  Exists: 1
+--- !u!114 &7640860689419993278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/PlayerSounds/PlayerStep
+  m_EditorClassIdentifier: 
+  Path: event:/PlayerSounds/PlayerStep
+  Guid:
+    Data1: -291212642
+    Data2: 1229031154
+    Data3: -414281587
+    Data4: 1289083007
+  Banks:
+  - {fileID: -6076681454377724465}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 2658810102696043300}
+  - {fileID: -3474264015751686721}
+  - {fileID: -7128761368538611185}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 182
+--- !u!114 &7757829048736075428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/VFX/Katana/Shot
+  m_EditorClassIdentifier: 
+  Path: event:/VFX/Katana/Shot
+  Guid:
+    Data1: -198327085
+    Data2: 1243631254
+    Data3: 514360735
+    Data4: -1938883303
+  Banks:
+  - {fileID: 7096212720880033483}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 4994903501389816384}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 203
+--- !u!114 &8663722654109579014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Gun Shot/CameraPositionX
+  m_EditorClassIdentifier: 
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1

@@ -458,7 +458,7 @@ MonoBehaviour:
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 1
   ShowBankRefreshWindow: 1
-  AutomaticEventLoading: 1
+  AutomaticEventLoading: 0
   BankLoadType: 0
   AutomaticSampleLoading: 0
   EncryptionKey: 
@@ -466,7 +466,7 @@ MonoBehaviour:
   TargetAssetPath: FMODBanks
   TargetBankFolder: 
   EventLinkage: 0
-  LoggingLevel: 1
+  LoggingLevel: 0
   SpeakerModeSettings: []
   SampleRateSettings: []
   LiveUpdateSettings: []
@@ -478,9 +478,15 @@ MonoBehaviour:
   MasterBanks:
   - Master
   Banks:
+  - Player
   - Themes
   - VFX
-  BanksToLoad: []
+  BanksToLoad:
+  - Master
+  - Master.strings
+  - Player
+  - Themes
+  - VFX
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
   AndroidUseOBB: 0
@@ -491,9 +497,9 @@ MonoBehaviour:
   EnableErrorCallback: 0
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
-  CurrentVersion: 131618
+  CurrentVersion: 131843
   HideSetupWizard: 1
-  LastEventReferenceScanVersion: 131618
+  LastEventReferenceScanVersion: 131843
   Platforms:
   - {fileID: -9148364549534204657}
   - {fileID: -8798298017273933974}
@@ -772,7 +778,7 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     SampleRate:
-      Value: 44100
+      Value: 48000
       HasValue: 1
     BuildDirectory:
       Value: 
@@ -781,32 +787,30 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     VirtualChannelCount:
-      Value: 0
-      HasValue: 0
+      Value: 2048
+      HasValue: 1
     RealChannelCount:
       Value: 0
       HasValue: 0
     DSPBufferLength:
-      Value: 128
+      Value: 0
       HasValue: 1
     DSPBufferCount:
-      Value: 5
+      Value: 0
       HasValue: 1
     Plugins:
       Value: []
       HasValue: 0
     StaticPlugins:
       Value: []
-      HasValue: 0
+      HasValue: 1
     CallbackHandler:
       Value: {fileID: 0}
       HasValue: 0
   OutputTypeName: AUTODETECT
   threadAffinities:
-    Value:
-    - threads: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
-      affinity: 65535
-    HasValue: 1
+    Value: []
+    HasValue: 0
   displaySortOrder: 0
   childIdentifiers: []
   codecChannels:

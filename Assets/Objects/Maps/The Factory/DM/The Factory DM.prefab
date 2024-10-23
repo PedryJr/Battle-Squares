@@ -49947,6 +49947,13 @@ MonoBehaviour:
   timeBetweenPoints: 1
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &3892622520076405470
 GameObject:
   m_ObjectHideFlags: 0
@@ -52613,6 +52620,13 @@ MonoBehaviour:
   timeBetweenPoints: 1
   offset: 0
   siblingOffset: 0
+  customCurve: 0
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4085340656606328398
 GameObject:
   m_ObjectHideFlags: 0
@@ -57080,6 +57094,13 @@ MonoBehaviour:
   icon: {fileID: 4346031889009749170, guid: 9e0d2a774bab54e4e861668669e20067, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: The Factory
+  battleThemeReference:
+    Guid:
+      Data1: -751826246
+      Data2: 1134526964
+      Data3: 301012907
+      Data4: -108581261
+    Path: event:/BattleThemes/The Factory
   size: 
   difficulty: 
 --- !u!114 &-7812783935480389576
