@@ -8,6 +8,7 @@ public sealed class EditorPixelBehaviour : MonoBehaviour
 {
 
     public int siblingIndex;
+
     public Image image;
 
     PixelStateAnimator pixelStateAnimator;
@@ -47,7 +48,7 @@ public sealed class EditorPixelBehaviour : MonoBehaviour
     [BurstCompile]
     private void Start()
     {
-        colored = playerSynchronizer.skin[siblingIndex];
+        colored = playerSynchronizer.skinData.skinFrames[pixelManager.frameIndex].frame[siblingIndex];
 
         pixelManager.lastIsHovering[siblingIndex] = lastIsHovering;
         pixelManager.colored[siblingIndex] = colored;

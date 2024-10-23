@@ -2,28 +2,33 @@ using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Netcode;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 public class Skin : NetworkBehaviour
 {
+
     string skinsPath;
 
     PlayerSynchronizer playerSynchronizer;
 
     private void Awake()
     {
+
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
         skinsPath = Path.Combine(Application.persistentDataPath, "skins.json");
 
-        // Load skin data from file
         if (File.Exists(skinsPath))
         {
-            string json = File.ReadAllText(skinsPath);
-            bool[] data = JsonConvert.DeserializeObject<bool[]>(json);
 
-            // Ensure we don't exceed the skin array length
-            if (data.Length == 116)
+            string json = File.ReadAllText(skinsPath);
+            SkinData skinData = JsonConvert.DeserializeObject<SkinData>(json);
+
+            if (skinData.skinFrames[0].frame.Length == 116)
             {
-                playerSynchronizer.skin = (bool[])data.Clone();
+
+                playerSynchronizer.skinData = skinData;
+
             }
             else
             {
@@ -39,17 +44,20 @@ public class Skin : NetworkBehaviour
 
     private void InitializeDefaultSkin()
     {
-        playerSynchronizer.skin = new bool[116];
-        for (int i = 0; i < playerSynchronizer.skin.Length; i++)
-        {
-            playerSynchronizer.skin[i] = true;
-        }
 
-        // Save the default skin data
-        SaveSkinData(playerSynchronizer.skin);
+        playerSynchronizer.skinData = new SkinData();
+        for (int i = 0; i < playerSynchronizer.skinData.skinFrames[0].frame.Length; i++)
+        {
+            playerSynchronizer.skinData.skinFrames[0].frame[i] = true;
+        }
+        playerSynchronizer.skinData.animate = false;
+        playerSynchronizer.skinData.frames = 1;
+
+        SaveSkinData(playerSynchronizer.skinData);
+
     }
 
-    public void SaveSkinData(bool[] data)
+    public void SaveSkinData(SkinData data)
     {
         string json = JsonConvert.SerializeObject(data, Formatting.Indented);
         File.WriteAllText(skinsPath, json);
@@ -57,11 +65,32 @@ public class Skin : NetworkBehaviour
 
     public void SaveSingleSkin()
     {
-        SaveSkinData(playerSynchronizer.skin);
+        SaveSkinData(playerSynchronizer.skinData);
     }
 
     private void OnApplicationQuit()
     {
         SaveSingleSkin();
     }
+}
+
+public class SkinData
+{
+
+    public bool animate;
+    public float frameRate = 10;
+    public SkinFrame[] skinFrames;
+    public int frames;
+
+    public SkinData()
+    {
+        skinFrames = new SkinFrame[1];
+        skinFrames[0].frame = new bool[116];
+    }
+
+    public struct SkinFrame
+    {
+        public bool[] frame;
+    }
+
 }

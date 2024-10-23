@@ -1,0 +1,44 @@
+using TMPro;
+using UnityEngine;
+
+public class EditorFrameRateBehaviour : MonoBehaviour
+{
+
+    [SerializeField]
+    TMP_Text textField;
+
+    PlayerSynchronizer playerSynchronizer;
+
+    float frameRate;
+
+    private void Awake()
+    {
+        
+        playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
+
+        frameRate = playerSynchronizer.skinData.frameRate;
+
+    }
+
+    private void Update()
+    {
+        
+        if(frameRate != playerSynchronizer.skinData.frameRate)
+        {
+            playerSynchronizer.skinData.frameRate = frameRate;
+            textField.text = $"Framerate - {Mathf.RoundToInt(frameRate)}";
+        }
+
+    }
+
+    public void UPFRAMERATE()
+    {
+        frameRate = Mathf.RoundToInt(frameRate + 1);
+    }
+
+    public void DOWNFRAMERATE()
+    {
+        frameRate = Mathf.RoundToInt(frameRate - 1);
+    }
+
+}

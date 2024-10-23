@@ -9,14 +9,17 @@ public class ScrollerBehaviour : MonoBehaviour
     float timer;
     bool animate = true;
 
-    private void Awake()
+    [SerializeField]
+    bool flip;
+
+    private void OnEnable()
     {
         
         slider = GetComponent<Slider>();
         scrollRect = transform.parent.GetComponent<ScrollRect>();
         if (scrollRect.horizontal) scrollRect.horizontalNormalizedPosition = 1;
         if (scrollRect.vertical) scrollRect.verticalNormalizedPosition = 1;
-        timer = 0;
+        timer = flip ? 1 : 0;
 
     }
 
@@ -26,13 +29,30 @@ public class ScrollerBehaviour : MonoBehaviour
         if (animate)
         {
 
-            if (timer < 1) timer += Time.deltaTime;
-            if (timer > 1) timer = 1;
+            if (flip)
+            {
 
-            if (scrollRect.horizontal) scrollRect.horizontalNormalizedPosition = Mathf.SmoothStep(0, 1, Mathf.SmoothStep(0, 1, 1 - timer));
-            if (scrollRect.vertical) scrollRect.verticalNormalizedPosition = Mathf.SmoothStep(0, 1, Mathf.SmoothStep(0, 1, 1 - timer));
+                if (timer > 0) timer -= Time.deltaTime;
+                if (timer < 0) timer = 0;
 
-            if (timer == 1) animate = false;
+                if (scrollRect.horizontal) scrollRect.horizontalNormalizedPosition = Mathf.SmoothStep(0, 1, Mathf.SmoothStep(0, 1, 1 - timer));
+                if (scrollRect.vertical) scrollRect.verticalNormalizedPosition = Mathf.SmoothStep(0, 1, Mathf.SmoothStep(0, 1, 1 - timer));
+
+                if (timer == 0) animate = false;
+
+            }
+            else
+            {
+
+                if (timer < 1) timer += Time.deltaTime;
+                if (timer > 1) timer = 1;
+
+                if (scrollRect.horizontal) scrollRect.horizontalNormalizedPosition = Mathf.SmoothStep(0, 1, Mathf.SmoothStep(0, 1, 1 - timer));
+                if (scrollRect.vertical) scrollRect.verticalNormalizedPosition = Mathf.SmoothStep(0, 1, Mathf.SmoothStep(0, 1, 1 - timer));
+
+                if (timer == 1) animate = false;
+
+            }
 
         }
 

@@ -269,6 +269,13 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         eventTrigger.triggers.Add(pointerClickEntry);
 
     }
+
+    public void RemoveTriggers()
+    {
+        EventTrigger eventTrigger = gameObject.GetComponent<EventTrigger>();
+        if(eventTrigger) Destroy(gameObject.GetComponent<EventTrigger>());
+    }
+
     [BurstCompile]
     private void OnDestroy()
     {

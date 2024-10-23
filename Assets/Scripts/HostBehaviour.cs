@@ -20,9 +20,6 @@ public sealed class HostBehaviour : MonoBehaviour
     [SerializeField]
     LobbyBehaviour defaultLobby;
 
-    [SerializeField]
-    PixelManager pixelManager;
-
     private void Awake()
     {
 
@@ -39,8 +36,6 @@ public sealed class HostBehaviour : MonoBehaviour
 
     public async void InitializeServerEvent()
     {
-
-        if (pixelManager.skinValue < pixelManager.skinTolerance) return;
 
         selectedLobby.UpdateAvalible();
 

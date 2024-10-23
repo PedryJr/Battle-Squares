@@ -22,7 +22,7 @@ public sealed class LobbyLoader : MonoBehaviour
     public List<LobbyBehaviour> failedLobbies;
     float lobbyUpdateTime = 0;
 
-    async void OnEnable()
+    async void Awake()
     {
 
         Lobbies = new List<LobbyBehaviour>();

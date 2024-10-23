@@ -5,7 +5,6 @@ using UnityEngine;
 public class PainterExec : MonoBehaviour
 {
 
-    [SerializeField]
     CursorBehaviour cursorBehaviour;
 
     PixelManager pixelManager;
@@ -49,6 +48,7 @@ public class PainterExec : MonoBehaviour
     {
 
         pixelManager = GetComponent<PixelManager>();
+        cursorBehaviour = FindAnyObjectByType<CursorBehaviour>();
         
     }
 

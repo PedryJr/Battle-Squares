@@ -80,6 +80,9 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     Transform spawn;
 
+    public Sprite[] bodyFrames;
+    public Sprite[] nozzleFrames;
+
     [SerializeField]
     EventReference deathSoundReference;
     public EventInstance deathSoundInstance;
@@ -333,7 +336,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         return angleInDegrees;
     }
 
-    public void CreateTextureFromBoolArray10BY10(bool[] boolArray)
+    public void CreateTextureFromBoolArray10BY10(bool[] boolArray, byte frameIndex)
     {
 
         bool[] rotatedArray = new bool[100];
@@ -357,10 +360,12 @@ public sealed class PlayerBehaviour : MonoBehaviour
         }
 
         texture.Apply();
-        spriteRenderer.sprite = Sprite.Create(texture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 0.5f), 10);
+        bodyFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 0.5f), 10);
+        if (frameIndex == 0) spriteRenderer.sprite = bodyFrames[frameIndex];
+
     }
 
-    public void CreateTextureFromBoolArray4BY4(bool[] boolArray)
+    public void CreateTextureFromBoolArray4BY4(bool[] boolArray, byte frameIndex)
     {
 
         bool[] rotatedArray = new bool[16];
@@ -394,9 +399,46 @@ public sealed class PlayerBehaviour : MonoBehaviour
                 texture.SetPixel(j, i, color);
             }
         }
-
         texture.Apply();
-        nozzleBehaviour.spriteRenderer.sprite = Sprite.Create(texture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
+        Debug.Log(frameIndex);
+        nozzleFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
+        if (frameIndex == 0) nozzleBehaviour.spriteRenderer.sprite = nozzleFrames[frameIndex];
+
+    }
+
+    float animationTimer;
+    public float frameRate = 10;
+    int animationIndex;
+    int lastAnimationIndex;
+
+    public void AnimatePlayer()
+    {
+
+        animationTimer = 1;
+
+    }
+
+    void ApplyPlayerAnimation()
+    {
+
+        if (animationTimer > 0) animationTimer -= Time.deltaTime * (frameRate / nozzleFrames.Length);
+        if (animationTimer < 0) animationTimer = 0;
+        if (animationTimer == 0)
+        {
+            animationIndex = 0;
+        }
+        else
+        {
+            animationIndex = Mathf.FloorToInt((1 - animationTimer) * bodyFrames.Length);
+        }
+
+        if(animationIndex != lastAnimationIndex)
+        {
+            nozzleBehaviour.spriteRenderer.sprite = nozzleFrames[animationIndex];
+            spriteRenderer.sprite = bodyFrames[animationIndex];
+            lastAnimationIndex = animationIndex;
+        }
+
     }
 
     [BurstCompile]
@@ -465,6 +507,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         hpBarScale = Vector3.one * (healthPoints / maxHealthPoints);
         nozzlePosition = nozzleTransform.position;
         healthbar.transform.localScale = hpBarScale;
+        ApplyPlayerAnimation();
 
 /*        speedParticleTimer += Time.deltaTime * Mathf.Clamp((rb.linearVelocity.magnitude - 15) * 2f, 0, 20);
         if(speedParticleTimer > 1)

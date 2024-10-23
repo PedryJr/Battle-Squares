@@ -498,7 +498,9 @@ PlayerSettings:
     m_ChunkSizeInMB: 16
     m_MaxChunks: 0
     m_OverrideDefaultSettings: 0
-  m_BuildTargetGraphicsJobs: []
+  m_BuildTargetGraphicsJobs:
+  - m_BuildTarget: WindowsStandaloneSupport
+    m_GraphicsJobs: 1
   m_BuildTargetGraphicsJobMode: []
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: WindowsStandaloneSupport
@@ -798,7 +800,7 @@ PlayerSettings:
   platformArchitecture: {}
   scriptingBackend:
     Android: 1
-    Standalone: 1
+    Standalone: 0
   il2cppCompilerConfiguration:
     Standalone: 2
   il2cppCodeGeneration: {}

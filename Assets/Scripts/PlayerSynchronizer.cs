@@ -13,7 +13,7 @@ using static PlayerSynchronizer;
 public sealed class PlayerSynchronizer : NetworkBehaviour
 {
 
-    public bool[] skin;
+    public SkinData skinData;
 
     public float ping;
     public float rtt;
@@ -363,21 +363,30 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 localSquare = playerData.square;
                 FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
 
-                bool[] bodySkin = new bool[100];
-                bool[] nozzleSkin = new bool[16];
+                localSquare.nozzleFrames = new Sprite[skinData.skinFrames.Length];
+                localSquare.bodyFrames = new Sprite[skinData.skinFrames.Length];
+                localSquare.frameRate = skinData.frameRate;
 
-                for (int i = 0; i < 100; i++)
+                for(int j = 0; j < skinData.skinFrames.Length; j++)
                 {
-                    bodySkin[i] = skin[i];
-                }
 
-                for (int i = 0; i < 16; i++)
-                {
-                    nozzleSkin[i] = skin[100 + i];
-                }
+                    bool[] bodySkin = new bool[100];
+                    bool[] nozzleSkin = new bool[16];
 
-                localSquare.CreateTextureFromBoolArray10BY10(bodySkin);
-                localSquare.CreateTextureFromBoolArray4BY4(bodySkin);
+                    for (int i = 0; i < 100; i++)
+                    {
+                        bodySkin[i] = skinData.skinFrames[j].frame[i];
+                    }
+
+                    for (int i = 0; i < 16; i++)
+                    {
+                        nozzleSkin[i] = skinData.skinFrames[j].frame[100 + i];
+                    }
+
+                    localSquare.CreateTextureFromBoolArray10BY10(bodySkin, (byte) j);
+                    localSquare.CreateTextureFromBoolArray4BY4(nozzleSkin, (byte) j);
+
+                }
 
             }
 
@@ -506,10 +515,16 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
             }
 
-
         }
 
-        RequestSkinUpdateServerRpc((byte)localSquare.id, skin);
+        RequestSkinLengthServerRpc((byte)localSquare.id, (byte)skinData.skinFrames.Length, skinData.frameRate);
+
+        for(int i = 0; i < skinData.skinFrames.Length; i++)
+        {
+
+            RequestSkinUpdateServerRpc((byte)localSquare.id, skinData.skinFrames[i].frame, (byte) i);
+
+        }
 
     }
 
@@ -554,15 +569,15 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void RequestSkinUpdateServerRpc(byte id, bool[] skin)
+    public void RequestSkinUpdateServerRpc(byte id, bool[] skin, byte index)
     {
 
-        RequestSkinUpdateClientRpc(id, skin);
+        RequestSkinUpdateClientRpc(id, skin, index);
 
     }
 
     [ClientRpc]
-    public void RequestSkinUpdateClientRpc(byte id, bool[] skin)
+    public void RequestSkinUpdateClientRpc(byte id, bool[] skin, byte index)
     {
 
         bool[] bodySkin = new bool[100];
@@ -583,8 +598,33 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             if((byte) player.square.id == id)
             {
 
-                player.square.CreateTextureFromBoolArray10BY10(bodySkin);
-                player.square.CreateTextureFromBoolArray4BY4(nozzleSkin);
+                player.square.CreateTextureFromBoolArray10BY10(bodySkin, index);
+                player.square.CreateTextureFromBoolArray4BY4(nozzleSkin, index);
+
+            }
+
+        }
+
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestSkinLengthServerRpc(byte id, byte length, float frameRate)
+    {
+        RequestSkinLengthClientRpc(id, length, frameRate);
+    }
+
+    [ClientRpc]
+    public void RequestSkinLengthClientRpc(byte id, byte length, float frameRate)
+    {
+
+        foreach (PlayerData player in playerIdentities)
+        {
+            if ((byte)player.square.id == id)
+            {
+
+                player.square.bodyFrames = new Sprite[length];
+                player.square.nozzleFrames = new Sprite[length];
+                player.square.frameRate = frameRate;
 
             }
 
