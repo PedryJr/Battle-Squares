@@ -1,12 +1,15 @@
 using Netcode.Transports.Facepunch;
 using Steamworks;
+using Steamworks.Data;
 using System;
 using System.Collections.Generic;
 using Unity.Burst;
+using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using static PlayerSynchronizer;
 [BurstCompile]
@@ -40,6 +43,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     public bool hostShutdown = false;
 
+    Scene lastScene;
+
     delegate void UpdatePFPStream();
     List<UpdatePFPStream> updatePFPStream;
 
@@ -51,19 +56,20 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
 
         DontDestroyOnLoad(this);
+        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+        SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
         updatePFPStream = new List<UpdatePFPStream>();
         networkManager = GameObject.Find("Network").GetComponent<NetworkManager>();
         projectileManager = GetComponent<ProjectileManager>();
         localSteamData = GetComponent<LocalSteamData>();
         networkManager.OnClientConnectedCallback += SetupNewPlayer;
         networkManager.OnClientDisconnectCallback += DisconnectPlayer;
-        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-        SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
         playerIdList.OnListChanged += PlayerIdList_OnListChanged;
         hunter = GetComponent<Hunter>();
         scoreManager = GetComponent<ScoreManager>();
 
     }
+
     [BurstCompile]
     private void PlayerIdList_OnListChanged(NetworkListEvent<IdMatch> changeEvent)
     {
@@ -146,14 +152,37 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         if (arg0.name == "GameScene")
         {
+
             Invoke("LateHudInit", 0.3f);
             stopUpdate = false;
+            FindAnyObjectByType<MapInitiator>().InitPresetMap(localSquare.selectedMap, scoreManager.gameMode);
+
+            if (IsHost)
+            {
+                SteamNetwork.currentLobby?.SetData("Avalible", "false");
+                SteamNetwork.currentLobby?.SetPrivate();
+                SteamNetwork.currentLobby?.SetInvisible();
+                SteamNetwork.currentLobby?.SetJoinable(false);
+            }
+
         }
         else if (arg0.name == "LobbyScene")
         {
             Invoke("LateHudInit", 0.3f);
             stopUpdate = false;
             FindAnyObjectByType<PlayerController>().EnableController();
+
+            if(SteamNetwork.currentLobby != null)
+            {
+
+                if (IsHost && (bool) SteamNetwork.currentLobby?.Owner.IsMe)
+                {
+                    SteamNetwork.currentLobby?.SetPublic();
+                    SteamNetwork.currentLobby?.SetJoinable(true);
+                }
+
+            }
+
         }
 
         PlayerController.uiRegs = 0;
@@ -162,7 +191,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         GameObject spawn = GameObject.FindGameObjectWithTag("Spawn");
         if (spawn && localSquare) localSquare.transform.position = spawn.transform.position;
         int sceneIndex = arg0.buildIndex;
+
         LoadSceneOnPlayersClientRpc(sceneIndex);
+
+        lastScene = arg0;
 
     }
 
@@ -355,7 +387,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             playerIdentities.Add(playerData);
 
             List<ulong> nowPlayers = new List<ulong>();
-            List<bool> nowReady = new List<bool>();
 
             if (playerData.id == NetworkManager.LocalClientId)
             {
@@ -367,7 +398,43 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 localSquare.bodyFrames = new Sprite[skinData.skinFrames.Length];
                 localSquare.frameRate = skinData.frameRate;
 
-                for(int j = 0; j < skinData.skinFrames.Length; j++)
+                bool validSkin = true;
+
+                for (int j = 0; j < skinData.skinFrames.Length; j++)
+                {
+
+                    bool validFrame = skinData.skinFrames[j].valid;
+
+                    if(!validFrame) validSkin = false;
+
+                }
+
+                if (validSkin)
+                {
+
+                    for (int j = 0; j < skinData.skinFrames.Length; j++)
+                    {
+
+                        bool[] bodySkin = new bool[100];
+                        bool[] nozzleSkin = new bool[16];
+
+                        for (int i = 0; i < 100; i++)
+                        {
+                            bodySkin[i] = skinData.skinFrames[j].frame[i];
+                        }
+
+                        for (int i = 0; i < 16; i++)
+                        {
+                            nozzleSkin[i] = skinData.skinFrames[j].frame[100 + i];
+                        }
+
+                        localSquare.CreateTextureFromBoolArray10BY10(bodySkin, (byte)j);
+                        localSquare.CreateTextureFromBoolArray4BY4(nozzleSkin, (byte)j);
+
+                    }
+
+                }
+                else
                 {
 
                     bool[] bodySkin = new bool[100];
@@ -375,30 +442,30 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
                     for (int i = 0; i < 100; i++)
                     {
-                        bodySkin[i] = skinData.skinFrames[j].frame[i];
+                        bodySkin[i] = true;
                     }
 
                     for (int i = 0; i < 16; i++)
                     {
-                        nozzleSkin[i] = skinData.skinFrames[j].frame[100 + i];
+                        nozzleSkin[i] = true;
                     }
 
-                    localSquare.CreateTextureFromBoolArray10BY10(bodySkin, (byte) j);
-                    localSquare.CreateTextureFromBoolArray4BY4(nozzleSkin, (byte) j);
+                    localSquare.CreateTextureFromBoolArray10BY10(bodySkin, 0);
+                    localSquare.CreateTextureFromBoolArray4BY4(nozzleSkin, 0);
 
                 }
 
             }
+            
 
             foreach (PlayerData player in playerIdentities)
             {
 
                 nowPlayers.Add(player.id);
-                nowReady.Add(player.square.ready);
 
             }
 
-            SetupNewPlayerClientRpc(nowPlayers.ToArray(), nowReady.ToArray(), id, scoreManager.gameMode);
+            SetupNewPlayerClientRpc(nowPlayers.ToArray(), id, scoreManager.gameMode);
 
             scoreManager.UpdateModeAsHost(scoreManager.gameMode);
             UpdateSelectedMap(localSquare.selectedMap);
@@ -419,7 +486,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             foreach (PlayerData player in playerIdentities)
             {
 
-                SyncPlayerDataClientRpc((byte)player.id, player.square.isDead);
+                if(player.id != id) SyncPlayerDataClientRpc((byte)player.id, player.square.isDead);
 
             }
 
@@ -439,9 +506,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
                 player.square.isDead = isDead;
 
-                if(IsHost) player.square.ready = true;
-                UpdatePlayerReady(player.square.ready);
-
             }
 
         }
@@ -454,7 +518,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     [BurstCompile]
     [ClientRpc]
-    void SetupNewPlayerClientRpc(ulong[] nowPlayers, bool[] nowReady, ulong connectedId, ScoreManager.Mode gameMode)
+    void SetupNewPlayerClientRpc(ulong[] nowPlayers, ulong connectedId, ScoreManager.Mode gameMode)
     {
 
         clrUpdate = 0;
@@ -471,9 +535,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
                 playerIdentities = new List<PlayerData>();
                 idPairs = new List<IdPair>
-            {
+                {
                 new IdPair { clientId = connectedId, steamId = SteamClient.SteamId }
-            };
+                };
 
                 for (int i = 0; i < nowPlayers.Length; i++)
                 {
@@ -508,24 +572,67 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 playerData.square = Instantiate(square);
                 playerData.id = connectedId;
                 playerData.square.id = connectedId;
-                playerData.square.ready = false;
                 playerData.square.SpawnEffect();
 
                 playerIdentities.Add(playerData);
+
+                if (!localSquare)
+                {
+
+                    foreach (PlayerData player in playerIdentities)
+                    {
+
+                        if(player.id == connectedId)
+                        {
+                            localSquare = playerData.square;
+                            FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
+                        }
+
+                    }
+
+                }
 
             }
 
         }
 
-        RequestSkinLengthServerRpc((byte)localSquare.id, (byte)skinData.skinFrames.Length, skinData.frameRate);
+        bool validSkin = true;
 
-        for(int i = 0; i < skinData.skinFrames.Length; i++)
+        for (int j = 0; j < skinData.skinFrames.Length; j++)
         {
 
-            RequestSkinUpdateServerRpc((byte)localSquare.id, skinData.skinFrames[i].frame, (byte) i);
+            bool validFrame = skinData.skinFrames[j].valid;
+
+            if (!validFrame) validSkin = false;
 
         }
 
+        if (validSkin)
+        {
+
+            RequestSkinLengthServerRpc((byte)localSquare.id, (byte)skinData.skinFrames.Length, skinData.frameRate);
+
+            for (int i = 0; i < skinData.skinFrames.Length; i++)
+            {
+
+                RequestSkinUpdateServerRpc((byte)localSquare.id, skinData.skinFrames[i].frame, (byte)i);
+
+            }
+
+        }
+        else
+        {
+
+            bool[] skin = new bool[116];
+
+            for (int i = 0; i < skin.Length; i++)
+            {
+                skin[i] = true;
+            }
+
+            RequestSkinLengthServerRpc((byte)localSquare.id, 1, 0);
+            RequestSkinUpdateServerRpc((byte)localSquare.id, skin, 0);
+        }
     }
 
     [BurstCompile]
@@ -637,18 +744,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     float miniTimer;
 
-    [BurstCompile]
-    private void LateUpdate()
-    {
-
-        if (updatePFPStream.Count > 0)
-        {
-            updatePFPStream[0]();
-            updatePFPStream.RemoveAt(0);
-        }
-
-    }
-
     private void Update()
     {
 
@@ -679,6 +774,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if (clrUpdate > 1)
         {
             UpdateColor();
+            UpdatePlayerReady(localSquare.ready);
             clrUpdate = 0;
         }
         else if (clrUpdate2 < 8)
@@ -688,73 +784,118 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
         rbUpdate += deltaTime * 100f;
 
-    }
+    }/*
     [BurstCompile]
     void UpdateRigidBody()
     {
-        ulong sourceId = networkManager.LocalClientId;
+        byte sourceId = (byte) localSquare.id;
 
-        byte[] compPos = MyExtentions.EncodePosition(localSquare.position.x + 64, localSquare.position.y + 64);
-        byte[] compVel = MyExtentions.EncodePosition(localSquare.velocity.x + 64, localSquare.velocity.y + 64);
-        byte[] compRot = MyExtentions.EncodeRotation(localSquare.rotation);
-        byte[] compRotVel = MyExtentions.EncodeFloat(localSquare.angularVelocity);
-
-        byte[] data = new byte[14]
-        {
-            compPos[0], compPos[1], compPos[2], compPos[3],
-            compVel[0], compVel[1], compVel[2], compVel[3],
-            compRot[0], compRot[1],
-            compRotVel[0], compRotVel[1], compRotVel[2],
-            (byte) sourceId
+        float[] data = new float[] 
+        { 
+            localSquare.rb.position.x, localSquare.rb.position.y,
+            localSquare.rb.linearVelocity.x, localSquare.rb.linearVelocity.y,
+            localSquare.rb.rotation, localSquare.rb.angularVelocity
         };
 
-        UpdateRigidBodyRpc(data);
+        UpdateRigidBodyRpc(data, sourceId);
 
     }
     [BurstCompile]
 
     [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
-    void UpdateRigidBodyRpc(byte[] data)
+    void UpdateRigidBodyRpc(float[] data, byte sourceId)
     {
 
-        if ((byte)networkManager.LocalClientId == data[13]) return;
         if (playerIdentities == null) return;
+        if ((byte) localSquare.id == sourceId) return;
 
         foreach (PlayerData player in playerIdentities)
         {
+
+            if ((byte)player.square.id != sourceId) continue;
 
             StorePlayerRigidBodyData(player, data);
 
         }
     }
     [BurstCompile]
-    void StorePlayerRigidBodyData(PlayerData player, byte[] data)
+    void StorePlayerRigidBodyData(PlayerData player, float[] data)
     {
 
-        if ((byte)player.id != data[13]) return;
         if (player.square.isDead) return;
 
-        byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
-        byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
-        byte[] compRot = new byte[2] { data[8], data[9] };
-        byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
+        player.square.rb.position = new Vector2(data[0], data[1]);
+        player.square.rb.linearVelocity = new Vector2(data[2], data[3]);
+        player.square.rb.rotation = data[4];
+        player.square.rb.angularVelocity = data[5];
+
+    }*/
+        [BurstCompile]
+        void UpdateRigidBody()
+        {
+            ulong sourceId = networkManager.LocalClientId;
+
+            byte[] compPos = MyExtentions.EncodePosition(localSquare.position.x + 64, localSquare.position.y + 64);
+            byte[] compVel = MyExtentions.EncodePosition(localSquare.velocity.x + 64, localSquare.velocity.y + 64);
+            byte[] compRot = MyExtentions.EncodeRotation(localSquare.rotation);
+            byte[] compRotVel = MyExtentions.EncodeFloat(localSquare.angularVelocity);
+
+            byte[] data = new byte[14]
+            {
+                compPos[0], compPos[1], compPos[2], compPos[3],
+                compVel[0], compVel[1], compVel[2], compVel[3],
+                compRot[0], compRot[1],
+                compRotVel[0], compRotVel[1], compRotVel[2],
+                (byte) sourceId
+            };
+
+            UpdateRigidBodyRpc(data);
+
+        }
+        [BurstCompile]
+
+        [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+        void UpdateRigidBodyRpc(byte[] data)
+        {
+
+            if ((byte)networkManager.LocalClientId == data[13]) return;
+            if (playerIdentities == null) return;
+
+            foreach (PlayerData player in playerIdentities)
+            {
+
+                StorePlayerRigidBodyData(player, data);
+
+            }
+        }
+        [BurstCompile]
+        void StorePlayerRigidBodyData(PlayerData player, byte[] data)
+        {
+
+            if ((byte)player.id != data[13]) return;
+            if (player.square.isDead) return;
+
+            byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
+            byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
+            byte[] compRot = new byte[2] { data[8], data[9] };
+            byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
 
 
-        (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
-        xPos -= 64;
-        yPos -= 64;
-        (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
-        xVel -= 64;
-        yVel -= 64;
-        float rot = MyExtentions.DecodeRotation(compRot);
-        float rotVel = MyExtentions.DecodeFloat(compRotVel);
+            (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
+            xPos -= 64;
+            yPos -= 64;
+            (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
+            xVel -= 64;
+            yVel -= 64;
+            float rot = MyExtentions.DecodeRotation(compRot);
+            float rotVel = MyExtentions.DecodeFloat(compRotVel);
 
-        player.square.rb.position = new Vector2(xPos, yPos);
-        player.square.rb.rotation = rot;
-        player.square.rb.linearVelocity = new Vector2(xVel, yVel);
-        player.square.rb.angularVelocity = rotVel;
+            player.square.rb.position = new Vector2(xPos, yPos);
+            player.square.rb.rotation = rot;
+            player.square.rb.linearVelocity = new Vector2(xVel, yVel);
+            player.square.rb.angularVelocity = rotVel;
 
-    }
+        }
     [BurstCompile]
     public void UpdateNozzle()
     {
@@ -822,7 +963,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
         if (player.id != data[0]) return;
 
-        player.square.playerColor = new Color(data[1] / 256f, data[2] / 256f, data[3] / 256f);
+        player.square.playerColor = new UnityEngine.Color(data[1] / 256f, data[2] / 256f, data[3] / 256f);
         player.square.newColor = true;
 
     }
@@ -887,8 +1028,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void UpdatePlayerReady(bool ready)
     {
 
-        byte sourceId = (byte)networkManager.LocalClientId;
-        byte data = (byte)localSquare.score;
+        byte sourceId = (byte) localSquare.id;
 
         UpdatePlayerReadyRpc(sourceId, ready);
 
@@ -903,7 +1043,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         foreach (PlayerData player in playerIdentities)
         {
-            StorePlayerReady(player, sourceId, ready);
+            if(player.id == sourceId) StorePlayerReady(player, sourceId, ready);
         }
 
     }
@@ -911,8 +1051,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     [BurstCompile]
     void StorePlayerReady(PlayerData player, byte sourceId, bool ready)
     {
-
-        if ((byte)player.id != sourceId) return;
 
         player.square.ready = ready;
 
@@ -1123,7 +1261,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    public void PlayerDeathEffect(Vector3 particlePosition, Color particleColor)
+    public void PlayerDeathEffect(Vector3 particlePosition, UnityEngine.Color particleColor)
     {
 
         localSquare.deathSoundInstance.start();
@@ -1139,13 +1277,13 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
     [BurstCompile]
-    public Color UpdatePlayerColor(float value)
+    public UnityEngine.Color UpdatePlayerColor(float value)
     {
 
         float h, s, v;
-        Color.RGBToHSV(localSquare.playerColor, out h, out s, out v);
+        UnityEngine.Color.RGBToHSV(localSquare.playerColor, out h, out s, out v);
         h = value;
-        localSquare.playerColor = Color.HSVToRGB(h, s, v);
+        localSquare.playerColor = UnityEngine.Color.HSVToRGB(h, s, v);
         localSquare.newColor = true;
 
         UpdateColor();
@@ -1216,7 +1354,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         public Texture2D texture;
         public void UpdatePFP(int x, int y, byte[] rgb)
         {
-            Color pixelColor = new Color(rgb[0] / 256f, rgb[1] / 256f, rgb[2] / 256f, 1f);
+            UnityEngine.Color pixelColor = new UnityEngine.Color(rgb[0] / 256f, rgb[1] / 256f, rgb[2] / 256f, 1f);
 
             texture.SetPixel(x, y, pixelColor);
         }

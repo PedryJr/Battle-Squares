@@ -17,7 +17,7 @@ public class JoinWithCodeBehaviour : MonoBehaviour
 
     public async void JOINWITHCODE(string code)
     {
-        char[] aA = code.ToCharArray();
+        char[] aA = code.ToUpper().ToCharArray();
         if (aA.Length != 8) return;
 
         NetworkManager.Singleton.Shutdown();
@@ -25,8 +25,6 @@ public class JoinWithCodeBehaviour : MonoBehaviour
 
         LobbyQuery bruh = new LobbyQuery();
         Lobby[] lobbyWithCode = await bruh.RequestAsync();
-
-        Debug.Log(code);
 
         if (lobbyWithCode != null)
         {

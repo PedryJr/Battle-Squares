@@ -26,18 +26,21 @@ public sealed class ReadyUpButton : MonoBehaviour
     private void Start()
     {
 
-        if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
+        if (!NetworkManager.Singleton.IsHost)
         {
 
             GetComponent<Image>().enabled = true;
             GetComponent<ButtonHoverAnimation>().enabled = true;
             GetComponentInChildren<TextMeshProUGUI>().enabled = true;
+            /*playerSynchronizer.localSquare.ready = false;*/
+            playerSynchronizer.UpdatePlayerReady(false);
 
         }
         else
         {
-
-            playerSynchronizer.localSquare.ready = true;
+/*
+            playerSynchronizer.localSquare.ready = true;*/
+            playerSynchronizer.UpdatePlayerReady(true);
             Destroy(gameObject);
 
         }
@@ -61,7 +64,7 @@ public sealed class ReadyUpButton : MonoBehaviour
         }
 
         playersReady = i;
-
+        ready = playerSynchronizer.localSquare.ready;
         if (ready)
         {
             textField.text = $"{playersReady} / {players}";
@@ -76,8 +79,10 @@ public sealed class ReadyUpButton : MonoBehaviour
     public void READY()
     {
 
-        ready = !ready;
-        playerSynchronizer.UpdatePlayerReady(ready);
+        playerSynchronizer.localSquare.ready = !playerSynchronizer.localSquare.ready;
+/*
+        ready = !ready;*//*
+        playerSynchronizer.UpdatePlayerReady(!ready);*/
 
     }
 

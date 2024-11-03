@@ -436,7 +436,10 @@ MonoBehaviour:
   exitHoverTransitionTime: 0.17
   clickTransitionTime: 0.085
   multiplier: 1
+  inverseScroll: 0
   animationType: 0
+  soundInteractionHoverType: 0
+  soundInteractionClickType: 0
 --- !u!114 &85936864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1779,7 +1782,10 @@ MonoBehaviour:
   exitHoverTransitionTime: 0.17
   clickTransitionTime: 0.085
   multiplier: 1
+  inverseScroll: 0
   animationType: 0
+  soundInteractionHoverType: 0
+  soundInteractionClickType: 0
 --- !u!114 &833948307
 MonoBehaviour:
   m_ObjectHideFlags: 0

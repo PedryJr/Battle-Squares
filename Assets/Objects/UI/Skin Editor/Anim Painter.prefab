@@ -54,7 +54,19 @@ MonoBehaviour:
   rectTransform: {fileID: 0}
   clickEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1432386496187801956}
+        m_TargetAssemblyTypeName: SkinPreviewBehaviour, Assembly-CSharp
+        m_MethodName: PREVIEW
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
@@ -66,7 +78,10 @@ MonoBehaviour:
   exitHoverTransitionTime: 0.17
   clickTransitionTime: 0.085
   multiplier: 1
+  inverseScroll: 0
   animationType: 0
+  soundInteractionHoverType: 0
+  soundInteractionClickType: 0
 --- !u!222 &6428525737651698599
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1198,7 +1213,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9020463195842227943}
   - component: {fileID: 2561912860843695289}
-  - component: {fileID: 7938979063216488404}
   - component: {fileID: 8903812783275920087}
   m_Layer: 5
   m_Name: Frame Preview
@@ -1236,46 +1250,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 818064884441185461}
   m_CullTransparentMesh: 0
---- !u!114 &7938979063216488404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 818064884441185461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0c99a9e37e78b459cce30f6a175734, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rectTransform: {fileID: 0}
-  clickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SkinFrameBehaviour, Assembly-CSharp
-        m_MethodName: SELECT
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
-  onHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  isHovering: 0
-  animateColor: 0
-  enterHoverTransitionTime: 0.13
-  exitHoverTransitionTime: 0.13
-  clickTransitionTime: 0.1
-  multiplier: 3
-  animationType: 1
 --- !u!114 &8903812783275920087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2566,7 +2540,10 @@ MonoBehaviour:
   exitHoverTransitionTime: 0.13
   clickTransitionTime: 0.1
   multiplier: 2.5
+  inverseScroll: 0
   animationType: 1
+  soundInteractionHoverType: 0
+  soundInteractionClickType: 0
 --- !u!1 &1524319127579463524
 GameObject:
   m_ObjectHideFlags: 0
@@ -3045,7 +3022,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -86.464966}
+  m_AnchoredPosition: {x: 0, y: -130}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3863819530053928113
@@ -3074,6 +3051,10 @@ MonoBehaviour:
   pixelManager: {fileID: 6444047514199008506}
   editingIndex: 0
   lastEditingIndex: 0
+  copy: 0
+  lastCopy: 0
+  paste: 0
+  lastPaste: 0
 --- !u!1 &2069576876736549172
 GameObject:
   m_ObjectHideFlags: 0
@@ -12896,6 +12877,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee72b633bd4787a42b9e74cfe91e15e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animatedPaintAreaBehaviour: {fileID: 305649169301308787}
   requiredField: {fileID: 5018326172860723279}
   requiredFormat: ' / '
   filling: 0
@@ -13480,7 +13462,7 @@ GameObject:
   - component: {fileID: 3056262528369032485}
   - component: {fileID: 7641539393915516624}
   - component: {fileID: 7915116146120773753}
-  - component: {fileID: 7955564529874462368}
+  - component: {fileID: 1432386496187801956}
   m_Layer: 5
   m_Name: Preview Sector
   m_TagString: Untagged
@@ -13546,7 +13528,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 100
---- !u!114 &7955564529874462368
+--- !u!114 &1432386496187801956
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13555,27 +13537,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7671035428906159571}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Script: {fileID: 11500000, guid: 78a6cdf1b5a687c40b831ddab73a04d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Content: {fileID: 0}
-  m_Horizontal: 0
-  m_Vertical: 1
-  m_MovementType: 1
-  m_Elasticity: 0.1
-  m_Inertia: 1
-  m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 0
-  m_Viewport: {fileID: 0}
-  m_HorizontalScrollbar: {fileID: 0}
-  m_VerticalScrollbar: {fileID: 0}
-  m_HorizontalScrollbarVisibility: 2
-  m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: -3
-  m_VerticalScrollbarSpacing: -3
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
+  areaBehaviour: {fileID: 305649169301308787}
+  playerSynchronizer: {fileID: 0}
+  nozzlePreview: {fileID: 8783110840576567818}
+  bodyPreview: {fileID: 4385621286595878109}
 --- !u!1 &7695055056043751781
 GameObject:
   m_ObjectHideFlags: 0
@@ -13692,7 +13660,10 @@ MonoBehaviour:
   exitHoverTransitionTime: 0.13
   clickTransitionTime: 0.1
   multiplier: 2.5
+  inverseScroll: 0
   animationType: 1
+  soundInteractionHoverType: 0
+  soundInteractionClickType: 0
 --- !u!1 &7727075686753412258
 GameObject:
   m_ObjectHideFlags: 0
@@ -13989,7 +13960,10 @@ MonoBehaviour:
   exitHoverTransitionTime: 0.17
   clickTransitionTime: 0.085
   multiplier: 1
+  inverseScroll: 0
   animationType: 0
+  soundInteractionHoverType: 0
+  soundInteractionClickType: 0
 --- !u!222 &9083268696641056622
 CanvasRenderer:
   m_ObjectHideFlags: 0

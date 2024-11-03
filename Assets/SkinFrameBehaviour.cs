@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class SkinFrameBehaviour : MonoBehaviour
@@ -15,8 +16,8 @@ public class SkinFrameBehaviour : MonoBehaviour
     string baseText = "Base";
     string deletableText = "Delete";
 
-    [SerializeField] Image nozzle;
-    [SerializeField] Image body;
+    [SerializeField] public Image nozzle;
+    [SerializeField] public Image body;
 
     [SerializeField] ButtonHoverAnimation deleteButton;
     [SerializeField] Image deleteButtonImage;
@@ -28,9 +29,23 @@ public class SkinFrameBehaviour : MonoBehaviour
     CursorBehaviour cursorBehaviour;
     AnimatedPaintAreaBehaviour animatedPaintAreaBehaviour;
 
+    UIAudio uIAudio;
+
+    Texture2D nozzleTexture;
+    Texture2D bodyTexture;
+
     private void Awake()
     {
-        
+
+        uIAudio = Resources.Load<UIAudio>("UIAudio");
+
+        nozzleTexture = new Texture2D(4, 4, TextureFormat.ARGB32, false);
+        nozzleTexture.filterMode = FilterMode.Point;
+        nozzle.sprite = Sprite.Create(nozzleTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, -1), 4);
+        bodyTexture = new Texture2D(10, 10, TextureFormat.ARGB32, false);
+        bodyTexture.filterMode = FilterMode.Point;
+        body.sprite = Sprite.Create(bodyTexture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 1), 10);
+
         playerSynchronizer = FindFirstObjectByType<PlayerSynchronizer>();
         cursorBehaviour = FindFirstObjectByType<CursorBehaviour>();
         animatedPaintAreaBehaviour = GetComponentInParent<AnimatedPaintAreaBehaviour>();
@@ -105,7 +120,8 @@ public class SkinFrameBehaviour : MonoBehaviour
 
     public void SELECT()
     {
-
+/*
+        uIAudio.PlayClick(1f);*/
         for (int i = 0; i < animatedPaintAreaBehaviour.pixelManager.colored.Length; i++)
         {
             animatedPaintAreaBehaviour.pixelManager.colored[i] = frameData[i];
@@ -117,22 +133,25 @@ public class SkinFrameBehaviour : MonoBehaviour
 
     public void DELETE()
     {
-
-        animatedPaintAreaBehaviour.DELETEFRAME(frameIndex);
+/*
+        uIAudio.PlayClick(0.8f);*/
+        animatedPaintAreaBehaviour.DELETEFRAME(this);
 
     }
 
     public void MOVEUP()
     {
-
-        animatedPaintAreaBehaviour.MOVEFRAME(-1);
+/*
+        uIAudio.PlayClick(1.2f);*/
+        animatedPaintAreaBehaviour.MOVEFRAME(-1, frameIndex);
 
     }
 
     public void MOVEDOWN()
     {
-
-        animatedPaintAreaBehaviour.MOVEFRAME(1);
+/*
+        uIAudio.PlayClick(1.2f);*/
+        animatedPaintAreaBehaviour.MOVEFRAME(1, frameIndex);
 
     }
 
@@ -146,8 +165,6 @@ public class SkinFrameBehaviour : MonoBehaviour
             rotatedArray[i] = boolArray[99 - i];
         }
 
-        Texture2D texture = new Texture2D(10, 10, TextureFormat.ARGB32, false);
-        texture.filterMode = FilterMode.Point;
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 10; j++)
@@ -155,19 +172,16 @@ public class SkinFrameBehaviour : MonoBehaviour
                 int index = i * 10 + j;
 
                 Color color = rotatedArray[index] ? Color.white : Color.clear;
-                texture.SetPixel(j, i, color);
+                bodyTexture.SetPixel(j, i, color);
             }
         }
 
-        texture.Apply();
-        body.sprite = Sprite.Create(texture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 1), 10);
+        bodyTexture.Apply();
     }
 
     public void CreateTextureFromBoolArray4BY4(Span<bool> boolArray)
     {
 
-        Texture2D texture = new Texture2D(4, 4, TextureFormat.ARGB32, false);
-        texture.filterMode = FilterMode.Point;
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -175,12 +189,11 @@ public class SkinFrameBehaviour : MonoBehaviour
                 int index = i * 4 + j;
 
                 Color color = boolArray[index] ? Color.white : Color.clear;
-                texture.SetPixel(j, i, color);
+                nozzleTexture.SetPixel(j, i, color);
             }
         }
 
-        texture.Apply();
-        nozzle.sprite = Sprite.Create(texture, new Rect(0, 0, 4, 4), new Vector2(0.5f, -1), 4);
+        nozzleTexture.Apply();
     }
 
 }

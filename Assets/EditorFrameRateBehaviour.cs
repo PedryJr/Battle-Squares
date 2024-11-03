@@ -17,6 +17,7 @@ public class EditorFrameRateBehaviour : MonoBehaviour
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
 
         frameRate = playerSynchronizer.skinData.frameRate;
+        textField.text = $"Framerate - {Mathf.RoundToInt(frameRate)}";
 
     }
 

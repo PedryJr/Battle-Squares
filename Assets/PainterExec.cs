@@ -6,8 +6,11 @@ public class PainterExec : MonoBehaviour
 {
 
     CursorBehaviour cursorBehaviour;
-
+    PlayerSynchronizer playerSynchronizer;
     PixelManager pixelManager;
+
+    [SerializeField]
+    AnimatedPaintAreaBehaviour animatedPaintAreaBehaviour;
 
     [SerializeField]
     TMP_Text requiredField;
@@ -48,8 +51,9 @@ public class PainterExec : MonoBehaviour
     {
 
         pixelManager = GetComponent<PixelManager>();
+        playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         cursorBehaviour = FindAnyObjectByType<CursorBehaviour>();
-        
+
     }
 
     private void LateUpdate()
@@ -121,6 +125,37 @@ public class PainterExec : MonoBehaviour
 
         requiredField.text = stringBuilder.ToString();
         stringBuilder.Clear();
+
+        if (animatedPaintAreaBehaviour)
+        {
+
+            if (pixelManager.skinValue >= pixelManager.skinTolerance)
+            {
+                playerSynchronizer.skinData.skinFrames[animatedPaintAreaBehaviour.editingIndex].valid = true;
+                requiredField.color = Color.white;
+            }
+            else
+            {
+                playerSynchronizer.skinData.skinFrames[animatedPaintAreaBehaviour.editingIndex].valid = false;
+                requiredField.color = Color.red;
+            }
+
+        }
+        else
+        {
+            if (pixelManager.skinValue >= pixelManager.skinTolerance)
+            {
+
+                playerSynchronizer.skinData.skinFrames[0].valid = true;
+                requiredField.color = Color.white;
+
+            }
+            else
+            {
+                playerSynchronizer.skinData.skinFrames[0].valid = false;
+                requiredField.color = Color.red;
+            }
+        }
 
     }
 

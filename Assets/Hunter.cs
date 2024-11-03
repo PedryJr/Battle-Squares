@@ -39,7 +39,7 @@ public class Hunter : NetworkBehaviour
         scoreManager = FindAnyObjectByType<ScoreManager>();
         SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
 
-        MySettings.Init();
+/*        MySettings.Init();*/
         wins = MySettings.wins;
 
     }
@@ -201,6 +201,9 @@ public class Hunter : NetworkBehaviour
     public void Spawn(byte spawnId)
     {
 
+        if (!playerSynchronizer) return;
+        if (!playerSynchronizer.localSquare) return;
+
         if ((byte)playerSynchronizer.localSquare.id != spawnId) return;
 
         dieTime = 0;
@@ -209,6 +212,9 @@ public class Hunter : NetworkBehaviour
 
     public void GameEnd()
     {
+
+        if (!playerSynchronizer) return;
+        if (!playerSynchronizer.localSquare) return;
 
         bool givePDM = true;
 

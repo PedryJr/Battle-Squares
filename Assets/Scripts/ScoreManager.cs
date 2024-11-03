@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -91,15 +92,43 @@ public sealed class ScoreManager : NetworkBehaviour
         if (arg0.name.Equals("GameScene"))
         {
 
-            inGame = true;
-            UpdateScoreBoardFunc();
+            try
+            {
 
-            CursorBehaviour.SetEnabled(false);
-            Cursor.lockState = CursorLockMode.Locked;
-            foreach (PlayerData player in playerSynchronizer.playerIdentities) player.square.score = 0;
-            UpdateScoreBoardFunc();
+                inGame = true;
+                UpdateScoreBoardFunc();
+
+                CursorBehaviour.SetEnabled(false);
+                Cursor.lockState = CursorLockMode.Locked;
+                foreach (PlayerData player in playerSynchronizer.playerIdentities) player.square.score = 0;
+                UpdateScoreBoardFunc();
+
+            }
+            catch (NullReferenceException)
+            {
+
+                SteamNetwork.currentLobby?.Leave();
+
+                SteamNetwork.CreateNewLobby();
+
+                PlayerSynchronizer playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
+
+                if (playerSynchronizer.IsHost)
+                {
+
+                    playerSynchronizer.hostShutdown = true;
+                    playerSynchronizer.DisconnectPlayerLocally();
+
+                }
+
+                NetworkManager.Singleton.Shutdown(true);
+                playerSynchronizer.DisconnectPlayerLocally();
+
+                playerSynchronizer.hostShutdown = false;
+            }
 
         }
+
     }
 
     public void UnloadGameScene(Scene arg0)
@@ -202,8 +231,6 @@ public sealed class ScoreManager : NetworkBehaviour
 
         GameModeDisplayBehaviour modeDisplay = FindAnyObjectByType<GameModeDisplayBehaviour>();
         if(modeDisplay) modeDisplay.DisplayGameMode(gameMode);
-
-        Debug.Log($"Mode Updated! ({gameMode.ToString()})");
 
     }
 

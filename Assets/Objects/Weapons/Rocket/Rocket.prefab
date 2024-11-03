@@ -141,13 +141,21 @@ MonoBehaviour:
       Data3: -2093597511
       Data4: 375597960
     Path: event:/VFX/Rocket/Shot
+  aliveReference:
+    Guid:
+      Data1: -1118391309
+      Data2: 1169296489
+      Data3: 1500635325
+      Data4: -1382243783
+    Path: event:/VFX/Rocket/Alive
+  aliveSound: 1
   hitSoundReference:
     Guid:
-      Data1: 533881192
-      Data2: 1270306389
-      Data3: -1733238086
-      Data4: 1170857750
-    Path: event:/VFX/Base/Gun Hit
+      Data1: 1822841090
+      Data2: 1210098766
+      Data3: -2011946849
+      Data4: -226974081
+    Path: event:/VFX/Rocket/Hit
   data:
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}

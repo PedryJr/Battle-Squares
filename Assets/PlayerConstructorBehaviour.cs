@@ -13,6 +13,9 @@ public class PlayerConstructorBehaviour : MonoBehaviour
     [SerializeField]
     Transform openPosition;
 
+    PlayerBehaviour playerToConstruct = null;
+    bool hasPlayerToConstruct;
+
     Vector3 fromPos;
     Vector3 toPos;
 
@@ -31,11 +34,13 @@ public class PlayerConstructorBehaviour : MonoBehaviour
 
     }
 
-    public void StartNewConstruction()
+    public void StartNewConstruction(PlayerBehaviour playerToConstruct)
     {
         state = DoorState.Opening;
         toPos = openPosition.position;
         ResetFromPos();
+        hasPlayerToConstruct = true;
+        this.playerToConstruct = playerToConstruct;
     }
 
     public void EndConstruction()
@@ -43,6 +48,8 @@ public class PlayerConstructorBehaviour : MonoBehaviour
         state = DoorState.Closing;
         toPos = shutPosition.position;
         ResetFromPos();
+        hasPlayerToConstruct = false;
+        playerToConstruct = null;
     }
 
     void ResetFromPos()
@@ -55,7 +62,12 @@ public class PlayerConstructorBehaviour : MonoBehaviour
     private void Update()
     {
 
-        if(state == DoorState.Closing) initDelay = InitDelay;
+        if (hasPlayerToConstruct != playerToConstruct)
+        {
+            EndConstruction();
+        }
+
+        if (state == DoorState.Closing) initDelay = InitDelay;
         if (state == DoorState.Opening) initDelay += Time.deltaTime;
 
         if (initDelay > InitDelay) initDelay = InitDelay;

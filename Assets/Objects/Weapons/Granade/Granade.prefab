@@ -166,18 +166,26 @@ MonoBehaviour:
   hitMark: {fileID: 7378723969388511367, guid: db1fac817b12bcc4eac9cf90dd30d019, type: 3}
   shotReference:
     Guid:
-      Data1: 1840774806
-      Data2: 1158770082
-      Data3: 226132131
-      Data4: 1720554927
-    Path: event:/VFX/Base/Gun Shot
+      Data1: -309024939
+      Data2: 1325181984
+      Data3: -830670415
+      Data4: -1573445829
+    Path: event:/VFX/Grenade/Shot
+  aliveReference:
+    Guid:
+      Data1: -845846
+      Data2: 1310110962
+      Data3: -200403021
+      Data4: 141950161
+    Path: event:/VFX/Grenade/Alive
+  aliveSound: 0
   hitSoundReference:
     Guid:
-      Data1: 533881192
-      Data2: 1270306389
-      Data3: -1733238086
-      Data4: 1170857750
-    Path: event:/VFX/Base/Gun Hit
+      Data1: -2047983969
+      Data2: 1235076663
+      Data3: -1168752252
+      Data4: -1245837876
+    Path: event:/VFX/Grenade/Hit
   data:
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}
@@ -244,6 +252,7 @@ MonoBehaviour:
     sync: 0
     syncSpeed: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 4519005768283276661, guid: 08767c478a3d3d6469a0485dad922769, type: 3}
   multiplySpawnrateByLifetime: 0

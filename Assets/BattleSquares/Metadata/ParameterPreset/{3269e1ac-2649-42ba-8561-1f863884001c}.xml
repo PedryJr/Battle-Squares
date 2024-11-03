@@ -32,8 +32,5 @@
 		<property name="clockSource">
 			<value>1</value>
 		</property>
-		<property name="speedAscending">
-			<value>0.5</value>
-		</property>
 	</object>
 </objects>

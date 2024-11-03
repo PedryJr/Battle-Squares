@@ -23,6 +23,8 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     SpriteRenderer spriteRenderer;
     Image image;
 
+    UIAudio uIAudio;
+
     Vector2 offHoveredSize;
     Vector2 onHoveredSize;
     Vector2 onClickedSize;
@@ -56,13 +58,25 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     [SerializeField]
     float multiplier = 1;
 
+    [SerializeField]
+    bool inverseScroll;
+
     float animationTimer;
 
     [SerializeField]
     AnimationType animationType;
+
+    [SerializeField]
+    SoundInteractionHoverType soundInteractionHoverType;
+
+    [SerializeField]
+    SoundInteractionClickType soundInteractionClickType;
+
     [BurstCompile]
     private void Awake()
     {
+
+        uIAudio = Resources.Load<UIAudio>("UIAudio");
 
         if (animateColor)
         {
@@ -94,7 +108,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         {
             if (!scrollRect) return;
             if (!isHovering) return;
-            float scroll = context.ReadValue<float>();
+            float scroll = inverseScroll ? -context.ReadValue<float>() : context.ReadValue<float>();
 
             Vector2 capturedVelocity = scrollRect.velocity;
             Vector2 addedVelocity = new Vector2(scroll, scroll) * 100;
@@ -163,6 +177,10 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     void OnHover()
     {
 
+        if (soundInteractionHoverType == SoundInteractionHoverType.Normal && isHovering == false) uIAudio.PlayHover(1f);
+        if (soundInteractionHoverType == SoundInteractionHoverType.HighPitch && isHovering == false) uIAudio.PlayHover(1.2f);
+        if (soundInteractionHoverType == SoundInteractionHoverType.LowPitch && isHovering == false) uIAudio.PlayHover(0.8f);
+
         input.Enable();
 
         isHovering = true;
@@ -228,6 +246,10 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
         if (animatingClick) return;
 
+        if (soundInteractionClickType == SoundInteractionClickType.Normal) uIAudio.PlayClick(1f);
+        if (soundInteractionClickType == SoundInteractionClickType.HighPitch) uIAudio.PlayClick(1.2f);
+        if (soundInteractionClickType == SoundInteractionClickType.LowPitch) uIAudio.PlayClick(0.8f);
+
         animatingClick = true;
         animationTimer = 0;
         fromSize = rectTransform.sizeDelta;
@@ -262,7 +284,16 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
         pointerEnterEntry.callback.AddListener((eventData) => { OnHover(); });
         pointerExitEntry.callback.AddListener((eventData) => { ExitHover(); });
-        pointerClickEntry.callback.AddListener((eventData) => { ButtonClick(); });
+        pointerClickEntry.callback.AddListener((eventData) => 
+        {
+        
+            PointerEventData pointerEvent = (PointerEventData) eventData;
+            if (pointerEvent.button == PointerEventData.InputButton.Left) Debug.Log("Left Button");
+            if (pointerEvent.button == PointerEventData.InputButton.Right) Debug.Log("Right Button");
+
+            ButtonClick();
+
+        });
 
         eventTrigger.triggers.Add(pointerEnterEntry);
         eventTrigger.triggers.Add(pointerExitEntry);
@@ -300,6 +331,10 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     {
 
         clickEvent.RemoveAllListeners();
+
+        EventTrigger eventTrigger = GetComponent<EventTrigger>();
+
+        if (eventTrigger) Destroy(eventTrigger);
 
     }
 
@@ -355,6 +390,22 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     {
         Stretch,
         Expand
+    }
+
+    enum SoundInteractionHoverType
+    {
+        Normal,
+        HighPitch,
+        LowPitch,
+        None
+    }
+
+    enum SoundInteractionClickType
+    {
+        Normal,
+        HighPitch,
+        LowPitch,
+        None
     }
 
 }

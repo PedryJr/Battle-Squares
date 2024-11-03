@@ -23,8 +23,8 @@ public sealed class MySettings : MonoBehaviour
 
     public static void Init()
     {
-        settingsFilePath = Path.Combine(Application.persistentDataPath, "settings.json");
-        statsFilePath = Path.Combine(Application.persistentDataPath, "stats.json");
+        settingsFilePath = Path.Combine(SaveManager.saveFolderPath, "settings.json");
+        statsFilePath = Path.Combine(SaveManager.saveFolderPath, "stats.json");
         LoadSettings();
         LoadStats();
     }

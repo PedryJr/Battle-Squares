@@ -46,7 +46,7 @@ public class PlayerSpawnEffectBehaviour : MonoBehaviour
     {
         
         playerBehaviour = player;
-        playerConstructor.StartNewConstruction();
+        playerConstructor.StartNewConstruction(player);
 
     }
 
@@ -61,7 +61,6 @@ public class PlayerSpawnEffectBehaviour : MonoBehaviour
     {
 
         if (!playerBehaviour) return;
-        if (!playerConstructor.open && !constructionBegun) return;
 
         timer += Time.deltaTime;
 
@@ -80,8 +79,13 @@ public class PlayerSpawnEffectBehaviour : MonoBehaviour
             catch
             {
 
-                playerConstructor.EndConstruction();
-                constructionBegun = true;
+                if (!constructionBegun)
+                {
+
+                    playerConstructor.EndConstruction();
+                    constructionBegun = true;
+
+                }
 
             }
 

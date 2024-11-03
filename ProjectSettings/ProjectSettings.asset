@@ -227,9 +227,9 @@ PlayerSettings:
   - {fileID: 4386670900800471581, guid: 1e9ce7636d4de8f47abc8f498e06315e, type: 3}
   - {fileID: 4386670900800471581, guid: e12cbaf63080268438d5820867b806d9, type: 3}
   - {fileID: 4386670900800471581, guid: 46a55622cd479fc429abe806f9bbb2ea, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1945663898846683812, guid: 1f60c299cda115b4e862fce7339b02a9, type: 3}
+  - {fileID: 1499770821528576087, guid: 9266ff3d1d7a0c64386a1b774ac845ed, type: 3}
+  - {fileID: 3761956243672518087, guid: 55cb2228b91179f498a22fa424608996, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 6372967502296238417, guid: dec702cdf478ab647b20dd837eb9d885, type: 3}
@@ -830,7 +830,7 @@ PlayerSettings:
   gcIncremental: 1
   gcWBarrierValidation: 0
   apiCompatibilityLevelPerPlatform: {}
-  editorAssembliesCompatibilityLevel: 1
+  editorAssembliesCompatibilityLevel: 2
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Battle Squares U6

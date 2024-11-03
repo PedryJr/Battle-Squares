@@ -54,7 +54,7 @@ public class CopyBehaviour : MonoBehaviour
 
     public string GetRandomString(int length)
     {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const string chars = "QWERTYUIOPASDFGHJKLZXCVBNM";
         return new string(Enumerable.Repeat(chars, length)
           .Select(s => s[random.Next(s.Length)]).ToArray());
     }

@@ -200,8 +200,6 @@ public sealed class NozzleBehaviour : MonoBehaviour
         if (fire)
         {
 
-            playerBehaviour.AnimatePlayer();
-
             projectileManager.SpawnProjectile(
                 type,
                 globalNozzleDirection,

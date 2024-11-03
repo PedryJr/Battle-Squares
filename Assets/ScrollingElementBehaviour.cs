@@ -46,6 +46,10 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
     float clickTransitionTime;
     [SerializeField]
     float multiplier = 1;
+    [SerializeField]
+    bool inverseScroll;
+    [SerializeField]
+    bool dormant;
 
     float animationTimer;
 
@@ -75,7 +79,7 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
         {
             if (!scrollRect) return;
             if (!isHovering) return;
-            float scroll = context.ReadValue<float>();
+            float scroll = inverseScroll ? -context.ReadValue<float>() : context.ReadValue<float>();
 
             Vector2 capturedVelocity = scrollRect.velocity;
             Vector2 addedVelocity = new Vector2(scroll, scroll) * 100;
@@ -110,6 +114,8 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
 
         isHovering = true;
 
+        PlayerController.uiRegs += 1;
+
     }
     [BurstCompile]
     public void ExitHover()
@@ -118,6 +124,8 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
         input.Disable();
 
         isHovering = false;
+
+        PlayerController.uiRegs = Mathf.Clamp01(PlayerController.uiRegs - 1);
 
     }
     [BurstCompile]

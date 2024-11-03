@@ -19,42 +19,11 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
 
     public ProjectileType weaponType;
 
-    private void OnEnable()
+    private void Awake()
     {
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         image = GetComponent<Image>();
-    }
-
-    private void Start()
-    {
-
-        if (!playerSynchronizer) return;
-        if (!playerSynchronizer.localSquare) return;
-        if (!playerSynchronizer.localSquare.nozzleBehaviour) return;
-
-        weapons = weaponSelectorContent.GetComponentsInChildren<WeaponSelector>();
-        if (previewType == WeaponPreviewType.Primary)
-        {
-            foreach (WeaponSelector weaponSelector in weapons)
-            {
-                if (weaponSelector.weaponType == playerSynchronizer.localSquare.nozzleBehaviour.primary)
-                {
-                    image.sprite = weaponSelector.GetImage();
-                    weaponType = weaponSelector.weaponType;
-                }
-            }
-        }
-        else
-        {
-            foreach (WeaponSelector weaponSelector in weapons)
-            {
-                if (weaponSelector.weaponType == playerSynchronizer.localSquare.nozzleBehaviour.secondary)
-                {
-                    image.sprite = weaponSelector.GetImage();
-                    weaponType = weaponSelector.weaponType;
-                }
-            }
-        }
+        weapons = weaponSelectorContent.GetComponentsInChildren<WeaponSelector>(true);
     }
 
     private void Update()

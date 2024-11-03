@@ -41,6 +41,8 @@ public class WeaponTextBehaviour : MonoBehaviour
         if (fadeTimer > 1) fadeTimer = 1;
 
         if (!playerSynchronizer) return;
+        if (!playerSynchronizer.localSquare) return;
+        if (!playerSynchronizer.localSquare.nozzleBehaviour) return;
 
         string output = string.Empty;
 

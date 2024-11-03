@@ -151,6 +151,7 @@ public sealed class CursorBehaviour : MonoBehaviour
     public static void SetEnabled(bool enable)
     {
         isEnabled = enable;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public static void SetColor(Color brightColor, Color darkColor)

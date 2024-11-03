@@ -53,7 +53,7 @@ public sealed class Mods : MonoBehaviour
     public static void SaveMods()
     {
 
-        modsFilePath = Path.Combine(Application.persistentDataPath, "mods.json");
+        modsFilePath = Path.Combine(SaveManager.saveFolderPath, "mods.json");
 
         ModsData data = new ModsData
         {

@@ -66,9 +66,6 @@
 	</object>
 	<object class="MarkerTrack" id="{2c9d14ac-ae62-403e-94d7-6f4bee81d974}" />
 	<object class="GroupTrack" id="{8eb57d92-264f-4034-b39a-6d6c96e1795e}">
-		<relationship name="automationTracks">
-			<destination>{5ca3dc76-b7e1-447e-9400-58336c627e77}</destination>
-		</relationship>
 		<relationship name="modules">
 			<destination>{a7c6f749-a2ca-491b-b080-a9c18b0860e1}</destination>
 		</relationship>
@@ -106,11 +103,6 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{e8728520-9c57-49cb-828e-30418dab1356}" />
-	<object class="AutomationTrack" id="{5ca3dc76-b7e1-447e-9400-58336c627e77}">
-		<relationship name="automator">
-			<destination>{08e0b82f-eb32-49d4-8c36-71350eb77dec}</destination>
-		</relationship>
-	</object>
 	<object class="ProgrammerSound" id="{a7c6f749-a2ca-491b-b080-a9c18b0860e1}">
 		<property name="isAsync">
 			<value>true</value>
@@ -122,7 +114,7 @@
 			<value>true</value>
 		</property>
 		<relationship name="placeholder">
-			<destination>{d05f0a08-1476-4a64-bfb2-df91c78a3f1b}</destination>
+			<destination>{dfb36277-866d-4617-9939-455630d72a18}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{2f314f9d-c5fc-4ef2-bc64-564b91ef6f47}">
@@ -173,12 +165,12 @@
 	<object class="MixerBusFader" id="{3a3cefeb-bace-48f4-937d-1ae89b6c19bc}" />
 	<object class="MixerBusEffectChain" id="{2ed04e4c-2597-4348-9ac9-2748244e1c3a}">
 		<relationship name="effects">
-			<destination>{78fef62f-e405-4925-92bc-a88d98e133f4}</destination>
+			<destination>{8ead6772-420c-4d06-8fe6-197a2d727c10}</destination>
 			<destination>{edb87032-e6a8-42c8-b1b1-2a9e396436fb}</destination>
-			<destination>{a6a06710-68bd-47ed-a510-b635bfa523aa}</destination>
-			<destination>{d9dfe4b5-9c62-4db2-93a1-53a0773f76fe}</destination>
-			<destination>{6607378d-c33b-422a-ae9f-4cf8adfd95f2}</destination>
-			<destination>{3e689fb1-b00b-4f5b-bc30-0cd83523b7c8}</destination>
+			<destination>{eb5c7719-8b6a-4a7a-b0ce-193a895d38a8}</destination>
+			<destination>{4fa3b5d0-12f0-496d-b43d-d0c00ec21a27}</destination>
+			<destination>{74d308b1-cdea-4d92-b233-eaa3d43fe8e6}</destination>
+			<destination>{86b68767-714f-4625-91d9-bfb6b83460b3}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{dcb91ba4-0036-4061-87d8-16c2847467ba}" />
@@ -206,12 +198,31 @@
 			<value>28</value>
 		</property>
 	</object>
-	<object class="PitchShifterEffect" id="{78fef62f-e405-4925-92bc-a88d98e133f4}">
+	<object class="PitchShifterEffect" id="{8ead6772-420c-4d06-8fe6-197a2d727c10}">
 		<property name="pitch">
-			<value>1.39999998</value>
+			<value>1.19999993</value>
 		</property>
-		<property name="fftSize">
-			<value>740</value>
+	</object>
+	<object class="MixerBusFader" id="{edb87032-e6a8-42c8-b1b1-2a9e396436fb}" />
+	<object class="ChorusEffect" id="{eb5c7719-8b6a-4a7a-b0ce-193a895d38a8}">
+		<property name="bypass">
+			<value>true</value>
+		</property>
+		<property name="rate">
+			<value>3.9000001</value>
+		</property>
+		<property name="depth">
+			<value>64</value>
+		</property>
+	</object>
+	<object class="TremoloEffect" id="{4fa3b5d0-12f0-496d-b43d-d0c00ec21a27}">
+		<property name="bypass">
+			<value>true</value>
+		</property>
+	</object>
+	<object class="PitchShifterEffect" id="{74d308b1-cdea-4d92-b233-eaa3d43fe8e6}">
+		<property name="pitch">
+			<value>2</value>
 		</property>
 		<property name="overlap">
 			<value>32</value>
@@ -219,164 +230,22 @@
 		<property name="maxChannels">
 			<value>16</value>
 		</property>
-		<relationship name="automators">
-			<destination>{08e0b82f-eb32-49d4-8c36-71350eb77dec}</destination>
-		</relationship>
 	</object>
-	<object class="MixerBusFader" id="{edb87032-e6a8-42c8-b1b1-2a9e396436fb}" />
-	<object class="MultibandDynamicsEffect" id="{a6a06710-68bd-47ed-a510-b635bfa523aa}">
+	<object class="TremoloEffect" id="{86b68767-714f-4625-91d9-bfb6b83460b3}">
 		<property name="bypass">
 			<value>true</value>
 		</property>
-		<property name="lowerFrequency">
-			<value>21999.9902</value>
+		<property name="frequency">
+			<value>3.60000014</value>
 		</property>
-		<property name="upperFrequency">
-			<value>21999.9902</value>
-		</property>
-		<property name="modeA">
-			<value>4</value>
-		</property>
-		<property name="thresholdA">
-			<value>-27.5</value>
-		</property>
-		<property name="thresholdB">
-			<value>-15.085845</value>
-		</property>
-		<property name="thresholdC">
-			<value>-8.96996498</value>
-		</property>
-		<property name="ratioA">
-			<value>9</value>
-		</property>
-		<property name="attackA">
-			<value>38</value>
-		</property>
-	</object>
-	<object class="SFXReverbEffect" id="{d9dfe4b5-9c62-4db2-93a1-53a0773f76fe}">
-		<property name="bypass">
-			<value>true</value>
-		</property>
-		<property name="decayTime">
-			<value>100</value>
-		</property>
-		<property name="earlyDelay">
-			<value>0</value>
-		</property>
-		<property name="lateDelay">
-			<value>50</value>
-		</property>
-		<property name="HFReference">
-			<value>900</value>
-		</property>
-		<property name="HFDecayRatio">
-			<value>100</value>
-		</property>
-		<property name="lowShelfFrequency">
-			<value>20</value>
-		</property>
-		<property name="highCut">
-			<value>5200</value>
-		</property>
-		<property name="wetLevel">
-			<value>-34</value>
-		</property>
-		<property name="dryLevel">
-			<value>-17.5</value>
-		</property>
-	</object>
-	<object class="MultibandEqEffect" id="{6607378d-c33b-422a-ae9f-4cf8adfd95f2}">
-		<property name="filterTypeA">
-			<value>9</value>
-		</property>
-		<property name="filterTypeB">
-			<value>9</value>
-		</property>
-		<property name="filterTypeC">
-			<value>9</value>
-		</property>
-		<property name="filterTypeD">
-			<value>9</value>
-		</property>
-		<property name="frequencyA">
-			<value>1048.74744</value>
-		</property>
-		<property name="frequencyB">
-			<value>8327.0498</value>
-		</property>
-		<property name="frequencyC">
-			<value>20.0000019</value>
-		</property>
-		<property name="frequencyD">
-			<value>131.785141</value>
-		</property>
-		<property name="qualityA">
-			<value>0.393034458</value>
-		</property>
-		<property name="qualityC">
-			<value>0.179999992</value>
-		</property>
-		<property name="qualityD">
-			<value>0.239999995</value>
-		</property>
-		<property name="gainA">
-			<value>-11.8965511</value>
-		</property>
-		<property name="gainB">
-			<value>-6.20689583</value>
-		</property>
-		<property name="gainC">
-			<value>-30</value>
-		</property>
-		<property name="gainD">
-			<value>10.3448257</value>
-		</property>
-	</object>
-	<object class="CompressorEffect" id="{3e689fb1-b00b-4f5b-bc30-0cd83523b7c8}">
-		<property name="bypass">
-			<value>true</value>
-		</property>
-		<property name="threshold">
-			<value>-46</value>
-		</property>
-		<property name="ratio">
-			<value>12</value>
-		</property>
-		<property name="gain">
-			<value>27.5</value>
-		</property>
-	</object>
-	<object class="Automator" id="{08e0b82f-eb32-49d4-8c36-71350eb77dec}">
-		<property name="nameOfPropertyBeingAutomated">
-			<value>pitch</value>
-		</property>
-		<relationship name="automationCurves">
-			<destination>{c25b8a79-f2d7-4147-9240-3aa5357ae079}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationCurve" id="{c25b8a79-f2d7-4147-9240-3aa5357ae079}">
-		<relationship name="parameter">
-			<destination>{40639fb7-cde9-439d-a2d0-c23aa2f6cc27}</destination>
-		</relationship>
-		<relationship name="automationPoints">
-			<destination>{459f6af7-1d3d-4bd8-af29-e2fdf5c9a592}</destination>
-			<destination>{a2ceaa06-0bda-486c-bfbc-7bc770cf2170}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationPoint" id="{459f6af7-1d3d-4bd8-af29-e2fdf5c9a592}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="value">
+		<property name="shape">
 			<value>1</value>
 		</property>
-	</object>
-	<object class="AutomationPoint" id="{a2ceaa06-0bda-486c-bfbc-7bc770cf2170}">
-		<property name="position">
-			<value>1</value>
+		<property name="duty">
+			<value>0.409999996</value>
 		</property>
-		<property name="value">
-			<value>1.5</value>
+		<property name="phase">
+			<value>1</value>
 		</property>
 	</object>
 </objects>

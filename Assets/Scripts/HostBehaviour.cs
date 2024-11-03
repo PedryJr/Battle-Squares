@@ -48,9 +48,11 @@ public sealed class HostBehaviour : MonoBehaviour
         {
 
             await SceneManager.LoadSceneAsync("LobbyScene", LoadSceneMode.Single);
-            SteamNetwork.currentLobby?.SetData("Avalible", "true");
+            SteamNetwork.currentLobby?.SetData("Avalible", "false");
+            SteamNetwork.currentLobby?.SetPrivate();
+            SteamNetwork.currentLobby?.SetInvisible();
+            SteamNetwork.currentLobby?.SetJoinable(false);
             NetworkManager.Singleton.StartHost();
-            await SteamNetwork.currentLobby?.Join();
 
         }
         else

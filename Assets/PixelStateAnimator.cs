@@ -163,4 +163,15 @@ public sealed class PixelStateAnimator : MonoBehaviour
 
     }
 
+    private void OnDisable()
+    {
+
+        EventTrigger eventTrigger = GetComponent<EventTrigger>();
+
+        if (eventTrigger) Destroy(eventTrigger);
+
+
+
+    }
+
 }

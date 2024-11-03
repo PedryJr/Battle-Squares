@@ -12,11 +12,11 @@ public class Skin : NetworkBehaviour
 
     PlayerSynchronizer playerSynchronizer;
 
-    private void Awake()
+    public void Init()
     {
 
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
-        skinsPath = Path.Combine(Application.persistentDataPath, "skins.json");
+        skinsPath = Path.Combine(SaveManager.saveFolderPath, "skins.json");
 
         if (File.Exists(skinsPath))
         {
@@ -24,34 +24,47 @@ public class Skin : NetworkBehaviour
             string json = File.ReadAllText(skinsPath);
             SkinData skinData = JsonConvert.DeserializeObject<SkinData>(json);
 
-            if (skinData.skinFrames[0].frame.Length == 116)
+            if (skinData != null)
             {
 
-                playerSynchronizer.skinData = skinData;
+                if (skinData.skinFrames[0].frame.Length == 116)
+                {
+
+                    playerSynchronizer.skinData = skinData;
+
+                }
+                else
+                {
+                    InitializeDefaultSkin();
+                }
 
             }
             else
             {
-                Debug.LogWarning("Loaded skin data length does not match expected length. Initializing with default.");
                 InitializeDefaultSkin();
             }
+
         }
         else
         {
             InitializeDefaultSkin();
         }
+
     }
 
     private void InitializeDefaultSkin()
     {
 
         playerSynchronizer.skinData = new SkinData();
+
         for (int i = 0; i < playerSynchronizer.skinData.skinFrames[0].frame.Length; i++)
         {
             playerSynchronizer.skinData.skinFrames[0].frame[i] = true;
         }
+
         playerSynchronizer.skinData.animate = false;
         playerSynchronizer.skinData.frames = 1;
+        playerSynchronizer.skinData.skinFrames[0].valid = true;
 
         SaveSkinData(playerSynchronizer.skinData);
 
@@ -90,6 +103,7 @@ public class SkinData
 
     public struct SkinFrame
     {
+        public bool valid;
         public bool[] frame;
     }
 

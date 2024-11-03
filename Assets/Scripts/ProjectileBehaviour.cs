@@ -1,5 +1,6 @@
 using FMOD.Studio;
 using FMODUnity;
+using NWaves.Features;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     public bool sync;
     public bool flipFlop;
 
+    const string paramNameCameraPositionX = "CameraPositionX";
+
     bool stuck;
     GameObject stuckTo;
 
@@ -90,10 +93,15 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     [SerializeField]
     EventReference shotReference;
 
+    [SerializeField] EventReference aliveReference;
+
+    [SerializeField] bool aliveSound;
+
     [SerializeField]
     EventReference hitSoundReference;
 
     EventInstance shotInstance;
+    EventInstance aliveInstance;
 
     PlayerBehaviour playerHit;
     PlayerBehaviour closestPlayer = null;
@@ -151,14 +159,28 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     private void Start()
     {
 
+        float pitch = 1f + UnityEngine.Random.Range(-0.08f, 0.08f);
+
         if (math.abs(data.burst) != 0) return;
 
         shotInstance = RuntimeManager.CreateInstance(shotReference);
-        shotInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
+        shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
         shotInstance.setParameterByName("Power", data.speed / 65f);
         shotInstance.setVolume(MySettings.volume);
-        shotInstance.setPitch(1f + UnityEngine.Random.Range(-0.08f, 0.08f));
+        shotInstance.setPitch(pitch);
         shotInstance.start();
+
+        if (aliveSound)
+        {
+
+            aliveInstance = RuntimeManager.CreateInstance(aliveReference);
+            aliveInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+            aliveInstance.setParameterByName("Power", data.speed / 65f);
+            aliveInstance.setVolume(MySettings.volume);
+            aliveInstance.setPitch(pitch);
+            aliveInstance.start();
+
+        }
 
         if (cameraAnimator && IsLocalProjectile) cameraAnimator.Shake();
 
@@ -313,9 +335,33 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         GlobalUpdate();
 
     }
+
+    float audioTimer;
+
     [BurstCompile]
     void GlobalUpdate()
     {
+
+        if (audioTimer < 1) audioTimer += Time.deltaTime * 20;
+        else
+        {
+
+            PLAYBACK_STATE playbackState;
+            shotInstance.getPlaybackState(out playbackState);
+
+            if (playbackState == PLAYBACK_STATE.PLAYING) shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+
+            if (aliveSound)
+            {
+
+                aliveInstance.getPlaybackState(out playbackState);
+
+                if (playbackState == PLAYBACK_STATE.PLAYING) aliveInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+
+            }
+
+            audioTimer = 0;
+        }
 
         if (externalTrailRef)
         {
@@ -411,6 +457,12 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         damage += Time.deltaTime * (damageScaleOverTime * Mods.at[11]);
         timeAlive += Time.deltaTime;
+        Vector2 vel, pos;
+        float ang, rot;
+        vel = rb.linearVelocity;
+        pos = rb.position;
+        ang = rb.angularVelocity;
+        rot = rb.rotation;
 
         if(homingDirection != Vector2.zero)
         {
@@ -419,22 +471,55 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         if (melee)
         {
-            SetMeleeShape();
+            float meleePosLerp = data.meleePosAnimation.Evaluate(math.clamp(timeAlive / data.lifeTime, 0, 1));
+            Vector2 meleeDirection = Vector2.Lerp(meleeStartDirection, meleeEndDirection, meleePosLerp);
+            Vector2 meleeLocalPos = meleeDirection.normalized * data.meleeRange;
+            Vector2 meleeGlobalPos = meleeLocalPos + owningPlayer.rb.position;
+            pos = meleeGlobalPos;
+
+            float meleeRotLerp = data.meleeRotAnimation.Evaluate(math.clamp(timeAlive / data.lifeTime, 0, 1));
+            rot = initRot + math.lerp(meleeStartRot, meleeEndRot, meleeRotLerp);
+
+            if (trailParticleSystem)
+            {
+                MainModule main = trailParticleSystem.main;
+
+                Vector3 spriteSize = spriteRenderer.bounds.size;
+                main.startSizeX = spriteSize.x;
+                main.startSizeY = spriteSize.y;
+                main.startSizeZ = 1;
+
+                main.startRotation = math.radians(spriteRenderer.transform.eulerAngles.z);
+            }
+
+            vel = owningPlayer.rb.linearVelocity;
+
+            if (data.enableMorph)
+            {
+                morphLerp = data.morhpAnimation.Evaluate(math.clamp(timeAlive / data.timeToMorph, 0, 1));
+                transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
+            }
+
+            rb.linearVelocity = vel;
+            rb.position = pos;
+            rb.angularVelocity = ang;
+            rb.rotation = rot;
             return;
+
         }
 
         if(data.spinSpeed > 0)
         {
-            rb.angularVelocity = rb.angularVelocity / math.abs(rb.angularVelocity) * data.spinSpeed;
+            ang = ang / math.abs(ang) * data.spinSpeed;
         }
 
         if (stickToSender)
         {
 
-            owningPlayer.rb.linearVelocity = rb.linearVelocity;
-            rb.rotation = math.lerp(startRotate, rotate, timeAlive / data.lifeTime);
-            if (rb.rotation > 360f) rb.rotation -= 360f;
-            if (rb.rotation < 360f) rb.rotation += 360f;
+            owningPlayer.rb.linearVelocity = vel;
+            rot = math.lerp(startRotate, rotate, timeAlive / data.lifeTime);
+            if (rot > 360f) rot -= 360f;
+            if (rot < 360f) rot += 360f;
 
         }
 
@@ -443,60 +528,32 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             morphLerp = data.morhpAnimation.Evaluate(math.clamp(timeAlive / data.timeToMorph, 0, 1));
             transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
         }
-        rb.linearVelocity += rb.linearVelocity * (speedModifier * Time.deltaTime);
+        vel += vel * (speedModifier * Time.deltaTime);
 
-        travelDistance += (rb.position - lastPos).magnitude;
-        lastPos = rb.position;
+        travelDistance += (pos - lastPos).magnitude;
+        lastPos = pos;
 
-        rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, data.speedLimit);
-        if(rb.linearVelocity.magnitude < data.minSpeed)
+        vel = Vector2.ClampMagnitude(vel, data.speedLimit);
+        if(vel.magnitude < data.minSpeed)
         {
-            rb.linearVelocity = rb.linearVelocity.normalized * data.minSpeed;
+            vel = vel.normalized * data.minSpeed;
         }
 
-        (float posX, float posY) = (rb.position.x, rb.position.y);
-        rb.position = new Vector2(math.clamp(posX, -64, 64), math.clamp(posY, -64, 64));
+        (float posX, float posY) = (pos.x, pos.y);
+        pos = new Vector2(math.clamp(posX, -64, 64), math.clamp(posY, -64, 64));
 
-        if (rb.rotation > 360) rb.rotation -= 360;
-        if (rb.rotation < 0) rb.rotation += 360;
+        if (rot > 360) rot -= 360;
+        if (rot < 0) rot += 360;
 
-        rb.angularVelocity = math.clamp(rb.angularVelocity, -1000, 1000);
+        ang = math.clamp(ang, -1000, 1000);
+
+        rb.linearVelocity = vel;
+        rb.position = pos;
+        rb.angularVelocity = ang;
+        rb.rotation = rot;
 
     }
-    [BurstCompile]
-    void SetMeleeShape()
-    {
 
-        float meleePosLerp = data.meleePosAnimation.Evaluate(math.clamp(timeAlive / data.lifeTime, 0, 1));
-        Vector2 meleeDirection = Vector2.Lerp(meleeStartDirection, meleeEndDirection, meleePosLerp);
-        Vector2 meleeLocalPos = meleeDirection.normalized * data.meleeRange;
-        Vector2 meleeGlobalPos = meleeLocalPos + owningPlayer.rb.position;
-        rb.position = meleeGlobalPos;
-
-        float meleeRotLerp = data.meleeRotAnimation.Evaluate(math.clamp(timeAlive / data.lifeTime, 0, 1));
-        rb.rotation = initRot + math.lerp(meleeStartRot, meleeEndRot, meleeRotLerp);
-
-        if (trailParticleSystem)
-        {
-            MainModule main = trailParticleSystem.main;
-
-            Vector3 spriteSize = spriteRenderer.bounds.size;
-            main.startSizeX = spriteSize.x;
-            main.startSizeY = spriteSize.y;
-            main.startSizeZ = 1;
-
-            main.startRotation = math.radians(spriteRenderer.transform.eulerAngles.z);
-        }
-
-        rb.linearVelocity = owningPlayer.rb.linearVelocity;
-
-        if (data.enableMorph)
-        {
-            morphLerp = data.morhpAnimation.Evaluate(math.clamp(timeAlive / data.timeToMorph, 0, 1));
-            transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
-        }
-
-    }
     [BurstCompile]
     void LocalUpdate()
     {
@@ -863,6 +920,13 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         owningPlayer.transform.localScale = Vector3.one;
         owningPlayer.nozzleBehaviour.transform.localScale = Vector3.one * 0.4f;
+
+        if (aliveSound)
+        {
+
+            aliveInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
+        }
 
     }
 

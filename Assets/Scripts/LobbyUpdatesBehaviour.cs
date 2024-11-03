@@ -48,6 +48,8 @@ public sealed class LobbyUpdatesBehaviour : MonoBehaviour
 
             }
 
+            playerSynchronizer.localSquare.ready = true;
+
         }
 
         timer += Time.deltaTime * 5;

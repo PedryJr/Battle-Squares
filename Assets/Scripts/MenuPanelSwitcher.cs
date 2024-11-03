@@ -21,7 +21,6 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
     private void Awake()
     {
 
-        if(!ignoreInit) MySettings.Init();
         string value;
 
         initButtons[0].text = $"Volume: {Mathf.RoundToInt(MySettings.volume * 10)}";

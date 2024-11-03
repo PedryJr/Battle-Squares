@@ -19,9 +19,14 @@ public sealed class WeaponSelector : MonoBehaviour
     [SerializeField]
     ScrollRect scroll;
 
+    ButtonHoverAnimation hoverAnimation;
+    PlayerSynchronizer playerSynchronizer;
+
     private void Awake()
     {
         
+        playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
+        hoverAnimation = GetComponent<ButtonHoverAnimation>();
         selectorImage = GetComponent<Image>();
 
     }
@@ -49,6 +54,13 @@ public sealed class WeaponSelector : MonoBehaviour
     public Sprite GetImage()
     {
         return selectorImage.sprite;
+    }
+
+    private void Update()
+    {
+        
+        hoverAnimation.onHoveredColor = secondary.color;
+
     }
 
 }

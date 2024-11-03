@@ -277,8 +277,11 @@ MonoBehaviour:
   - 8
   - 6
   - 6
+  image: {fileID: 0}
   scale: 0.01625
   forceEnable: 0
+  click: 0
+  skipColorManip: 0
 --- !u!222 &133719621
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -687,6 +690,7 @@ GameObject:
   - component: {fileID: 7766882706945389861}
   - component: {fileID: 7766882706945389862}
   - component: {fileID: 7766882706945389863}
+  - component: {fileID: 7766882706945389864}
   m_Layer: 0
   m_Name: Synchronizer
   m_TagString: Sync
@@ -1198,7 +1202,7 @@ MonoBehaviour:
     shootingInterval: 0.04
     projectileSpeed: 45
     projectileAcceleration: -5
-    lifeTime: 1.8
+    lifeTime: 3
     holdable: 0
     burst: 0
     bounces: 0
@@ -1211,13 +1215,13 @@ MonoBehaviour:
     skipAoeOnTargetHit: 1
     knockback: 9
     speedLimit: 100
-    minSpeed: 17
+    minSpeed: 15
     aoeDamage: 4
     baseDamage: 6.66
     damageTimeScale: 0
     recoil: 7
     enableMorph: 1
-    targetMorph: {x: 0.18, y: 0.45, z: 1}
+    targetMorph: {x: 0.18, y: 0.6, z: 1}
     timeToMorph: 0.33
     morphAnimation:
       serializedVersion: 2
@@ -1908,7 +1912,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c629967c4b4e84c4baad690db35c9ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSkin: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+--- !u!114 &7766882706945389864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45f68c3163ff73d4fa2c81008711c7c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameVersion: {fileID: 11400000, guid: d91b6d3970dccfd44815ad26cc50e9a8, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

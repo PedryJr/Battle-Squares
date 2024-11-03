@@ -164,7 +164,7 @@ SpriteRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 2
-  m_Sprite: {fileID: 2015791465023387440, guid: 485ceb1555b61fb439460743cea46228, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -291,7 +291,7 @@ SpriteRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 3
-  m_Sprite: {fileID: -4040204858726684011, guid: a9c073e757801674099c9f53e519a8a6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -974,6 +974,8 @@ MonoBehaviour:
   col: {fileID: 0}
   healthbar: {fileID: 9003449554754366807}
   dogTag: {fileID: 924873863533695052, guid: 0e7d01f8e78ec0949bce1e2a2184658a, type: 3}
+  bodyFrames: []
+  nozzleFrames: []
   deathSoundReference:
     Guid:
       Data1: 626443750
@@ -1003,6 +1005,7 @@ MonoBehaviour:
       Data3: -414281587
       Data4: 1289083007
     Path: event:/PlayerSounds/PlayerStep
+  frameRate: 10
   speedParticles: []
   spawnBuffer: 0
   newMods: 0

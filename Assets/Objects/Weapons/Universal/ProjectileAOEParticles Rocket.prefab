@@ -118,7 +118,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.7
-      minScalar: 0.2
+      minScalar: 0.35
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -288,7 +288,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 1.2
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -981,7 +981,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 28
+        scalar: 25
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -1316,8 +1316,8 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 12.56637
-      minScalar: -12.56637
+      scalar: 15.707963
+      minScalar: -15.707963
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1578,7 +1578,7 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.3
+          time: 0.28251365
           value: 0.2
           inSlope: -1.0754917
           outSlope: -1.0754917
@@ -1611,7 +1611,7 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.3
+          time: 0.28251365
           value: -0.2
           inSlope: 0.9907127
           outSlope: 0.9907127
@@ -1649,7 +1649,7 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.3
+          time: 0.28251365
           value: -0.2
           inSlope: 1.04711
           outSlope: 1.04711
@@ -1682,7 +1682,7 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.3
+          time: 0.28251365
           value: 0.2
           inSlope: -1.0341845
           outSlope: -1.0341845
@@ -2517,7 +2517,7 @@ ParticleSystem:
       m_Bits: 4294967295
     influenceList: []
   ClampVelocityModule:
-    enabled: 1
+    enabled: 0
     x:
       serializedVersion: 2
       minMaxState: 0

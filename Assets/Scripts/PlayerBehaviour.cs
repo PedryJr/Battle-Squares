@@ -2,6 +2,7 @@ using FMOD.Studio;
 using FMODUnity;
 using MathNet.Numerics;
 using Steamworks;
+using System;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -193,13 +194,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
             }
 
-            if (arg0.name == "GameScene")
-            {
-
-                FindAnyObjectByType<MapInitiator>().InitPresetMap(selectedMap, scoreManager.gameMode);
-
-            }
-
             deathChamber = GameObject.FindGameObjectWithTag("Death").transform;
 
             if(isLocalPlayer) spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
@@ -233,24 +227,53 @@ public sealed class PlayerBehaviour : MonoBehaviour
     [BurstCompile]
     private void Start()
     {
-        DontDestroyOnLoad(gameObject);
-        deathSoundInstance = RuntimeManager.CreateInstance(deathSoundReference);
-        spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
-        deathChamber = GameObject.FindGameObjectWithTag("Death").transform;
 
-        if (isLocalPlayer)
+        try
         {
 
-            playerController = FindAnyObjectByType<PlayerController>();
-            GetComponentInChildren<NozzleBehaviour>().SetPlayerController(playerController, this);
-            playerTransform.position = GameObject.FindGameObjectWithTag("Spawn").transform.position;
-            playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
+            DontDestroyOnLoad(gameObject);
+            deathSoundInstance = RuntimeManager.CreateInstance(deathSoundReference);
+            spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
+            deathChamber = GameObject.FindGameObjectWithTag("Death").transform;
+
+            if (isLocalPlayer)
+            {
+
+                playerController = FindAnyObjectByType<PlayerController>();
+                GetComponentInChildren<NozzleBehaviour>().SetPlayerController(playerController, this);
+                playerTransform.position = GameObject.FindGameObjectWithTag("Spawn").transform.position;
+                playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
+
+            }
+
+            ApplyColors();
+
+            playerSlapSound = RuntimeManager.CreateInstance(playerSlap);
 
         }
+        catch
+        {
 
-        ApplyColors();
+            SteamNetwork.currentLobby?.Leave();
 
-        playerSlapSound = RuntimeManager.CreateInstance(playerSlap);
+            SteamNetwork.CreateNewLobby();
+
+            PlayerSynchronizer playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
+
+            if (playerSynchronizer.IsHost)
+            {
+
+                playerSynchronizer.hostShutdown = true;
+                playerSynchronizer.DisconnectPlayerLocally();
+
+            }
+
+            NetworkManager.Singleton.Shutdown(true);
+            playerSynchronizer.DisconnectPlayerLocally();
+
+            playerSynchronizer.hostShutdown = false;
+
+        }
 
     }
 
@@ -295,9 +318,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
                     float soundDirection = ConvertVector2ToAngle(toCam.normalized);
                     float distance = toCam.magnitude;
 
-                    Debug.Log(distance);
-                    Debug.Log(soundDirection);
-
                     playerSlapSound.setParameterByName("Direction", soundDirection);
                     playerSlapSound.setParameterByName("Distance", distance);
 
@@ -311,6 +331,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
                 }
 
                 playerSlapSound.setParameterByName("Player Speed", slapIntensity);
+                playerSlapSound.setVolume(MySettings.volume);
                 playerSlapSound.start();
                 slapTimer = 0.27f;
 
@@ -339,14 +360,14 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public void CreateTextureFromBoolArray10BY10(bool[] boolArray, byte frameIndex)
     {
 
-        bool[] rotatedArray = new bool[100];
+        Span<bool> rotatedArray = stackalloc bool[100];
 
         for (int i = 0; i < 100; i++)
         {
-            rotatedArray[i] = boolArray[99 - i]; // Flip the array
+            rotatedArray[i] = boolArray[99 - i];
         }
 
-        Texture2D texture = new Texture2D(10, 10, TextureFormat.ARGB32, false);
+        Texture2D texture = new Texture2D(10, 10, TextureFormat.RGBA32, false);
         texture.filterMode = FilterMode.Point;
         for (int i = 0; i < 10; i++)
         {
@@ -361,6 +382,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         texture.Apply();
         bodyFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 0.5f), 10);
+        texture.Compress(true);
         if (frameIndex == 0) spriteRenderer.sprite = bodyFrames[frameIndex];
 
     }
@@ -368,7 +390,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public void CreateTextureFromBoolArray4BY4(bool[] boolArray, byte frameIndex)
     {
 
-        bool[] rotatedArray = new bool[16];
+        Span<bool> rotatedArray = stackalloc bool[16];
 
         rotatedArray[0] = boolArray[3];
         rotatedArray[1] = boolArray[7];
@@ -387,7 +409,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         rotatedArray[14] = boolArray[8];
         rotatedArray[15] = boolArray[12];
 
-        Texture2D texture = new Texture2D(4, 4, TextureFormat.ARGB32, false);
+        Texture2D texture = new Texture2D(4, 4, TextureFormat.RGBA32, false);
         texture.filterMode = FilterMode.Point;
         for (int i = 0; i < 4; i++)
         {
@@ -400,7 +422,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
             }
         }
         texture.Apply();
-        Debug.Log(frameIndex);
         nozzleFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
         if (frameIndex == 0) nozzleBehaviour.spriteRenderer.sprite = nozzleFrames[frameIndex];
 

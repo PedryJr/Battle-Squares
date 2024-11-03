@@ -126,6 +126,7 @@ public sealed class ProjectileManager : NetworkBehaviour
 
         forceToAdd = -direction.normalized * multiplier1 * multiplier2;
         owningPlayer.rb.AddForce(forceToAdd, ForceMode2D.Impulse);
+        owningPlayer.AnimatePlayer();
 
     }
     [BurstCompile]

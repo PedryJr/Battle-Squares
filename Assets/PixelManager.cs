@@ -16,6 +16,7 @@ public sealed class PixelManager : MonoBehaviour
     public int skinTolerance;
     public int skinValue;
     public int frameIndex = 0;
+    int oldSkinValue;
 
     PainterExec painterExec;
     CursorBehaviour cursorBehaviour;
@@ -160,7 +161,14 @@ public sealed class PixelManager : MonoBehaviour
         painterExec.filling = colorJob.filling[0];
         painterExec.previewFilling = colorJob.previewFilling[0];
         painterExec.newSlowHover = colorJob.newSlowHover[0];
-        playerSynchronizer.skinData.skinFrames[frameIndex].frame = colored.ToArray();
+
+    }
+
+    private void LateUpdate()
+    {
+
+        if (oldSkinValue != skinValue) playerSynchronizer.skinData.skinFrames[frameIndex].frame = colored.ToArray();
+        oldSkinValue = skinValue;
 
     }
 

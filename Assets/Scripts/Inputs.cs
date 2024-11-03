@@ -567,6 +567,94 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Editor"",
+            ""id"": ""d2508080-ac8c-4a6b-90c4-bb2be6389d0f"",
+            ""actions"": [
+                {
+                    ""name"": ""Copy"",
+                    ""type"": ""Button"",
+                    ""id"": ""5f616ec0-da03-4fe7-b86d-46f5def279dd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Paste"",
+                    ""type"": ""Button"",
+                    ""id"": ""bf465bc1-b935-404c-ac5c-7453f097530e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PasteV"",
+                    ""type"": ""Button"",
+                    ""id"": ""d4bc9d53-7cc8-4d2a-8b2b-8e1a06028459"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CopyC"",
+                    ""type"": ""Button"",
+                    ""id"": ""37606a62-2dcc-44a1-a129-21ae040202ed"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1213d6a2-ab57-4782-ac9c-1b29de388f7e"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Copy"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd2fafba-d955-483b-a62a-f4821b980b58"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Paste"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""81c591ff-f71a-403c-b87d-93fc1c2a1016"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PasteV"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""555ef4f1-a403-4499-bf79-051984a06490"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CopyC"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -598,6 +686,12 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         m_Cursor = asset.FindActionMap("Cursor", throwIfNotFound: true);
         m_Cursor_DoLocation = m_Cursor.FindAction("DoLocation", throwIfNotFound: true);
         m_Cursor_DoClick = m_Cursor.FindAction("DoClick", throwIfNotFound: true);
+        // Editor
+        m_Editor = asset.FindActionMap("Editor", throwIfNotFound: true);
+        m_Editor_Copy = m_Editor.FindAction("Copy", throwIfNotFound: true);
+        m_Editor_Paste = m_Editor.FindAction("Paste", throwIfNotFound: true);
+        m_Editor_PasteV = m_Editor.FindAction("PasteV", throwIfNotFound: true);
+        m_Editor_CopyC = m_Editor.FindAction("CopyC", throwIfNotFound: true);
     }
 
     ~@Inputs()
@@ -607,6 +701,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_MouseMaps.enabled, "This will cause a leak and performance issues, Inputs.MouseMaps.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_ChatMaps.enabled, "This will cause a leak and performance issues, Inputs.ChatMaps.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Cursor.enabled, "This will cause a leak and performance issues, Inputs.Cursor.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Editor.enabled, "This will cause a leak and performance issues, Inputs.Editor.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -990,6 +1085,76 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         }
     }
     public CursorActions @Cursor => new CursorActions(this);
+
+    // Editor
+    private readonly InputActionMap m_Editor;
+    private List<IEditorActions> m_EditorActionsCallbackInterfaces = new List<IEditorActions>();
+    private readonly InputAction m_Editor_Copy;
+    private readonly InputAction m_Editor_Paste;
+    private readonly InputAction m_Editor_PasteV;
+    private readonly InputAction m_Editor_CopyC;
+    public struct EditorActions
+    {
+        private @Inputs m_Wrapper;
+        public EditorActions(@Inputs wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Copy => m_Wrapper.m_Editor_Copy;
+        public InputAction @Paste => m_Wrapper.m_Editor_Paste;
+        public InputAction @PasteV => m_Wrapper.m_Editor_PasteV;
+        public InputAction @CopyC => m_Wrapper.m_Editor_CopyC;
+        public InputActionMap Get() { return m_Wrapper.m_Editor; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(EditorActions set) { return set.Get(); }
+        public void AddCallbacks(IEditorActions instance)
+        {
+            if (instance == null || m_Wrapper.m_EditorActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_EditorActionsCallbackInterfaces.Add(instance);
+            @Copy.started += instance.OnCopy;
+            @Copy.performed += instance.OnCopy;
+            @Copy.canceled += instance.OnCopy;
+            @Paste.started += instance.OnPaste;
+            @Paste.performed += instance.OnPaste;
+            @Paste.canceled += instance.OnPaste;
+            @PasteV.started += instance.OnPasteV;
+            @PasteV.performed += instance.OnPasteV;
+            @PasteV.canceled += instance.OnPasteV;
+            @CopyC.started += instance.OnCopyC;
+            @CopyC.performed += instance.OnCopyC;
+            @CopyC.canceled += instance.OnCopyC;
+        }
+
+        private void UnregisterCallbacks(IEditorActions instance)
+        {
+            @Copy.started -= instance.OnCopy;
+            @Copy.performed -= instance.OnCopy;
+            @Copy.canceled -= instance.OnCopy;
+            @Paste.started -= instance.OnPaste;
+            @Paste.performed -= instance.OnPaste;
+            @Paste.canceled -= instance.OnPaste;
+            @PasteV.started -= instance.OnPasteV;
+            @PasteV.performed -= instance.OnPasteV;
+            @PasteV.canceled -= instance.OnPasteV;
+            @CopyC.started -= instance.OnCopyC;
+            @CopyC.performed -= instance.OnCopyC;
+            @CopyC.canceled -= instance.OnCopyC;
+        }
+
+        public void RemoveCallbacks(IEditorActions instance)
+        {
+            if (m_Wrapper.m_EditorActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IEditorActions instance)
+        {
+            foreach (var item in m_Wrapper.m_EditorActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_EditorActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public EditorActions @Editor => new EditorActions(this);
     public interface ISquareControllerActions
     {
         void OnUp(InputAction.CallbackContext context);
@@ -1021,5 +1186,12 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     {
         void OnDoLocation(InputAction.CallbackContext context);
         void OnDoClick(InputAction.CallbackContext context);
+    }
+    public interface IEditorActions
+    {
+        void OnCopy(InputAction.CallbackContext context);
+        void OnPaste(InputAction.CallbackContext context);
+        void OnPasteV(InputAction.CallbackContext context);
+        void OnCopyC(InputAction.CallbackContext context);
     }
 }
