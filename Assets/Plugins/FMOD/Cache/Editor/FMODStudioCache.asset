@@ -311,7 +311,7 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638657362389702750
+  lastModified: 638662399125556877
   FileSizes:
   - Name: Desktop
     Value: 2332
@@ -406,10 +406,10 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638657362389692757
+  lastModified: 638662399125538197
   FileSizes:
   - Name: Desktop
-    Value: 4528
+    Value: 3878
   Exists: 1
 --- !u!114 &-3474264015751686721
 MonoBehaviour:
@@ -827,7 +827,7 @@ MonoBehaviour:
   - {fileID: -3858178114869651658}
   StringsBanks:
   - {fileID: -5230284171643110809}
-  cacheTime: 638657955917309681
+  cacheTime: 638662399125556877
   cacheVersion: 131843
 --- !u!114 &102241271348088986
 MonoBehaviour:

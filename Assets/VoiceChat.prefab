@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4443445537725286710}
   - component: {fileID: 3800845951864430765}
   m_Layer: 6
-  m_Name: Voice Networker (Studio)
+  m_Name: VoiceChat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

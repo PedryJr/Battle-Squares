@@ -287,7 +287,10 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         pointerClickEntry.callback.AddListener((eventData) => 
         {
         
+
             PointerEventData pointerEvent = (PointerEventData) eventData;
+
+
             if (pointerEvent.button == PointerEventData.InputButton.Left) Debug.Log("Left Button");
             if (pointerEvent.button == PointerEventData.InputButton.Right) Debug.Log("Right Button");
 
