@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 [InitializeOnLoad]
 public class PlayFromBootstrapScene
 {
-    private static readonly string bootstrapScenePath = "Assets/Scenes/NetworkScene.unity"; 
+    private static readonly string bootstrapScenePath = "Assets/Scenes/NetworkScene/NetworkScene.unity"; 
     private const string PreviousSceneKey = "PreviousScenePath";
 
     static PlayFromBootstrapScene()

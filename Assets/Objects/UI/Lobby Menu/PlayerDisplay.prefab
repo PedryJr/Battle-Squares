@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6982744319546336873}
   - component: {fileID: 1499074310025494159}
   m_Layer: 5
-  m_Name: Display
+  m_Name: PlayerDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -197,6 +197,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
+  currentColor: {r: 0, g: 0, b: 0, a: 0}
+  fromColor: {r: 0, g: 0, b: 0, a: 0}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
@@ -204,7 +208,10 @@ MonoBehaviour:
   exitHoverTransitionTime: 0.15
   clickTransitionTime: 0.05
   multiplier: 4
+  inverseScroll: 0
   animationType: 1
+  soundInteractionHoverType: 1
+  soundInteractionClickType: 1
 --- !u!114 &1167188435216249862
 MonoBehaviour:
   m_ObjectHideFlags: 0

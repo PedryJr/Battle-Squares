@@ -6,20 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/NetworkScene.unity
-    guid: f80a933fc2a1a134a94ecd21df659f32
+    path: Assets/Scenes/NetworkScene/NetworkScene.unity
+    guid: f96463116aa7e1649985e5d239abd901
   - enabled: 1
-    path: Assets/Scenes/MenuScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/MenuScene/MenuScene.unity
+    guid: 5148d9a08ab144746a62eac520c2c9bd
   - enabled: 1
     path: Assets/Scenes/LobbyScene/LobbyScene.unity
     guid: 33bf92714a56a7b41b54de66f8a72181
   - enabled: 1
-    path: Assets/Scenes/GameScene.unity
-    guid: deb523f9e440b0d4f856ffc2735db8e3
+    path: Assets/Scenes/GameScene/GameScene.unity
+    guid: a0adb807d53306048aed7552fed2191c
   - enabled: 1
-    path: Assets/Scenes/GameOver.unity
-    guid: 9a2669bd2b157a04fb1c374739db1907
+    path: Assets/Scenes/GameOverScene/GameOver.unity
+    guid: 5c2c77325f3338e46b9daab4be3d198c
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b7b47f3acca291845b09de5e59848083, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: caeeeb8e8f605dc42866145ecbfdef4a, type: 3}

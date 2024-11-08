@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 475697944879185979}
   - component: {fileID: -7129086307586825064}
   m_Layer: 5
-  m_Name: MapIconTemplate
+  m_Name: Map Select Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

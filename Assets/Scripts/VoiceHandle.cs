@@ -9,15 +9,33 @@ public class VoiceHandle : NetworkBehaviour
 
     [SerializeField]
     VoiceNetworker voiceNetworker;
+    VoiceEmitter voiceEmitter;
+    VoiceRecorder voiceRecorder;
 
     PlayerSynchronizer playerSynchronizer = null;
     PlayerBehaviour attatchedPlayer = null;
 
     Transform cameraTransform;
 
+    float lastSettingsVolume = -1;
+    float settingsVolume;
+
+    float lastVolume = -1;
+    float volume;
+
+    bool lastMuted = true;
+    bool muted;
+
+    bool lastSelfMute;
+    bool selfMute;
+
+    bool init = true;
+
     private void Awake()
     {
         
+        voiceEmitter = GetComponent<VoiceEmitter>();
+        voiceRecorder = GetComponent<VoiceRecorder>();
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
 
     }
@@ -26,6 +44,15 @@ public class VoiceHandle : NetworkBehaviour
     {
         cameraTransform = Camera.main.transform;
         voiceNetworker.StartRecording();
+
+        if (IsOwner)
+        {
+
+            selfMute = MySettings.muted;
+
+            ApplySelfMute();
+
+        }
 
         DontDestroyOnLoad(this);
 
@@ -50,7 +77,15 @@ public class VoiceHandle : NetworkBehaviour
 
             foreach (PlayerData player in playerSynchronizer.playerIdentities)
             {
-                if (player.id == OwnerClientId) attatchedPlayer = player.square;
+                if (player.id == OwnerClientId)
+                {
+
+                    attatchedPlayer = player.square;
+                    volume = attatchedPlayer.voiceVolume;
+                    muted = attatchedPlayer.voiceMute;
+                    ApplyVoiceChatVolume();
+
+                }
             }
 
         }
@@ -67,6 +102,63 @@ public class VoiceHandle : NetworkBehaviour
 
             }
 
+        }
+
+        if (attatchedPlayer)
+        {
+
+            settingsVolume = MySettings.volume;
+            volume = attatchedPlayer.voiceVolume;
+            muted = attatchedPlayer.voiceMute;
+
+            bool change = false;
+
+            if (volume != lastVolume) change = true;
+
+            if (muted != lastMuted) change = true;
+
+            if (settingsVolume != lastSettingsVolume) change = true;
+
+            if (change) ApplyVoiceChatVolume();
+
+            lastSettingsVolume = settingsVolume;
+            lastVolume = volume;
+            lastMuted = muted;
+
+            if (IsOwner)
+            {
+                selfMute = MySettings.muted;
+
+                if(selfMute != lastSelfMute) ApplySelfMute();
+
+                lastSelfMute = muted;
+
+            }
+
+        }
+
+    }
+
+    void ApplyVoiceChatVolume()
+    {
+
+        float muteMultiplier = muted ? 0 : 1;
+        voiceEmitter.SetVolume(volume * settingsVolume * muteMultiplier);
+
+    }
+
+    void ApplySelfMute()
+    {
+
+        if (selfMute)
+        {
+            voiceNetworker.StopRecording();
+            voiceRecorder.StopRecording();
+        }
+        else
+        {
+            voiceNetworker.StartRecording();
+            voiceRecorder.StartRecording();
         }
 
     }

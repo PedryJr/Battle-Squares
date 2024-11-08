@@ -815,6 +815,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
             EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
             eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
+            eventInstance.setVolume(MySettings.volume);
             eventInstance.start();
 
             RaycastHit2D point = GetClosestEnvironmentPoint(boom.position);

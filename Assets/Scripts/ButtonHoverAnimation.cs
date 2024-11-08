@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.Burst;
 using UnityEngine;
@@ -21,7 +22,9 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     public Inputs input;
     ScrollRect scrollRect;
     SpriteRenderer spriteRenderer;
-    Image image;
+
+    [NonSerialized]
+    public Image image;
 
     UIAudio uIAudio;
 

@@ -7,12 +7,22 @@ public class OpenPlayerProfileBehaviour : MonoBehaviour
     [SerializeField]
     LobbyPlayerDisplayBehaviour display;
 
-    public async void SELECT()
+    PlayerSettingsBehaviour playerSettingsBehaviour;
+
+    LoadPlayerImagesBehaviour loadPlayerImagesBehaviour;
+
+    private void Start()
     {
 
-        await display.assignedPlayer.friend.RequestInfoAsync();
+        loadPlayerImagesBehaviour = GetComponentInParent<LoadPlayerImagesBehaviour>();
+        playerSettingsBehaviour = loadPlayerImagesBehaviour.playerSettingsBehaviour;
 
-        SteamFriends.OpenUserOverlay(display.assignedPlayer.friend.Id, "steamid");
+    }
+
+    public void SELECT()
+    {
+
+        playerSettingsBehaviour.SHOW(display.assignedPlayer);
 
     }
 

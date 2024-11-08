@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 7011763751681141725}
   - component: {fileID: 6875909145504773864}
   m_Layer: 5
-  m_Name: Frame
+  m_Name: Animation Frame Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

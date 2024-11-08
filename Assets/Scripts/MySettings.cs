@@ -17,6 +17,7 @@ public sealed class MySettings : MonoBehaviour
     public static int maxLobbyKills = 0;
     public static int kills = 0;
     public static int deaths = 0;
+    public static bool muted = true;
 
     private static string settingsFilePath;
     private static string statsFilePath;
@@ -38,6 +39,7 @@ public sealed class MySettings : MonoBehaviour
             fps = fps,
             fullscreen = fullscreen,
             postProcessing = postProcessing,
+            muted = muted,
         };
 
         string json = JsonUtility.ToJson(data, true);
@@ -73,6 +75,7 @@ public sealed class MySettings : MonoBehaviour
             fps = data.fps;
             fullscreen = data.fullscreen;
             postProcessing = data.postProcessing;
+            muted = data.muted;
         }
 
         ApplySettings();
@@ -136,6 +139,7 @@ public class SettingsData
     public int fps = 0;
     public int fullscreen = 0;
     public bool postProcessing = true;
+    public bool muted;
 }
 
 public class UserStatsData

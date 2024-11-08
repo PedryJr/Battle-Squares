@@ -19,17 +19,7 @@ MonoBehaviour:
   m_PlatformBuildProfile:
     rid: 6617008902117261333
   m_OverrideGlobalSceneList: 0
-  m_Scenes:
-  - m_enabled: 1
-    m_path: Assets/Scenes/NetworkScene.unity
-  - m_enabled: 1
-    m_path: Assets/Scenes/MenuScene.unity
-  - m_enabled: 1
-    m_path: Assets/Scenes/LobbyScene.unity
-  - m_enabled: 1
-    m_path: Assets/Scenes/GameScene.unity
-  - m_enabled: 1
-    m_path: Assets/Scenes/GameOver.unity
+  m_Scenes: []
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
     m_Settings:

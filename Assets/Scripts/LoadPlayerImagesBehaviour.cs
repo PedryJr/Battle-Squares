@@ -7,6 +7,9 @@ public class LoadPlayerImagesBehaviour : MonoBehaviour
 {
 
     [SerializeField]
+    public PlayerSettingsBehaviour playerSettingsBehaviour;
+
+    [SerializeField]
     LobbyPlayerDisplayBehaviour playerDisplayBehaviour;
 
     PlayerSynchronizer playerSynchronizer;

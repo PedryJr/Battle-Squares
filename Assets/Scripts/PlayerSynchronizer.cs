@@ -1,15 +1,10 @@
-using Netcode.Transports.Facepunch;
 using Steamworks;
-using Steamworks.Data;
 using System;
 using System.Collections.Generic;
 using Unity.Burst;
-using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using static PlayerSynchronizer;
 [BurstCompile]
@@ -64,38 +59,18 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         localSteamData = GetComponent<LocalSteamData>();
         networkManager.OnClientConnectedCallback += SetupNewPlayer;
         networkManager.OnClientDisconnectCallback += DisconnectPlayer;
-        playerIdList.OnListChanged += PlayerIdList_OnListChanged;
         hunter = GetComponent<Hunter>();
         scoreManager = GetComponent<ScoreManager>();
 
     }
 
     [BurstCompile]
-    private void PlayerIdList_OnListChanged(NetworkListEvent<IdMatch> changeEvent)
-    {
-
-        for (int i = 0; i < playerIdentities.Count; i++)
-        {
-
-            for(int j = 0; j < playerIdList.Count; j++)
-            {
-
-                if (playerIdList[j].clientId == playerIdentities[i].id)
-                {
-                    playerIdentities[i].square.AssertSteamDataAvalible(playerIdList[j].steamId);
-                }
-
-            }
-
-        }
-
-    }
-    [BurstCompile]
     public void ForceReset()
     {
 
         if (playerIdentities != null)
         {
+
             foreach (PlayerData player in playerIdentities)
             {
 
@@ -325,9 +300,21 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    [ClientRpc(RequireOwnership = true, Delivery = RpcDelivery.Reliable)]
+    public void KickPlayerClientRpc(byte id)
+    {
+
+        if ((byte)localSquare.id != id) return;
+
+        DisconnectPlayerLocally();
+
+    }
+
     [BurstCompile]
     public void DisconnectPlayerLocally()
     {
+
+        NetworkManager.Shutdown();
 
         SceneManager.LoadSceneAsync("MenuScene");
 
@@ -393,6 +380,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
                 localSquare = playerData.square;
                 FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
+                localSquare.AssertSteamDataAvalible(SteamClient.SteamId.Value);
+
 
                 localSquare.nozzleFrames = new Sprite[skinData.skinFrames.Length];
                 localSquare.bodyFrames = new Sprite[skinData.skinFrames.Length];
@@ -633,6 +622,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             RequestSkinLengthServerRpc((byte)localSquare.id, 1, 0);
             RequestSkinUpdateServerRpc((byte)localSquare.id, skin, 0);
         }
+
+        RequestSteamDataServerRpc((byte)localSquare.id, SteamClient.SteamId.Value);
+
     }
 
     [BurstCompile]
@@ -732,6 +724,29 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 player.square.bodyFrames = new Sprite[length];
                 player.square.nozzleFrames = new Sprite[length];
                 player.square.frameRate = frameRate;
+
+            }
+
+        }
+
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestSteamDataServerRpc(byte id, ulong steamId)
+    {
+        RequestSteamDataClientRpc(id, steamId);
+    }
+
+    [ClientRpc]
+    public void RequestSteamDataClientRpc(byte id, ulong steamId)
+    {
+
+        foreach (PlayerData player in playerIdentities)
+        {
+            if ((byte)player.square.id == id)
+            {
+
+                player.square.AssertSteamDataAvalible(steamId);
 
             }
 

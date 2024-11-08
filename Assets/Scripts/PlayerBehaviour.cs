@@ -45,6 +45,11 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public float maxHealthPoints = 20;
     public Vector3 hpBarScale;
 
+    [NonSerialized]
+    public float voiceVolume = 0.1f;
+    [NonSerialized]
+    public bool voiceMute = false;
+
     float slapIntensity;
 
     public int score;
