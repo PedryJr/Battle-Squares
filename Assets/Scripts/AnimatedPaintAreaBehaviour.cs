@@ -90,7 +90,10 @@ public class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
             if (copy == 2)
             {
 
-                GUIUtility.systemCopyBuffer = JsonConvert.SerializeObject(skinFrames[editingIndex].frameData, Formatting.Indented);
+                string copyCode = MyExtentions.BoolArrayToString(skinFrames[editingIndex].frameData);
+                GUIUtility.systemCopyBuffer = copyCode;
+                /*
+                                GUIUtility.systemCopyBuffer = JsonConvert.SerializeObject(copiedFrame, Formatting.Indented);*/
 
             }
 
@@ -104,8 +107,12 @@ public class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
             if (paste == 2)
             {
 
-                bool[] copiedFrame = JsonConvert.DeserializeObject<bool[]>(GUIUtility.systemCopyBuffer);
-                if (copiedFrame != null) for (int i = 0; i < pixelManager.colored.Length; i++) pixelManager.colored[i] = copiedFrame[i];
+                bool[] pastedFrame = MyExtentions.StringToBoolArray(GUIUtility.systemCopyBuffer);
+                if (pastedFrame != null) for (int i = 0; i < pixelManager.colored.Length; i++) pixelManager.colored[i] = pastedFrame[i];
+
+                /*                bool[] pastedFrame = MyExtentions.ByteArrayToBoolArray(JsonConvert.DeserializeObject<byte[]>(GUIUtility.systemCopyBuffer), 116);
+
+                                if (pastedFrame != null) for (int i = 0; i < pixelManager.colored.Length; i++) pixelManager.colored[i] = pastedFrame[i];*/
 
             }
 

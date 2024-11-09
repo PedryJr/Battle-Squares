@@ -119,7 +119,7 @@ public class PainterExec : MonoBehaviour
 
         }
 
-        stringBuilder.Append(pixelManager.skinValue);
+        stringBuilder.Append(Mathf.FloorToInt(pixelManager.skinValue));
         stringBuilder.Append(requiredFormat);
         stringBuilder.Append(pixelManager.skinTolerance);
 

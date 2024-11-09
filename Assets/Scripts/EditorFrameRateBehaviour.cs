@@ -40,6 +40,7 @@ public class EditorFrameRateBehaviour : MonoBehaviour
     public void DOWNFRAMERATE()
     {
         frameRate = Mathf.RoundToInt(frameRate - 1);
+        if(frameRate < 1) frameRate = 1;
     }
 
 }

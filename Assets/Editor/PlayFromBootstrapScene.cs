@@ -20,11 +20,9 @@ public class PlayFromBootstrapScene
         {
             string currentScenePath = SceneManager.GetActiveScene().path;
             EditorPrefs.SetString(PreviousSceneKey, currentScenePath);
-            Debug.Log($"Saving current scene to EditorPrefs: {currentScenePath}");
 
             if (currentScenePath != bootstrapScenePath)
             {
-                Debug.Log("Switching to Bootstrap scene...");
                 EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
                 EditorSceneManager.OpenScene(bootstrapScenePath);
             }
@@ -32,15 +30,9 @@ public class PlayFromBootstrapScene
         else if (state == PlayModeStateChange.EnteredEditMode)
         {
             string previousScenePath = EditorPrefs.GetString(PreviousSceneKey, string.Empty);
-            Debug.Log($"Exiting Play mode, will return to scene from EditorPrefs: {previousScenePath}");
             if (!string.IsNullOrEmpty(previousScenePath) && previousScenePath != bootstrapScenePath)
             {
-                Debug.Log($"Returning to previous scene: {previousScenePath}");
                 EditorSceneManager.OpenScene(previousScenePath);
-            }
-            else
-            {
-                Debug.LogWarning("Previous scene path is invalid or same as Bootstrap scene.");
             }
         }
     }

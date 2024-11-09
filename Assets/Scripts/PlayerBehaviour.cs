@@ -3,6 +3,7 @@ using FMODUnity;
 using MathNet.Numerics;
 using Steamworks;
 using System;
+using System.IO;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -413,6 +414,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         rotatedArray[13] = boolArray[4];
         rotatedArray[14] = boolArray[8];
         rotatedArray[15] = boolArray[12];
+
 
         Texture2D texture = new Texture2D(4, 4, TextureFormat.RGBA32, false);
         texture.filterMode = FilterMode.Point;

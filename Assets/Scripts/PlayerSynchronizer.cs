@@ -2,6 +2,7 @@ using Steamworks;
 using System;
 using System.Collections.Generic;
 using Unity.Burst;
+using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
@@ -385,7 +386,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
                 localSquare.nozzleFrames = new Sprite[skinData.skinFrames.Length];
                 localSquare.bodyFrames = new Sprite[skinData.skinFrames.Length];
-                localSquare.frameRate = skinData.frameRate;
+                localSquare.frameRate = skinData.animate ? skinData.frameRate : 0;
 
                 bool validSkin = true;
 
@@ -599,12 +600,16 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if (validSkin)
         {
 
-            RequestSkinLengthServerRpc((byte)localSquare.id, (byte)skinData.skinFrames.Length, skinData.frameRate);
+            float frameRate = skinData.animate ? skinData.frameRate : 0;
+
+            RequestSkinLengthServerRpc((byte)localSquare.id, (byte)skinData.skinFrames.Length, frameRate);
 
             for (int i = 0; i < skinData.skinFrames.Length; i++)
             {
 
-                RequestSkinUpdateServerRpc((byte)localSquare.id, skinData.skinFrames[i].frame, (byte)i);
+                byte[] skinAsData = MyExtentions.BoolArrayToByteArray(skinData.skinFrames[i].frame);
+
+                RequestSkinUpdateServerRpc((byte)localSquare.id, skinAsData, (byte)i);
 
             }
 
@@ -619,8 +624,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 skin[i] = true;
             }
 
+            byte[] skinAsData = MyExtentions.BoolArrayToByteArray(skin);
+
             RequestSkinLengthServerRpc((byte)localSquare.id, 1, 0);
-            RequestSkinUpdateServerRpc((byte)localSquare.id, skin, 0);
+            RequestSkinUpdateServerRpc((byte)localSquare.id, skinAsData, 0);
         }
 
         RequestSteamDataServerRpc((byte)localSquare.id, SteamClient.SteamId.Value);
@@ -668,7 +675,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void RequestSkinUpdateServerRpc(byte id, bool[] skin, byte index)
+    public void RequestSkinUpdateServerRpc(byte id, byte[] skin, byte index)
     {
 
         RequestSkinUpdateClientRpc(id, skin, index);
@@ -676,8 +683,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RequestSkinUpdateClientRpc(byte id, bool[] skin, byte index)
+    public void RequestSkinUpdateClientRpc(byte id, byte[] skinAsData, byte index)
     {
+
+        bool[] skin = MyExtentions.ByteArrayToBoolArray(skinAsData, 116);
 
         bool[] bodySkin = new bool[100];
         bool[] nozzleSkin = new bool[16];

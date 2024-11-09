@@ -1,14 +1,8 @@
-using Steamworks;
-using Steamworks.Data;
 using System;
-using System.IO.Compression;
-using System.IO;
 using UnityEngine;
-using Unity.VisualScripting;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
-using Unity.Burst;
 using Unity.Mathematics;
+using System.Text;
 public static class MyExtentions
 {
 
@@ -16,6 +10,7 @@ public static class MyExtentions
 
     public static byte[] EncodePosition(float x, float y)
     {
+
         int scaledX = (int)(x * 32);
         int scaledY = (int)(y * 32);
 
@@ -36,10 +31,12 @@ public static class MyExtentions
         result[3] = (byte)((x4 << 4) | y4);
 
         return result;
+
     }
 
     public static (float, float) DecodePosition(byte[] bytes)
     {
+
         int x1 = (bytes[0] >> 4) & 0xF;
         int y1 = bytes[0] & 0xF;
 
@@ -59,10 +56,12 @@ public static class MyExtentions
         float y = scaledY / 32.0f;
 
         return (x, y);
+
     }
 
     public static byte[] EncodeRotation(float rotation)
     {
+
         int scaledRotation = (int)((rotation / 360.0f) * 65535);
 
         byte highByte = (byte)((scaledRotation >> 8) & 0xFF);
@@ -73,10 +72,12 @@ public static class MyExtentions
         result[1] = lowByte;
 
         return result;
+
     }
 
     public static float DecodeRotation(byte[] bytes)
     {
+
         if (bytes.Length != 2)
             throw new ArgumentException("Input must be exactly 2 bytes.");
 
@@ -88,10 +89,12 @@ public static class MyExtentions
         float rotation = (scaledRotation / 65535.0f) * 360.0f;
 
         return rotation;
+
     }
 
     public static byte[] EncodeFloat(float value)
     {
+
         float minValue = -1000.0f;
         float maxValue = 1000.0f;
         int range = (int)(maxValue - minValue);
@@ -105,10 +108,12 @@ public static class MyExtentions
         byte byte3 = (byte)(scaledValue & 0xFF);
 
         return new byte[] { byte1, byte2, byte3 };
+
     }
 
     public static float DecodeFloat(byte[] bytes)
     {
+
         if (bytes.Length != 3)
             throw new ArgumentException("Input must be exactly 3 bytes.");
 
@@ -121,6 +126,7 @@ public static class MyExtentions
         float value = minValue + ((scaledValue / 16777215.0f) * range);
 
         return value;
+
     }
 
     public static byte[] EncodeNozzlePosition(float x, float y)
@@ -133,6 +139,7 @@ public static class MyExtentions
         byte scaledY = (byte)((y + 1.0f) * 127.5f);
 
         return new byte[] { scaledX, scaledY };
+
     }
 
     public static (float, float) DecodeNozzlePosition(byte[] bytes)
@@ -145,55 +152,69 @@ public static class MyExtentions
         float y = (scaledY / 127.5f) - 1.0f;
 
         return (x, y);
+
     }
 
     public static float EaseInOutCubic(float x)
     {
+
         if (x < 0.5)
         {
+
             return 4 * x * x * x;
+
         }
         else
         {
+
             return 1 - (float) math.pow(-2 * x + 2, 3) / 2;
+
         }
+
     }
 
     public static float EaseInExpo(float x)
     {
+
         return x == 0 ? 0 : (float) math.pow(2, 10 * x - 10);
+
     }
 
     public static float EaseInQuad(float x)
     {
+
         return x * x;
+
     }
 
     public static float EaseOutQuad(float x)
     {
+
         return 1 - (1 - x) * (1 - x);
+
     }
 
     public static Vector2 AngleToNormalizedCoordinate(float angle)
     {
+
         float radians = math.radians(angle);
 
         float x = math.cos(radians);
         float y = math.sin(radians);
 
         return new Vector2(x, y).normalized;
+
     }
     public static string SanitizeMessage(string message)
     {
-        // Truncate the message to 120 characters if it's longer
-        message = message.Length > 120 ? message.Substring(0, 120) : message;
 
-        // Regular expression to match allowed characters
+        message = message.Length > 120 ? message.Substring(0, 120) : message;
         message = Regex.Replace(message,
             @"[^\p{L}\p{N}\p{Sc}\p{Sm}\p{Mn}\p{Pc}\p{Pd}\p{Zs}.,<>{}|_+=!?;:'""\-\(\)]",
             string.Empty);
 
         return message;
+
     }
 
 
@@ -227,5 +248,95 @@ public static class MyExtentions
         return 1 - math.pow(1 - x, 5);
 
     }
+
+    public static byte[] BoolArrayToByteArray(bool[] boolArray)
+    {
+        int byteCount = (boolArray.Length + 7) / 8;
+        byte[] byteArray = new byte[byteCount];
+
+        for (int i = 0; i < boolArray.Length; i++)
+        {
+            if (boolArray[i])
+            {
+                byteArray[i / 8] |= (byte)(1 << (i % 8));
+            }
+        }
+
+        return byteArray;
+    }
+
+    public static bool[] ByteArrayToBoolArray(byte[] byteArray, int boolArrayLength)
+    {
+        bool[] boolArray = new bool[boolArrayLength];
+
+        for (int i = 0; i < boolArrayLength; i++)
+        {
+            boolArray[i] = (byteArray[i / 8] & (1 << (i % 8))) != 0;
+        }
+
+        return boolArray;
+    }
+
+    public static string BoolArrayToString(bool[] boolArray)
+    {
+        if (boolArray.Length != 116)
+        {
+            throw new ArgumentException("Boolean array must have exactly 116 elements.");
+        }
+
+        byte[] byteArray = new byte[16];
+
+        for (int i = 0; i < boolArray.Length; i++)
+        {
+            if (boolArray[i])
+            {
+                byteArray[i / 8] |= (byte)(1 << (i % 8));
+            }
+        }
+
+        StringBuilder hexString = new StringBuilder(byteArray.Length * 2);
+        foreach (byte b in byteArray)
+        {
+            hexString.Append(b.ToString("X2"));
+        }
+
+        StringBuilder formattedString = new StringBuilder();
+        for (int i = 0; i < hexString.Length; i += 8)
+        {
+            if (i > 0)
+            {
+                formattedString.Append('-');
+            }
+            formattedString.Append(hexString.ToString().Substring(i, 8));
+        }
+
+        return formattedString.ToString();
+    }
+
+    public static bool[] StringToBoolArray(string encodedString)
+    {
+        string cleanedString = encodedString.Replace("-", "");
+
+        int byteCount = cleanedString.Length / 2;
+        byte[] byteArray = new byte[byteCount];
+        for (int i = 0; i < byteCount; i++)
+        {
+            byteArray[i] = Convert.ToByte(cleanedString.Substring(i * 2, 2), 16);
+        }
+
+        if (byteArray.Length != 16)
+        {
+            throw new ArgumentException("Invalid encoded string length.");
+        }
+
+        bool[] boolArray = new bool[116];
+        for (int i = 0; i < boolArray.Length; i++)
+        {
+            boolArray[i] = (byteArray[i / 8] & (1 << (i % 8))) != 0;
+        }
+
+        return boolArray;
+    }
+
 
 }

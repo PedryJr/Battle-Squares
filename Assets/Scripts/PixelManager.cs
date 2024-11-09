@@ -14,9 +14,9 @@ public sealed class PixelManager : MonoBehaviour
 {
 
     public int skinTolerance;
-    public int skinValue;
+    public float skinValue;
     public int frameIndex = 0;
-    int oldSkinValue;
+    float oldSkinValue;
 
     PainterExec painterExec;
     CursorBehaviour cursorBehaviour;
@@ -148,13 +148,13 @@ public sealed class PixelManager : MonoBehaviour
 
         handle.Complete();
 
-        skinValue = 0;
+        skinValue = 0f;
         for (int i = 0; i < pixelCount; i++)
         {
 
             animators[i].rectTransform.sizeDelta = currentSize[i];
             pixels[i].image.color = currentColor[i];
-            skinValue += colored[i] && i < 100 ? 1 : 0;
+            skinValue += colored[i] ? i < 100 ? 1f : 0.025f : 0;
 
         }
 

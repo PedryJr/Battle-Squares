@@ -570,15 +570,32 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
                 foreach (PlayerData player in projectileManager.playerSynchronizer.playerIdentities)
                 {
-                    if (player.id == ownerId) continue;
-                    if (Vector2.Distance(rb.position, player.square.rb.position) > data.aoe) continue;
-                    if (Physics2D.Linecast(rb.position, player.square.rb.position, LayerMask.GetMask("Environment")).collider != null) continue;
-                    if (playerHit) if (skipAoeOnHit && player.square == playerHit) continue;
+                    if (player.id == ownerId)
+                    {
 
-                    Vector2 direction = (player.square.rb.position - rb.position).normalized;
+                        if (Vector2.Distance(rb.position, player.square.rb.position) > data.aoe) continue;
+                        if (Physics2D.Linecast(rb.position, player.square.rb.position, LayerMask.GetMask("Environment")).collider != null) continue;
+                        if (playerHit) if (skipAoeOnHit && player.square == playerHit) continue;
 
-                    player.square.timeSinceHit = 0.25f;
-                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)player.square.id, aoeDamage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
+                        Vector2 direction = (player.square.rb.position - rb.position).normalized;
+
+                        player.square.timeSinceHit = 0.25f;
+                        projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)player.square.id, 0, 0, (byte)ownerId, direction * data.knockback);
+
+                    }
+                    else
+                    {
+
+                        if (Vector2.Distance(rb.position, player.square.rb.position) > data.aoe) continue;
+                        if (Physics2D.Linecast(rb.position, player.square.rb.position, LayerMask.GetMask("Environment")).collider != null) continue;
+                        if (playerHit) if (skipAoeOnHit && player.square == playerHit) continue;
+
+                        Vector2 direction = (player.square.rb.position - rb.position).normalized;
+
+                        player.square.timeSinceHit = 0.25f;
+                        projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)player.square.id, aoeDamage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
+
+                    }
 
                 }
 
@@ -618,7 +635,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         {
 
             projectileManager.UpdateProjectile(this);
-            syncTimer -= data.syncSpeed;
+            syncTimer = 0;
 
         }
 
