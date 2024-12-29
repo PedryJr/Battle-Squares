@@ -796,7 +796,7 @@ MonoBehaviour:
       HasValue: 1
     Plugins:
       Value: []
-      HasValue: 0
+      HasValue: 1
     StaticPlugins:
       Value: []
       HasValue: 1

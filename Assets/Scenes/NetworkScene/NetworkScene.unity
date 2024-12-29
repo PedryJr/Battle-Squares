@@ -766,6 +766,91 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapons:
+  - type: 10
+    projectile: {fileID: 3066612454653962984, guid: 7a460261f861aa64c82e30c947c476e1, type: 3}
+    launchParticle: {fileID: 7289681851009581468, guid: 752d8ec26064b1e47892dcc12571f6c3, type: 3}
+    projectileAmmo: 6
+    reloadTime: 2.1
+    shootingInterval: 0.25
+    projectileSpeed: 50
+    projectileAcceleration: -5
+    lifeTime: 2.5
+    holdable: 1
+    burst: 0
+    bounces: 0
+    fluctuation: 0.38
+    noGravity: 0
+    dieOnImpact: 0
+    damageOnImpact: 1
+    sticky: 1
+    aoe: 0
+    skipAoeOnTargetHit: 0
+    knockback: 0
+    speedLimit: 100
+    minSpeed: 0
+    aoeDamage: 0
+    baseDamage: 1.2
+    damageTimeScale: 0
+    recoil: 1
+    enableMorph: 0
+    targetMorph: {x: 0, y: 0, z: 1}
+    timeToMorph: 0
+    morphAnimation:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sync: 1
+    syncSpeed: 0.3
+    returnToSender: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 1
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    flipFlop: 0
+    homing: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 1
+    bounceOfPlayers: 0
+    slowDownAmount: 20
+    senderSpeedOnDeath: 0
   - type: 0
     projectile: {fileID: 3066612454653962984, guid: 1484733a76041e247bad07d9e0c99dcc, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 6784c58aca5da3644917ab374eec1c9d, type: 3}

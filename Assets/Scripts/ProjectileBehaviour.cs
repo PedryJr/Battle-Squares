@@ -457,6 +457,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     float rotate;
     float startRotate;
+    bool lastSticky;
+
     [BurstCompile]
     private void FixedUpdate()
     {
@@ -464,11 +466,18 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         damage += Time.deltaTime * (damageScaleOverTime * Mods.at[11]);
         timeAlive += Time.deltaTime;
         Vector2 vel, pos;
-        float ang, rot;
+        float ang, rot, oldRot;
         vel = rb.linearVelocity;
         pos = rb.position;
         ang = rb.angularVelocity;
         rot = rb.rotation;
+        oldRot = rb.rotation;
+
+        if(lastSticky != hasStuckToPoint)
+        {
+            rb.gravityScale = 0;
+            lastSticky = hasStuckToPoint;
+        }
 
         if(homingDirection != Vector2.zero)
         {
@@ -551,9 +560,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         ang = math.clamp(ang, -1000, 1000);
 
         rb.linearVelocity = vel;
-        rb.position = pos;
+        rb.position = hasStuckToPoint ? pointStuckAt : pos;
         rb.angularVelocity = ang;
-        rb.rotation = rot;
+        rb.rotation = hasStuckToPoint ? stickyNormalAngle : rot;
 
     }
 
@@ -791,9 +800,31 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     }
 
     bool flipRotation = true;
+    Vector3 pointStuckAt;
+    Vector2 stickySurfaceNormal;
+    float stickyNormalAngle;
+    bool hasStuckToPoint;
+
     [BurstCompile]
     void EnvironmentCollisionCheck()
     {
+
+        if (data.sticky)
+        {
+
+            RaycastHit2D closesPoint = GetClosestEnvironmentPoint(rb.position);
+
+            if (closesPoint.transform)
+            {
+                stickySurfaceNormal = closesPoint.normal;
+                pointStuckAt = closesPoint.point;
+                hasStuckToPoint = true;
+                stickyNormalAngle = Mathf.Atan2(stickySurfaceNormal.y, stickySurfaceNormal.x) * Mathf.Rad2Deg;
+                rb.position = pointStuckAt;
+                if (IsLocalProjectile) projectileManager.UpdateProjectile(this);
+            }
+
+        }
         if (data.dieOnImpact)
         {
             destroyed = true;
