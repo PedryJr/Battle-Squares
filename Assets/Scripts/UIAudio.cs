@@ -3,7 +3,7 @@ using FMODUnity;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UIAudio", menuName = "Config/UIAudio")]
-public class UIAudio : ScriptableObject
+public sealed class UIAudio : ScriptableObject
 {
 
     [SerializeField]

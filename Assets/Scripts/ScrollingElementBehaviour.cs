@@ -1,7 +1,5 @@
-using TMPro;
 using Unity.Burst;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -36,7 +34,6 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
 
     public bool isHovering;
     public bool animateColor;
-    bool animatingClick = false;
 
     [SerializeField]
     float enterHoverTransitionTime;
@@ -44,8 +41,6 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
     float exitHoverTransitionTime;
     [SerializeField]
     float clickTransitionTime;
-    [SerializeField]
-    float multiplier = 1;
     [SerializeField]
     bool inverseScroll;
     [SerializeField]

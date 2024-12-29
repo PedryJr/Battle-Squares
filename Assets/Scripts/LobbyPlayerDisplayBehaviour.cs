@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyPlayerDisplayBehaviour : MonoBehaviour
+public sealed class LobbyPlayerDisplayBehaviour : MonoBehaviour
 {
 
     public PlayerBehaviour assignedPlayer = null;

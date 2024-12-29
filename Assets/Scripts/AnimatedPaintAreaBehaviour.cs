@@ -1,27 +1,25 @@
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
+public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 {
+    [SerializeField]
+    private SkinFrameBehaviour skinFrameBehaviour;
 
-    [SerializeField]
-    SkinFrameBehaviour skinFrameBehaviour;
-/*
-    [SerializeField]
-    PixelManager pixelManager;*/
+    /*
+        [SerializeField]
+        PixelManager pixelManager;*/
 
     [SerializeField]
     public List<SkinFrameBehaviour> skinFrames;
 
     [SerializeField]
-    Transform frameContainer;
+    private Transform frameContainer;
 
     [SerializeField]
     public PixelManager pixelManager;
 
-    PlayerSynchronizer playerSynchronizer;
+    private PlayerSynchronizer playerSynchronizer;
 
     public int editingIndex = 0;
     public int lastEditingIndex = 0;
@@ -32,11 +30,10 @@ public class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
     public int paste;
     public int lastPaste;
 
-    Inputs input;
+    private Inputs input;
 
     private void Start()
     {
-
         input = new Inputs();
         input.Editor.Copy.performed += (context) => { copy++; };
         input.Editor.Copy.canceled += (context) => { copy--; };
@@ -53,82 +50,67 @@ public class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
         for (int i = 0; i < playerSynchronizer.skinData.frames; i++)
         {
-
             SkinFrameBehaviour newframe = Instantiate(skinFrameBehaviour, frameContainer);
             skinFrames.Add(newframe);
             skinFrames[i].frameIndex = i;
             newframe.frameData = playerSynchronizer.skinData.skinFrames[i].frame;
             skinFrames[i].UPDATEPREVIEW();
-
         }
-
     }
 
     private void Update()
     {
-        
-        if(editingIndex != lastEditingIndex)
+        if (editingIndex != lastEditingIndex)
         {
             pixelManager.frameIndex = editingIndex;
-            
-            if(editingIndex == 0) pixelManager.skinTolerance = 45;
+
+            if (editingIndex == 0) pixelManager.skinTolerance = 45;
             else pixelManager.skinTolerance = 24;
 
             lastEditingIndex = editingIndex;
-
         }
 
         skinFrames[editingIndex].UPDATEPREVIEW();
-
     }
 
     private void LateUpdate()
     {
-
         if (copy != lastCopy)
         {
             if (copy == 2)
             {
-
                 string copyCode = MyExtentions.BoolArrayToString(skinFrames[editingIndex].frameData);
                 GUIUtility.systemCopyBuffer = copyCode;
                 /*
                                 GUIUtility.systemCopyBuffer = JsonConvert.SerializeObject(copiedFrame, Formatting.Indented);*/
-
             }
 
             lastCopy = copy;
-
         }
 
         if (paste != lastPaste)
         {
-
             if (paste == 2)
             {
-
                 bool[] pastedFrame = MyExtentions.StringToBoolArray(GUIUtility.systemCopyBuffer);
                 if (pastedFrame != null) for (int i = 0; i < pixelManager.colored.Length; i++) pixelManager.colored[i] = pastedFrame[i];
 
                 /*                bool[] pastedFrame = MyExtentions.ByteArrayToBoolArray(JsonConvert.DeserializeObject<byte[]>(GUIUtility.systemCopyBuffer), 116);
 
                                 if (pastedFrame != null) for (int i = 0; i < pixelManager.colored.Length; i++) pixelManager.colored[i] = pastedFrame[i];*/
-
             }
 
             lastPaste = paste;
         }
-
     }
 
     public void DELETEFRAME(SkinFrameBehaviour skinFrameToRemove)
     {
-
         int indexToRemove = skinFrameToRemove.frameIndex;
 
         if (editingIndex == skinFrameToRemove.frameIndex)
         {
-            if(editingIndex == skinFrames.Count - 1) editingIndex = skinFrames.Count - 2;
+            if (editingIndex == skinFrames.Count - 1) editingIndex = skinFrames.Count - 2;
         }
 
         skinFrames.Remove(skinFrameToRemove);
@@ -138,13 +120,12 @@ public class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
         bool rememberAnimate = playerSynchronizer.skinData.animate;
         bool[] rememberValid = new bool[playerSynchronizer.skinData.skinFrames.Length];
         List<bool[]> rememberFrames = new List<bool[]>();
-        
+
         for (int i = 0; i < playerSynchronizer.skinData.skinFrames.Length; i++)
         {
             rememberValid[i] = playerSynchronizer.skinData.skinFrames[i].valid;
 
             if (i != indexToRemove) rememberFrames.Add(playerSynchronizer.skinData.skinFrames[i].frame);
-
         }
 
         playerSynchronizer.skinData = new SkinData();
@@ -163,12 +144,10 @@ public class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
         {
             skinFrames[i].frameIndex = i;
         }
-
     }
 
     public void CREATEFRAME()
     {
-
         bool[] newSkinData = new bool[116];
         for (int i = 0; i < newSkinData.Length; i++)
         {
@@ -202,17 +181,14 @@ public class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
             if (i == newIndex) playerSynchronizer.skinData.skinFrames[i].frame = newSkinData;
             else playerSynchronizer.skinData.skinFrames[i].valid = rememberValid[i];
-
         }
 
         skinFrames[newIndex].frameIndex = newIndex;
         skinFrameToAdd.UPDATEPREVIEW();
-
     }
 
     public void MOVEFRAME(int posChange, int sourceIndex)
     {
-
         int targetIndex = sourceIndex + posChange;
 
         if (targetIndex < 0 || targetIndex >= skinFrames.Count) return;
@@ -236,15 +212,11 @@ public class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
         skinFrames[sourceIndex].UPDATEPREVIEW();
         skinFrames[targetIndex].UPDATEPREVIEW();
-
     }
 
     private void OnDestroy()
     {
-
         input.Disable();
         input.Dispose();
-
     }
-
 }

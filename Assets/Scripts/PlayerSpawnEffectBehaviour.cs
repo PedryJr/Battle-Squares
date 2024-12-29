@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerSpawnEffectBehaviour : MonoBehaviour
+public sealed class PlayerSpawnEffectBehaviour : MonoBehaviour
 {
 
 

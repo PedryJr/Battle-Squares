@@ -1,15 +1,11 @@
 using FMOD.Studio;
 using FMODUnity;
-using NWaves.Features;
-using Steamworks;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 using static PlayerSynchronizer;
-using static ProjectileManager;
 using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
 
@@ -140,6 +136,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     float meleeStartRot;
     float meleeEndRot;
     float initRot;
+
+    static Dictionary<ulong, Material> trailMaterials = new Dictionary<ulong, Material>();
+
     [BurstCompile]
     private void Awake()
     {
@@ -259,7 +258,14 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         if (trailParticles)
         {
 
-            Material trailParticleMaterial = Instantiate(trailParticles.material);
+            Material trailParticleMaterial;
+            if (trailMaterials.ContainsKey(data.owningPlayer.id)) trailParticleMaterial = trailMaterials[data.owningPlayer.id];
+            else
+            {
+                trailParticleMaterial = Instantiate(trailParticles.material);
+                trailMaterials.Add(data.owningPlayer.id, trailParticleMaterial);
+            }
+            Destroy(trailParticles.material);
             trailParticles.material = trailParticleMaterial;
             trailParticles.material.color = generalParticleColor;
 
@@ -378,7 +384,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
                 if (!(externalTrailSpawnTimer > externalTrailSpawnRate)) return;
 
                 ExternalTrailBehaviour externalTrail = Instantiate(externalTrailRef, transform.position, transform.rotation, null);
-                if (externalTrail) externalTrail.Play(generalParticleColor);
+                if (externalTrail) externalTrail.Play(generalParticleColor, owningPlayer.id);
 
                 externalTrailSpawnTimer -= externalTrailSpawnRate;
 
@@ -505,7 +511,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             rb.angularVelocity = ang;
             rb.rotation = rot;
             return;
-
         }
 
         if(data.spinSpeed > 0)
@@ -515,12 +520,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         if (stickToSender)
         {
-
             owningPlayer.rb.linearVelocity = vel;
             rot = math.lerp(startRotate, rotate, timeAlive / data.lifeTime);
             if (rot > 360f) rot -= 360f;
             if (rot < 360f) rot += 360f;
-
         }
 
         if (data.enableMorph)
@@ -816,6 +819,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         DestroyThisProjectile(hit);
 
     }
+
+    static Dictionary<ulong, Material> impactMaterials = new Dictionary<ulong, Material>();
+
     [BurstCompile]
     void DestroyThisProjectile(bool hit)
     {
@@ -839,9 +845,22 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             float angle = math.degrees(math.atan2(-point.normal.y, -point.normal.x));
 
             GameObject impactParticles = Instantiate(impactParticle, boom.transform.position, Quaternion.Euler(0, 0, angle), null);
-            Material particleMaterial = Instantiate(impactParticles.GetComponent<ParticleSystemRenderer>().material);
-            impactParticles.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
-            impactParticles.GetComponent<ParticleSystemRenderer>().material.color = generalParticleColor;
+
+            Material imapctMaterial;
+
+            ParticleSystemRenderer particleSystemRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
+
+            if (impactMaterials.ContainsKey(owningPlayer.id)) imapctMaterial = impactMaterials[owningPlayer.id];
+            else
+            {
+
+                imapctMaterial = Instantiate(particleSystemRenderer.material);
+                impactMaterials.Add(owningPlayer.id, imapctMaterial);
+
+            }
+            Destroy(particleSystemRenderer.material);
+            particleSystemRenderer.material = imapctMaterial;
+            particleSystemRenderer.material.color = generalParticleColor;
 
             if (timeAlive >= data.lifeTime)
             {
@@ -924,17 +943,34 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
         eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
+        eventInstance.setVolume(MySettings.volume);
         eventInstance.start();
 
         GameObject impactParticles = Instantiate(impactParticle, boom.transform.position, transform.rotation, null);
-        Material particleMaterial = Instantiate(impactParticles.GetComponent<ParticleSystemRenderer>().material);
-        impactParticles.GetComponent<ParticleSystemRenderer>().material = particleMaterial;
+
+        Material imapctMaterial;
+
+        ParticleSystemRenderer particleSystemRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
+
+        if (impactMaterials.ContainsKey(owningPlayer.id)) imapctMaterial = impactMaterials[owningPlayer.id];
+        else
+        {
+
+            imapctMaterial = Instantiate(particleSystemRenderer.material);
+            impactMaterials.Add(owningPlayer.id, imapctMaterial);
+
+        }
+
+        impactParticles.GetComponent<ParticleSystemRenderer>().material = imapctMaterial;
         impactParticles.GetComponent<ParticleSystemRenderer>().material.color = generalParticleColor;
 
     }
+
     [BurstCompile]
     private void OnDestroy()
     {
+
+        for(int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
 
         owningPlayer.transform.localScale = Vector3.one;
         owningPlayer.nozzleBehaviour.transform.localScale = Vector3.one * 0.4f;

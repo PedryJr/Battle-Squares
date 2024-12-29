@@ -1,13 +1,10 @@
 using FMOD.Studio;
 using FMODUnity;
-using MathNet.Numerics;
 using Steamworks;
 using System;
-using System.IO;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 [BurstCompile]
@@ -169,7 +166,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     private void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
     {
 
-        if (!this.IsDestroyed())
+        if (this)
         {
 
             if (isLocalPlayer)
@@ -388,7 +385,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         texture.Apply();
         bodyFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 0.5f), 10);
-        texture.Compress(true);
         if (frameIndex == 0) spriteRenderer.sprite = bodyFrames[frameIndex];
 
     }
@@ -536,18 +532,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
         nozzlePosition = nozzleTransform.position;
         healthbar.transform.localScale = hpBarScale;
         ApplyPlayerAnimation();
-
-/*        speedParticleTimer += Time.deltaTime * Mathf.Clamp((rb.linearVelocity.magnitude - 15) * 2f, 0, 20);
-        if(speedParticleTimer > 1)
-        {
-
-            Vector2 speedParticleDirection = rb.linearVelocity.normalized;
-            float speedParticleAngle = Mathf.Rad2Deg * Mathf.Atan2(speedParticleDirection.y, speedParticleDirection.x);
-            int particleIndex = speedParticleSwitcher++ % speedParticles.Length;
-            Instantiate(speedParticles[particleIndex], transform.position, Quaternion.Euler(0, 0, speedParticleAngle), null).Applycolor(this);
-
-            speedParticleTimer = 0;
-        }*/
 
         if (timeSinceHit < 1) timeSinceHit += Time.deltaTime * 3.5f;
         else if (timeSinceHit > 1) timeSinceHit = 1;

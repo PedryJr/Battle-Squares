@@ -1,12 +1,10 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class SkinEditorBehaviour : MonoBehaviour
+public sealed class SkinEditorBehaviour : MonoBehaviour
 {
 
     bool animate = false;
-    bool editorCanvasOn = false;
 
     [SerializeField]
     PaintAreaBehaviour noAnimPainter;

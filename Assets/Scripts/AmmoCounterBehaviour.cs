@@ -2,76 +2,68 @@ using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
+
 [BurstCompile]
 public sealed class AmmoCounterBehaviour : MonoBehaviour
 {
+    [SerializeField]
+    private bool primary;
 
     [SerializeField]
-    bool primary;
+    private Image ammoVisualizer;
 
-    [SerializeField]
-    Image ammoVisualizer;
+    private int primaryRemaining;
+    private int recordPrimaryRemaining;
 
-    int primaryRemaining;
-    int recordPrimaryRemaining;
+    private int secondaryRemaining;
+    private int recordSecondaryRemaining;
 
-    int secondaryRemaining;
-    int recordSecondaryRemaining;
+    private NozzleBehaviour nozzleBehaviour;
 
-    NozzleBehaviour nozzleBehaviour;
+    private VisualElement[] ammoVisualizers;
 
-    VisualElement[] ammoVisualizers;
-
-    Color emptyColor;
+    private Color emptyColor;
 
     [BurstCompile]
     public void UnitHUD()
     {
-
         emptyColor = GetComponent<Image>().color;
 
         nozzleBehaviour = FindAnyObjectByType<PlayerSynchronizer>().localSquare.nozzleBehaviour;
 
         if (primary)
         {
-
             ammoVisualizers = new VisualElement[nozzleBehaviour.primaryAmmo];
             for (int i = 0; i < ammoVisualizers.Length; i++)
             {
                 ammoVisualizers[i].image = Instantiate(ammoVisualizer, transform);
             }
-
         }
         else
         {
-
             ammoVisualizers = new VisualElement[nozzleBehaviour.secondaryAmmo];
             for (int i = 0; i < ammoVisualizers.Length; i++)
             {
                 ammoVisualizers[i].image = Instantiate(ammoVisualizer, transform);
             }
-
         }
-
     }
+
     [BurstCompile]
     private void Update()
     {
-
         if (primary) UpdatePrimary();
         else UpdateSecondary();
-
     }
+
     [BurstCompile]
     public void UpdatePrimary()
     {
-
-
         if (!nozzleBehaviour) return;
         Color color;
         primaryRemaining = nozzleBehaviour.primaryAmmo - nozzleBehaviour.primaryShots;
         float lerp = math.clamp(nozzleBehaviour.primaryTimeSinceShot, 0, nozzleBehaviour.primaryReloadTime) / nozzleBehaviour.primaryReloadTime;
-        lerp = MyExtentions.EaseInQuad( MyExtentions.EaseInExpo(lerp));
+        lerp = MyExtentions.EaseInQuad(MyExtentions.EaseInExpo(lerp));
 
         if (primaryRemaining != recordPrimaryRemaining)
         {
@@ -99,26 +91,22 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
             if (ammoVisualizers[i].transition2)
             {
                 color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, math.smoothstep(0, 1, ammoVisualizers[i].timer));
-
             }
             else
             {
                 color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, ammoVisualizers[i].timer);
-
             }
             color.r *= 0.8f;
             color.g *= 0.8f;
             color.b *= 0.8f;
             color.a = 1;
             ammoVisualizers[i].image.color = color;
-
         }
-
     }
+
     [BurstCompile]
     public void UpdateSecondary()
     {
-
         if (!nozzleBehaviour) return;
         Color color;
         secondaryRemaining = nozzleBehaviour.secondaryAmmo - nozzleBehaviour.secondaryShots;
@@ -150,55 +138,47 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
             if (ammoVisualizers[i].transition2)
             {
                 color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, math.smoothstep(0, 1, ammoVisualizers[i].timer));
-
             }
             else
             {
                 color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, ammoVisualizers[i].timer);
-
             }
             color.r *= 0.8f;
             color.g *= 0.8f;
             color.b *= 0.8f;
             color.a = 1;
             ammoVisualizers[i].image.color = color;
-
         }
-
     }
+
     [BurstCompile]
     public void UpdateWeaponType()
     {
 
+        if (ammoVisualizers == null) return;
+
         for (int i = 0; i < ammoVisualizers.Length; i++)
         {
-
             Destroy(ammoVisualizers[i].image.gameObject);
             ammoVisualizers[i].image = null;
-
         }
 
         if (primary)
         {
-
             ammoVisualizers = new VisualElement[nozzleBehaviour.primaryAmmo];
             for (int i = 0; i < ammoVisualizers.Length; i++)
             {
                 ammoVisualizers[i].image = Instantiate(ammoVisualizer, transform);
             }
-
         }
         else
         {
-
             ammoVisualizers = new VisualElement[nozzleBehaviour.secondaryAmmo];
             for (int i = 0; i < ammoVisualizers.Length; i++)
             {
                 ammoVisualizers[i].image = Instantiate(ammoVisualizer, transform);
             }
-
         }
-
     }
 
     private void OnEnable()
@@ -212,14 +192,11 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
     }
 
     [BurstCompile]
-    struct VisualElement
+    private struct VisualElement
     {
-
         public Image image;
         public bool transition;
         public float timer;
         public bool transition2;
-
     }
-
 }

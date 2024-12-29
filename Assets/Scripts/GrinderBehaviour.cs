@@ -1,8 +1,7 @@
-using Unity.Physics;
 using UnityEngine;
 using UnityEngine.U2D;
 
-public class GrinderBehaviour : MonoBehaviour
+public sealed class GrinderBehaviour : MonoBehaviour
 {
 
     [SerializeField]

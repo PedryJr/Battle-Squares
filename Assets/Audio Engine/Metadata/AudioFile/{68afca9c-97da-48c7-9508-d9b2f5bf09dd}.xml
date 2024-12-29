@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{68afca9c-97da-48c7-9508-d9b2f5bf09dd}">
+		<property name="assetPath">
+			<value>MOAI 3.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>267.44163265306122</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{c9a0bd40-629b-48af-94c8-7a5e6ceaffa4}</destination>
+		</relationship>
+	</object>
+</objects>

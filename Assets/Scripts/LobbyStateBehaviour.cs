@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class LobbyStateBehaviour : MonoBehaviour
+public sealed class LobbyStateBehaviour : MonoBehaviour
 {
 
     [SerializeField]

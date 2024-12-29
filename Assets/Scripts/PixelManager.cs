@@ -1,13 +1,7 @@
 using UnityEngine;
-using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
-using System;
-using Unity.Mathematics;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
-using System.Linq;
-using Unity.Entities.UniversalDelegates;
 
 [BurstCompile]
 public sealed class PixelManager : MonoBehaviour

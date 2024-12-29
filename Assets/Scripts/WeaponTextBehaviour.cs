@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using static ProjectileManager;
 
-public class WeaponTextBehaviour : MonoBehaviour
+public sealed class WeaponTextBehaviour : MonoBehaviour
 {
 
     TMP_Text equippedClassesField;

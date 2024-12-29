@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerSettingsBehaviour : MonoBehaviour
+public sealed class PlayerSettingsBehaviour : MonoBehaviour
 {
 
     [SerializeField]

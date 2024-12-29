@@ -1,8 +1,7 @@
-using Unity.Physics;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SkinPreviewBehaviour : MonoBehaviour
+public sealed class SkinPreviewBehaviour : MonoBehaviour
 {
 
     [SerializeField]

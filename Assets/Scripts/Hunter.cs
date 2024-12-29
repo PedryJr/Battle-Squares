@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using Steamworks;
 using System.Collections.Generic;
-using Unity.Entities.UniversalDelegates;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static PlayerSynchronizer;
 
-public class Hunter : NetworkBehaviour
+public sealed class Hunter : NetworkBehaviour
 {
 
     public int lobbyKills;

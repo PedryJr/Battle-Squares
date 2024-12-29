@@ -1,10 +1,6 @@
-using TMPro;
 using Unity.Burst;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 [BurstCompile]
 public sealed class PixelStateAnimator : MonoBehaviour

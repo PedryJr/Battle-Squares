@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 
-public class PatchBehaviour : MonoBehaviour
+public sealed class PatchBehaviour : MonoBehaviour
 {
     SpriteShapeController spriteShapeController;
     PolygonCollider2D polygonCollider;

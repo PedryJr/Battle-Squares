@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EditorSwitchBehaviour : MonoBehaviour
+public sealed class EditorSwitchBehaviour : MonoBehaviour
 {
 
     bool editorCanvasOn = false;

@@ -41,7 +41,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
     MapSynchronizer mapSync;
     public PlayerBehaviour playerBehaviour;
     PlayerSynchronizer playerSynchronizer;
-    public new Collider2D collider;
+    public Collider2D flagCollider;
     Rigidbody2D following;
     Transform post;
     Transform child;
@@ -77,7 +77,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         flagParticleSystem = child.GetComponent<ParticleSystem>();
         mainParticleModule = flagParticleSystem.main;
         post = transform.parent;
-        collider = GetComponent<Collider2D>();
+        flagCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         mapSync = GameObject.FindGameObjectWithTag("Sync").GetComponent<MapSynchronizer>();
         playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();

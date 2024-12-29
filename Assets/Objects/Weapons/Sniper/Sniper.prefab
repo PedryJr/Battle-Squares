@@ -5015,6 +5015,14 @@ MonoBehaviour:
       Data3: 1818233730
       Data4: -1518369794
     Path: event:/VFX/Sniper/Shot
+  aliveReference:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  aliveSound: 0
   hitSoundReference:
     Guid:
       Data1: 533881192
@@ -5088,6 +5096,7 @@ MonoBehaviour:
     sync: 0
     syncSpeed: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0

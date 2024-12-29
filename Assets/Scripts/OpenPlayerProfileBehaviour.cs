@@ -1,7 +1,6 @@
-using Steamworks;
 using UnityEngine;
 
-public class OpenPlayerProfileBehaviour : MonoBehaviour
+public sealed class OpenPlayerProfileBehaviour : MonoBehaviour
 {
 
     [SerializeField]

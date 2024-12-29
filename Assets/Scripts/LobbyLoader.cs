@@ -2,7 +2,6 @@ using Steamworks;
 using Steamworks.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -91,7 +90,7 @@ public sealed class LobbyLoader : MonoBehaviour
                 if (lobby.lobby.Id == lb.Id) exist = true;
             }
             if (exist) continue;
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 lobbiesToRemove.Add(lobby);
             }
@@ -99,7 +98,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 lobby.transform.SetParent(transform.parent, true);
             }
@@ -109,7 +108,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 if (lobby.ownerId == SteamClient.SteamId.Value)
                 {
@@ -120,7 +119,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 if (lobby.lobby.GetData("Avalible").Equals("true"))
                 {
@@ -131,7 +130,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 if (lobby.lobby.GetData("Avalible").Equals("false"))
                 {
@@ -149,7 +148,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in sortedLobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 lobby.transform.SetParent(transform, true);
             }
@@ -202,7 +201,7 @@ public sealed class LobbyLoader : MonoBehaviour
                 if (lobby.lobby.Id == lb.Id) exist = true;
             }
             if (exist) continue;
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 Lobbies.Remove(lobby);
                 Destroy(lobby.gameObject);
@@ -211,7 +210,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 lobby.transform.SetParent(transform.parent, true);
             }
@@ -221,7 +220,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 if (lobby.ownerId == SteamClient.SteamId.Value)
                 {
@@ -232,7 +231,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 if (lobby.lobby.GetData("Avalible").Equals("true"))
                 {
@@ -243,7 +242,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in Lobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 if (lobby.lobby.GetData("Avalible").Equals("false"))
                 {
@@ -254,7 +253,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
         foreach (LobbyBehaviour lobby in sortedLobbies)
         {
-            if (!lobby.IsDestroyed())
+            if (lobby)
             {
                 lobby.transform.SetParent(transform, true);
             }

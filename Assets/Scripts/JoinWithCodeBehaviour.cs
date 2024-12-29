@@ -1,15 +1,9 @@
-using Netcode.Transports.Facepunch;
 using Steamworks;
 using Steamworks.Data;
-using System.Threading.Tasks;
-using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static UnityEngine.Rendering.DebugUI;
 
-public class JoinWithCodeBehaviour : MonoBehaviour
+public sealed class JoinWithCodeBehaviour : MonoBehaviour
 {
 
     [SerializeField]

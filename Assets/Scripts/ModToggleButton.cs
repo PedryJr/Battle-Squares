@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class ModToggleButton : MonoBehaviour
+public sealed class ModToggleButton : MonoBehaviour
 {
 
     [SerializeField]

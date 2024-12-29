@@ -1,33 +1,29 @@
 using TMPro;
 using UnityEngine;
 
-public class ChatToggleBehaviour : MonoBehaviour
+public sealed class ChatToggleBehaviour : MonoBehaviour
 {
+    [SerializeField]
+    private TextMeshProUGUI placeHolderField;
 
     [SerializeField]
-    TextMeshProUGUI placeHolderField;
+    private TextMeshProUGUI contentField;
 
     [SerializeField]
-    TextMeshProUGUI contentField;
+    private TMP_InputField inputField;
 
-    [SerializeField]
-    TMP_InputField inputField;
-
-    bool flipFlop;
-    float animationTimer;
+    private bool flipFlop;
+    private float animationTimer;
 
     private void OnEnable()
     {
-
         placeHolderField.text = "";
         inputField.text = "";
-
     }
 
     private void Update()
     {
-        
-        if(inputField.text == "")
+        if (inputField.text == "")
         {
             AnimateEmptyText();
         }
@@ -38,12 +34,10 @@ public class ChatToggleBehaviour : MonoBehaviour
 
         contentField.text = inputField.text;
         animationTimer += Time.deltaTime;
-
     }
 
-    void AnimateEmptyText()
+    private void AnimateEmptyText()
     {
-
         if (animationTimer > 0.37f)
         {
             flipFlop = !flipFlop;
@@ -58,7 +52,5 @@ public class ChatToggleBehaviour : MonoBehaviour
             }
             animationTimer = 0;
         }
-
     }
-
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
-public class ParticleColorApplicant : MonoBehaviour
+public sealed class ParticleColorApplicant : MonoBehaviour
 {
 
     [SerializeField]

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class TransformBasedVelocity : MonoBehaviour
+public sealed class TransformBasedVelocity : MonoBehaviour
 {
     Rigidbody2D rb;
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SolidRotatorBehaviour : MonoBehaviour
+public sealed class SolidRotatorBehaviour : MonoBehaviour
 {
 
     Rigidbody2D rb;

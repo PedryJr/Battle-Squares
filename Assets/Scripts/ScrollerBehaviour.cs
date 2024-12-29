@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScrollerBehaviour : MonoBehaviour
+public sealed class ScrollerBehaviour : MonoBehaviour
 {
 
     ScrollRect scrollRect;

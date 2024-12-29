@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static PlayerSynchronizer;
@@ -179,8 +178,8 @@ public sealed class ScoreManager : NetworkBehaviour
         foreach (ScoreBoard scoreboard in scores)
         {
 
-            if(!scoreBoard.IsDestroyed())
-                if(!scoreBoard.gameObject.IsDestroyed())
+            if(scoreBoard != null)
+                if(scoreBoard.gameObject)
                     Destroy(scoreboard.gameObject);
 
         }

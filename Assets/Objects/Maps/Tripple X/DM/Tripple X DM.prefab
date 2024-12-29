@@ -21858,7 +21858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edeb90a6526e2643bd84086d9f0c49a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: -5322691566557524574, guid: 833c95bc291a1d849b0594de037f1228, type: 3}
+  icon: {fileID: 21300000, guid: 833c95bc291a1d849b0594de037f1228, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Tripple X
   battleThemeReference:

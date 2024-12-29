@@ -2,8 +2,6 @@ using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.Windows;
 [BurstCompile]
 public sealed class CursorBehaviour : MonoBehaviour
 {

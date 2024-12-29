@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class EditorFrameRateBehaviour : MonoBehaviour
+public sealed class EditorFrameRateBehaviour : MonoBehaviour
 {
 
     [SerializeField]

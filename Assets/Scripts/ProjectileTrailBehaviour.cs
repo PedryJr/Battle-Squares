@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
@@ -30,7 +29,7 @@ public sealed class ProjectileTrailBehaviour : MonoBehaviour
     private void LateUpdate()
     {
 
-        deadProjectile = (target.IsDestroyed() || target == null);
+        deadProjectile = target == null;
         if (stateCheck != deadProjectile)
         {
             stateCheck = deadProjectile;

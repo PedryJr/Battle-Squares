@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public sealed class FlagPost : MonoBehaviour, IObjective
 {

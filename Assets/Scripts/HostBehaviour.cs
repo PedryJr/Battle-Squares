@@ -4,7 +4,6 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static PlayerSynchronizer;
 using Image = UnityEngine.UI.Image;
 
 public sealed class HostBehaviour : MonoBehaviour

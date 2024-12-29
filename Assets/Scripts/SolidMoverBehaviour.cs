@@ -1,10 +1,9 @@
-using System;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 
 [BurstCompile]
-public class SolidMoverBehaviour : MonoBehaviour
+public sealed class SolidMoverBehaviour : MonoBehaviour
 {
 
     float timer;

@@ -1,10 +1,9 @@
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using System;
 using Unity.Netcode;
 
-public class CopyBehaviour : MonoBehaviour
+public sealed class CopyBehaviour : MonoBehaviour
 {
 
     [SerializeField]

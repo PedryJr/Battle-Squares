@@ -2,12 +2,10 @@ using Steamworks;
 using System;
 using System.Collections.Generic;
 using Unity.Burst;
-using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static PlayerSynchronizer;
 [BurstCompile]
 public sealed class PlayerSynchronizer : NetworkBehaviour
 {
@@ -555,7 +553,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
             }
             else
-            {
+            { 
 
                 PlayerData playerData = new PlayerData();
 
@@ -1197,24 +1195,25 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         UpdateScore();
 
     }*/
-    [BurstCompile]
+
+
     public void UpdatePlayerHealth(byte id, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
-
-        UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
+/*
+        UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);*/
         UpdatePlayerHealthRpc(id, damage, slowDownAmount, responsibleId, knockBack);
 
     }
-    [BurstCompile]
+
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void UpdatePlayerHealthRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
-
-        if ((byte) localSquare.id == responsibleId) return;
+/*
+        if ((byte) localSquare.id == responsibleId) return;*/
         UpdatePlayerHealthFunc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
         
     }
-    [BurstCompile]
+
 
     void UpdatePlayerHealthFunc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
@@ -1224,7 +1223,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         foreach (PlayerData player in playerIdentities)
         {
 
-            if ((byte) player.id == affectedId)
+            if ((byte) player.square.id == affectedId)
             {
 
                 player.square.rb.AddForce(knockBack, ForceMode2D.Impulse);
@@ -1285,9 +1284,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    public void PlayerDeathEffect(Vector3 particlePosition, UnityEngine.Color particleColor)
+    public void PlayerDeathEffect(Vector3 particlePosition, Color particleColor)
     {
 
+        localSquare.deathSoundInstance.setVolume(MySettings.volume);
         localSquare.deathSoundInstance.start();
 
         GameObject newParticle = Instantiate(deathParticles, particlePosition, Quaternion.Euler(0, 0, 0), null);
@@ -1301,13 +1301,13 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
     [BurstCompile]
-    public UnityEngine.Color UpdatePlayerColor(float value)
+    public Color UpdatePlayerColor(float value)
     {
 
         float h, s, v;
-        UnityEngine.Color.RGBToHSV(localSquare.playerColor, out h, out s, out v);
+        Color.RGBToHSV(localSquare.playerColor, out h, out s, out v);
         h = value;
-        localSquare.playerColor = UnityEngine.Color.HSVToRGB(h, s, v);
+        localSquare.playerColor = Color.HSVToRGB(h, s, v);
         localSquare.newColor = true;
 
         UpdateColor();

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StartScrollAtZero : MonoBehaviour
+public sealed class StartScrollAtZero : MonoBehaviour
 {
 
     ScrollRect scrollRect;

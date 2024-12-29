@@ -1,9 +1,6 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 using static PlayerSynchronizer;
-using static UnityEngine.GraphicsBuffer;
-using static UnityEngine.ParticleSystem;
 
 public sealed class DogTagBehaviour : MonoBehaviour
 {

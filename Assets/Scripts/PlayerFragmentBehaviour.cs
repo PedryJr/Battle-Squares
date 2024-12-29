@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerFragmentBehaviour : MonoBehaviour
+public sealed class PlayerFragmentBehaviour : MonoBehaviour
 {
 
     Vector3 targetScale;

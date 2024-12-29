@@ -2,7 +2,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 
-public class PainterExec : MonoBehaviour
+public sealed class PainterExec : MonoBehaviour
 {
 
     CursorBehaviour cursorBehaviour;

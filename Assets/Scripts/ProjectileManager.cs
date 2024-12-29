@@ -1,17 +1,13 @@
-using Steamworks;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static PlayerSynchronizer;
-using static ProjectileManager;
 using Random = System.Random;
-using System.Security.Cryptography;
 using Unity.Mathematics;
-using static Unity.VisualScripting.Member;
 using Unity.Burst;
+using static ProjectileManager;
 
 [BurstCompile]
 public sealed class ProjectileManager : NetworkBehaviour
@@ -212,17 +208,44 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
         return null;
     }
+
+    static Dictionary<ulong, Material> particleMaterials = new Dictionary<ulong, Material>();
+    byte[] particleData = new byte[7];
     [BurstCompile]
     public void SpawnParticles(Vector3 particlePosition, Quaternion particleRotation, UnityEngine.Color particleColor, ProjectileType projectileType)
     {
 
         ulong ignoreId = NetworkManager.LocalClientId;
 
+        Debug.Log(particleColor);
+
+        byte[] rotation = MyExtentions.EncodeRotation(particleRotation.eulerAngles.z);
+
+        particleData[0] = (byte) Mathf.FloorToInt(particleColor.r * 255);
+        particleData[1] = (byte) Mathf.FloorToInt(particleColor.g * 255);
+        particleData[2] = (byte) Mathf.FloorToInt(particleColor.b * 255);
+
+        particleData[3] = (byte) ignoreId;
+
+        particleData[4] = (byte)projectileType;
+
+        particleData[5] = rotation[0];
+        particleData[6] = rotation[1];
+
         GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
 
         foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
         {
-            Material particleMaterial = Instantiate(particle.material);
+
+            Material particleMaterial;
+
+            if (particleMaterials.ContainsKey(ignoreId)) particleMaterial = particleMaterials[ignoreId];
+            else
+            {
+                particleMaterial = Instantiate(particle.material);
+                particleMaterials.Add(ignoreId, particleMaterial);
+            }
+            for (int i = 0; i < particle.materials.Length; i++) Destroy(particle.materials[i]);
             particle.material = particleMaterial;
             particle.material.color = particleColor;
         }
@@ -230,31 +253,43 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (IsHost)
         {
 
-            SpawnParticlesClientRpc(particlePosition, particleRotation, particleColor, ignoreId, projectileType);
+            SpawnParticlesClientRpc(particlePosition, particleData);
 
         }
         if (!IsHost)
         {
 
-            SpawnParticlesServerRpc(particlePosition, particleRotation, particleColor, ignoreId, projectileType);
+            SpawnParticlesServerRpc(particlePosition, particleData);
 
         }
 
     }
     [BurstCompile]
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnParticlesServerRpc(Vector3 particlePosition, Quaternion particleRotation, Vector4 particleColor, ulong ignoreId, ProjectileType projectileType)
+    public void SpawnParticlesServerRpc(Vector3 particlePosition, byte[] newParticleData)
     {
+
+        Vector4 particleColor = new Vector4(newParticleData[0] / 255f, newParticleData[1] / 255f, newParticleData[2] / 255f, 1f);
+        ulong ignoreId = newParticleData[3];
+        ProjectileType projectileType = (ProjectileType) newParticleData[4];
+        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[5], newParticleData[6] }));
 
         if (NetworkManager.LocalClientId == ignoreId) return;
 
-        SpawnParticlesClientRpc(particlePosition, particleRotation, particleColor, ignoreId, projectileType);
+        SpawnParticlesClientRpc(particlePosition, newParticleData);
 
         GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
 
         foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
         {
-            Material particleMaterial = Instantiate(particle.material);
+            Material particleMaterial;
+            if (particleMaterials.ContainsKey(ignoreId)) particleMaterial = particleMaterials[ignoreId];
+            else
+            {
+                particleMaterial = Instantiate(particle.material);
+                particleMaterials.Add(ignoreId, particleMaterial);
+            }
+            for (int i = 0; i < particle.materials.Length; i++) Destroy(particle.materials[i]);
             particle.material = particleMaterial;
             particle.material.color = particleColor;
         }
@@ -262,8 +297,13 @@ public sealed class ProjectileManager : NetworkBehaviour
     }
     [BurstCompile]
     [ClientRpc]
-    public void SpawnParticlesClientRpc(Vector3 particlePosition, Quaternion particleRotation, Vector4 particleColor, ulong ignoreId, ProjectileType projectileType)
+    public void SpawnParticlesClientRpc(Vector3 particlePosition, byte[] newParticleData)
     {
+
+        Vector4 particleColor = new Vector4(newParticleData[0] / 255f, newParticleData[1] / 255f, newParticleData[2] / 255f, 1f);
+        ulong ignoreId = newParticleData[3];
+        ProjectileType projectileType = (ProjectileType)newParticleData[4];
+        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[5], newParticleData[6] }));
 
         if (IsHost) return;
 
@@ -273,7 +313,14 @@ public sealed class ProjectileManager : NetworkBehaviour
 
         foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
         {
-            Material particleMaterial = Instantiate(particle.material);
+            Material particleMaterial;
+            if (particleMaterials.ContainsKey(ignoreId)) particleMaterial = particleMaterials[ignoreId];
+            else
+            {
+                particleMaterial = Instantiate(particle.material);
+                particleMaterials.Add(ignoreId, particleMaterial);
+            }
+            for (int i = 0; i < particle.materials.Length; i++) Destroy(particle.materials[i]);
             particle.material = particleMaterial;
             particle.material.color = particleColor;
         }
@@ -305,7 +352,7 @@ public sealed class ProjectileManager : NetworkBehaviour
             if (instance.projectileID == projectileID)
             {
 
-                if (!instance.IsDestroyed()) instance.OnDespawn(hit);
+                if (instance != null) instance.OnDespawn(hit);
 
                 deletedProjectile = instance;
 
@@ -333,7 +380,7 @@ public sealed class ProjectileManager : NetworkBehaviour
             if (instance.projectileID == projectileID)
             {
 
-                if (!instance.IsDestroyed()) instance.OnDespawn(hit);
+                if (instance != null) instance.OnDespawn(hit);
 
                 deletedProjectile = instance;
 
@@ -361,7 +408,7 @@ public sealed class ProjectileManager : NetworkBehaviour
             if (instance.projectileID == projectileID)
             {
 
-                if (!instance.IsDestroyed()) instance.OnDespawn(hit);
+                if (instance != null) instance.OnDespawn(hit);
 
                 deletedProjectile = instance;
 
@@ -398,7 +445,7 @@ public sealed class ProjectileManager : NetworkBehaviour
             if (instance.projectileID == projectileID)
             {
 
-                if (!instance.IsDestroyed()) instance.HitReg();
+                if (instance != null) instance.HitReg();
 
                 break;
 
@@ -420,7 +467,7 @@ public sealed class ProjectileManager : NetworkBehaviour
             if (instance.projectileID == projectileID)
             {
 
-                if (!instance.IsDestroyed()) instance.HitReg();
+                if (instance != null) instance.HitReg();
 
                 break;
 
@@ -442,7 +489,7 @@ public sealed class ProjectileManager : NetworkBehaviour
             if (instance.projectileID == projectileID)
             {
 
-                if (!instance.IsDestroyed()) instance.HitReg();
+                if (instance != null) instance.HitReg();
 
                 break;
 
@@ -595,7 +642,8 @@ public sealed class ProjectileManager : NetworkBehaviour
         Charge,
         Katana,
         Boomerang,
-        Hailmaker
+        Hailmaker,
+        Scortcher
 
     }
 

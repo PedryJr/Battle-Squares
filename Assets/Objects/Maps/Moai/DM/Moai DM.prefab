@@ -2722,16 +2722,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edeb90a6526e2643bd84086d9f0c49a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: -4712846450385580888, guid: b87e36e19ba4fea46a2cd8bbc5bd6200, type: 3}
+  icon: {fileID: 21300000, guid: b87e36e19ba4fea46a2cd8bbc5bd6200, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Moai
   battleThemeReference:
     Guid:
-      Data1: -751826246
-      Data2: 1134526964
-      Data3: 301012907
-      Data4: -108581261
-    Path: event:/BattleThemes/The Factory
+      Data1: -1162726050
+      Data2: 1150789997
+      Data3: 385001131
+      Data4: 852178984
+    Path: event:/BattleThemes/MOAI
   size: 
   difficulty: 
 --- !u!114 &8530454141395189244

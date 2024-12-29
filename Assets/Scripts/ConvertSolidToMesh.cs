@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.U2D;
 using Material = UnityEngine.Material;
 
-public class ConvertSolidToMesh : MonoBehaviour
+public sealed class ConvertSolidToMesh : MonoBehaviour
 {
 
     [SerializeField]

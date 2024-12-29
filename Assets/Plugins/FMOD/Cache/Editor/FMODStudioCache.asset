@@ -28,6 +28,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 132
+--- !u!114 &-8527749055709185727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/MOAI/CameraPositionX
+  m_EditorClassIdentifier: 
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-7128761368538611185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,6 +168,30 @@ MonoBehaviour:
   - Name: Desktop
     Value: 13280
   Exists: 1
+--- !u!114 &-6054552335131819331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/MOAI/Climax
+  m_EditorClassIdentifier: 
+  Name: Climax
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 4019113442
+    data2: 3476276034
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-5976928713244360149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +203,54 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
   m_Name: parameter:/Square Deity/Intensity
+  m_EditorClassIdentifier: 
+  Name: Intensity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2935720071
+    data2: 1046895765
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-5876038178186041308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Square Deity OLD/Intensity
+  m_EditorClassIdentifier: 
+  Name: Intensity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2935720071
+    data2: 1046895765
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-5861612564218013826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/MOAI/Intensity
   m_EditorClassIdentifier: 
   Name: Intensity
   StudioPath: 
@@ -311,10 +407,10 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638662693261860313
+  lastModified: 638674787191700728
   FileSizes:
   - Name: Desktop
-    Value: 2332
+    Value: 2412
   Exists: 1
 --- !u!114 &-5054600546276340479
 MonoBehaviour:
@@ -406,7 +502,7 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638662693261860313
+  lastModified: 638674787191680753
   FileSizes:
   - Name: Desktop
     Value: 3878
@@ -464,7 +560,7 @@ MonoBehaviour:
   - {fileID: -5976928713244360149}
   MinDistance: 1
   MaxDistance: 20
-  Length: 66246
+  Length: 365766
 --- !u!114 &-3194765753783543456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,7 +661,7 @@ MonoBehaviour:
     Data4: -108581261
   Banks:
   - {fileID: 6063943717218973278}
-  IsStream: 1
+  IsStream: 0
   Is3D: 1
   IsOneShot: 0
   Parameters:
@@ -781,6 +877,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 417
+--- !u!114 &-136934383418854523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Square Deity OLD/Climax
+  m_EditorClassIdentifier: 
+  Name: Climax
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 4019113442
+    data2: 3476276034
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -821,13 +941,15 @@ MonoBehaviour:
   - {fileID: 2026406934592970604}
   - {fileID: -993022564571109927}
   - {fileID: 1519181402333502124}
+  - {fileID: 9170157736898280619}
+  - {fileID: 2727840294187770395}
   EditorParameters:
   - {fileID: -1220666489223329230}
   MasterBanks:
   - {fileID: -3858178114869651658}
   StringsBanks:
   - {fileID: -5230284171643110809}
-  cacheTime: 638662693261860313
+  cacheTime: 638681534028289484
   cacheVersion: 131843
 --- !u!114 &102241271348088986
 MonoBehaviour:
@@ -1038,6 +1160,36 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &2727840294187770395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BattleThemes/Square Deity OLD
+  m_EditorClassIdentifier: 
+  Path: event:/BattleThemes/Square Deity OLD
+  Guid:
+    Data1: 892791786
+    Data2: 1169341049
+    Data3: -1879502404
+    Data4: 1573527554
+  Banks:
+  - {fileID: 6063943717218973278}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -136934383418854523}
+  - {fileID: -5876038178186041308}
+  - {fileID: 4969683084415332645}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 66246
 --- !u!114 &3053614709836959599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1162,6 +1314,30 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &4969683084415332645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Square Deity OLD/CameraPositionX
+  m_EditorClassIdentifier: 
+  Name: CameraPositionX
+  StudioPath: 
+  Min: -15
+  Max: 15
+  Default: 0
+  ID:
+    data1: 566106688
+    data2: 978960363
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &4994903501389816384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1256,10 +1432,10 @@ MonoBehaviour:
   Path: Assets/BattleSquares/Build/Desktop/Themes.bank
   Name: Themes
   StudioPath: bank:/Themes
-  lastModified: 638657313864354934
+  lastModified: 638681534028289484
   FileSizes:
   - Name: Desktop
-    Value: 1806400
+    Value: 15393984
   Exists: 1
 --- !u!114 &6337742966284777977
 MonoBehaviour:
@@ -1439,3 +1615,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &9170157736898280619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BattleThemes/MOAI
+  m_EditorClassIdentifier: 
+  Path: event:/BattleThemes/MOAI
+  Guid:
+    Data1: -1162726050
+    Data2: 1150789997
+    Data3: 385001131
+    Data4: 852178984
+  Banks:
+  - {fileID: 6063943717218973278}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -8527749055709185727}
+  - {fileID: -6054552335131819331}
+  - {fileID: -5861612564218013826}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 267441

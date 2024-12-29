@@ -2,45 +2,45 @@ using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class ChatBubbleBehaviour : MonoBehaviour
+public sealed class ChatBubbleBehaviour : MonoBehaviour
 {
-
-    float scaleYRef = 12.288f;
-    float scaleXRef = 1.6666f;
+    private float scaleYRef = 12.288f;
+    private float scaleXRef = 1.6666f;
     public float timer = 0;
-    float screenSizeY;
-    float scaleX;
-    float scaleY;
-    float lerp;
+    private float screenSizeY;
+    private float scaleX;
+    private float scaleY;
+    private float lerp;
     public AnimationState state = AnimationState.Expanding;
-    delegate void Func();
-    Func updateFunc = () => { };
-    Vector2 currentSize;
-    Vector2 targetSize;
-    Vector2 originPos;
-    Vector2 targetPos;
-    Vector2 currentPos;
+
+    private delegate void Func();
+
+    private Func updateFunc = () => { };
+    private Vector2 currentSize;
+    private Vector2 targetSize;
+    private Vector2 originPos;
+    private Vector2 targetPos;
+    private Vector2 currentPos;
 
     [SerializeField]
-    float timeToExpand;
+    private float timeToExpand;
 
     [SerializeField]
-    float timeToExist;
+    private float timeToExist;
 
     [SerializeField]
-    float timeToShrink;
+    private float timeToShrink;
 
     [SerializeField]
-    float scale;
+    private float scale;
 
-    RectTransform rectTransform;
-    TMP_Text messageField;
-    PlayerBehaviour playerBehaviour;
-    Material material;
+    private RectTransform rectTransform;
+    private TMP_Text messageField;
+    private PlayerBehaviour playerBehaviour;
+    private Material material;
 
     private void Awake()
     {
-
         rectTransform = GetComponent<RectTransform>();
         messageField = GetComponentInChildren<TMP_Text>();
         material = Instantiate(messageField.fontSharedMaterial);
@@ -49,50 +49,44 @@ public class ChatBubbleBehaviour : MonoBehaviour
         currentSize = new Vector2();
 
         UpdateScreenMeasurements();
-
     }
 
     private void Update()
     {
-
         UpdateScreenMeasurements();
 
         if (playerBehaviour) UpdatePosition();
 
         timer += Time.deltaTime;
 
-        updateFunc = 
+        updateFunc =
             state == AnimationState.Expanding ? UpdateExpand :
             state == AnimationState.Existing ? UpdateStay :
-            state == AnimationState.Shrinking ? UpdateShrink : 
+            state == AnimationState.Shrinking ? UpdateShrink :
             () => { };
 
         rectTransform.sizeDelta = currentSize * scale;
         rectTransform.anchoredPosition = currentPos;
 
         updateFunc();
-
     }
 
-    void UpdateExpand()
+    private void UpdateExpand()
     {
-
         lerp = Mathf.SmoothStep(0, 1, timer / timeToExpand);
         currentSize = Vector2.Lerp(Vector2.zero, targetSize, lerp);
 
-        if(timer > timeToExpand)
+        if (timer > timeToExpand)
         {
             timer = 0;
             state = AnimationState.Existing;
         }
 
         currentPos = Vector2.Lerp(originPos, targetPos, math.smoothstep(0, 1, lerp));
-
     }
 
-    void UpdateStay()
+    private void UpdateStay()
     {
-
         if (timer > timeToExist)
         {
             timer = 0;
@@ -100,12 +94,10 @@ public class ChatBubbleBehaviour : MonoBehaviour
         }
 
         currentPos = Vector2.Lerp(currentPos, targetPos, Time.deltaTime * 30);
-
     }
 
-    void UpdateShrink()
+    private void UpdateShrink()
     {
-
         lerp = Mathf.SmoothStep(0, 1, timer / timeToShrink);
         currentSize = Vector2.Lerp(targetSize, Vector2.zero, lerp);
 
@@ -115,22 +107,18 @@ public class ChatBubbleBehaviour : MonoBehaviour
         }
 
         currentPos = Vector2.Lerp(targetPos, originPos, Mathf.SmoothStep(0, 1, lerp));
-
     }
 
-    void UpdateScreenMeasurements()
+    private void UpdateScreenMeasurements()
     {
-
         screenSizeY = Screen.height;
         scaleY = screenSizeY / scaleYRef;
         scaleX = scaleY * scaleXRef;
         targetSize = new Vector2(scaleX, scaleY);
-
     }
 
-    void UpdatePosition()
+    private void UpdatePosition()
     {
-
         originPos = Camera.main.WorldToScreenPoint(playerBehaviour.transform.position);
         targetPos = Camera.main.WorldToScreenPoint(playerBehaviour.transform.position + new Vector3(0, 2.45f, 0));
 
@@ -139,12 +127,10 @@ public class ChatBubbleBehaviour : MonoBehaviour
 
         targetPos.y = Mathf.Clamp(targetPos.y, targetSize.y, Screen.height - (targetSize.y));
         targetPos.x = Mathf.Clamp(targetPos.x, targetSize.x, Screen.width - (targetSize.x));
-
     }
 
     public void ApplyMessage(string message, PlayerBehaviour attatchedPlayer)
     {
-
         Color messageColor = attatchedPlayer.playerDarkerColor;
         messageColor.a = 1;
 
@@ -163,24 +149,17 @@ public class ChatBubbleBehaviour : MonoBehaviour
         }
 
         playerBehaviour.chatBubbleBehaviour = this;
-
     }
 
     private void OnDestroy()
     {
-
         if (playerBehaviour.chatBubbleBehaviour)
         {
-
             if (playerBehaviour.chatBubbleBehaviour == this)
             {
-
                 playerBehaviour.chatBubbleBehaviour = null;
-
             }
-
         }
-
     }
 
     public enum AnimationState
@@ -189,5 +168,4 @@ public class ChatBubbleBehaviour : MonoBehaviour
         Existing,
         Shrinking
     }
-
 }

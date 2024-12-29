@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResetMod : MonoBehaviour
+public sealed class ResetMod : MonoBehaviour
 {
 
     Slider slider;

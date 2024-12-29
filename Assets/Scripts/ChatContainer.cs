@@ -7,19 +7,17 @@ using static PlayerSynchronizer;
 
 public sealed class ChatContainer : MonoBehaviour
 {
+    [SerializeField]
+    private UnityEngine.UI.Image userIcon;
 
     [SerializeField]
-    UnityEngine.UI.Image userIcon;
+    private TextMeshProUGUI contextContainer;
 
-    [SerializeField]
-    TextMeshProUGUI contextContainer;
-
-    ulong sentId;
-    PlayerSynchronizer playerSynchronizer;
+    private ulong sentId;
+    private PlayerSynchronizer playerSynchronizer;
 
     public async void Initialize(string context, SteamId steamId, ulong sentId)
     {
-
         Image? image = await SteamFriends.GetLargeAvatarAsync(steamId);
         playerSynchronizer = FindFirstObjectByType<PlayerSynchronizer>();
 
@@ -38,38 +36,30 @@ public sealed class ChatContainer : MonoBehaviour
         userIcon.sprite = Sprite.Create(spriteTexture, spriteRect, spritePivot);
         contextContainer.text = context;
         this.sentId = sentId;
-
     }
 
     private void Update()
     {
-
         List<PlayerData> playerIdentities = playerSynchronizer.playerIdentities;
 
         for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++)
         {
-
             if (sentId == playerIdentities[i].id)
             {
-
                 contextContainer.color = UnityEngine.Color.Lerp(
                     playerIdentities[i].square.playerColor,
-                    playerIdentities[i].square.playerDarkerColor, 
+                    playerIdentities[i].square.playerDarkerColor,
                     0.5f);
 
                 return;
-
             }
-
         }
-
     }
 
-    struct Data
+    private struct Data
     {
         public ulong id;
         public UnityEngine.Color dark;
         public UnityEngine.Color bright;
     }
-
 }

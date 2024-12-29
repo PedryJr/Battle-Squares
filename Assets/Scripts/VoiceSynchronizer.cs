@@ -1,11 +1,7 @@
-using ProximityChat;
-using System;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class VoiceSynchronizer : NetworkBehaviour
+public sealed class VoiceSynchronizer : NetworkBehaviour
 {
 
     [SerializeField]

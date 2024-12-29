@@ -1,10 +1,8 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 using static PlayerSynchronizer;
-using static Unity.VisualScripting.Member;
 
-public class MessageRecieverBehaviour : MonoBehaviour
+public sealed class MessageRecieverBehaviour : MonoBehaviour
 {
 
     [SerializeField]

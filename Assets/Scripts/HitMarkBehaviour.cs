@@ -1,11 +1,8 @@
-using System.Collections.Generic;
 using Unity.Burst;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [BurstCompile]
-public class HitMarkBehaviour : MonoBehaviour
+public sealed class HitMarkBehaviour : MonoBehaviour
 {
 
     public float timer;
@@ -90,6 +87,17 @@ public class HitMarkBehaviour : MonoBehaviour
 
         if (fadeOut > 1)
         {
+
+            foreach (SpawnStageBehaviour spawnStageBehaviour in spawnStages)
+            {
+
+                foreach (SpriteRenderer spriteRenderer in spawnStageBehaviour.sprites)
+                {
+                    Destroy(spriteRenderer.material);
+                }
+
+            }
+
             Destroy(gameObject);
         }
 

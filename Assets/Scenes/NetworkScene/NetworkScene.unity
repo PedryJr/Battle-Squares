@@ -691,6 +691,7 @@ GameObject:
   - component: {fileID: 7766882706945389862}
   - component: {fileID: 7766882706945389863}
   - component: {fileID: 7766882706945389864}
+  - component: {fileID: 7766882706945389865}
   m_Layer: 0
   m_Name: Synchronizer
   m_TagString: Sync
@@ -796,7 +797,25 @@ MonoBehaviour:
     timeToMorph: 0
     morphAnimation:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -904,7 +923,7 @@ MonoBehaviour:
     launchParticle: {fileID: 7289681851009581468, guid: c2f50d2d9a5df5f4b9f0d3e1477fc04a, type: 3}
     projectileAmmo: 19
     reloadTime: 1.65
-    shootingInterval: 0.092
+    shootingInterval: 0.08
     projectileSpeed: 33
     projectileAcceleration: -0.402
     lifeTime: 2
@@ -1691,91 +1710,6 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 20
     senderSpeedOnDeath: 0
-  - type: 10
-    projectile: {fileID: 3066612454653962984, guid: 84a724dfa7aa2e1418b752caf7241c5a, type: 3}
-    launchParticle: {fileID: 7289681851009581468, guid: f6535d4c1c04976418fdf3b57c915dfb, type: 3}
-    projectileAmmo: 10
-    reloadTime: 2.1
-    shootingInterval: 0.055
-    projectileSpeed: 50
-    projectileAcceleration: -4
-    lifeTime: 0.7
-    holdable: 1
-    burst: 0
-    bounces: 0
-    fluctuation: 0.38
-    noGravity: 1
-    dieOnImpact: 1
-    damageOnImpact: 1
-    sticky: 0
-    aoe: 0
-    skipAoeOnTargetHit: 0
-    knockback: 0
-    speedLimit: 100
-    minSpeed: 0
-    aoeDamage: 0
-    baseDamage: 1.2
-    damageTimeScale: 0
-    recoil: 1
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 1}
-    timeToMorph: 0
-    morphAnimation:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    sync: 0
-    syncSpeed: 0.4
-    returnToSender: 0
-    stickToSender: 0
-    melee: 0
-    oneTimeHit: 1
-    meleeRange: 0
-    swingDegrees: 0
-    meleeRotation: 0
-    meleePosAnimation:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    meleeRotAnimation:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    flipFlop: 0
-    homing: 0
-    homingStrength: 0
-    homingDistance: 0
-    spinSpeed: 0
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 0
-    dontBlockProjectiles: 1
-    bounceOfPlayers: 0
-    slowDownAmount: 20
-    senderSpeedOnDeath: 0
   nozzleParticles: {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
   projectiles: []
   localNozzle: {fileID: 0}
@@ -2010,6 +1944,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameVersion: {fileID: 11400000, guid: d91b6d3970dccfd44815ad26cc50e9a8, type: 2}
+--- !u!114 &7766882706945389865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a85b8d6a3235244b31ab15d39be812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  applicationID: 1305450101845790790
+  details: Squaring up with others!
+  state: 
+  largeImage: 24
+  largeText: Battle Squares
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

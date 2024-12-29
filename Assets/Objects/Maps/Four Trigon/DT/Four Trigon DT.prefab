@@ -5638,7 +5638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edeb90a6526e2643bd84086d9f0c49a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 4147366561876006544, guid: d44fa77acfaa7e845a7c22b132d590c3, type: 3}
+  icon: {fileID: 21300000, guid: d44fa77acfaa7e845a7c22b132d590c3, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Four Trigon
   battleThemeReference:

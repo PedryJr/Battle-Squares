@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
 
 public sealed class ParticleBehaviour : MonoBehaviour
 {
@@ -13,6 +12,15 @@ public sealed class ParticleBehaviour : MonoBehaviour
 
         if (timer > 1.4f)
         {
+
+            ParticleSystemRenderer[] particleSystems = GetComponentsInChildren<ParticleSystemRenderer>();
+            foreach (ParticleSystemRenderer particleSystem in particleSystems)
+            {
+                Material[] materials = particleSystem.materials;
+                for (int i = 0; i < materials.Length; i++) Destroy(materials[i]);
+            }
+
+            
 
             Destroy(gameObject);
 

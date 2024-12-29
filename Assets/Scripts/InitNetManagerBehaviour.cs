@@ -13,6 +13,7 @@ public sealed class InitNetManagerBehaviour : MonoBehaviour
 
         networkManager.SetSingleton();
 
+
     }
 
 }

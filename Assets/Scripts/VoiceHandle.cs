@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static PlayerSynchronizer;
 
-public class VoiceHandle : NetworkBehaviour
+public sealed class VoiceHandle : NetworkBehaviour
 {
 
     [SerializeField]
@@ -28,8 +28,6 @@ public class VoiceHandle : NetworkBehaviour
 
     bool lastSelfMute;
     bool selfMute;
-
-    bool init = true;
 
     private void Awake()
     {

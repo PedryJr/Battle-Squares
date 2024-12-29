@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using static PlayerSynchronizer;
 
-public class LoadPlayerImagesBehaviour : MonoBehaviour
+public sealed class LoadPlayerImagesBehaviour : MonoBehaviour
 {
 
     [SerializeField]

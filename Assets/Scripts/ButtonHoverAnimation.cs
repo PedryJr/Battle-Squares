@@ -9,38 +9,37 @@ using UnityEngine.UI;
 [BurstCompile]
 public sealed class ButtonHoverAnimation : MonoBehaviour
 {
+    [SerializeField]
+    private RectTransform rectTransform;
 
     [SerializeField]
-    RectTransform rectTransform;
+    private UnityEvent clickEvent;
 
-    [SerializeField] 
-    UnityEvent clickEvent;
+    private TextMeshProUGUI tmp;
 
-    TextMeshProUGUI tmp;
-
-    Button button;
+    private Button button;
     public Inputs input;
-    ScrollRect scrollRect;
-    SpriteRenderer spriteRenderer;
+    private ScrollRect scrollRect;
+    private SpriteRenderer spriteRenderer;
 
     [NonSerialized]
     public Image image;
 
-    UIAudio uIAudio;
+    private UIAudio uIAudio;
 
-    Vector2 offHoveredSize;
-    Vector2 onHoveredSize;
-    Vector2 onClickedSize;
-    Vector2 currentSize;
-    Vector2 offsetSizeStretch;
-    Vector2 offsetSizeExpand;
-    Vector2 offsetSizeClickedStretch;
-    Vector2 offsetSizeClickedExpand;
-    Vector2 fromSize;
-    Vector2 toSize;
-    Vector2 initSize;
-    Vector2 tmpPos;
-    Vector2 tmpSize;
+    private Vector2 offHoveredSize;
+    private Vector2 onHoveredSize;
+    private Vector2 onClickedSize;
+    private Vector2 currentSize;
+    private Vector2 offsetSizeStretch;
+    private Vector2 offsetSizeExpand;
+    private Vector2 offsetSizeClickedStretch;
+    private Vector2 offsetSizeClickedExpand;
+    private Vector2 fromSize;
+    private Vector2 toSize;
+    private Vector2 initSize;
+    private Vector2 tmpPos;
+    private Vector2 tmpSize;
 
     public Color offHoveredColor;
     public Color currentColor;
@@ -50,35 +49,37 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
     public bool isHovering;
     public bool animateColor;
-    bool animatingClick = false;
+    private bool animatingClick = false;
 
     [SerializeField]
-    float enterHoverTransitionTime;
-    [SerializeField]
-    float exitHoverTransitionTime;
-    [SerializeField]
-    float clickTransitionTime;
-    [SerializeField]
-    float multiplier = 1;
+    private float enterHoverTransitionTime;
 
     [SerializeField]
-    bool inverseScroll;
-
-    float animationTimer;
+    private float exitHoverTransitionTime;
 
     [SerializeField]
-    AnimationType animationType;
+    private float clickTransitionTime;
 
     [SerializeField]
-    SoundInteractionHoverType soundInteractionHoverType;
+    private float multiplier = 1;
 
     [SerializeField]
-    SoundInteractionClickType soundInteractionClickType;
+    private bool inverseScroll;
+
+    private float animationTimer;
+
+    [SerializeField]
+    private AnimationType animationType;
+
+    [SerializeField]
+    private SoundInteractionHoverType soundInteractionHoverType;
+
+    [SerializeField]
+    private SoundInteractionClickType soundInteractionClickType;
 
     [BurstCompile]
     private void Awake()
     {
-
         uIAudio = Resources.Load<UIAudio>("UIAudio");
 
         if (animateColor)
@@ -86,18 +87,17 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
             image = GetComponent<Image>();
             spriteRenderer = GetComponent<SpriteRenderer>();
 
-            if(spriteRenderer) offHoveredColor = spriteRenderer.color;
+            if (spriteRenderer) offHoveredColor = spriteRenderer.color;
             else if (image) offHoveredColor = image.color;
 
             currentColor = offHoveredColor;
             fromColor = offHoveredColor;
             toColor = offHoveredColor;
-
         }
 
         tmp = GetComponentInChildren<TextMeshProUGUI>();
 
-        if(tmp)
+        if (tmp)
         {
             tmpPos = tmp.rectTransform.localPosition;
             tmpSize = tmp.rectTransform.sizeDelta;
@@ -122,8 +122,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
             capturedVelocity = Vector2.ClampMagnitude(capturedVelocity + addedVelocity, 1000);
 
             scrollRect.velocity = capturedVelocity;
-
-
         };
 
         if (!rectTransform) rectTransform = GetComponent<RectTransform>();
@@ -146,12 +144,11 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
         onHoveredSize += animationType == AnimationType.Expand ? offsetSizeExpand : offsetSizeStretch;
         onClickedSize -= animationType == AnimationType.Expand ? offsetSizeClickedExpand : offsetSizeClickedStretch;
-
     }
+
     [BurstCompile]
     private void OnEnable()
     {
-
         SetupEventTriggers();
 
         rectTransform.sizeDelta = offHoveredSize;
@@ -162,24 +159,21 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         }
 
         ExitHover();
-
     }
 
     [BurstCompile]
     private void Update()
     {
-
         Animate();
 
         ApplyAnimation();
-
     }
 
     #region Setup
-    [BurstCompile]
-    void OnHover()
-    {
 
+    [BurstCompile]
+    private void OnHover()
+    {
         if (soundInteractionHoverType == SoundInteractionHoverType.Normal && isHovering == false) uIAudio.PlayHover(1f);
         if (soundInteractionHoverType == SoundInteractionHoverType.HighPitch && isHovering == false) uIAudio.PlayHover(1.2f);
         if (soundInteractionHoverType == SoundInteractionHoverType.LowPitch && isHovering == false) uIAudio.PlayHover(0.8f);
@@ -209,12 +203,11 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
                 fromColor = image.color;
             }
         }
-
     }
+
     [BurstCompile]
     public void ExitHover()
     {
-
         input.Disable();
 
         isHovering = false;
@@ -241,12 +234,11 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         }
 
         if (animatingClick) RunClickEvent();
-
     }
+
     [BurstCompile]
     public void ButtonClick()
     {
-
         if (animatingClick) return;
 
         if (soundInteractionClickType == SoundInteractionClickType.Normal) uIAudio.PlayClick(1f);
@@ -257,26 +249,24 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         animationTimer = 0;
         fromSize = rectTransform.sizeDelta;
         toSize = onClickedSize;
-
     }
+
     [BurstCompile]
-    void Animate()
+    private void Animate()
     {
+        animationTimer =
 
-        animationTimer = 
-
-            animatingClick ? 
+            animatingClick ?
                 animationTimer < 1 ? animationTimer + (Time.deltaTime / clickTransitionTime) : 1
                 :
                 isHovering ? animationTimer < 1 ? animationTimer + (Time.deltaTime / enterHoverTransitionTime) : 1
                 :
                 animationTimer < 1 ? animationTimer + (Time.deltaTime / exitHoverTransitionTime) : 1;
-
     }
-    [BurstCompile]
-    void SetupEventTriggers()
-    {
 
+    [BurstCompile]
+    private void SetupEventTriggers()
+    {
         EventTrigger eventTrigger = GetComponent<EventTrigger>();
 
         if (!eventTrigger) eventTrigger = gameObject.AddComponent<EventTrigger>();
@@ -287,36 +277,22 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
         pointerEnterEntry.callback.AddListener((eventData) => { OnHover(); });
         pointerExitEntry.callback.AddListener((eventData) => { ExitHover(); });
-        pointerClickEntry.callback.AddListener((eventData) => 
-        {
-        
-
-            PointerEventData pointerEvent = (PointerEventData) eventData;
-
-
-            if (pointerEvent.button == PointerEventData.InputButton.Left) Debug.Log("Left Button");
-            if (pointerEvent.button == PointerEventData.InputButton.Right) Debug.Log("Right Button");
-
-            ButtonClick();
-
-        });
+        pointerClickEntry.callback.AddListener((eventData) => { ButtonClick(); });
 
         eventTrigger.triggers.Add(pointerEnterEntry);
         eventTrigger.triggers.Add(pointerExitEntry);
         eventTrigger.triggers.Add(pointerClickEntry);
-
     }
 
     public void RemoveTriggers()
     {
         EventTrigger eventTrigger = gameObject.GetComponent<EventTrigger>();
-        if(eventTrigger) Destroy(gameObject.GetComponent<EventTrigger>());
+        if (eventTrigger) Destroy(gameObject.GetComponent<EventTrigger>());
     }
 
     [BurstCompile]
     private void OnDestroy()
     {
-
         if (isHovering)
         {
             PlayerController.uiRegs -= 1;
@@ -330,36 +306,30 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         }
 
         clickEvent.RemoveAllListeners();
-
     }
 
     private void OnDisable()
     {
-
         clickEvent.RemoveAllListeners();
 
         EventTrigger eventTrigger = GetComponent<EventTrigger>();
 
         if (eventTrigger) Destroy(eventTrigger);
-
     }
 
-    #endregion
+    #endregion Setup
+
     [BurstCompile]
-    void ApplyAnimation()
+    private void ApplyAnimation()
     {
-
-
-        if (animatingClick) 
+        if (animatingClick)
         {
-
             float lerp;
 
             lerp = MyExtentions.EaseOnClick(animationTimer);
             currentSize = Vector2.LerpUnclamped(fromSize, toSize, lerp);
 
-            if(animationTimer > 1) RunClickEvent();
-
+            if (animationTimer > 1) RunClickEvent();
         }
         else
         {
@@ -369,36 +339,32 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
             if (animateColor)
             {
-
                 if (spriteRenderer) spriteRenderer.color = Color.Lerp(fromColor, toColor, lerp);
                 else image.color = Color.Lerp(fromColor, toColor, lerp);
             }
-
         }
 
         rectTransform.sizeDelta = currentSize;
-
     }
+
     [BurstCompile]
     public void RunClickEvent()
     {
-
         fromSize = rectTransform.sizeDelta;
         toSize = isHovering ? onHoveredSize : offHoveredSize;
         animationTimer = 0;
         animatingClick = false;
 
         clickEvent?.Invoke();
-
     }
 
-    enum AnimationType
+    private enum AnimationType
     {
         Stretch,
         Expand
     }
 
-    enum SoundInteractionHoverType
+    private enum SoundInteractionHoverType
     {
         Normal,
         HighPitch,
@@ -406,12 +372,11 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         None
     }
 
-    enum SoundInteractionClickType
+    private enum SoundInteractionClickType
     {
         Normal,
         HighPitch,
         LowPitch,
         None
     }
-
 }

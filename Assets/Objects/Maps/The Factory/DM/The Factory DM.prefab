@@ -57091,7 +57091,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edeb90a6526e2643bd84086d9f0c49a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 4346031889009749170, guid: 9e0d2a774bab54e4e861668669e20067, type: 3}
+  icon: {fileID: 21300000, guid: 9e0d2a774bab54e4e861668669e20067, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: The Factory
   battleThemeReference:
@@ -58450,8 +58450,8 @@ SpriteShapeRenderer:
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   m_LocalAABB:
-    m_Center: {x: 0, y: -0.00000047683716, z: 0}
-    m_Extent: {x: 1.0000001, y: 1.0000005, z: 0}
+    m_Center: {x: -0.00000047683716, y: -0.00000047683716, z: 0}
+    m_Extent: {x: 1.0000006, y: 1.0000005, z: 0}
   m_SpriteSortPoint: 0
 --- !u!114 &1933685218397059706
 MonoBehaviour:
@@ -58516,7 +58516,7 @@ MonoBehaviour:
       spriteIndex: 0
       corner: 1
       m_CornerMode: 1
-    - position: {x: -1, y: -0.666667, z: 0}
+    - position: {x: -1.0000011, y: -0.6666666, z: 0}
       leftTangent: {x: 0, y: 0, z: 0}
       rightTangent: {x: 0, y: 0, z: 0}
       mode: 0
@@ -58592,7 +58592,7 @@ MonoBehaviour:
   - {x: 1, y: -0.666667, z: 0}
   - {x: 0.66666675, y: -1.0000004, z: 0}
   - {x: -0.6666666, y: -1.000001, z: 0}
-  - {x: -1, y: -0.666667, z: 0}
+  - {x: -1.0000011, y: -0.6666666, z: 0}
   - {x: -1, y: 0.6666664, z: 0}
   m_Uv0Array:
   - {x: -26, y: -0.5}
@@ -58601,7 +58601,7 @@ MonoBehaviour:
   - {x: -24.75, y: -1.7500002}
   - {x: -25, y: -2.0000002}
   - {x: -26, y: -2.0000007}
-  - {x: -26.25, y: -1.7500002}
+  - {x: -26.25, y: -1.75}
   - {x: -26.25, y: -0.75000024}
   m_TanArray:
   - {x: 0, y: 0, z: 0, w: 0}

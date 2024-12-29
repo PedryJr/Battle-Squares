@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerConstructorBehaviour : MonoBehaviour
+public sealed class PlayerConstructorBehaviour : MonoBehaviour
 {
 
 

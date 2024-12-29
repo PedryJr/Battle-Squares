@@ -1,11 +1,8 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using static PlayerSynchronizer;
-using static Unity.VisualScripting.Member;
 
 public sealed class MapSynchronizer : NetworkBehaviour
 {
@@ -38,8 +35,6 @@ public sealed class MapSynchronizer : NetworkBehaviour
     public float localTimeWithPing;
 
     private float updateTime;
-
-    int sync10Times = 10;
 
     private void Awake()
     {

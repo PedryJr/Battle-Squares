@@ -1,11 +1,8 @@
 using System.IO;
-using UnityEngine;
 using Newtonsoft.Json;
 using Unity.Netcode;
-using NUnit.Framework;
-using System.Collections.Generic;
 
-public class Skin : NetworkBehaviour
+public sealed class Skin : NetworkBehaviour
 {
 
     string skinsPath;

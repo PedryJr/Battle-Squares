@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SpawnStageBehaviour : MonoBehaviour
+public sealed class SpawnStageBehaviour : MonoBehaviour
 {
 
     [SerializeField]

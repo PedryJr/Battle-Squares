@@ -751,7 +751,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -5796,7 +5796,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -6077,7 +6077,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -15973,7 +15973,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -31183,7 +31183,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -31377,7 +31377,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -37730,7 +37730,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -38881,7 +38881,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -39075,7 +39075,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -39208,7 +39208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edeb90a6526e2643bd84086d9f0c49a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: -6947837168354792129, guid: cb733c92c5d447e4eb14c15ee68da5b3, type: 3}
+  icon: {fileID: 21300000, guid: cb733c92c5d447e4eb14c15ee68da5b3, type: 3}
   lightPos: {fileID: 817054715471609535}
   arenaName: Mazzard Klatre
   battleThemeReference:
@@ -59114,7 +59114,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -59682,7 +59682,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -65103,7 +65103,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -66518,7 +66518,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -71612,7 +71612,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -79988,7 +79988,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0
@@ -91540,7 +91540,7 @@ MonoBehaviour:
   id: 0
   spriteRenderer: {fileID: 0}
   playerBehaviour: {fileID: 0}
-  collider: {fileID: 0}
+  flagCollider: {fileID: 0}
   flagParticleSystem: {fileID: 0}
   follower: {fileID: 0}
   offset: 0

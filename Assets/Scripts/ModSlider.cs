@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ModSlider : MonoBehaviour
+public sealed class ModSlider : MonoBehaviour
 {
 
     [SerializeField]
