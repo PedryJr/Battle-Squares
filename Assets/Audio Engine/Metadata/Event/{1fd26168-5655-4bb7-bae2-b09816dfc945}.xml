@@ -60,8 +60,8 @@
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{da75c682-5209-4183-9065-00d868d7356f}">
-		<property name="dopplerEnabled">
-			<value>true</value>
+		<property name="maxVoices">
+			<value>30</value>
 		</property>
 		<property name="dopplerScale">
 			<value>270</value>

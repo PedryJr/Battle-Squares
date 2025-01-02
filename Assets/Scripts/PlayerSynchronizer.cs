@@ -1,3 +1,4 @@
+using FMODUnity;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -1199,8 +1200,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     public void UpdatePlayerHealth(byte id, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
-/*
-        UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);*/
         UpdatePlayerHealthRpc(id, damage, slowDownAmount, responsibleId, knockBack);
 
     }
@@ -1208,8 +1207,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void UpdatePlayerHealthRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
-/*
-        if ((byte) localSquare.id == responsibleId) return;*/
         UpdatePlayerHealthFunc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
         
     }
@@ -1226,14 +1223,19 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             if ((byte) player.square.id == affectedId)
             {
 
-                player.square.rb.AddForce(knockBack, ForceMode2D.Impulse);
-                player.square.healthPoints -= damage;
-                player.square.healthPoints = math.clamp(player.square.healthPoints, 0, player.square.maxHealthPoints);
+                if (!player.square.isDead)
+                {
 
-                player.square.rb.linearDamping = math.clamp(player.square.rb.linearDamping + slowDownAmount, 0.1f, 100f);
-                player.square.rb.angularDamping = math.clamp(player.square.rb.angularDamping + slowDownAmount, 0.1f, 100f);
+                    player.square.rb.AddForce(knockBack, ForceMode2D.Impulse);
+                    player.square.healthPoints -= damage;
+                    player.square.healthPoints = math.clamp(player.square.healthPoints, 0, player.square.maxHealthPoints);
 
-                if (player.square.healthPoints == 0 && !player.square.isDead)
+                    player.square.rb.linearDamping = math.clamp(player.square.rb.linearDamping + slowDownAmount, 0.1f, 100f);
+                    player.square.rb.angularDamping = math.clamp(player.square.rb.angularDamping + slowDownAmount, 0.1f, 100f);
+
+                }
+
+                if (player.square.healthPoints <= 0 && !player.square.isDead)
                 {
 
                     foreach (PlayerData player1 in playerIdentities) if ((byte) player1.id == responsibleId) player.square.killStreak++;
@@ -1268,7 +1270,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         }
 
-        if (affectedId == (byte) localSquare.id)
+        if (affectedId == (byte) localSquare.id && !localSquare.isDead)
         {
 
             UpdateHealth();

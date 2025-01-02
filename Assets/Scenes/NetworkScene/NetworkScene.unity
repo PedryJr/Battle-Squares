@@ -766,91 +766,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapons:
-  - type: 10
-    projectile: {fileID: 3066612454653962984, guid: 7a460261f861aa64c82e30c947c476e1, type: 3}
-    launchParticle: {fileID: 7289681851009581468, guid: 752d8ec26064b1e47892dcc12571f6c3, type: 3}
-    projectileAmmo: 6
-    reloadTime: 2.1
-    shootingInterval: 0.25
-    projectileSpeed: 50
-    projectileAcceleration: -5
-    lifeTime: 2.5
-    holdable: 1
-    burst: 0
-    bounces: 0
-    fluctuation: 0.38
-    noGravity: 0
-    dieOnImpact: 0
-    damageOnImpact: 1
-    sticky: 1
-    aoe: 0
-    skipAoeOnTargetHit: 0
-    knockback: 0
-    speedLimit: 100
-    minSpeed: 0
-    aoeDamage: 0
-    baseDamage: 1.2
-    damageTimeScale: 0
-    recoil: 1
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 1}
-    timeToMorph: 0
-    morphAnimation:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    sync: 1
-    syncSpeed: 0.3
-    returnToSender: 0
-    stickToSender: 0
-    melee: 0
-    oneTimeHit: 1
-    meleeRange: 0
-    swingDegrees: 0
-    meleeRotation: 0
-    meleePosAnimation:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    meleeRotAnimation:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    flipFlop: 0
-    homing: 0
-    homingStrength: 0
-    homingDistance: 0
-    spinSpeed: 0
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 0
-    dontBlockProjectiles: 1
-    bounceOfPlayers: 0
-    slowDownAmount: 20
-    senderSpeedOnDeath: 0
   - type: 0
     projectile: {fileID: 3066612454653962984, guid: 1484733a76041e247bad07d9e0c99dcc, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 6784c58aca5da3644917ab374eec1c9d, type: 3}
@@ -936,11 +851,13 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 1
     projectile: {fileID: 3066612454653962984, guid: e996855feaaebdd44a38ac085247b5c3, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
     projectileAmmo: 2
-    reloadTime: 2.2
+    reloadTime: 2.5
     shootingInterval: 0.04
     projectileSpeed: 60
     projectileAcceleration: 0
@@ -1003,6 +920,8 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 2
     projectile: {fileID: 3066612454653962984, guid: 0e5e809c41fa5344a9148b72c5826481, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: c2f50d2d9a5df5f4b9f0d3e1477fc04a, type: 3}
@@ -1070,6 +989,8 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 3
     projectile: {fileID: 3066612454653962984, guid: 60fe5a07722983144bf629b18c3c2728, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: d8f2373ffb8c1d74b8bafe429c9fa5c6, type: 3}
@@ -1164,6 +1085,8 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 4
     projectile: {fileID: 3066612454653962984, guid: df99116d93bd6da419c716dbcedd5e0b, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 407e4aa50b4ac3246ae54abf626c8b81, type: 3}
@@ -1231,11 +1154,13 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 5
     projectile: {fileID: 3066612454653962984, guid: cad4485b5d1f23a40a2d262d07303006, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
     projectileAmmo: 3
-    reloadTime: 1.5
+    reloadTime: 3
     shootingInterval: 0.04
     projectileSpeed: 20
     projectileAcceleration: 0
@@ -1298,6 +1223,8 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 6
     projectile: {fileID: 3066612454653962984, guid: 76131a323adaf2140bfedbbaaf9b4913, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: f314d24c6dc858544a9523786afd9469, type: 3}
@@ -1383,6 +1310,8 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 7
     projectile: {fileID: 3066612454653962984, guid: 069c25ee8449356448d40969e5a37f42, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 88f1cfe0c09d9fc4a8f356131abb5b7d, type: 3}
@@ -1495,6 +1424,8 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 8
     projectile: {fileID: 3066612454653962984, guid: d6c3af4a7b2d3304192974fb3d513631, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 10af522d604c7374a8a7d24e280de81d, type: 3}
@@ -1520,7 +1451,7 @@ MonoBehaviour:
     aoeDamage: 0
     baseDamage: 4
     damageTimeScale: 0
-    recoil: -4.8
+    recoil: -5.1
     enableMorph: 1
     targetMorph: {x: 1.3, y: 0.2, z: 1}
     timeToMorph: 0.165
@@ -1643,6 +1574,8 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 9
     projectile: {fileID: 3066612454653962984, guid: 232b889b82dd47146853b21ab9905dfb, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: 085cf986ebf02ba4e9d2be6607b3df70, type: 3}
@@ -1710,6 +1643,8 @@ MonoBehaviour:
     bounceOfPlayers: 1
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
   - type: 10
     projectile: {fileID: 3066612454653962984, guid: 84a724dfa7aa2e1418b752caf7241c5a, type: 3}
     launchParticle: {fileID: 7289681851009581468, guid: f6535d4c1c04976418fdf3b57c915dfb, type: 3}
@@ -1735,7 +1670,7 @@ MonoBehaviour:
     aoeDamage: 0
     baseDamage: 1.2
     damageTimeScale: 0
-    recoil: 1
+    recoil: 1.5
     enableMorph: 0
     targetMorph: {x: 0, y: 0, z: 1}
     timeToMorph: 0
@@ -1795,6 +1730,95 @@ MonoBehaviour:
     bounceOfPlayers: 0
     slowDownAmount: 20
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+  - type: 11
+    projectile: {fileID: 3066612454653962984, guid: 7a460261f861aa64c82e30c947c476e1, type: 3}
+    launchParticle: {fileID: 7289681851009581468, guid: 752d8ec26064b1e47892dcc12571f6c3, type: 3}
+    projectileAmmo: 7
+    reloadTime: 3.2
+    shootingInterval: 0.08
+    projectileSpeed: 50
+    projectileAcceleration: -5
+    lifeTime: 5
+    holdable: 1
+    burst: 0
+    bounces: 0
+    fluctuation: 0.19
+    noGravity: 0
+    dieOnImpact: 0
+    damageOnImpact: 1
+    sticky: 1
+    aoe: 0
+    skipAoeOnTargetHit: 0
+    knockback: 1
+    speedLimit: 100
+    minSpeed: 0
+    aoeDamage: 0
+    baseDamage: 0
+    damageTimeScale: 0
+    recoil: 2.3
+    enableMorph: 0
+    targetMorph: {x: 0, y: 0, z: 1}
+    timeToMorph: 0
+    morphAnimation:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sync: 1
+    syncSpeed: 0.3
+    returnToSender: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 1
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    flipFlop: 0
+    homing: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 1
+    bounceOfPlayers: 0
+    slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 3
+    lingeringFrequency: 2.5
   nozzleParticles: {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
   projectiles: []
   localNozzle: {fileID: 0}

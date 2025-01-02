@@ -60,14 +60,14 @@
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{42fcf897-9c4e-4b07-9d04-1a6c3334ff20}">
-		<property name="dopplerEnabled">
-			<value>true</value>
+		<property name="maxVoices">
+			<value>30</value>
+		</property>
+		<property name="voiceStealing">
+			<value>1</value>
 		</property>
 		<property name="dopplerScale">
 			<value>270</value>
-		</property>
-		<property name="triggerCooldown">
-			<value>9</value>
 		</property>
 	</object>
 	<object class="MarkerTrack" id="{927d2acf-b6f6-47e5-a823-6ccab43d908f}" />

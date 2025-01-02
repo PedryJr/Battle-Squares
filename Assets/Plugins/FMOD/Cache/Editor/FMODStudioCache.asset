@@ -21,7 +21,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: -6163062173220661443}
@@ -115,7 +115,7 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Player.bank
   Name: Player
   StudioPath: bank:/Player
-  lastModified: 638710701857608552
+  lastModified: 638714471764974906
   FileSizes:
   - Name: Desktop
     Value: 13280
@@ -183,7 +183,7 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638710701857576841
+  lastModified: 638714471764035584
   FileSizes:
   - Name: Desktop
     Value: 2412
@@ -305,7 +305,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: -7086255061977626997}
@@ -357,7 +357,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: -5546842167466409939}
@@ -562,7 +562,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: 1273568147337170834}
@@ -696,7 +696,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: 3667690904054000154}
@@ -773,7 +773,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: 6390418744559467312}
@@ -849,7 +849,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: 3942372773023115695}
@@ -929,7 +929,7 @@ MonoBehaviour:
   - {fileID: 5398076114463253590}
   StringsBanks:
   - {fileID: -6060654848937170672}
-  cacheTime: 638710701858528583
+  cacheTime: 638714489788976516
   cacheVersion: 131843
 --- !u!114 &102241271348088986
 MonoBehaviour:
@@ -976,7 +976,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: 102241271348088986}
@@ -1053,7 +1053,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: 1263847062947500625}
@@ -1081,7 +1081,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: -5054600546276340479}
@@ -1109,7 +1109,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: -4987696194738718931}
@@ -1215,7 +1215,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: 4542858616980936136}
@@ -1309,10 +1309,10 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Themes.bank
   Name: Themes
   StudioPath: bank:/Themes
-  lastModified: 638710701858468590
+  lastModified: 638714471819076468
   FileSizes:
   - Name: Desktop
-    Value: 15393984
+    Value: 15394176
   Exists: 1
 --- !u!114 &4969683084415332645
 MonoBehaviour:
@@ -1410,7 +1410,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: -975245365296833348}
@@ -1432,7 +1432,7 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638710701857526841
+  lastModified: 638714471764025578
   FileSizes:
   - Name: Desktop
     Value: 3878
@@ -1506,7 +1506,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 0
   Parameters:
   - {fileID: -442708472329658485}
@@ -1534,7 +1534,7 @@ MonoBehaviour:
   Banks:
   - {fileID: -6644664689769345712}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 0
   Parameters:
   - {fileID: 2658810102696043300}
@@ -1564,7 +1564,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 7992759740790496804}
   IsStream: 0
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters:
   - {fileID: 4994903501389816384}
@@ -1586,7 +1586,7 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/VFX.bank
   Name: VFX
   StudioPath: bank:/VFX
-  lastModified: 638710701858528583
+  lastModified: 638714489788976516
   FileSizes:
   - Name: Desktop
     Value: 116128

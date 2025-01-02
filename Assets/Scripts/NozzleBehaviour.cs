@@ -77,7 +77,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
 
     }
     [BurstCompile]
-    private void Update()
+    private void FixedUpdate()
     {
 
         intensity = math.clamp(intensity - Time.deltaTime / 5f, 0, 1);
@@ -112,7 +112,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
         if (!playerController.shootPrimary && !playerController.shootSecondary) return;
         
         relativePositionToPlayer = playerBehaviour.toPos;
-        globalNozzleDirection = playerBehaviour.transform.position + (Vector3) playerBehaviour.toPos;
+        globalNozzleDirection = playerBehaviour.rb.position + playerBehaviour.toPos;
 
         bool primaryReady, secondaryReady;
 

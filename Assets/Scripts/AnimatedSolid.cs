@@ -20,6 +20,7 @@ public sealed class AnimatedSolid : MonoBehaviour
 
     private void Awake()
     {
+
         mapSynchronizer = FindAnyObjectByType<MapSynchronizer>();
         if (simulated) InitSimulated();
     }

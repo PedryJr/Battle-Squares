@@ -152,7 +152,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         cameraAnimator = Camera.main.GetComponent<CameraAnimator>();
         playersHit = new List<PlayerBehaviour>();
         flagsHit = new List<FlagBehaviour>();
-
+        playersCollidingWith = new List<PlayerBehaviour>();
     }
     [BurstCompile]
     private void Start()
@@ -178,6 +178,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             aliveInstance.setVolume(MySettings.volume);
             aliveInstance.setPitch(pitch);
             aliveInstance.start();
+
 
         }
 
@@ -381,12 +382,15 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
                 externalTrailSpawnTimer += deltaTime;
 
-                if (!(externalTrailSpawnTimer > externalTrailSpawnRate)) return;
+                while (externalTrailSpawnTimer > externalTrailSpawnRate)
+                {
 
-                ExternalTrailBehaviour externalTrail = Instantiate(externalTrailRef, transform.position, transform.rotation, null);
-                if (externalTrail) externalTrail.Play(generalParticleColor, owningPlayer.id);
+                    ExternalTrailBehaviour externalTrail = Instantiate(externalTrailRef, transform.position, transform.rotation, null);
+                    if (externalTrail) externalTrail.Play(generalParticleColor, owningPlayer.id);
 
-                externalTrailSpawnTimer -= externalTrailSpawnRate;
+                    externalTrailSpawnTimer -= externalTrailSpawnRate;
+
+                }
 
             }
 
@@ -566,6 +570,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
+    float lingeringTimer;
+
     [BurstCompile]
     void LocalUpdate()
     {
@@ -646,12 +652,50 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         else if (sync && syncTimer > data.syncSpeed)
         {
 
+            
+
             projectileManager.UpdateProjectile(this);
             syncTimer = 0;
 
         }
 
+        lingeringTimer += Time.deltaTime;
+
     }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+
+        if (!IsLocalProjectile) return;
+
+        PlayerBehaviour playerBehaviour = collision.gameObject.GetComponent<PlayerBehaviour>();
+
+        if (playerBehaviour)
+        {
+
+            if (playerBehaviour.id == owningPlayer.id) return;
+
+            if (data.lingeringDamage > 0)
+            {
+
+                if (lingeringTimer * data.lingeringFrequency > 1)
+                {
+
+                    lingeringTimer = 0;
+
+
+                    Vector2 direction = (playerBehaviour.rb.position - rb.position).normalized;
+                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.id, data.lingeringDamage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
+
+
+                }
+
+            }
+
+        }
+
+    }
+
     [BurstCompile]
     private void OnTriggerEnter2D(Collider2D collider)
     {
@@ -666,6 +710,17 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         CollisionCheck(collision.gameObject);
 
     }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        CollisionCancell(collision.gameObject);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        CollisionCancell(collision.gameObject);
+    }
+
     [BurstCompile]
     void CollisionCheck(GameObject collidedWith)
     {
@@ -684,6 +739,18 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         if (projectileBehaviour) ProjectileCollisionCheck(projectileBehaviour);
 
     }
+
+    List<PlayerBehaviour> playersCollidingWith;
+
+    [BurstCompile]
+    void CollisionCancell(GameObject collidedWith)
+    {
+
+        PlayerBehaviour playerBehaviour = collidedWith.GetComponent<PlayerBehaviour>();
+        if (playerBehaviour) playersCollidingWith.Remove(playerBehaviour);
+
+    }
+
     [BurstCompile]
     void PlayerCollisionCheck(PlayerBehaviour playerBehaviour)
     {
@@ -730,7 +797,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         if (playerBehaviour)
         {
-
+            playersCollidingWith.Add(playerBehaviour);
             playersHit.Add(playerBehaviour);
 
             if (data.bounceOfPlayers)
@@ -821,6 +888,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
                 hasStuckToPoint = true;
                 stickyNormalAngle = Mathf.Atan2(stickySurfaceNormal.y, stickySurfaceNormal.x) * Mathf.Rad2Deg;
                 rb.position = pointStuckAt;
+                rb.rotation = stickyNormalAngle;
                 if (IsLocalProjectile) projectileManager.UpdateProjectile(this);
             }
 
@@ -1001,7 +1069,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     private void OnDestroy()
     {
 
-        for(int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
+        shotInstance.release();
+
+        for (int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
 
         owningPlayer.transform.localScale = Vector3.one;
         owningPlayer.nozzleBehaviour.transform.localScale = Vector3.one * 0.4f;
@@ -1010,6 +1080,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         {
 
             aliveInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            aliveInstance.release();
 
         }
 
@@ -1075,6 +1146,9 @@ public struct ProjectileInitData
 
     public float slowDownAmount;
     public float senderSpeedOnDeath;
+
+    public float lingeringDamage;
+    public float lingeringFrequency;
 
 
 }

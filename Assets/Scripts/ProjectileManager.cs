@@ -183,6 +183,8 @@ public sealed class ProjectileManager : NetworkBehaviour
             bounceOfPlayers = weapon.bounceOfPlayers,
             slowDownAmount = weapon.slowDownAmount,
             senderSpeedOnDeath = weapon.senderSpeedOnDeath,
+            lingeringDamage = weapon.lingeringDamage,
+            lingeringFrequency = weapon.lingeringFrequency,
 
         };
 
@@ -626,6 +628,8 @@ public sealed class ProjectileManager : NetworkBehaviour
         public bool bounceOfPlayers;
         public float slowDownAmount;
         public float senderSpeedOnDeath;
+        public float lingeringDamage;
+        public float lingeringFrequency;
 
     }
 
