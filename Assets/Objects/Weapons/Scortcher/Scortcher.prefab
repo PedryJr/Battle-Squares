@@ -260,7 +260,7 @@ MonoBehaviour:
   externalTrailRef: {fileID: 8693188006018225575, guid: 147091b030c1eb643b5f27bf276d093a, type: 3}
   multiplySpawnrateByLifetime: 1
   lifeTimeMultiplier: 2.5
-  externalTrailSpawnRate: 0.15
+  externalTrailSpawnRate: 0.2
 --- !u!61 &1066894796322893754
 BoxCollider2D:
   m_ObjectHideFlags: 0

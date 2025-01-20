@@ -16,9 +16,6 @@ public sealed class ExternalTrailBehaviour : MonoBehaviour
 
     private void Awake()
     {
-/*
-        Play(Color.red);*/
-
     }
 
     public void Play(Color color, ulong id)

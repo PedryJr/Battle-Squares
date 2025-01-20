@@ -3,7 +3,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 
-[BurstCompile]
 public sealed class PixelManager : MonoBehaviour
 {
 
@@ -59,7 +58,6 @@ public sealed class PixelManager : MonoBehaviour
     [SerializeField]
     public Color hoverEmptyColor;
 
-    [BurstCompile]
     private void Awake()
     {
 
@@ -94,7 +92,6 @@ public sealed class PixelManager : MonoBehaviour
 
     }
 
-    [BurstCompile]
     private void Update()
     {
 
@@ -166,7 +163,6 @@ public sealed class PixelManager : MonoBehaviour
 
     }
 
-    [BurstCompile]
     private void OnDestroy()
     {
 

@@ -467,10 +467,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     private void FixedUpdate()
     {
 
-        damage += Time.deltaTime * (damageScaleOverTime * Mods.at[11]);
-        timeAlive += Time.deltaTime;
         Vector2 vel, pos;
         float ang, rot, oldRot;
+
+        damage += Time.deltaTime * (damageScaleOverTime * Mods.at[11]);
+        timeAlive += Time.deltaTime;
         vel = rb.linearVelocity;
         pos = rb.position;
         ang = rb.angularVelocity;
