@@ -993,4 +993,9 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
+    public byte GetID()
+    {
+        return (byte) id;
+    }
+
 }

@@ -187,7 +187,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     }
 
     [BurstCompile]
-    public void InitializeBullet(ProjectileInitData data)
+    public void InitializeBullet(ref ProjectileInitData data)
     {
 
         initDamage = data.baseDamage;
@@ -321,7 +321,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             data.burst = (data.burst > 0 ? burst : -burst) * -1;
 
             GameObject newBurst = Instantiate(gameObject, transform.parent);
-            newBurst.GetComponent<ProjectileBehaviour>().InitializeBullet(data);
+            newBurst.GetComponent<ProjectileBehaviour>().InitializeBullet(ref data);
 
         }
 

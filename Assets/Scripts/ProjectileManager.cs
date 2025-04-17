@@ -101,7 +101,6 @@ public sealed class ProjectileManager : NetworkBehaviour
         PlayerBehaviour owningPlayer = null;
 
         Weapon weapon = new();
-        ProjectileInitData data = new();
         Vector2 forceToAdd = new();
 
         float multiplier1, multiplier2;
@@ -112,10 +111,10 @@ public sealed class ProjectileManager : NetworkBehaviour
         projectileBehaviour = Instantiate(weapon.projectile, position, Quaternion.identity, null).GetComponent<ProjectileBehaviour>();
         projectileBehaviour.flipFlop = flipFlop;
 
-        data = WeaponToProjectileData(weapon, projectileID, position, direction, burstData, fluctuation, owningPlayer);
+        ProjectileInitData data = WeaponToProjectileData(ref weapon, projectileID, position, direction, burstData, fluctuation, owningPlayer);
 
         projectileBehaviour.ownerId = owningPlayer.id;
-        projectileBehaviour.InitializeBullet(data);
+        projectileBehaviour.InitializeBullet(ref data);
 
         multiplier1 = weapon.recoil * Mods.at[13];
         multiplier2 = MyExtentions.EaseOutQuad(math.clamp(1 - (playerSynchronizer.localSquare.rb.linearVelocity.magnitude / 28), 0, 1));
@@ -126,7 +125,7 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
     [BurstCompile]
-    ProjectileInitData WeaponToProjectileData(Weapon weapon, uint projectileID, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, PlayerBehaviour owningPlayer)
+    ProjectileInitData WeaponToProjectileData(ref Weapon weapon, uint projectileID, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, PlayerBehaviour owningPlayer)
     {
 
         return new() 
