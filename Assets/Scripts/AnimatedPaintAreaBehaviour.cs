@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
@@ -18,6 +19,9 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
     [SerializeField]
     public PixelManager pixelManager;
+
+    [SerializeField]
+    public RectTransform selector;
 
     private PlayerSynchronizer playerSynchronizer;
 
@@ -71,6 +75,10 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
         }
 
         skinFrames[editingIndex].UPDATEPREVIEW();
+
+        Vector3 targetPos = math.transform(skinFrames[editingIndex].transform.localToWorldMatrix, skinFrames[editingIndex].body.rectTransform.localPosition);
+
+        selector.position = Vector3.Lerp(selector.position, targetPos, Time.deltaTime * 25);
     }
 
     private void LateUpdate()
@@ -144,6 +152,7 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
         {
             skinFrames[i].frameIndex = i;
         }
+        skinFrames[editingIndex].SELECT();
     }
 
     public void CREATEFRAME()

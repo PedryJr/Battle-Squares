@@ -63,7 +63,7 @@ public sealed class VoiceHandle : NetworkBehaviour
 
         cameraTransform = Camera.main.transform;
 
-        if (arg0.name.Equals("MenuScene")) Destroy(gameObject);
+        if (arg0.name.Equals("MenuScene")) if(gameObject) Destroy(gameObject);
 
     }
 

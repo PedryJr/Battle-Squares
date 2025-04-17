@@ -12,7 +12,7 @@ public sealed class SkinPreviewBehaviour : MonoBehaviour
 
     float animationTimer;
     int animationIndex;
-    int lastAnimationIndex;
+    int lastAnimationIndex = -1;
 
     [SerializeField]
     Image nozzlePreview;

@@ -233,7 +233,7 @@ public struct PixelColorJob : IJobParallelFor
     public NativeArray<float> colorTimer;
     public NativeArray<float> colorLerp;
 
-    [BurstCompile]
+    [BurstCompile(CompileSynchronously = false, Debug = false, DisableSafetyChecks = true, FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Low, OptimizeFor = OptimizeFor.Performance)]
     public void Execute(int index)
     {
 
