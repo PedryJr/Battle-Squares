@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 {
@@ -22,6 +24,8 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
     [SerializeField]
     public RectTransform selector;
+    [SerializeField]
+    public TMP_Text indicatorInSelector;
 
     private PlayerSynchronizer playerSynchronizer;
 
@@ -33,6 +37,10 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
     public int paste;
     public int lastPaste;
+
+    float indicatorTimer = 1;
+    Color indicatorTravelColor = new Color(0.0F, 0.0F, 0.0F, 0.0F);
+    Color indicatorHighlightColor = new Color(1.0F, 1.0F, 1.0F, 1.0F);
 
     private Inputs input;
 
@@ -66,6 +74,7 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
     {
         if (editingIndex != lastEditingIndex)
         {
+            indicatorTimer = 0;
             pixelManager.frameIndex = editingIndex;
 
             if (editingIndex == 0) pixelManager.skinTolerance = 45;
@@ -73,12 +82,17 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
             lastEditingIndex = editingIndex;
         }
+        
+        indicatorTimer += Time.deltaTime * 5F;
+        indicatorTimer = Mathf.Clamp01(indicatorTimer);
 
         skinFrames[editingIndex].UPDATEPREVIEW();
 
         Vector3 targetPos = math.transform(skinFrames[editingIndex].transform.localToWorldMatrix, skinFrames[editingIndex].body.rectTransform.localPosition);
+        targetPos.x = Mathf.Lerp(targetPos.x - 0.1F, targetPos.x, math.smoothstep(0F, 1F, indicatorTimer * 1.3F));
 
-        selector.position = Vector3.Lerp(selector.position, targetPos, Time.deltaTime * 25);
+        indicatorInSelector.color = Color.Lerp(indicatorTravelColor, indicatorHighlightColor, indicatorTimer);
+        selector.position = Vector3.Lerp(selector.position, targetPos, Time.deltaTime * 100F * indicatorTimer);
     }
 
     private void LateUpdate()
