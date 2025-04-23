@@ -1084,7 +1084,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
 
         UpdatePlayerHealthRpc(id, damage, slowDownAmount, responsibleId, knockBack);
-        UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
+        //UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
     }
 
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
