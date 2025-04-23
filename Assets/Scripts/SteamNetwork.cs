@@ -104,7 +104,7 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 
             }
 
-            NetworkManager.Singleton.Shutdown(true);
+            NetworkManager.Singleton.Shutdown(false);
             playerSynchronizer.DisconnectPlayerLocally();
 
             playerSynchronizer.hostShutdown = false;
