@@ -15,6 +15,8 @@ public sealed class LoadScores : MonoBehaviour
     private void Awake()
     {
 
+        timer = 0;
+
         playerSynchronizer = FindFirstObjectByType<PlayerSynchronizer>();
 
         for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++)

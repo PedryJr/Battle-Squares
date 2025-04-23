@@ -64,25 +64,52 @@ public sealed class LobbyLoader : MonoBehaviour
         LobbyQuery lobbyQuery1 = SteamMatchmaking.LobbyList;
         lobbyQuery1.FilterDistanceWorldwide();
         lobbyQuery1.WithKeyValue("Variant", "BattleSquares");
+/*
+        List<Lobby> manuallyFiltered = new List<Lobby>();*/
 
-        List<Lobby> manuallyFiltered = new List<Lobby>();
+        List<ulong> newLobbies = new List<ulong>();
 
         Lobby[] fetchedLobbies = await lobbyQuery1.RequestAsync();
 
-        if (this != null)
+        if (this == null) return;
+        if (fetchedLobbies == null) return;
+
+        newLobbies.AddRange(fetchedLobbies.Select(l => l.Id.Value));
+
+        for (int i = 0; i < fetchedLobbies.Length; i++)
         {
+            Lobby candidate = fetchedLobbies[i];
+            if (LobbiesV2.ContainsKey(candidate.Id.Value)) continue;
 
-            if (fetchedLobbies != null)
+            if (candidate.GetData("Avalible").Equals("true"))
             {
+                LobbiesV2.Add(candidate.Id, Instantiate(lobbyTemplate, transform).Initialize(candidate, this));
+            }
+            else if (candidate.GetData("OwnerId").Equals(SteamClient.SteamId.Value.ToString()))
+            {
+                LobbiesV2.Add(candidate.Id, Instantiate(lobbyTemplate, transform).Initialize(candidate, this));
+            }
+        }
 
-                //Filter lobbies
+        for (int i = 0; i < LobbiesV2.Count; i++)
+        {
+            ulong oldId = LobbiesV2.Keys.ElementAt(i);
+            if (!newLobbies.Contains(oldId))
+            {
+                LobbyBehaviour lobbyBehaviour = LobbiesV2[oldId];
+                LobbiesV2.Remove(oldId);
+                Destroy(lobbyBehaviour.gameObject);
+            }
+        }
+
+        /*        //Filter lobbies
                 for (int i = 0; i < fetchedLobbies.Length; i++)
                 {
 
                     bool filterFlag = true;
                     Lobby aLobby = fetchedLobbies[i];
 
-                    if(!aLobby.GetData("Avalible").Equals("true")) filterFlag = false;
+                    if (!aLobby.GetData("Avalible").Equals("true")) filterFlag = false;
 
                     if (aLobby.GetData("OwnerId").Equals(SteamClient.SteamId.Value.ToString())) filterFlag = true;
 
@@ -132,11 +159,7 @@ public sealed class LobbyLoader : MonoBehaviour
                     LobbyBehaviour lobbyBehaviour = LobbiesV2[id];
                     LobbiesV2.Remove(id);
                     Destroy(lobbyBehaviour.gameObject);
-                }
-
-            }
-
-        }
+                }*/
 
     }
 

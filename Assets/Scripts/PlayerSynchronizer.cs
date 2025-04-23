@@ -16,6 +16,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public float ping;
     public float rtt;
 
+    PlayerData[] test;
+
     public List<PlayerData> playerIdentities;
     public List<IdPair> idPairs;
     NetworkManager networkManager;
@@ -62,6 +64,11 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         hunter = GetComponent<Hunter>();
         scoreManager = GetComponent<ScoreManager>();
 
+    }
+
+    private void LateUpdate()
+    {
+        test = playerIdentities?.ToArray();
     }
 
     [BurstCompile]
@@ -124,7 +131,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     [BurstCompile]
     private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-
+        Debug.Log("lol");
         if (arg0.name == "GameScene")
         {
 
@@ -157,6 +164,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 }
 
             }
+
+        }
+        else if (arg0.name == "MenuScene")
+        {
+
+
 
         }
 
@@ -550,7 +563,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
                 }
 
-                RequestAddPlayerServerRpc(connectedId, SteamNetwork.playerSteamID);
 
             }
             else
@@ -582,6 +594,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 }
 
             }
+            
+            if(connectedId == NetworkManager.LocalClientId) RequestAddPlayerServerRpc(connectedId, SteamNetwork.playerSteamID);
 
         }
 
@@ -807,52 +821,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
         rbUpdate += deltaTime * 100f;
 
-    }/*
-    [BurstCompile]
-    void UpdateRigidBody()
-    {
-        byte sourceId = (byte) localSquare.id;
-
-        float[] data = new float[] 
-        { 
-            localSquare.rb.position.x, localSquare.rb.position.y,
-            localSquare.rb.linearVelocity.x, localSquare.rb.linearVelocity.y,
-            localSquare.rb.rotation, localSquare.rb.angularVelocity
-        };
-
-        UpdateRigidBodyRpc(data, sourceId);
-
     }
-    [BurstCompile]
-
-    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
-    void UpdateRigidBodyRpc(float[] data, byte sourceId)
-    {
-
-        if (playerIdentities == null) return;
-        if ((byte) localSquare.id == sourceId) return;
-
-        foreach (PlayerData player in playerIdentities)
-        {
-
-            if ((byte)player.square.id != sourceId) continue;
-
-            StorePlayerRigidBodyData(player, data);
-
-        }
-    }
-    [BurstCompile]
-    void StorePlayerRigidBodyData(PlayerData player, float[] data)
-    {
-
-        if (player.square.isDead) return;
-
-        player.square.rb.position = new Vector2(data[0], data[1]);
-        player.square.rb.linearVelocity = new Vector2(data[2], data[3]);
-        player.square.rb.rotation = data[4];
-        player.square.rb.angularVelocity = data[5];
-
-    }*/
     [BurstCompile]
     void UpdateRigidBody()
     {
@@ -1276,6 +1245,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         Mods.at[index] = value;
 
     }
+    [Serializable]
     [BurstCompile]
     public struct PlayerData
     {

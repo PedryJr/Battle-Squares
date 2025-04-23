@@ -84,9 +84,12 @@ public sealed class CameraAnimator : MonoBehaviour
 
     private void Update()
     {
+
+
         CalculateFrames();
 
         if (!scoreManager.inGame) return;
+        if (!playerSynchronizer) return;
 
         Effects();
 

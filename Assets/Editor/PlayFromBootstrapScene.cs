@@ -1,10 +1,10 @@
-/*using UnityEditor;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [InitializeOnLoad]
-public class PlayFromBootstrapScene
+public class PlayFromBootstrapScene : Editor
 {
     private static readonly string bootstrapScenePath = "Assets/Scenes/NetworkScene/NetworkScene.unity";
     private const string PreviousSceneKey = "PreviousScenePath";
@@ -36,4 +36,4 @@ public class PlayFromBootstrapScene
             }
         }
     }
-}*/
+}
