@@ -147,10 +147,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             stopUpdate = false;
             FindAnyObjectByType<PlayerController>().EnableController();
 
-            if(SteamNetwork.currentLobby != null)
+            if (SteamNetwork.currentLobby != null)
             {
 
-                if (IsHost && (bool) SteamNetwork.currentLobby?.Owner.IsMe)
+                if (IsHost && (bool)SteamNetwork.currentLobby?.Owner.IsMe)
                 {
                     SteamNetwork.currentLobby?.SetPublic();
                     SteamNetwork.currentLobby?.SetJoinable(true);
@@ -394,7 +394,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
                     bool validFrame = skinData.skinFrames[j].valid;
 
-                    if(!validFrame) validSkin = false;
+                    if (!validFrame) validSkin = false;
 
                 }
 
@@ -445,7 +445,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 }
 
             }
-            
+
 
             foreach (PlayerData player in playerIdentities)
             {
@@ -467,15 +467,15 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             }
 
             playerData.square.SpawnEffect();
-/*
-            DontDestroyOnLoad(playerData.square);*/
+            /*
+                        DontDestroyOnLoad(playerData.square);*/
 
 
 
             foreach (PlayerData player in playerIdentities)
             {
 
-                if(player.id != id) SyncPlayerDataClientRpc((byte)player.id, player.square.isDead);
+                if (player.id != id) SyncPlayerDataClientRpc((byte)player.id, player.square.isDead);
 
             }
 
@@ -490,7 +490,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         foreach (PlayerData player in playerIdentities)
         {
 
-            if((byte) player.id == id)
+            if ((byte)player.id == id)
             {
 
                 player.square.isDead = isDead;
@@ -554,7 +554,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
             }
             else
-            { 
+            {
 
                 PlayerData playerData = new PlayerData();
 
@@ -571,7 +571,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                     foreach (PlayerData player in playerIdentities)
                     {
 
-                        if(player.id == connectedId)
+                        if (player.id == connectedId)
                         {
                             localSquare = playerData.square;
                             FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
@@ -669,7 +669,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             }
         }
 
-        if(addNewId) playerIdList.Add(new IdMatch { clientId = clientId, steamId = steamId });
+        if (addNewId) playerIdList.Add(new IdMatch { clientId = clientId, steamId = steamId });
 
     }
 
@@ -702,7 +702,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         foreach (PlayerData player in playerIdentities)
         {
-            if((byte) player.square.id == id)
+            if ((byte)player.square.id == id)
             {
 
                 player.square.CreateTextureFromBoolArray10BY10(bodySkin, index);
@@ -770,7 +770,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     private void Update()
     {
 
-        rtt = (float) (NetworkManager.LocalTime.Time - NetworkManager.ServerTime.Time);
+        rtt = (float)(NetworkManager.LocalTime.Time - NetworkManager.ServerTime.Time);
         ping = rtt / 2;
 
     }
@@ -853,72 +853,72 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         player.square.rb.angularVelocity = data[5];
 
     }*/
-        [BurstCompile]
-        void UpdateRigidBody()
+    [BurstCompile]
+    void UpdateRigidBody()
+    {
+        ulong sourceId = networkManager.LocalClientId;
+
+        byte[] compPos = MyExtentions.EncodePosition(localSquare.position.x + 64, localSquare.position.y + 64);
+        byte[] compVel = MyExtentions.EncodePosition(localSquare.velocity.x + 64, localSquare.velocity.y + 64);
+        byte[] compRot = MyExtentions.EncodeRotation(localSquare.rotation);
+        byte[] compRotVel = MyExtentions.EncodeFloat(localSquare.angularVelocity);
+
+        byte[] data = new byte[14]
         {
-            ulong sourceId = networkManager.LocalClientId;
-
-            byte[] compPos = MyExtentions.EncodePosition(localSquare.position.x + 64, localSquare.position.y + 64);
-            byte[] compVel = MyExtentions.EncodePosition(localSquare.velocity.x + 64, localSquare.velocity.y + 64);
-            byte[] compRot = MyExtentions.EncodeRotation(localSquare.rotation);
-            byte[] compRotVel = MyExtentions.EncodeFloat(localSquare.angularVelocity);
-
-            byte[] data = new byte[14]
-            {
                 compPos[0], compPos[1], compPos[2], compPos[3],
                 compVel[0], compVel[1], compVel[2], compVel[3],
                 compRot[0], compRot[1],
                 compRotVel[0], compRotVel[1], compRotVel[2],
                 (byte) sourceId
-            };
+        };
 
-            UpdateRigidBodyRpc(data);
+        UpdateRigidBodyRpc(data);
 
-        }
-        [BurstCompile]
+    }
+    [BurstCompile]
 
-        [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
-        void UpdateRigidBodyRpc(byte[] data)
+    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+    void UpdateRigidBodyRpc(byte[] data)
+    {
+
+        if ((byte)networkManager.LocalClientId == data[13]) return;
+        if (playerIdentities == null) return;
+
+        foreach (PlayerData player in playerIdentities)
         {
 
-            if ((byte)networkManager.LocalClientId == data[13]) return;
-            if (playerIdentities == null) return;
-
-            foreach (PlayerData player in playerIdentities)
-            {
-
-                StorePlayerRigidBodyData(player, data);
-
-            }
-        }
-        [BurstCompile]
-        void StorePlayerRigidBodyData(PlayerData player, byte[] data)
-        {
-
-            if ((byte)player.id != data[13]) return;
-            if (player.square.isDead) return;
-
-            byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
-            byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
-            byte[] compRot = new byte[2] { data[8], data[9] };
-            byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
-
-
-            (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
-            xPos -= 64;
-            yPos -= 64;
-            (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
-            xVel -= 64;
-            yVel -= 64;
-            float rot = MyExtentions.DecodeRotation(compRot);
-            float rotVel = MyExtentions.DecodeFloat(compRotVel);
-
-            player.square.rb.position = new Vector2(xPos, yPos);
-            player.square.rb.rotation = rot;
-            player.square.rb.linearVelocity = new Vector2(xVel, yVel);
-            player.square.rb.angularVelocity = rotVel;
+            StorePlayerRigidBodyData(player, data);
 
         }
+    }
+    [BurstCompile]
+    void StorePlayerRigidBodyData(PlayerData player, byte[] data)
+    {
+
+        if ((byte)player.id != data[13]) return;
+        if (player.square.isDead) return;
+
+        byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
+        byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
+        byte[] compRot = new byte[2] { data[8], data[9] };
+        byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
+
+
+        (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
+        xPos -= 64;
+        yPos -= 64;
+        (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
+        xVel -= 64;
+        yVel -= 64;
+        float rot = MyExtentions.DecodeRotation(compRot);
+        float rotVel = MyExtentions.DecodeFloat(compRotVel);
+
+        player.square.rb.position = new Vector2(xPos, yPos);
+        player.square.rb.rotation = rot;
+        player.square.rb.linearVelocity = new Vector2(xVel, yVel);
+        player.square.rb.angularVelocity = rotVel;
+
+    }
     [BurstCompile]
     public void UpdateNozzle()
     {
@@ -1051,7 +1051,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void UpdatePlayerReady(bool ready)
     {
 
-        byte sourceId = (byte) localSquare.id;
+        byte sourceId = (byte)localSquare.id;
 
         UpdatePlayerReadyRpc(sourceId, ready);
 
@@ -1066,7 +1066,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         foreach (PlayerData player in playerIdentities)
         {
-            if(player.id == sourceId) StorePlayerReady(player, sourceId, ready);
+            if (player.id == sourceId) StorePlayerReady(player, sourceId, ready);
         }
 
     }
@@ -1106,97 +1106,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         player.square.selectedMap = map;
 
     }
-    /*
-    [BurstCompile]
-    public void UpdatePlayerHealth(ulong id, float modifier, ulong responsibleId, Vector2 knockBack)
-    {
-
-        ulong ignoreId = NetworkManager.LocalClientId;
-
-        if (IsHost)
-        {
-
-            UpdatePlayerHealthClientRpc(id, modifier, responsibleId, knockBack, ignoreId);
-
-        }
-
-        if (!IsHost)
-        {
-
-            UpdatePlayerHealthServerRpc(id, modifier, responsibleId, knockBack, ignoreId);
-
-        }
-
-        EndUpdatePlayerHealth(id, modifier, responsibleId, knockBack);
-
-    }
-    [BurstCompile]
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void UpdatePlayerHealthServerRpc(ulong id, float damage, ulong responsibleId, Vector2 knockBack, ulong ignoreId)
-    {
-
-        if (NetworkManager.LocalClientId == ignoreId) return;
-
-        UpdatePlayerHealthClientRpc(id, damage, responsibleId, knockBack, ignoreId);
-
-        EndUpdatePlayerHealth(id, damage, responsibleId, knockBack);
-
-    }
-    [BurstCompile]
-    [ClientRpc(Delivery = RpcDelivery.Reliable)]
-    void UpdatePlayerHealthClientRpc(ulong id, float damage, ulong responsibleId, Vector2 knockBack, ulong ignoreId)
-    {
-
-        if (NetworkManager.LocalClientId == ignoreId) return;
-
-        if (IsHost) return;
-
-        EndUpdatePlayerHealth(id, damage, responsibleId, knockBack);
-
-    }
-    [BurstCompile]
-    void EndUpdatePlayerHealth(ulong id, float damage, ulong responsibleId, Vector2 knockBack)
-    {
-
-        bool kill = false;
-
-        foreach (PlayerData player in playerIdentities)
-        {
-
-            if (player.id != id) continue;
-
-            if (player.square.isDead) continue;
-
-            player.square.healthPoints -= damage;
-
-            player.square.rb.AddForce(knockBack, ForceMode2D.Impulse);
-
-            if (player.square.healthPoints > 0) continue;
-
-            player.square.KillPlayer();
-            kill = true;
-
-        }
-
-        if (kill && scoreManager.gameMode == ScoreManager.Mode.DM)
-        {
-
-            foreach (PlayerData data in playerIdentities)
-            {
-
-                if (data.id != responsibleId) continue;
-
-                data.square.score++;
-                scoreManager.UpdateScoreBoard();
-
-            }
-        }
-
-        UpdateHealth();
-        UpdateScore();
-
-    }*/
-
 
     public void UpdatePlayerHealth(byte id, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
@@ -1208,7 +1117,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void UpdatePlayerHealthRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
         UpdatePlayerHealthFunc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
-        
+
     }
 
 
@@ -1220,7 +1129,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         foreach (PlayerData player in playerIdentities)
         {
 
-            if ((byte) player.square.id == affectedId)
+            if ((byte)player.square.id == affectedId)
             {
 
                 if (!player.square.isDead)
@@ -1238,7 +1147,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 if (player.square.healthPoints <= 0 && !player.square.isDead)
                 {
 
-                    foreach (PlayerData player1 in playerIdentities) if ((byte) player1.id == responsibleId) player.square.killStreak++;
+                    foreach (PlayerData player1 in playerIdentities) if ((byte)player1.id == responsibleId) player.square.killStreak++;
 
                     kill = true;
                     PlayerDeathEffect(player.square.rb.position, player.square.playerDarkerColor);
@@ -1259,7 +1168,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             foreach (PlayerData player in playerIdentities)
             {
 
-                if ((byte) player.id == responsibleId)
+                if ((byte)player.id == responsibleId)
                 {
 
                     player.square.score++;
@@ -1270,14 +1179,14 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         }
 
-        if (affectedId == (byte) localSquare.id && !localSquare.isDead)
+        if (affectedId == (byte)localSquare.id && !localSquare.isDead)
         {
 
             UpdateHealth();
 
         }
 
-        if (responsibleId == (byte) localSquare.id)
+        if (responsibleId == (byte)localSquare.id)
         {
 
             UpdateScore();
@@ -1321,7 +1230,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void SpreadInGameMessage(string message)
     {
 
-        byte playerId = (byte) localSquare.id;
+        byte playerId = (byte)localSquare.id;
         string sanetizedMessage = MyExtentions.SanitizeMessage(message);
 
         SpreadInGameMessageRpc(sanetizedMessage, playerId);
@@ -1335,7 +1244,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         PlayerBehaviour source = null;
         MessageRecieverBehaviour messageReciever = null;
 
-        foreach(PlayerData player in playerIdentities)
+        foreach (PlayerData player in playerIdentities)
         {
 
             if (player.id == playerId) source = player.square;

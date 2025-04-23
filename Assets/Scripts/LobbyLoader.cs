@@ -1,6 +1,7 @@
 using Steamworks;
 using Steamworks.Data;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ public sealed class LobbyLoader : MonoBehaviour
     VerticalLayoutGroup layoutGroup;
 
     List<LobbyBehaviour> Lobbies;
+    Dictionary<ulong, LobbyBehaviour> LobbiesV2;
     public List<LobbyBehaviour> failedLobbies;
     float lobbyUpdateTime = 0;
 
@@ -25,8 +27,9 @@ public sealed class LobbyLoader : MonoBehaviour
     {
 
         Lobbies = new List<LobbyBehaviour>();
+        LobbiesV2 = new Dictionary<ulong, LobbyBehaviour>();
         failedLobbies = new List<LobbyBehaviour>();
-        await LoadLobbies();
+        await LoadLobbiesV2();
         LoadFirstLobby();
 
     }
@@ -48,7 +51,90 @@ public sealed class LobbyLoader : MonoBehaviour
         {
 
             lobbyUpdateTime = 0;
-            await LoadLobbies();
+            await LoadLobbiesV2();
+
+        }
+
+    }
+
+
+    async Task LoadLobbiesV2()
+    {
+
+        LobbyQuery lobbyQuery1 = SteamMatchmaking.LobbyList;
+        lobbyQuery1.FilterDistanceWorldwide();
+        lobbyQuery1.WithKeyValue("Variant", "BattleSquares");
+
+        List<Lobby> manuallyFiltered = new List<Lobby>();
+
+        Lobby[] fetchedLobbies = await lobbyQuery1.RequestAsync();
+
+        if (this != null)
+        {
+
+            if (fetchedLobbies != null)
+            {
+
+                //Filter lobbies
+                for (int i = 0; i < fetchedLobbies.Length; i++)
+                {
+
+                    bool filterFlag = true;
+                    Lobby aLobby = fetchedLobbies[i];
+
+                    if(!aLobby.GetData("Avalible").Equals("true")) filterFlag = false;
+
+                    if (aLobby.GetData("OwnerId").Equals(SteamClient.SteamId.Value.ToString())) filterFlag = true;
+
+                    if (filterFlag) manuallyFiltered.Add(aLobby);
+
+                }
+
+                //Add new lobbies
+                for (int i = 0; i < manuallyFiltered.Count; i++)
+                {
+
+                    Lobby aLobby = manuallyFiltered[i];
+
+                    if (!LobbiesV2.ContainsKey(aLobby.Id))
+                    {
+                        LobbiesV2.Add(aLobby.Id, Instantiate(lobbyTemplate, transform).Initialize(aLobby, this));
+                    }
+
+                }
+
+                //Remove lobbies that no longer exist
+                List<ulong> lobbiesToRemove = new List<ulong>();
+                for (int i = 0; i < LobbiesV2.Count; i++)
+                {
+
+                    bool matchFound = false;
+
+                    ulong oldId = LobbiesV2.Keys.ElementAt(i);
+                    ulong matchId = 0;
+
+                    for (int j = 0; j < manuallyFiltered.Count; j++)
+                    {
+                        if (matchFound) break;
+                        matchId = manuallyFiltered.ElementAt(j).Id;
+                        matchFound = matchId == oldId;
+                    }
+
+                    if (!matchFound)
+                    {
+                        lobbiesToRemove.Add(matchId);
+                        break;
+                    }
+
+                }
+                foreach (ulong id in lobbiesToRemove)
+                {
+                    LobbyBehaviour lobbyBehaviour = LobbiesV2[id];
+                    LobbiesV2.Remove(id);
+                    Destroy(lobbyBehaviour.gameObject);
+                }
+
+            }
 
         }
 
