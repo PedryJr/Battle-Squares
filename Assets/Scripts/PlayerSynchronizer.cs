@@ -1093,6 +1093,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     void UpdatePlayerHealthFunc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
 
+        Debug.Log("Ass hat");
+
         bool kill = false;
 
         foreach (PlayerData player in playerIdentities)
