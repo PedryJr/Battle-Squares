@@ -1024,6 +1024,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void UpdatePlayerReady(bool ready)
     {
 
+        if (!localSquare) return;
+
         byte sourceId = (byte)localSquare.id;
 
         UpdatePlayerReadyRpc(sourceId, ready);
