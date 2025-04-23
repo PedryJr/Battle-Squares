@@ -823,6 +823,38 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
     [BurstCompile]
+    void StorePlayerRigidBodyData(PlayerData player, byte[] data)
+    {
+
+        if ((byte)player.id == data[13])
+        {
+
+            if (player.square.isDead) return;
+
+            byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
+            byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
+            byte[] compRot = new byte[2] { data[8], data[9] };
+            byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
+
+
+            (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
+            xPos -= 64;
+            yPos -= 64;
+            (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
+            xVel -= 64;
+            yVel -= 64;
+            float rot = MyExtentions.DecodeRotation(compRot);
+            float rotVel = MyExtentions.DecodeFloat(compRotVel);
+
+            player.square.rb.position = new Vector2(xPos, yPos);
+            player.square.rb.rotation = rot;
+            player.square.rb.linearVelocity = new Vector2(xVel, yVel);
+            player.square.rb.angularVelocity = rotVel;
+
+        }
+
+    }
+    [BurstCompile]
     void UpdateRigidBody()
     {
         ulong sourceId = networkManager.LocalClientId;
@@ -859,34 +891,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             StorePlayerRigidBodyData(player, data);
 
         }
-    }
-    [BurstCompile]
-    void StorePlayerRigidBodyData(PlayerData player, byte[] data)
-    {
-
-        if ((byte)player.id != data[13]) return;
-        if (player.square.isDead) return;
-
-        byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
-        byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
-        byte[] compRot = new byte[2] { data[8], data[9] };
-        byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
-
-
-        (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
-        xPos -= 64;
-        yPos -= 64;
-        (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
-        xVel -= 64;
-        yVel -= 64;
-        float rot = MyExtentions.DecodeRotation(compRot);
-        float rotVel = MyExtentions.DecodeFloat(compRotVel);
-
-        player.square.rb.position = new Vector2(xPos, yPos);
-        player.square.rb.rotation = rot;
-        player.square.rb.linearVelocity = new Vector2(xVel, yVel);
-        player.square.rb.angularVelocity = rotVel;
-
     }
     [BurstCompile]
     public void UpdateNozzle()
@@ -1078,17 +1082,16 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     public void UpdatePlayerHealth(byte id, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
-        UpdatePlayerHealthRpc(id, damage, slowDownAmount, responsibleId, knockBack);
 
+        UpdatePlayerHealthRpc(id, damage, slowDownAmount, responsibleId, knockBack);
+        UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
     public void UpdatePlayerHealthRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
         UpdatePlayerHealthFunc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
-
     }
-
 
     void UpdatePlayerHealthFunc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
