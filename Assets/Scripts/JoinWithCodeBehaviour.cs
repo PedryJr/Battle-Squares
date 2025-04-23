@@ -14,7 +14,7 @@ public sealed class JoinWithCodeBehaviour : MonoBehaviour
         char[] aA = code.ToUpper().ToCharArray();
         if (aA.Length != 8) return;
 
-        NetworkManager.Singleton.Shutdown();
+        NetworkManager.Singleton.Shutdown(true);
         FindAnyObjectByType<PlayerSynchronizer>().ForceReset();
 
         LobbyQuery bruh = new LobbyQuery();

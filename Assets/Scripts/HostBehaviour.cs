@@ -35,12 +35,13 @@ public sealed class HostBehaviour : MonoBehaviour
 
     public async void InitializeServerEvent()
     {
-
         selectedLobby.UpdateAvalible();
 
         if (!selectedLobby.activated) return;
 
         NetworkManager.Singleton.Shutdown(true);
+        //GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>().Shutdown();
+
         FindAnyObjectByType<PlayerSynchronizer>().ForceReset();
 
         if (selectedLobby.lobbyId.Value == SteamNetwork.currentLobby.Value.Id)

@@ -85,7 +85,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
             }
 
-            playerIdentities = null;
         }
 
         foreach (ProjectileBehaviour projectile in projectileManager.projectiles)
@@ -95,13 +94,15 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         }
 
-        projectileManager.projectiles.Clear();
 
         PlayerBehaviour[] remainingPlayers = FindObjectsByType<PlayerBehaviour>(FindObjectsSortMode.None);
         for (int i = 0; i < remainingPlayers.Length; i++)
         {
             Destroy(remainingPlayers[i]);
         }
+
+        playerIdentities = null;
+        projectileManager.projectiles.Clear();
 
     }
     [BurstCompile]
