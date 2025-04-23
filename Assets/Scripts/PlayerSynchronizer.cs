@@ -327,7 +327,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void DisconnectPlayerLocally()
     {
 
-        NetworkManager.Shutdown();
+        NetworkManager.Shutdown(true);
 
         SceneManager.LoadSceneAsync("MenuScene");
 
@@ -1087,7 +1087,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
     }
 
-    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void UpdatePlayerHealthRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
         UpdatePlayerHealthFunc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
