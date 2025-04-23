@@ -327,7 +327,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void DisconnectPlayerLocally()
     {
 
-        NetworkManager.Shutdown(false);
+        NetworkManager.Shutdown(true);
 
         SceneManager.LoadSceneAsync("MenuScene");
 
