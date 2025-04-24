@@ -1,4 +1,5 @@
 using FMODUnity;
+using Netcode.Transports.Facepunch;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -329,6 +330,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
 
         NetworkManager.Shutdown(true);
+        GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>().DisconnectLocalClient();
 
         SceneManager.LoadSceneAsync("MenuScene");
 
