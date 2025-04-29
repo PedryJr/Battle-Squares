@@ -35,12 +35,14 @@ public sealed class HostBehaviour : MonoBehaviour
 
     public async void InitializeServerEvent()
     {
-
         selectedLobby.UpdateAvalible();
 
         if (!selectedLobby.activated) return;
 
         NetworkManager.Singleton.Shutdown(true);
+        GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>().Shutdown();
+        GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>().Initialize(NetworkManager.Singleton);
+
         FindAnyObjectByType<PlayerSynchronizer>().ForceReset();
 
         if (selectedLobby.lobbyId.Value == SteamNetwork.currentLobby.Value.Id)
@@ -73,6 +75,7 @@ public sealed class HostBehaviour : MonoBehaviour
             GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>().targetSteamId = selectedLobby.lobby.Owner.Id;
 
             NetworkManager.Singleton.StartClient();
+            
 
             SteamNetwork.currentLobby = selectedLobby.lobby;
 

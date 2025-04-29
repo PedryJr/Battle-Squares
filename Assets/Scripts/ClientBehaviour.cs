@@ -21,9 +21,14 @@ public sealed class ClientBehaviour : MonoBehaviour
             playerSynchronizer.DisconnectPlayerLocally();
 
         }
+        else
+        {
+
+            playerSynchronizer.DisconnectPlayerLocally();
+
+        }
 
         NetworkManager.Singleton.Shutdown(true);
-        playerSynchronizer.DisconnectPlayerLocally();
 
         playerSynchronizer.hostShutdown = false;
 
