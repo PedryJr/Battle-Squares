@@ -1,4 +1,6 @@
+using Steamworks;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 public sealed class LobbyStateBehaviour : MonoBehaviour
@@ -7,24 +9,24 @@ public sealed class LobbyStateBehaviour : MonoBehaviour
     [SerializeField]
     TMP_Text accessField;
 
-    public static bool access = false;
+    public static bool access = true;
+
+    float timer = 0;
 
     private void Start()
     {
+        UpdateAccessField();
 
-        if (access)
-        {
-            SteamNetwork.currentLobby?.SetJoinable(true);
-            SteamNetwork.currentLobby?.SetData("Avalible", "true");
-            accessField.text = "Public";
-        }
-        else
-        {
-            SteamNetwork.currentLobby?.SetJoinable(true);
-            SteamNetwork.currentLobby?.SetData("Avalible", "false");
-            accessField.text = "Private";
-        }
+    }
 
+    private void Update()
+    {
+        timer += Time.deltaTime;
+        if(timer > 2)
+        {
+            timer = 0;
+            UpdateAccessField();
+        }
     }
 
     public void ACESS()
@@ -32,17 +34,29 @@ public sealed class LobbyStateBehaviour : MonoBehaviour
 
         access = !access;
 
-        if (access)
+        UpdateAccessField();
+
+    }
+
+    void UpdateAccessField()
+    {
+
+        if (NetworkManager.Singleton.IsHost)
         {
-            SteamNetwork.currentLobby?.SetJoinable(true);
-            SteamNetwork.currentLobby?.SetData("Avalible", "true");
-            accessField.text = "Public";
-        }
-        else
-        {
-            SteamNetwork.currentLobby?.SetJoinable(true);
-            SteamNetwork.currentLobby?.SetData("Avalible", "false");
-            accessField.text = "Private";
+
+            if (access)
+            {
+                SteamNetwork.currentLobby?.SetJoinable(true);
+                SteamNetwork.currentLobby?.SetData("Avalible", "true");
+                accessField.text = "Public";
+            }
+            else
+            {
+                SteamNetwork.currentLobby?.SetJoinable(true);
+                SteamNetwork.currentLobby?.SetData("Avalible", "false");
+                accessField.text = "Private";
+            }
+
         }
 
     }

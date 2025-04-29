@@ -3,6 +3,7 @@ using Steamworks.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +31,7 @@ public sealed class LobbyLoader : MonoBehaviour
         LobbiesV2 = new Dictionary<ulong, LobbyBehaviour>();
         failedLobbies = new List<LobbyBehaviour>();
         await LoadLobbiesV2();
-        LoadFirstLobby();
+        LoadFirstLobbyV2();
 
     }
 
@@ -67,77 +68,167 @@ public sealed class LobbyLoader : MonoBehaviour
 
         List<Lobby> manuallyFiltered = new List<Lobby>();
 
+        List<ulong> keysToRemove = new List<ulong>();
+
         Lobby[] fetchedLobbies = await lobbyQuery1.RequestAsync();
 
-        if (this != null)
+        manuallyFiltered.AddRange(fetchedLobbies);
+
+        RemoveOfflineLobbies(ref fetchedLobbies, ref keysToRemove);
+
+        foreach (Lobby lobby in fetchedLobbies)
         {
 
-            if (fetchedLobbies != null)
+            if (!LobbiesV2.ContainsKey(lobby.Owner.Id))
             {
-
-                //Filter lobbies
-                for (int i = 0; i < fetchedLobbies.Length; i++)
-                {
-
-                    bool filterFlag = true;
-                    Lobby aLobby = fetchedLobbies[i];
-
-                    if(!aLobby.GetData("Avalible").Equals("true")) filterFlag = false;
-
-                    if (aLobby.GetData("OwnerId").Equals(SteamClient.SteamId.Value.ToString())) filterFlag = true;
-
-                    if (filterFlag) manuallyFiltered.Add(aLobby);
-
-                }
-
-                //Add new lobbies
-                for (int i = 0; i < manuallyFiltered.Count; i++)
-                {
-
-                    Lobby aLobby = manuallyFiltered[i];
-
-                    if (!LobbiesV2.ContainsKey(aLobby.Id))
-                    {
-                        LobbiesV2.Add(aLobby.Id, Instantiate(lobbyTemplate, transform).Initialize(aLobby, this));
-                    }
-
-                }
-
-                //Remove lobbies that no longer exist
-                List<ulong> lobbiesToRemove = new List<ulong>();
-                for (int i = 0; i < LobbiesV2.Count; i++)
-                {
-
-                    bool matchFound = false;
-
-                    ulong oldId = LobbiesV2.Keys.ElementAt(i);
-                    ulong matchId = 0;
-
-                    for (int j = 0; j < manuallyFiltered.Count; j++)
-                    {
-                        if (matchFound) break;
-                        matchId = manuallyFiltered.ElementAt(j).Id;
-                        matchFound = matchId == oldId;
-                    }
-
-                    if (!matchFound)
-                    {
-                        lobbiesToRemove.Add(matchId);
-                        break;
-                    }
-
-                }
-                foreach (ulong id in lobbiesToRemove)
-                {
-                    LobbyBehaviour lobbyBehaviour = LobbiesV2[id];
-                    LobbiesV2.Remove(id);
-                    Destroy(lobbyBehaviour.gameObject);
-                }
-
+                AddOnlineLobby(lobby);
             }
 
         }
 
+        /*
+                if (this != null)
+                {
+
+                    if (fetchedLobbies != null)
+                    {
+
+                        //Filter lobbies
+                        for (int i = 0; i < fetchedLobbies.Length; i++)
+                        {
+
+                            bool filterFlag = true;
+                            Lobby aLobby = fetchedLobbies[i];
+
+                            if(!aLobby.GetData("Avalible").Equals("true")) filterFlag = false;
+
+                            if (aLobby.GetData("OwnerId").Equals(SteamClient.SteamId.Value.ToString())) filterFlag = true;
+
+                            if (filterFlag) manuallyFiltered.Add(aLobby);
+
+                        }
+
+                        //Add new lobbies
+                        for (int i = 0; i < manuallyFiltered.Count; i++)
+                        {
+
+                            Lobby aLobby = manuallyFiltered[i];
+
+                            if (!LobbiesV2.ContainsKey(aLobby.Id))
+                            {
+                                LobbiesV2.Add(aLobby.Id, Instantiate(lobbyTemplate, transform).Initialize(aLobby, this));
+                            }
+
+                        }
+
+                        //Remove lobbies that no longer exist
+                        List<ulong> lobbiesToRemove = new List<ulong>();
+                        for (int i = 0; i < LobbiesV2.Count; i++)
+                        {
+
+                            bool matchFound = false;
+
+                            ulong oldId = LobbiesV2.Keys.ElementAt(i);
+                            ulong matchId = 0;
+
+                            for (int j = 0; j < manuallyFiltered.Count; j++)
+                            {
+                                if (matchFound) break;
+                                matchId = manuallyFiltered.ElementAt(j).Id;
+                                matchFound = matchId == oldId;
+                            }
+
+                            if (!matchFound)
+                            {
+                                lobbiesToRemove.Add(matchId);
+                                break;
+                            }
+
+                        }
+                        foreach (ulong id in lobbiesToRemove)
+                        {
+                            LobbyBehaviour lobbyBehaviour = LobbiesV2[id];
+                            LobbiesV2.Remove(id);
+                            Destroy(lobbyBehaviour.gameObject);
+                        }
+
+                    }
+
+                }*/
+
+    }
+
+    void AddOnlineLobby(Lobby lobbyToAdd)
+    {
+
+        if(IsLobbyValid(lobbyToAdd))
+        {
+            CreateNewLobby(lobbyToAdd);
+        }
+
+    }
+
+    void CreateNewLobby(Lobby source)
+    {
+        LobbiesV2.Add(source.Owner.Id.Value, Instantiate(lobbyTemplate, transform).Initialize(source, this));
+    }
+
+    bool IsLobbyValid(Lobby lobbyToCheck)
+    {
+        bool lobbyIsValid = false;
+
+        if (Filter(lobbyToCheck, "Avalible", "true"))
+        {
+            lobbyIsValid = true;
+        }
+        else if (Filter(lobbyToCheck, "OwnerId", SteamClient.SteamId.Value.ToString()))
+        {
+            lobbyIsValid = true;
+        }
+        return lobbyIsValid;
+    }
+
+    bool Filter(Lobby toFilter, string key, string value)
+    {
+        return toFilter.GetData(key) == value;
+    }
+
+    void RemoveOfflineLobbies(ref Lobby[] manuallyFiltered, ref List<ulong> keysToRemove)
+    {
+        foreach (KeyValuePair<ulong, LobbyBehaviour> listedLobby in LobbiesV2)
+        {
+
+            bool listingOnline = false;
+
+            foreach (Lobby fetchedLobby in manuallyFiltered)
+            {
+
+
+                if (listedLobby.Key == fetchedLobby.Owner.Id.Value)
+                {
+
+                    if (IsLobbyValid(fetchedLobby))
+                    {
+                        listingOnline = true;
+                    }
+
+                }
+
+            }
+
+            if (!listingOnline)
+            {
+                keysToRemove.Add(listedLobby.Key);
+            }
+
+        }
+
+        foreach (ulong key in keysToRemove)
+        {
+            LobbyBehaviour oldListing = LobbiesV2[key];
+            LobbiesV2.Remove(key);
+            Destroy(oldListing.gameObject);
+        }
     }
 
     async Task LoadLobbies()
@@ -343,6 +434,23 @@ public sealed class LobbyLoader : MonoBehaviour
             {
                 lobby.transform.SetParent(transform, true);
             }
+        }
+
+    }
+
+    void LoadFirstLobbyV2()
+    {
+
+        foreach (LobbyBehaviour lobby in LobbiesV2.Values)
+        {
+
+            if (lobby.lobbyId == SteamNetwork.currentLobby?.Id.Value)
+            {
+
+                lobby.OnClicked();
+
+            }
+
         }
 
     }

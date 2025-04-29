@@ -564,6 +564,16 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         ang = math.clamp(ang, -1000, 1000);
 
+        if (data.alignDirection)
+        {
+            rot = math.degrees(math.atan2(vel.y, vel.x));
+            ang = (rot - rb.rotation) * Time.deltaTime;
+            if (projectileTrailBehaviour)
+            {
+                projectileTrailBehaviour.transform.rotation = transform.rotation;
+            }
+        }
+
         rb.linearVelocity = vel;
         rb.position = hasStuckToPoint ? pointStuckAt : pos;
         rb.angularVelocity = ang;
@@ -1150,6 +1160,7 @@ public struct ProjectileInitData
 
     public float lingeringDamage;
     public float lingeringFrequency;
+    public bool alignDirection;
 
 
 }

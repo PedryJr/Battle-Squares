@@ -184,6 +184,7 @@ public sealed class ProjectileManager : NetworkBehaviour
             senderSpeedOnDeath = weapon.senderSpeedOnDeath,
             lingeringDamage = weapon.lingeringDamage,
             lingeringFrequency = weapon.lingeringFrequency,
+            alignDirection = weapon.alignDirection,
 
         };
 
@@ -629,6 +630,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         public float senderSpeedOnDeath;
         public float lingeringDamage;
         public float lingeringFrequency;
+        public bool alignDirection;
 
     }
 
@@ -646,7 +648,8 @@ public sealed class ProjectileManager : NetworkBehaviour
         Katana,
         Boomerang,
         Hailmaker,
-        Scortcher
+        Scortcher,
+        Bounzooka
 
     }
 

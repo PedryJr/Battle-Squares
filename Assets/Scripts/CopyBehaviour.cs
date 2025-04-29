@@ -58,10 +58,11 @@ public sealed class CopyBehaviour : MonoBehaviour
           .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 
-    public void COPY()
+    public void COPY(IndicatorTextBehaviour indicator)
     {
 
         GUIUtility.systemCopyBuffer = code;
+        indicator.INDICATE();
 
     }
 

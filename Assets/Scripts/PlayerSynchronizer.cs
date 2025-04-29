@@ -1235,7 +1235,46 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         SpreadInGameMessageRpc(sanetizedMessage, playerId);
 
+        #region Test to see if it fix host->rejoin->rpc not sent problem
+        /*        if (IsHost) SpreadInGameMessageClientRpc(sanetizedMessage, playerId);
+                else SpreadInGameMessageServerRpc(sanetizedMessage, playerId);
+                SpreadIngameMessageFunc(sanetizedMessage, playerId);*/
+        #endregion
     }
+
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void SpreadInGameMessageServerRpc(string message, byte playerId)
+    {
+        SpreadInGameMessageClientRpc(message, playerId);
+    }
+
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    void SpreadInGameMessageClientRpc(string message, byte playerId)
+    {
+        if ((byte)localSquare.id == playerId) return;
+        SpreadIngameMessageFunc(message, playerId);
+    }
+
+    void SpreadIngameMessageFunc(string message, byte playerId)
+    {
+        PlayerBehaviour source = null;
+        MessageRecieverBehaviour messageReciever = null;
+
+        foreach (PlayerData player in playerIdentities)
+        {
+
+            if (player.id == playerId) source = player.square;
+
+        }
+
+        messageReciever = FindAnyObjectByType<MessageRecieverBehaviour>();
+
+        if (!source) return;
+        if (!messageReciever) return;
+
+        messageReciever.CreateNewMessage(message, source);
+    }
+
     [BurstCompile]
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void SpreadInGameMessageRpc(string message, byte playerId)
