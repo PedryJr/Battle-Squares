@@ -72,6 +72,8 @@ public sealed class LobbyLoader : MonoBehaviour
 
         Lobby[] fetchedLobbies = await lobbyQuery1.RequestAsync();
 
+        if (fetchedLobbies == null) return;
+
         manuallyFiltered.AddRange(fetchedLobbies);
 
         RemoveOfflineLobbies(ref fetchedLobbies, ref keysToRemove);
