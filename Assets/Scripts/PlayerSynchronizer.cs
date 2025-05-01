@@ -78,6 +78,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     void ConnectionApproval(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {
         Debug.Log(request.Payload.Length);
+        response.Approved = true;
     }
 
     private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
