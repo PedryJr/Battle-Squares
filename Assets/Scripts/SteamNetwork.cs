@@ -135,7 +135,7 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
     {
 
         currentLobby?.Leave();
-        currentLobby?.Refresh();
+        //currentLobby?.Refresh();
         currentLobby = null;
 
         currentLobby = await SteamMatchmaking.CreateLobbyAsync(4);
