@@ -735,8 +735,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     void SetupNewPlayerClientRpc(ulong[] nowPlayers, ulong connectedId, ScoreManager.Mode gameMode)
     {
 
-        Debug.Log("Running player setup");
-
         clrUpdate = 0;
 
         if (!IsHost)
@@ -1311,8 +1309,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     void UpdatePlayerHealthFunc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
-
-        Debug.Log("Ass hat");
 
         bool kill = false;
 

@@ -219,8 +219,6 @@ public sealed class ProjectileManager : NetworkBehaviour
 
         ulong ignoreId = NetworkManager.LocalClientId;
 
-        Debug.Log(particleColor);
-
         byte[] rotation = MyExtentions.EncodeRotation(particleRotation.eulerAngles.z);
 
         particleData[0] = (byte) Mathf.FloorToInt(particleColor.r * 255);
