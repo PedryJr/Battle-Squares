@@ -67,11 +67,16 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         networkManager.OnClientDisconnectCallback += DisconnectPlayer;*/
 
         networkManager.OnConnectionEvent += NetworkManager_OnConnectionEvent;
+        //networkManager.ConnectionApprovalCallback += ConnectionApproval;
 
         hunter = GetComponent<Hunter>();
         scoreManager = GetComponent<ScoreManager>();
         for (int i = 0; i < defaultSkin.Length; i++) defaultSkin[i] = true;
 
+    }
+
+    void ConnectionApproval(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+    {
     }
 
     private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
