@@ -1481,22 +1481,19 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         byte playerId = (byte)localSquare.id;
         string sanetizedMessage = MyExtentions.SanitizeMessage(message);
 
-        SpreadInGameMessageRpc(sanetizedMessage, playerId);
+        if (IsHost) SpreadInGameMessageClientRpc(sanetizedMessage, playerId);
+        else SpreadInGameMessageServerRpc(sanetizedMessage, playerId);
 
-        #region Test to see if it fix host->rejoin->rpc not sent problem
-        /*        if (IsHost) SpreadInGameMessageClientRpc(sanetizedMessage, playerId);
-                else SpreadInGameMessageServerRpc(sanetizedMessage, playerId);
-                SpreadIngameMessageFunc(sanetizedMessage, playerId);*/
-        #endregion
+        SpreadIngameMessageFunc(sanetizedMessage, playerId);
     }
 
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [ServerRpc(RequireOwnership = false)]
     void SpreadInGameMessageServerRpc(string message, byte playerId)
     {
         SpreadInGameMessageClientRpc(message, playerId);
     }
 
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [ClientRpc]
     void SpreadInGameMessageClientRpc(string message, byte playerId)
     {
         if ((byte)localSquare.id == playerId) return;
