@@ -392,7 +392,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         currentGameState.currentGameMode = scoreManager.gameMode;
         currentGameState.mods = (float[]) Mods.at.Clone();
 
-        RoundTripCollectorRpc(currentGameState);
+        RoundTripCollectorClientRpc(currentGameState);
 
     }
 
@@ -427,10 +427,14 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         return !playerExists;
     }
 
-    [Rpc(SendTo.Everyone)]
-    public void RoundTripCollectorRpc(GameStateData currentGameState)
+    [ClientRpc]
+    public void RoundTripCollectorClientRpc(GameStateData currentGameState)
     {
+        RoundTripCollector(ref currentGameState);
+    }
 
+    void RoundTripCollector(ref GameStateData currentGameState)
+    {
         scoreManager.gameMode = currentGameState.currentGameMode;
         for (int i = 0; i < currentGameState.mods.Length; i++) Mods.at[i] = currentGameState.mods[i];
 
@@ -442,11 +446,22 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         playerFactoryData.skinFrameCount = FetchGetFrameCount();
         playerFactoryData.skinAnimationSpeed = FetchGetFrameAnimation();
 
-        PlayerFactoryRpc(playerFactoryData);
+        if(IsHost) PlayerFactoryClientRpc(playerFactoryData);
+        else PlayerFactoryServerRpc(playerFactoryData);
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false)]
-    public void PlayerFactoryRpc(PlayerFactoryDataPacket playerData)
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayerFactoryServerRpc(PlayerFactoryDataPacket playerData)
+    {
+        PlayerFactoryClientRpc(playerData);
+    }
+
+    [ClientRpc]
+    public void PlayerFactoryClientRpc(PlayerFactoryDataPacket playerData)
+    {
+        PlayerFactory(ref playerData);
+    }
+    public void PlayerFactory(ref PlayerFactoryDataPacket playerData)
     {
         Debug.Log("Player Factory RPC\n" +
             $"Source ID: {playerData.networkId}\n" +
@@ -455,7 +470,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             $"Skin frames: {playerData.skinFrameCount}\n" +
             $"Skin speed: {playerData.skinAnimationSpeed}");
 
-        if(IsNewPlayer(playerData.networkId)) InstantiateNewPlayer(ref playerData);
+        if (IsNewPlayer(playerData.networkId)) InstantiateNewPlayer(ref playerData);
 
         UpdateColor();
         UpdateNozzle();
