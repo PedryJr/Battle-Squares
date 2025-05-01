@@ -1,3 +1,4 @@
+using Netcode.Transports.Facepunch;
 using Steamworks;
 using Steamworks.Data;
 using System;
@@ -146,6 +147,8 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
         currentLobby?.SetData("OwnerId", SteamClient.SteamId.Value.ToString());
         currentLobby?.SetData("Variant", "BattleSquares");
         currentLobby?.SetData("Code", "INVALID");
+
+        FindAnyObjectByType<FacepunchTransport>().Initialize(FindAnyObjectByType<NetworkManager>());
 
     }
 

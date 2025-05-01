@@ -82,7 +82,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
     {
 
-        networkManager.PendingClients.Clear();
+        //networkManager.PendingClients.Clear();
 
         if (arg2.EventType == ConnectionEvent.PeerConnected) CreateNewPlayer(arg2.ClientId);
         if (arg2.EventType == ConnectionEvent.ClientConnected) CreateNewPlayer(arg2.ClientId);
@@ -187,7 +187,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
         else if (arg0.name == "MenuScene")
         {
-
 
 
         }
@@ -345,9 +344,11 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     [BurstCompile]
     public void DisconnectPlayerLocally()
     {
-
+        Debug.Log("IMAGINE");
         NetworkManager.Shutdown(true);
-        GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>().DisconnectLocalClient();
+        FacepunchTransport ft = GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>();
+        ft.DisconnectLocalClient();
+        ft.Shutdown();
 
         SceneManager.LoadSceneAsync("MenuScene");
 
