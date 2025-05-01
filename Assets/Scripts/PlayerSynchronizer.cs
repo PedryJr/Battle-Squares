@@ -1030,7 +1030,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
 
         clientConnectionsStatusTimer += Time.deltaTime;
-        if(clientConnectionsStatusTimer > 1)
+        if(clientConnectionsStatusTimer > 0.3f)
         {
             string status = "";
             foreach (var item in NetworkManager.Singleton.ConnectedClients)
@@ -1038,6 +1038,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 status += $"|| {item.Value.ClientId}, {item.Key} ||";
             }
             Debug.Log(status);
+            Debug.Log($"Is client: {NetworkManager.Singleton.IsClient}");
+            Debug.Log($"Is connected client: {NetworkManager.Singleton.IsConnectedClient}");
+            clientConnectionsStatusTimer = 0;
         }
 
         rtt = (float)(NetworkManager.LocalTime.Time - NetworkManager.ServerTime.Time);
