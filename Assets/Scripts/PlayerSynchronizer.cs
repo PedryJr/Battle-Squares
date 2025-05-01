@@ -1359,13 +1359,22 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void UpdatePlayerHealth(byte id, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
 
-        UpdatePlayerHealthRpc(id, damage, slowDownAmount, responsibleId, knockBack);
-        //UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
+        if(IsHost) UpdatePlayerHealthClientRpc(id, damage, slowDownAmount, responsibleId, knockBack);
+        else UpdatePlayerHealthServerRpc(id, damage, slowDownAmount, responsibleId, knockBack);
+
+        UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    public void UpdatePlayerHealthRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdatePlayerHealthServerRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
+        UpdatePlayerHealthClientRpc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
+    }
+
+    [ClientRpc]
+    public void UpdatePlayerHealthClientRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
+    {
+        if ((byte)localSquare.id == responsibleId) return;
         UpdatePlayerHealthFunc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
     }
 
