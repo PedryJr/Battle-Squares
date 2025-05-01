@@ -76,7 +76,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
     {
+        if (arg2.EventType == ConnectionEvent.PeerConnected) CreateNewPlayer(arg2.ClientId);
         if (arg2.EventType == ConnectionEvent.ClientConnected) CreateNewPlayer(arg2.ClientId);
+        if (arg2.EventType == ConnectionEvent.PeerDisconnected) DisconnectPlayer(arg2.ClientId);
         if (arg2.EventType == ConnectionEvent.ClientDisconnected) DisconnectPlayer(arg2.ClientId);
     }
 
