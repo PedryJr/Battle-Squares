@@ -101,7 +101,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             Destroy(remainingPlayers[i]);
         }
 
-        playerIdentities = null;
+        //playerIdentities = null;
         projectileManager.projectiles.Clear();
 
     }
@@ -352,8 +352,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
             }
 
-            playerIdentities = null;
+            //playerIdentities = null;
         }
+        playerIdentities.Clear();
 
     }
 
