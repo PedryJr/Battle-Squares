@@ -433,6 +433,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         if(IsNewPlayer(playerData.networkId)) InstantiateNewPlayer(ref playerData);
 
+        UpdateColor();
+        UpdateNozzle();
+        UpdateRigidBody();
+        UpdateHealth();
+        UpdatePlayerReady(localSquare.ready);
+
     }
 
     public void InstantiateNewPlayer(ref PlayerFactoryDataPacket playerData)
