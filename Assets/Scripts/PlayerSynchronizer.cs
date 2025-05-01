@@ -63,12 +63,21 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         networkManager = GameObject.Find("Network").GetComponent<NetworkManager>();
         projectileManager = GetComponent<ProjectileManager>();
         localSteamData = GetComponent<LocalSteamData>();
-        networkManager.OnClientConnectedCallback += CreateNewPlayer;
-        networkManager.OnClientDisconnectCallback += DisconnectPlayer;
+/*        networkManager.OnClientConnectedCallback += CreateNewPlayer;
+        networkManager.OnClientDisconnectCallback += DisconnectPlayer;*/
+
+        networkManager.OnConnectionEvent += NetworkManager_OnConnectionEvent;
+
         hunter = GetComponent<Hunter>();
         scoreManager = GetComponent<ScoreManager>();
         for (int i = 0; i < defaultSkin.Length; i++) defaultSkin[i] = true;
 
+    }
+
+    private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
+    {
+        if (arg2.EventType == ConnectionEvent.ClientConnected) CreateNewPlayer(arg2.ClientId);
+        if (arg2.EventType == ConnectionEvent.ClientDisconnected) DisconnectPlayer(arg2.ClientId);
     }
 
     [BurstCompile]
