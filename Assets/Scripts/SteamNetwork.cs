@@ -133,7 +133,6 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 
     public static async void CreateNewLobby()
     {
-
         currentLobby?.Leave();
         //currentLobby?.Refresh();
         currentLobby = null;
