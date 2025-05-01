@@ -526,6 +526,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     void SetupNewPlayerClientRpc(ulong[] nowPlayers, ulong connectedId, ScoreManager.Mode gameMode)
     {
 
+        Debug.Log("Running player setup");
+
         clrUpdate = 0;
 
         if (!IsHost)
