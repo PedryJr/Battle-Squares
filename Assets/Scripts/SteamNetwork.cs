@@ -148,8 +148,6 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
         currentLobby?.SetData("Variant", "BattleSquares");
         currentLobby?.SetData("Code", "INVALID");
 
-        FindAnyObjectByType<FacepunchTransport>().Initialize(FindAnyObjectByType<NetworkManager>());
-
     }
 
     private void OnApplicationQuit()

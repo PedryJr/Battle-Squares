@@ -67,7 +67,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         networkManager.OnClientDisconnectCallback += DisconnectPlayer;*/
 
         networkManager.OnConnectionEvent += NetworkManager_OnConnectionEvent;
-        //networkManager.ConnectionApprovalCallback += ConnectionApproval;
+        networkManager.ConnectionApprovalCallback += ConnectionApproval;
 
         hunter = GetComponent<Hunter>();
         scoreManager = GetComponent<ScoreManager>();
@@ -77,10 +77,13 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     void ConnectionApproval(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {
+        Debug.Log(request.Payload.Length);
     }
 
     private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
     {
+
+        Debug.Log("MFFF");
 
         //networkManager.PendingClients.Clear();
 
