@@ -3,11 +3,13 @@ using Netcode.Transports.Facepunch;
 using Steamworks;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 [BurstCompile]
 public sealed class PlayerSynchronizer : NetworkBehaviour
 {
@@ -16,8 +18,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     public float ping;
     public float rtt;
-
-    PlayerData[] test;
 
     public List<PlayerData> playerIdentities;
     public List<IdPair> idPairs;
@@ -49,6 +49,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public NetworkList<IdMatch> playerIdList = new NetworkList<IdMatch>(readPerm: NetworkVariableReadPermission.Everyone, writePerm: NetworkVariableWritePermission.Server);
 
     bool stopUpdate;
+
+    bool[] defaultSkin = new bool[116];
+
     [BurstCompile]
     private void Awake()
     {
@@ -60,16 +63,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         networkManager = GameObject.Find("Network").GetComponent<NetworkManager>();
         projectileManager = GetComponent<ProjectileManager>();
         localSteamData = GetComponent<LocalSteamData>();
-        networkManager.OnClientConnectedCallback += SetupNewPlayer;
+        networkManager.OnClientConnectedCallback += CreateNewPlayer;
         networkManager.OnClientDisconnectCallback += DisconnectPlayer;
         hunter = GetComponent<Hunter>();
         scoreManager = GetComponent<ScoreManager>();
+        for (int i = 0; i < defaultSkin.Length; i++) defaultSkin[i] = true;
 
-    }
-
-    private void LateUpdate()
-    {
-        test = playerIdentities?.ToArray();
     }
 
     [BurstCompile]
@@ -133,7 +132,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     [BurstCompile]
     private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        Debug.Log("lol");
         if (arg0.name == "GameScene")
         {
 
@@ -359,9 +357,220 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    public void CreateNewPlayer(ulong id)
+    {
+
+        if (!IsHost) return;
+
+        GameStateData currentGameState = new GameStateData();
+
+        currentGameState.currentGameMode = scoreManager.gameMode;
+        currentGameState.mods = (float[]) Mods.at.Clone();
+
+        RoundTripCollectorRpc(currentGameState);
+
+    }
+
+    bool FetchSkinValidity()
+    {
+        bool skinValidCheck = true;
+        foreach (var frame in skinData.skinFrames) skinValidCheck = frame.valid && skinValidCheck;
+        return skinValidCheck;
+    }
+    int FetchGetFrameCount() => FetchSkinValidity() ? skinData.frames : 1;
+    float FetchGetFrameAnimation() => FetchSkinValidity() ? skinData.frameRate : 0F;
+    byte[] FetchGetFramePixels()
+    {
+        List<byte> collectedSkinData = new List<byte>();
+        if (FetchSkinValidity()) foreach (var frame in skinData.skinFrames) collectedSkinData.AddRange(MyExtentions.BoolArrayToByteArray(frame.frame));
+        else collectedSkinData.AddRange(MyExtentions.BoolArrayToByteArray(defaultSkin));
+        return collectedSkinData.ToArray();
+    }
+
+    bool IsNewPlayer(ulong playerId)
+    {
+        if(playerIdentities == null) playerIdentities = new List<PlayerData>();
+        bool playerExists = false;
+        foreach (PlayerData player in playerIdentities)
+        {
+            if ((byte)player.id == playerId)
+            {
+                playerExists = true;
+                break;
+            }
+        }
+        return !playerExists;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void RoundTripCollectorRpc(GameStateData currentGameState)
+    {
+
+        scoreManager.gameMode = currentGameState.currentGameMode;
+        for (int i = 0; i < currentGameState.mods.Length; i++) Mods.at[i] = currentGameState.mods[i];
+
+        PlayerFactoryDataPacket playerFactoryData = new PlayerFactoryDataPacket();
+
+        playerFactoryData.steamId = SteamClient.SteamId.Value;
+        playerFactoryData.networkId = NetworkManager.LocalClientId;
+        playerFactoryData.skinFrames = FetchGetFramePixels();
+        playerFactoryData.skinFrameCount = FetchGetFrameCount();
+        playerFactoryData.skinAnimationSpeed = FetchGetFrameAnimation();
+
+        PlayerFactoryRpc(playerFactoryData);
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false)]
+    public void PlayerFactoryRpc(PlayerFactoryDataPacket playerData)
+    {
+        Debug.Log("Player Factory RPC\n" +
+            $"Source ID: {playerData.networkId}\n" +
+            $"Source SteamID: {playerData.steamId}\n" +
+            $"Skin data: {playerData.skinFrames.Length}\n" +
+            $"Skin frames: {playerData.skinFrameCount}\n" +
+            $"Skin speed: {playerData.skinAnimationSpeed}");
+
+        if(IsNewPlayer(playerData.networkId)) InstantiateNewPlayer(ref playerData);
+
+    }
+
+    public void InstantiateNewPlayer(ref PlayerFactoryDataPacket playerData)
+    {
+        PlayerBehaviour newPlayer = Instantiate(square);
+
+        SetPlayerInitialData(ref newPlayer, ref playerData);
+
+        SetPlayerSkinData(ref newPlayer, ref playerData);
+
+        SetPlayerLocality(ref newPlayer, ref playerData);
+
+        SetPlayerSyncData(ref newPlayer, ref playerData);
+
+        SpawnPlayer(ref newPlayer);
+    }
+
+    private void SpawnPlayer(ref PlayerBehaviour newPlayer)
+    {
+        newPlayer.SpawnEffect();
+    }
+
+    private void SetPlayerLocality(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
+    {
+        if (playerData.networkId != NetworkManager.LocalClientId) return;
+
+        localSquare = newPlayer;
+        FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
+
+    }
+
+    private void SetPlayerSyncData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
+    {
+        playerIdentities.Add(new PlayerData
+        {
+            square = newPlayer,
+            id = playerData.networkId,
+            steamId = playerData.steamId
+        });
+        newPlayer.AssertSteamDataAvalible(playerData.steamId);
+    }
+
+    private void SetPlayerInitialData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
+    {
+        newPlayer.id = playerData.networkId;
+    }
+
+    public void SetPlayerSkinData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
+    {
+
+        newPlayer.nozzleFrames = new Sprite[playerData.skinFrameCount];
+        newPlayer.bodyFrames = new Sprite[playerData.skinFrameCount];
+        newPlayer.frameRate = playerData.skinAnimationSpeed;
+
+        byte[] frameBuffer = new byte[15];
+        bool[] skinBuffer;
+        int frameBufferIndex = 0;
+
+        for (int frameIndex = 0; frameIndex < playerData.skinFrameCount; frameIndex++)
+        {
+
+            for (int i = 0; i < 15; i++)
+            {
+                frameBuffer[i] = playerData.skinFrames[frameBufferIndex];
+                frameBufferIndex++;
+            }
+
+            skinBuffer = MyExtentions.ByteArrayToBoolArray(frameBuffer, 116);
+
+            bool[] bodySkin = new bool[100];
+            bool[] nozzleSkin = new bool[16];
+
+            for (int i = 0; i < 100; i++)
+            {
+                bodySkin[i] = skinBuffer[i];
+            }
+
+            for (int i = 0; i < 16; i++)
+            {
+                nozzleSkin[i] = skinBuffer[100 + i];
+            }
+
+            newPlayer.CreateTextureFromBoolArray10BY10(bodySkin, (byte)frameIndex);
+            newPlayer.CreateTextureFromBoolArray4BY4(nozzleSkin, (byte)frameIndex);
+
+        }
+
+
+    }
+
+    public struct PlayerFactoryDataPacket : INetworkSerializable
+    {
+
+        public ulong steamId;
+        public ulong networkId;
+
+        public int skinFrameCount;
+        public float skinAnimationSpeed;
+        public byte[] skinFrames;
+
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref steamId);
+            serializer.SerializeValue(ref networkId);
+
+            serializer.SerializeValue(ref skinFrameCount);
+            serializer.SerializeValue(ref skinAnimationSpeed);
+            serializer.SerializeValue(ref skinFrames);
+        }
+    }
+
+    public struct GameStateData : INetworkSerializable
+    {
+
+        public float[] mods;
+        public ScoreManager.Mode currentGameMode;
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref mods);
+            serializer.SerializeValue(ref currentGameMode);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
     [BurstCompile]
     public void SetupNewPlayer(ulong id)
     {
+
+        CreateNewPlayer(id);
 
         clrUpdate2 = 0;
         if (IsHost)
