@@ -1024,8 +1024,21 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     float miniTimer;
 
+    float clientConnectionsStatusTimer = 0;
+
     private void Update()
     {
+
+        clientConnectionsStatusTimer += Time.deltaTime;
+        if(clientConnectionsStatusTimer > 1)
+        {
+            string status = "";
+            foreach (var item in NetworkManager.Singleton.ConnectedClients)
+            {
+                status += $"|| {item.Value.ClientId}, {item.Key} ||";
+            }
+            Debug.Log(status);
+        }
 
         rtt = (float)(NetworkManager.LocalTime.Time - NetworkManager.ServerTime.Time);
         ping = rtt / 2;
