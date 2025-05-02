@@ -44,7 +44,7 @@ public sealed class LobbyUpdatesBehaviour : MonoBehaviour
 
                 for (int i = 0; i < Mods.at.Length; i++) oldMods[i] = Mods.at[i];
 
-                playerSynchronizer.SendModsDataRpc(Mods.at);
+                playerSynchronizer.SendModsDataClientRpc(Mods.at);
 
             }
 

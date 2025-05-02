@@ -1,16 +1,13 @@
-using FMODUnity;
 using Netcode.Transports.Facepunch;
 using Steamworks;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-[BurstCompile]
+
 public sealed class PlayerSynchronizer : NetworkBehaviour
 {
 
@@ -20,7 +17,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public float rtt;
 
     public List<PlayerData> playerIdentities;
-    public List<IdPair> idPairs;
     NetworkManager networkManager;
 
     [SerializeField]
@@ -52,7 +48,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     bool[] defaultSkin = new bool[116];
 
-    [BurstCompile]
+    
     private void Awake()
     {
 
@@ -63,8 +59,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         networkManager = GameObject.Find("Network").GetComponent<NetworkManager>();
         projectileManager = GetComponent<ProjectileManager>();
         localSteamData = GetComponent<LocalSteamData>();
-/*        networkManager.OnClientConnectedCallback += CreateNewPlayer;
-        networkManager.OnClientDisconnectCallback += DisconnectPlayer;*/
 
         networkManager.OnConnectionEvent += NetworkManager_OnConnectionEvent;
         networkManager.ConnectionApprovalCallback += ConnectionApproval;
@@ -84,7 +78,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
     {
 
-        Debug.Log("MFFF");
+        //Debug.Log("MFFF");
 
         //networkManager.PendingClients.Clear();
 
@@ -94,7 +88,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if (arg2.EventType == ConnectionEvent.ClientDisconnected) DisconnectPlayer(arg2.ClientId);
     }
 
-    [BurstCompile]
+    
     public void ForceReset()
     {
 
@@ -128,7 +122,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         projectileManager.projectiles.Clear();
 
     }
-    [BurstCompile]
+    
     private void SceneManager_sceneUnloaded(Scene arg0)
     {
 
@@ -139,7 +133,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
     void LateHudInit()
     {
 
@@ -152,7 +146,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
     private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         if (arg0.name == "GameScene")
@@ -208,7 +202,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
     [ClientRpc]
     void LoadSceneOnPlayersClientRpc(int sceneIndex)
     {
@@ -220,7 +214,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
     public void DisconnectPlayer(ulong id)
     {
 
@@ -233,7 +227,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
     void DisconnectPlayerRemotely(ulong id)
     {
 
@@ -289,7 +283,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
 
     [ClientRpc]
     public void DisconnectPlayerRemotelyClientRpc(ulong id)
@@ -345,7 +339,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
     public void DisconnectPlayerLocally()
     {
         Debug.Log("IMAGINE");
@@ -387,7 +381,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         if (!IsHost) return;
 
-        GameStateData currentGameState = new GameStateData();
+        GameStateDataPacket currentGameState = new GameStateDataPacket();
 
         currentGameState.currentGameMode = scoreManager.gameMode;
         currentGameState.mods = (float[]) Mods.at.Clone();
@@ -402,20 +396,25 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         foreach (var frame in skinData.skinFrames) skinValidCheck = frame.valid && skinValidCheck;
         return skinValidCheck;
     }
-    int FetchGetFrameCount() => FetchSkinValidity() ? skinData.frames : 1;
-    float FetchGetFrameAnimation() => FetchSkinValidity() ? skinData.frameRate : 0F;
-    byte[] FetchGetFramePixels()
+    int FetchFrameCount() => FetchSkinValidity() ? skinData.frames : 1;
+    float FetchFrameAnimation() => FetchSkinValidity() ? skinData.frameRate : 0F;
+    byte[] FetchFramePixels() => FetchSkinValidity() ? GetCustomSkin() : MyExtentions.BoolArrayToByteArray(defaultSkin);
+    byte[] GetCustomSkin()
     {
+        byte[] frameBuffer;
         List<byte> collectedSkinData = new List<byte>();
-        if (FetchSkinValidity()) foreach (var frame in skinData.skinFrames) collectedSkinData.AddRange(MyExtentions.BoolArrayToByteArray(frame.frame));
-        else collectedSkinData.AddRange(MyExtentions.BoolArrayToByteArray(defaultSkin));
+        foreach (SkinData.SkinFrame frame in skinData.skinFrames)
+        {
+            frameBuffer = MyExtentions.BoolArrayToByteArray(frame.frame);
+            collectedSkinData.AddRange(frameBuffer);
+        }
         return collectedSkinData.ToArray();
     }
 
     bool IsNewPlayer(ulong playerId)
     {
-        if(playerIdentities == null) playerIdentities = new List<PlayerData>();
         bool playerExists = false;
+        if(playerIdentities == null) playerIdentities = new List<PlayerData>();
         foreach (PlayerData player in playerIdentities)
         {
             if ((byte)player.id == playerId)
@@ -428,12 +427,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RoundTripCollectorClientRpc(GameStateData currentGameState)
+    public void RoundTripCollectorClientRpc(GameStateDataPacket currentGameState)
     {
         RoundTripCollector(ref currentGameState);
     }
 
-    void RoundTripCollector(ref GameStateData currentGameState)
+    void RoundTripCollector(ref GameStateDataPacket currentGameState)
     {
         scoreManager.gameMode = currentGameState.currentGameMode;
         for (int i = 0; i < currentGameState.mods.Length; i++) Mods.at[i] = currentGameState.mods[i];
@@ -442,9 +441,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         playerFactoryData.steamId = SteamClient.SteamId.Value;
         playerFactoryData.networkId = NetworkManager.LocalClientId;
-        playerFactoryData.skinFrames = FetchGetFramePixels();
-        playerFactoryData.skinFrameCount = FetchGetFrameCount();
-        playerFactoryData.skinAnimationSpeed = FetchGetFrameAnimation();
+        playerFactoryData.skinFrames = FetchFramePixels();
+        playerFactoryData.skinFrameCount = FetchFrameCount();
+        playerFactoryData.skinAnimationSpeed = FetchFrameAnimation();
 
         if(IsHost) PlayerFactoryClientRpc(playerFactoryData);
         else PlayerFactoryServerRpc(playerFactoryData);
@@ -539,10 +538,11 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         for (int frameIndex = 0; frameIndex < playerData.skinFrameCount; frameIndex++)
         {
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 15; i++, frameBufferIndex++)
             {
+
                 frameBuffer[i] = playerData.skinFrames[frameBufferIndex];
-                frameBufferIndex++;
+
             }
 
             skinBuffer = MyExtentions.ByteArrayToBoolArray(frameBuffer, 116);
@@ -565,7 +565,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         }
 
-
     }
 
     public struct PlayerFactoryDataPacket : INetworkSerializable
@@ -578,7 +577,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         public float skinAnimationSpeed;
         public byte[] skinFrames;
 
-
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref steamId);
@@ -590,7 +588,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
     }
 
-    public struct GameStateData : INetworkSerializable
+    public struct GameStateDataPacket : INetworkSerializable
     {
 
         public float[] mods;
@@ -602,471 +600,41 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             serializer.SerializeValue(ref currentGameMode);
         }
     }
-
-
-
-
-
-
-
-
-
-
-    [BurstCompile]
-    public void SetupNewPlayer(ulong id)
-    {
-
-        CreateNewPlayer(id);
-
-        clrUpdate2 = 0;
-        if (IsHost)
-        {
-
-            bool freshHost = false;
-
-            if (playerIdentities == null)
-            {
-
-                playerIdentities = new List<PlayerData>();
-                idPairs = new List<IdPair>
-                {
-                    new IdPair { clientId = id, steamId = SteamClient.SteamId }
-                };
-                freshHost = true;
-
-            }
-
-
-            PlayerData playerData = new PlayerData();
-            playerData.square = Instantiate(square);
-            playerData.square.id = id;
-            playerData.id = id;
-
-            playerIdentities.Add(playerData);
-
-            List<ulong> nowPlayers = new List<ulong>();
-
-            if (playerData.id == NetworkManager.LocalClientId)
-            {
-
-                localSquare = playerData.square;
-                FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
-                localSquare.AssertSteamDataAvalible(SteamClient.SteamId.Value);
-
-
-                localSquare.nozzleFrames = new Sprite[skinData.skinFrames.Length];
-                localSquare.bodyFrames = new Sprite[skinData.skinFrames.Length];
-                localSquare.frameRate = skinData.animate ? skinData.frameRate : 0;
-
-                bool validSkin = true;
-
-                for (int j = 0; j < skinData.skinFrames.Length; j++)
-                {
-
-                    bool validFrame = skinData.skinFrames[j].valid;
-
-                    if (!validFrame) validSkin = false;
-
-                }
-
-                if (validSkin)
-                {
-
-                    for (int j = 0; j < skinData.skinFrames.Length; j++)
-                    {
-
-                        bool[] bodySkin = new bool[100];
-                        bool[] nozzleSkin = new bool[16];
-
-                        for (int i = 0; i < 100; i++)
-                        {
-                            bodySkin[i] = skinData.skinFrames[j].frame[i];
-                        }
-
-                        for (int i = 0; i < 16; i++)
-                        {
-                            nozzleSkin[i] = skinData.skinFrames[j].frame[100 + i];
-                        }
-
-                        localSquare.CreateTextureFromBoolArray10BY10(bodySkin, (byte)j);
-                        localSquare.CreateTextureFromBoolArray4BY4(nozzleSkin, (byte)j);
-
-                    }
-
-                }
-                else
-                {
-
-                    bool[] bodySkin = new bool[100];
-                    bool[] nozzleSkin = new bool[16];
-
-                    for (int i = 0; i < 100; i++)
-                    {
-                        bodySkin[i] = true;
-                    }
-
-                    for (int i = 0; i < 16; i++)
-                    {
-                        nozzleSkin[i] = true;
-                    }
-
-                    localSquare.CreateTextureFromBoolArray10BY10(bodySkin, 0);
-                    localSquare.CreateTextureFromBoolArray4BY4(nozzleSkin, 0);
-
-                }
-
-            }
-
-
-            foreach (PlayerData player in playerIdentities)
-            {
-
-                nowPlayers.Add(player.id);
-
-            }
-
-            SetupNewPlayerClientRpc(nowPlayers.ToArray(), id, scoreManager.gameMode);
-
-            scoreManager.UpdateModeAsHost(scoreManager.gameMode);
-            UpdateSelectedMap(localSquare.selectedMap);
-            SendModsDataRpc(Mods.at);
-
-            if (freshHost)
-            {
-                playerIdList.Clear();
-                playerIdList.Add(new IdMatch { clientId = id, steamId = SteamClient.SteamId });
-            }
-
-            playerData.square.SpawnEffect();
-            /*
-                        DontDestroyOnLoad(playerData.square);*/
-
-
-
-            foreach (PlayerData player in playerIdentities)
-            {
-
-                if (player.id != id) SyncPlayerDataClientRpc((byte)player.id, player.square.isDead);
-
-            }
-
-        }
-
-    }
-
     [ClientRpc]
-    void SyncPlayerDataClientRpc(byte id, bool isDead)
+    public void SendModsDataClientRpc(float[] mods)
     {
-
-        foreach (PlayerData player in playerIdentities)
-        {
-
-            if ((byte)player.id == id)
-            {
-
-                player.square.isDead = isDead;
-
-            }
-
-        }
-
-        UpdateColor();
-        UpdateNozzle();
-        UpdateHealth();
-
-    }
-
-    [BurstCompile]
-    [ClientRpc]
-    void SetupNewPlayerClientRpc(ulong[] nowPlayers, ulong connectedId, ScoreManager.Mode gameMode)
-    {
-
-        clrUpdate = 0;
-
-        if (!IsHost)
-        {
-
-            if (playerIdentities == null)
-            {
-
-                GameModeDisplayBehaviour modeDisplay = FindAnyObjectByType<GameModeDisplayBehaviour>();
-                scoreManager.gameMode = gameMode;
-                if (modeDisplay) modeDisplay.DisplayGameMode(gameMode);
-
-                playerIdentities = new List<PlayerData>();
-                idPairs = new List<IdPair>
-                {
-                new IdPair { clientId = connectedId, steamId = SteamClient.SteamId }
-                };
-
-                for (int i = 0; i < nowPlayers.Length; i++)
-                {
-
-                    PlayerData playerData = new PlayerData();
-
-                    playerData.square = Instantiate(square);
-                    playerData.id = nowPlayers[i];
-                    playerData.square.id = nowPlayers[i];
-
-                    if (nowPlayers[i] == NetworkManager.LocalClientId)
-                    {
-
-                        localSquare = playerData.square;
-                        FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
-                        localSquare.SpawnEffect();
-
-                    }
-
-                    playerIdentities.Add(playerData);
-
-                }
-
-
-            }
-            else
-            {
-
-                PlayerData playerData = new PlayerData();
-
-                playerData.square = Instantiate(square);
-                playerData.id = connectedId;
-                playerData.square.id = connectedId;
-                playerData.square.SpawnEffect();
-
-                playerIdentities.Add(playerData);
-
-                if (!localSquare)
-                {
-
-                    foreach (PlayerData player in playerIdentities)
-                    {
-
-                        if (player.id == connectedId)
-                        {
-                            localSquare = playerData.square;
-                            FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
-                        }
-
-                    }
-
-                }
-
-            }
-            
-            if(connectedId == NetworkManager.LocalClientId) RequestAddPlayerServerRpc(connectedId, SteamNetwork.playerSteamID);
-
-        }
-
-        bool validSkin = true;
-
-        for (int j = 0; j < skinData.skinFrames.Length; j++)
-        {
-
-            bool validFrame = skinData.skinFrames[j].valid;
-
-            if (!validFrame) validSkin = false;
-
-        }
-
-        if (validSkin)
-        {
-
-            float frameRate = skinData.animate ? skinData.frameRate : 0;
-
-            RequestSkinLengthServerRpc((byte)localSquare.id, (byte)skinData.skinFrames.Length, frameRate);
-
-            for (int i = 0; i < skinData.skinFrames.Length; i++)
-            {
-
-                byte[] skinAsData = MyExtentions.BoolArrayToByteArray(skinData.skinFrames[i].frame);
-
-                RequestSkinUpdateServerRpc((byte)localSquare.id, skinAsData, (byte)i);
-
-            }
-
-        }
-        else
-        {
-
-            bool[] skin = new bool[116];
-
-            for (int i = 0; i < skin.Length; i++)
-            {
-                skin[i] = true;
-            }
-
-            byte[] skinAsData = MyExtentions.BoolArrayToByteArray(skin);
-
-            RequestSkinLengthServerRpc((byte)localSquare.id, 1, 0);
-            RequestSkinUpdateServerRpc((byte)localSquare.id, skinAsData, 0);
-        }
-
-        RequestSteamDataServerRpc((byte)localSquare.id, SteamClient.SteamId.Value);
-
-    }
-
-    [BurstCompile]
-    [Rpc(SendTo.Everyone)]
-    public void SendModsDataRpc(float[] mods)
-    {
-
         if (IsHost) return;
-
-        for (int i = 0; i < mods.Length; i++)
-        {
-
-            Mods.at[i] = mods[i];
-
-        }
-
-
+        for (int modIndex = 0; modIndex < mods.Length; modIndex++) Mods.at[modIndex] = mods[modIndex];
     }
-
-    [BurstCompile]
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestAddPlayerServerRpc(ulong clientId, ulong steamId)
-    {
-
-        if (!IsHost) return;
-
-        IdMatch newIdMatch = new IdMatch { clientId = clientId, steamId = steamId };
-        bool addNewId = true;
-
-        for (int i = 0; i < playerIdList.Count; i++)
-        {
-            if (playerIdList[i].clientId == clientId)
-            {
-                playerIdList[i] = newIdMatch;
-                addNewId = false;
-            }
-        }
-
-        if (addNewId) playerIdList.Add(new IdMatch { clientId = clientId, steamId = steamId });
-
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestSkinUpdateServerRpc(byte id, byte[] skin, byte index)
-    {
-
-        RequestSkinUpdateClientRpc(id, skin, index);
-
-    }
-
-    [ClientRpc]
-    public void RequestSkinUpdateClientRpc(byte id, byte[] skinAsData, byte index)
-    {
-
-        bool[] skin = MyExtentions.ByteArrayToBoolArray(skinAsData, 116);
-
-        bool[] bodySkin = new bool[100];
-        bool[] nozzleSkin = new bool[16];
-
-        for (int i = 0; i < 100; i++)
-        {
-            bodySkin[i] = skin[i];
-        }
-
-        for (int i = 0; i < 16; i++)
-        {
-            nozzleSkin[i] = skin[100 + i];
-        }
-
-        foreach (PlayerData player in playerIdentities)
-        {
-            if ((byte)player.square.id == id)
-            {
-
-                player.square.CreateTextureFromBoolArray10BY10(bodySkin, index);
-                player.square.CreateTextureFromBoolArray4BY4(nozzleSkin, index);
-
-            }
-
-        }
-
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestSkinLengthServerRpc(byte id, byte length, float frameRate)
-    {
-        RequestSkinLengthClientRpc(id, length, frameRate);
-    }
-
-    [ClientRpc]
-    public void RequestSkinLengthClientRpc(byte id, byte length, float frameRate)
-    {
-
-        foreach (PlayerData player in playerIdentities)
-        {
-            if ((byte)player.square.id == id)
-            {
-
-                player.square.bodyFrames = new Sprite[length];
-                player.square.nozzleFrames = new Sprite[length];
-                player.square.frameRate = frameRate;
-
-            }
-
-        }
-
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestSteamDataServerRpc(byte id, ulong steamId)
-    {
-        RequestSteamDataClientRpc(id, steamId);
-    }
-
-    [ClientRpc]
-    public void RequestSteamDataClientRpc(byte id, ulong steamId)
-    {
-
-        foreach (PlayerData player in playerIdentities)
-        {
-            if ((byte)player.square.id == id)
-            {
-
-                player.square.AssertSteamDataAvalible(steamId);
-
-            }
-
-        }
-
-    }
-
-    [BurstCompile]
     private void FixedUpdate() => UpdatePlayerData();
-
-    float miniTimer;
-
     float clientConnectionsStatusTimer = 0;
-
     private void Update()
     {
-
         clientConnectionsStatusTimer += Time.deltaTime;
         if(clientConnectionsStatusTimer > 0.3f)
         {
             string status = "";
+            
             foreach (var item in NetworkManager.Singleton.ConnectedClients)
             {
+            
                 status += $"|| {item.Value.ClientId}, {item.Key} ||";
+            
             }
+        
             Debug.Log(status);
             Debug.Log($"Is client: {NetworkManager.Singleton.IsClient}");
             Debug.Log($"Is connected client: {NetworkManager.Singleton.IsConnectedClient}");
+            
             clientConnectionsStatusTimer = 0;
+        
         }
 
-        rtt = (float)(NetworkManager.LocalTime.Time - NetworkManager.ServerTime.Time);
+        rtt = (float)(NetworkManager.LocalTime.Time - NetworkManager.ServerTime.Time);    
         ping = rtt / 2;
-
+    
     }
-
-
-    float rbUpdate, scrUpdate, clrUpdate, clrUpdate2;
-
-    [BurstCompile]
+    float rbUpdate, clrUpdate, clrUpdate2;
     void UpdatePlayerData()
     {
 
@@ -1096,7 +664,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         rbUpdate += deltaTime * 100f;
 
     }
-    [BurstCompile]
+    
     void StorePlayerRigidBodyData(PlayerData player, byte[] data)
     {
 
@@ -1128,7 +696,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-    [BurstCompile]
+    
     void UpdateRigidBody()
     {
         ulong sourceId = networkManager.LocalClientId;
@@ -1150,8 +718,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         UpdateRigidBodyRpc(data);
 
     }
-    [BurstCompile]
-
     [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
     void UpdateRigidBodyRpc(byte[] data)
     {
@@ -1166,7 +732,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         }
     }
-    [BurstCompile]
+    
     public void UpdateNozzle()
     {
         ulong sourceId = networkManager.LocalClientId;
@@ -1190,7 +756,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             StoreNozzleData(player, data);
         }
     }
-    [BurstCompile]
+    
     void StoreNozzleData(PlayerData player, byte[] comp)
     {
         if ((byte)player.id != comp[0]) return;
@@ -1203,7 +769,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         player.square.newNozzleLerp = 0;
 
     }
-    [BurstCompile]
+    
     public void UpdateColor()
     {
         ulong sourceId = networkManager.LocalClientId;
@@ -1228,7 +794,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             StoreColorData(player, data);
         }
     }
-    [BurstCompile]
+    
     void StoreColorData(PlayerData player, byte[] data)
     {
         if (player.id != data[0]) return;
@@ -1237,7 +803,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         player.square.newColor = true;
 
     }
-    [BurstCompile]
+    
     public void UpdateHealth()
     {
         byte sourceId = (byte)networkManager.LocalClientId;
@@ -1255,14 +821,14 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             StoreHealthData(player, sourceId, data);
         }
     }
-    [BurstCompile]
+    
     void StoreHealthData(PlayerData player, byte sourceId, float data)
     {
         if ((byte)player.id != sourceId) return;
 
         player.square.healthPoints = data;
     }
-    [BurstCompile]
+    
     public void UpdateScore()
     {
         byte sourceId = (byte)networkManager.LocalClientId;
@@ -1284,7 +850,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
     }
 
-    [BurstCompile]
+    
     void StoreScoreData(PlayerData player, byte sourceId, byte data)
     {
 
@@ -1294,7 +860,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
     public void UpdatePlayerReady(bool ready)
     {
 
@@ -1306,7 +872,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     void UpdatePlayerReadyRpc(byte sourceId, bool ready)
     {
@@ -1320,24 +886,24 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+    
     void StorePlayerReady(PlayerData player, byte sourceId, bool ready)
     {
 
         player.square.ready = ready;
 
     }
-    [BurstCompile]
+    
     public void UpdateSelectedMap(int map)
     {
 
         if (!IsHost) return;
-        UpdateSelectedMapRpc(map);
+        UpdateSelectedMapClientRpc(map);
 
     }
-    [BurstCompile]
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void UpdateSelectedMapRpc(int map)
+    
+    [ClientRpc]
+    void UpdateSelectedMapClientRpc(int map)
     {
 
         if (playerIdentities == null) return;
@@ -1348,7 +914,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-    [BurstCompile]
+    
     void StoreSelectedMap(PlayerData player, int map)
     {
 
@@ -1468,7 +1034,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-    [BurstCompile]
+    
     public Color UpdatePlayerColor(float value)
     {
 
@@ -1483,7 +1049,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         return localSquare.playerColor;
 
     }
-    [BurstCompile]
+    
     public void SpreadInGameMessage(string message)
     {
 
@@ -1529,7 +1095,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         messageReciever.CreateNewMessage(message, source);
     }
 
-    [BurstCompile]
+    
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void SpreadInGameMessageRpc(string message, byte playerId)
     {
@@ -1552,25 +1118,23 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         messageReciever.CreateNewMessage(message, source);
 
     }
-    [BurstCompile]
+    
     public void SyncMods(int index, float value)
     {
 
-        if (!IsHost) return;
-
-        SyncModsRpc(index, value);
+        if (IsHost) SyncModsClientRpc(index, value);
 
     }
-    [BurstCompile]
-    [Rpc(SendTo.Everyone)]
-    void SyncModsRpc(int index, float value)
+    
+    [ClientRpc]
+    void SyncModsClientRpc(int index, float value)
     {
 
         Mods.at[index] = value;
 
     }
     [Serializable]
-    [BurstCompile]
+    
     public struct PlayerData
     {
 
@@ -1594,15 +1158,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-    [BurstCompile]
-    public struct IdPair
-    {
-        public ulong clientId;
-        public SteamId steamId;
-    }
-
+    
 }
-[BurstCompile]
+
 public struct IdMatch : INetworkSerializable, IEquatable<IdMatch>
 {
     public ulong clientId;
