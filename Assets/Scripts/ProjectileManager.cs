@@ -104,9 +104,9 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector2 forceToAdd = new();
 
         float multiplier1, multiplier2;
-
         foreach (Weapon usedWeapon in weapons) if (usedWeapon.type == type) { weapon = usedWeapon; break; }
-        foreach (PlayerData playerData in playerSynchronizer.playerIdentities) if ((byte)playerData.square.id == sourceId) { owningPlayer = playerData.square; break; }
+        
+        owningPlayer = playerSynchronizer.GetPlayerById(sourceId);
 
         projectileBehaviour = Instantiate(weapon.projectile, position, Quaternion.identity, null).GetComponent<ProjectileBehaviour>();
         projectileBehaviour.flipFlop = flipFlop;

@@ -131,28 +131,22 @@ public sealed class DogTagBehaviour : MonoBehaviour
     public void RunCollected(byte playerId)
     {
 
-        foreach (PlayerData playerData in playerSynchronizer.playerIdentities)
+        PlayerBehaviour player = null;
+        player = playerSynchronizer.GetPlayerById(playerId);
+        if (player)
         {
-            if(playerData.id == playerId)
+            Color particleColor = player.playerDarkerColor;
+            Vector3 position = player.rb.position;
+            position.z = transform.position.z;
+
+            ParticleBehaviour newParticle = Instantiate(collectParticles, position, transform.rotation, null);
+
+            foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
             {
-
-                Color particleColor = playerData.square.playerDarkerColor;
-                Vector3 position = playerData.square.rb.position;
-                position.z = transform.position.z;
-
-                ParticleBehaviour newParticle = Instantiate(collectParticles, position, transform.rotation, null);
-
-                foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
-                {
-                    Material particleMaterial = Instantiate(particle.material);
-                    particle.material = particleMaterial;
-                    particle.material.color = particleColor;
-                }
-
-                break;
-
+                Material particleMaterial = Instantiate(particle.material);
+                particle.material = particleMaterial;
+                particle.material.color = particleColor;
             }
-
         }
 
         Destroy(gameObject);
