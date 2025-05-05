@@ -653,7 +653,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if (clrUpdate > 1)
         {
             UpdateColor();
-            UpdatePlayerReady(localSquare.ready);
+            //UpdatePlayerReady(localSquare.ready);
             clrUpdate = 0;
         }
         else if (clrUpdate2 < 8)
