@@ -79,10 +79,11 @@ public sealed class ReadyUpButton : MonoBehaviour
     public void READY()
     {
 
-        playerSynchronizer.localSquare.ready = !playerSynchronizer.localSquare.ready;
-/*
-        ready = !ready;*//*
-        playerSynchronizer.UpdatePlayerReady(!ready);*/
+        playerSynchronizer.UpdatePlayerReady(!ready);
+        //playerSynchronizer.localSquare.ready = !playerSynchronizer.localSquare.ready;
+        /*
+                ready = !ready;*//*
+                playerSynchronizer.UpdatePlayerReady(!ready);*/
 
     }
 
