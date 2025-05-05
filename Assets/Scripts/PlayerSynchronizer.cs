@@ -1003,7 +1003,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         UpdateScore();
 
-        if (kill && scoreManager.gameMode == ScoreManager.Mode.DM && responsibleId == NetworkManager.Singleton.LocalClientId)
+        if (
+            kill && 
+            scoreManager.gameMode == ScoreManager.Mode.DM && 
+            responsibleId == NetworkManager.Singleton.LocalClientId &&
+            scoreManager.inGame
+            )
         {
 
             foreach (PlayerData player in playerIdentities)
