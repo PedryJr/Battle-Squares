@@ -887,11 +887,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     void UpdatePlayerReadyClientRpc(byte sourceId, bool ready)
     {
 
-        UpdatePlayerReady(sourceId, ready);
+        Debug.Log($"UpdatePlayerReadyClientRpc: {sourceId}, {ready}");
+        UpdatePlayerReadyFinal(sourceId, ready);
 
     }
 
-    void UpdatePlayerReady(byte sourceId, bool ready)
+    void UpdatePlayerReadyFinal(byte sourceId, bool ready)
     {
 
         if (playerIdentities == null) return;
