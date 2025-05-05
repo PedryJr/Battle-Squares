@@ -983,41 +983,19 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         UpdateScore();
 
-        if (
-            kill && 
+        if (kill && 
             scoreManager.gameMode == ScoreManager.Mode.DM && 
-            responsibleId == NetworkManager.Singleton.LocalClientId &&
-            scoreManager.inGame
-            )
+            responsiblePlayer.id == localSquare.id &&
+            scoreManager.inGame)
         {
 
-            foreach (PlayerData player in playerIdentities)
-            {
-
-                if ((byte)player.id == responsibleId)
-                {
-
-                    player.square.score++;
-
-                }
-
-            }
+            if (responsiblePlayer) responsiblePlayer.score++;
 
         }
 
-        if (affectedId == (byte)localSquare.id && !localSquare.isDead)
-        {
+        if (affectedPlayer.id == localSquare.id && !localSquare.isDead) UpdateHealth();
 
-            UpdateHealth();
-
-        }
-
-        if (responsibleId == (byte)localSquare.id)
-        {
-
-            UpdateScore();
-
-        }
+        if (responsiblePlayer.id == localSquare.id) UpdateScore();
 
     }
 
@@ -1093,7 +1071,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         messageReciever.CreateNewMessage(message, source);
     }
 
-    PlayerBehaviour GetPlayerById(byte id)
+    public PlayerBehaviour GetPlayerById(byte id)
     {
         foreach (PlayerData player in playerIdentities)
         {
@@ -1102,7 +1080,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         return null;
     }
 
-    PlayerBehaviour GetPlayerById(ulong id)
+    public PlayerBehaviour GetPlayerById(ulong id)
     {
         foreach (PlayerData player in playerIdentities)
         {

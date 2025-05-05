@@ -73,17 +73,19 @@ public sealed class VoiceHandle : NetworkBehaviour
         if (!attatchedPlayer)
         {
 
-            foreach (PlayerData player in playerSynchronizer.playerIdentities)
+            if (playerSynchronizer)
             {
-                if (player.id == OwnerClientId)
-                {
 
-                    attatchedPlayer = player.square;
+                PlayerBehaviour player = null;
+                player = playerSynchronizer.GetPlayerById(OwnerClientId);
+                if (player)
+                {
+                    attatchedPlayer = player;
                     volume = attatchedPlayer.voiceVolume;
                     muted = attatchedPlayer.voiceMute;
                     ApplyVoiceChatVolume();
-
                 }
+
             }
 
         }
