@@ -57,7 +57,7 @@ public sealed class LobbyUpdatesBehaviour : MonoBehaviour
         if(timer > 1)
         {
 
-            playerSynchronizer.UpdatePlayerReady(playerSynchronizer.localSquare.ready);
+            //playerSynchronizer.UpdatePlayerReady(playerSynchronizer.localSquare.ready);
             timer = 0;
 
         }
