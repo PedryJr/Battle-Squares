@@ -944,39 +944,42 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         bool kill = false;
 
-        foreach (PlayerData player in playerIdentities)
+        PlayerBehaviour affectedPlayer = null;
+        PlayerBehaviour responsiblePlayer = null;
+
+        affectedPlayer = GetPlayerById(affectedId);
+        responsiblePlayer = GetPlayerById(responsibleId);
+
+
+        if (affectedPlayer)
         {
 
-            if ((byte)player.square.id == affectedId)
+            if (!affectedPlayer.isDead)
             {
 
-                if (!player.square.isDead)
-                {
+                affectedPlayer.rb.AddForce(knockBack, ForceMode2D.Impulse);
+                affectedPlayer.healthPoints -= damage;
+                affectedPlayer.healthPoints = math.clamp(affectedPlayer.healthPoints, 0, affectedPlayer.maxHealthPoints);
 
-                    player.square.rb.AddForce(knockBack, ForceMode2D.Impulse);
-                    player.square.healthPoints -= damage;
-                    player.square.healthPoints = math.clamp(player.square.healthPoints, 0, player.square.maxHealthPoints);
+                affectedPlayer.rb.linearDamping = math.clamp(affectedPlayer.rb.linearDamping + slowDownAmount, 0.1f, 100f);
+                affectedPlayer.rb.angularDamping = math.clamp(affectedPlayer.rb.angularDamping + slowDownAmount, 0.1f, 100f);
 
-                    player.square.rb.linearDamping = math.clamp(player.square.rb.linearDamping + slowDownAmount, 0.1f, 100f);
-                    player.square.rb.angularDamping = math.clamp(player.square.rb.angularDamping + slowDownAmount, 0.1f, 100f);
+            }
 
-                }
+            if (affectedPlayer.healthPoints <= 0 && !affectedPlayer.isDead)
+            {
 
-                if (player.square.healthPoints <= 0 && !player.square.isDead)
-                {
+                if (responsiblePlayer) affectedPlayer.killStreak++;
 
-                    foreach (PlayerData player1 in playerIdentities) if ((byte)player1.id == responsibleId) player.square.killStreak++;
-
-                    kill = true;
-                    PlayerDeathEffect(player.square.rb.position, player.square.playerDarkerColor);
-                    hunter.Kill(affectedId, responsibleId);
-                    player.square.KillPlayer();
-
-                }
+                kill = true;
+                PlayerDeathEffect(affectedPlayer.rb.position, affectedPlayer.playerDarkerColor);
+                hunter.Kill(affectedId, responsibleId);
+                affectedPlayer.KillPlayer();
 
             }
 
         }
+
 
         UpdateScore();
 
