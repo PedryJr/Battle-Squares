@@ -665,35 +665,30 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
     
-    void StorePlayerRigidBodyData(PlayerData player, byte[] data)
+    void StorePlayerRigidBodyData(PlayerBehaviour player, byte[] data)
     {
 
-        if ((byte)player.id == data[13])
-        {
+        if (player.isDead) return;
 
-            if (player.square.isDead) return;
-
-            byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
-            byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
-            byte[] compRot = new byte[2] { data[8], data[9] };
-            byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
+        byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
+        byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
+        byte[] compRot = new byte[2] { data[8], data[9] };
+        byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
 
 
-            (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
-            xPos -= 64;
-            yPos -= 64;
-            (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
-            xVel -= 64;
-            yVel -= 64;
-            float rot = MyExtentions.DecodeRotation(compRot);
-            float rotVel = MyExtentions.DecodeFloat(compRotVel);
+        (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
+        xPos -= 64;
+        yPos -= 64;
+        (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
+        xVel -= 64;
+        yVel -= 64;
+        float rot = MyExtentions.DecodeRotation(compRot);
+        float rotVel = MyExtentions.DecodeFloat(compRotVel);
 
-            player.square.rb.position = new Vector2(xPos, yPos);
-            player.square.rb.rotation = rot;
-            player.square.rb.linearVelocity = new Vector2(xVel, yVel);
-            player.square.rb.angularVelocity = rotVel;
-
-        }
+        player.rb.position = new Vector2(xPos, yPos);
+        player.rb.rotation = rot;
+        player.rb.linearVelocity = new Vector2(xVel, yVel);
+        player.rb.angularVelocity = rotVel;
 
     }
     
@@ -724,13 +719,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         if ((byte)networkManager.LocalClientId == data[13]) return;
         if (playerIdentities == null) return;
+        PlayerBehaviour player = null;
+        player = GetPlayerById(data[13]);
+        StorePlayerRigidBodyData(player, data);
 
-        foreach (PlayerData player in playerIdentities)
-        {
-
-            StorePlayerRigidBodyData(player, data);
-
-        }
     }
     
     public void UpdateNozzle()
@@ -1103,12 +1095,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         PlayerBehaviour source = null;
         MessageRecieverBehaviour messageReciever = null;
 
-        foreach (PlayerData player in playerIdentities)
-        {
-
-            if (player.id == playerId) source = player.square;
-
-        }
+        source = GetPlayerById(playerId);
 
         messageReciever = FindAnyObjectByType<MessageRecieverBehaviour>();
 
@@ -1118,7 +1105,25 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         messageReciever.CreateNewMessage(message, source);
     }
 
-    
+    PlayerBehaviour GetPlayerById(byte id)
+    {
+        foreach (PlayerData player in playerIdentities)
+        {
+            if ((byte)player.id == id) return player.square;
+        }
+        return null;
+    }
+
+    PlayerBehaviour GetPlayerById(ulong id)
+    {
+        foreach (PlayerData player in playerIdentities)
+        {
+            if (player.id == id) return player.square;
+        }
+        return null;
+    }
+
+
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void SpreadInGameMessageRpc(string message, byte playerId)
     {
@@ -1126,12 +1131,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         PlayerBehaviour source = null;
         MessageRecieverBehaviour messageReciever = null;
 
-        foreach (PlayerData player in playerIdentities)
-        {
-
-            if (player.id == playerId) source = player.square;
-
-        }
+        source = GetPlayerById(playerId);
 
         messageReciever = FindAnyObjectByType<MessageRecieverBehaviour>();
 
