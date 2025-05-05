@@ -610,25 +610,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     float clientConnectionsStatusTimer = 0;
     private void Update()
     {
-        clientConnectionsStatusTimer += Time.deltaTime;
-        if(clientConnectionsStatusTimer > 0.3f)
-        {
-            string status = "";
-            
-            foreach (var item in NetworkManager.Singleton.ConnectedClients)
-            {
-            
-                status += $"|| {item.Value.ClientId}, {item.Key} ||";
-            
-            }
-        
-            Debug.Log(status);
-            Debug.Log($"Is client: {NetworkManager.Singleton.IsClient}");
-            Debug.Log($"Is connected client: {NetworkManager.Singleton.IsConnectedClient}");
-            
-            clientConnectionsStatusTimer = 0;
-        
-        }
 
         rtt = (float)(NetworkManager.LocalTime.Time - NetworkManager.ServerTime.Time);    
         ping = rtt / 2;
