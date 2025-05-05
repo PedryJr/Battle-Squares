@@ -780,7 +780,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             (byte) math.round(localSquare.playerColor.g * 256),
             (byte) math.round(localSquare.playerColor.b * 256)
         };
+
         UpdateColortRpc(data);
+
     }
 
     [Rpc(SendTo.NotMe, Delivery = RpcDelivery.Unreliable)]
@@ -868,13 +870,28 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         byte sourceId = (byte)localSquare.id;
 
-        UpdatePlayerReadyRpc(sourceId, ready);
+        if (IsHost) UpdatePlayerReadyClientRpc(sourceId, ready);
+        else UpdatePlayerReadyServerRpc(sourceId, ready);
+
+        //UpdatePlayerReadyRpc(sourceId, ready);
 
     }
 
-    
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void UpdatePlayerReadyRpc(byte sourceId, bool ready)
+    [ServerRpc(RequireOwnership = false)]
+    void UpdatePlayerReadyServerRpc(byte sourceId, bool ready)
+    {
+        UpdatePlayerReadyClientRpc(sourceId, ready);
+    }
+
+    [ClientRpc]
+    void UpdatePlayerReadyClientRpc(byte sourceId, bool ready)
+    {
+
+        UpdatePlayerReady(sourceId, ready);
+
+    }
+
+    void UpdatePlayerReady(byte sourceId, bool ready)
     {
 
         if (playerIdentities == null) return;
