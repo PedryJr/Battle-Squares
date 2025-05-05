@@ -721,7 +721,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if (playerIdentities == null) return;
         PlayerBehaviour player = null;
         player = GetPlayerById(data[13]);
-        StorePlayerRigidBodyData(player, data);
+        if(player) StorePlayerRigidBodyData(player, data);
 
     }
     
@@ -742,23 +742,20 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
         if (networkManager.LocalClientId == data[0]) return;
         if (playerIdentities == null) return;
-
-        foreach (PlayerData player in playerIdentities)
-        {
-            StoreNozzleData(player, data);
-        }
+        PlayerBehaviour player = null;
+        player = GetPlayerById(data[0]);
+        if (player) StoreNozzleData(player, data);
     }
     
-    void StoreNozzleData(PlayerData player, byte[] comp)
+    void StoreNozzleData(PlayerBehaviour player, byte[] comp)
     {
-        if ((byte)player.id != comp[0]) return;
 
         (float fromX, float fromY) = MyExtentions.DecodeNozzlePosition(new byte[2] { comp[1], comp[2] });
         (float toX, float toY) = MyExtentions.DecodeNozzlePosition(new byte[2] { comp[3], comp[4] });
 
-        player.square.fromPos = new Vector2(fromX, fromY);
-        player.square.toPos = new Vector2(toX, toY);
-        player.square.newNozzleLerp = 0;
+        player.fromPos = new Vector2(fromX, fromY);
+        player.toPos = new Vector2(toX, toY);
+        player.newNozzleLerp = 0;
 
     }
     
@@ -782,19 +779,16 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
         if (networkManager.LocalClientId == data[0]) return;
         if (playerIdentities == null) return;
-
-        foreach (PlayerData player in playerIdentities)
-        {
-            StoreColorData(player, data);
-        }
+        PlayerBehaviour player = null;
+        player = GetPlayerById(data[0]);
+        if (player) StoreColorData(player, data);
     }
     
-    void StoreColorData(PlayerData player, byte[] data)
+    void StoreColorData(PlayerBehaviour player, byte[] data)
     {
-        if (player.id != data[0]) return;
 
-        player.square.playerColor = new UnityEngine.Color(data[1] / 256f, data[2] / 256f, data[3] / 256f);
-        player.square.newColor = true;
+        player.playerColor = new UnityEngine.Color(data[1] / 256f, data[2] / 256f, data[3] / 256f);
+        player.newColor = true;
 
     }
     
@@ -809,18 +803,15 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
         if ((byte)networkManager.LocalClientId == sourceId) return;
         if (playerIdentities == null) return;
-
-        foreach (PlayerData player in playerIdentities)
-        {
-            StoreHealthData(player, sourceId, data);
-        }
+        PlayerBehaviour player = null;
+        player = GetPlayerById(sourceId);
+        if (player) StoreHealthData(player, sourceId, data);
     }
     
-    void StoreHealthData(PlayerData player, byte sourceId, float data)
+    void StoreHealthData(PlayerBehaviour player, byte sourceId, float data)
     {
-        if ((byte)player.id != sourceId) return;
 
-        player.square.healthPoints = data;
+        player.healthPoints = data;
     }
     
     public void UpdateScore()
@@ -837,20 +828,16 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
         if ((byte)networkManager.LocalClientId == sourceId) return;
         if (playerIdentities == null) return;
-
-        foreach (PlayerData player in playerIdentities)
-        {
-            StoreScoreData(player, sourceId, data);
-        }
+        PlayerBehaviour player = null;
+        player = GetPlayerById(sourceId);
+        if (player) StoreScoreData(player, sourceId, data);
     }
 
     
-    void StoreScoreData(PlayerData player, byte sourceId, byte data)
+    void StoreScoreData(PlayerBehaviour player, byte sourceId, byte data)
     {
 
-        if ((byte)player.id != sourceId) return;
-
-        player.square.score = data;
+        player.score = data;
 
     }
 
@@ -888,19 +875,17 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
 
         if (playerIdentities == null) return;
-
-        foreach (PlayerData player in playerIdentities)
-        {
-            if (player.id == sourceId) StorePlayerReady(player, sourceId, ready);
-        }
+        PlayerBehaviour player = null;
+        player = GetPlayerById(sourceId);
+        if (player) StorePlayerReady(player, sourceId, ready);
 
     }
 
     
-    void StorePlayerReady(PlayerData player, byte sourceId, bool ready)
+    void StorePlayerReady(PlayerBehaviour player, byte sourceId, bool ready)
     {
 
-        player.square.ready = ready;
+        player.ready = ready;
 
     }
     
