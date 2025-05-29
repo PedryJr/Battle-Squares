@@ -128,7 +128,7 @@ public sealed class SolidMoverBehaviour : MonoBehaviour
         solid.localRotation = Quaternion.Slerp(fromRot, toRot, lerp);
 
     }
-    [BurstCompile]
+
     private void FixedUpdate()
     {
 
