@@ -2727,11 +2727,11 @@ MonoBehaviour:
   arenaName: Moai
   battleThemeReference:
     Guid:
-      Data1: -1162726050
-      Data2: 1150789997
-      Data3: 385001131
-      Data4: 852178984
-    Path: event:/BattleThemes/MOAI
+      Data1: -751826246
+      Data2: 1134526964
+      Data3: 301012907
+      Data4: -108581261
+    Path: event:/BattleThemes/The Factory
   size: 
   difficulty: 
 --- !u!114 &8530454141395189244

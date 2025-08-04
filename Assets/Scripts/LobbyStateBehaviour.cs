@@ -38,6 +38,15 @@ public sealed class LobbyStateBehaviour : MonoBehaviour
 
     }
 
+    public void FORCEACESS(bool value)
+    {
+
+        access = value;
+
+        UpdateAccessField();
+
+    }
+
     void UpdateAccessField()
     {
 

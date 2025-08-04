@@ -282,6 +282,10 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     float speedParticleTimer;
 
+    [SerializeField]
+    ParticleColorApplicant[] speedParticles;
+
+    int speedParticleSwitcher;
     public void SpawnEffect()
     {
 
@@ -484,12 +488,10 @@ public sealed class PlayerBehaviour : MonoBehaviour
     [BurstCompile]
     void ApplySteamData()
     {
-
         GetImageData(steamId);
         friend = new Friend(steamId);
         playerName = friend.Name;
         steamDataApplied = true;
-
     }
     [BurstCompile]
     public async void GetImageData(SteamId steamId)
@@ -512,11 +514,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
         pfp = Sprite.Create(spriteTexture, spriteRect, spritePivot);
 
     }
-
-    [SerializeField]
-    ParticleColorApplicant[] speedParticles;
-
-    int speedParticleSwitcher;
 
     [BurstCompile]
     private void Update()

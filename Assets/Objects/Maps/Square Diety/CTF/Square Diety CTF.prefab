@@ -2117,11 +2117,11 @@ MonoBehaviour:
   arenaName: Square Deity
   battleThemeReference:
     Guid:
-      Data1: -2128725640
-      Data2: 1242723049
-      Data3: -40543318
-      Data4: 319593330
-    Path: event:/BattleThemes/Square Deity
+      Data1: -751826246
+      Data2: 1134526964
+      Data3: 301012907
+      Data4: -108581261
+    Path: event:/BattleThemes/The Factory
   size: 
   difficulty: 
 --- !u!1 &3030772336222051228

@@ -51,11 +51,22 @@ public sealed class CursorBehaviour : MonoBehaviour
         inputs = new Inputs();
         inputs.Cursor.DoLocation.performed += (context) =>
         {
+            InactivityBehaviour.inactivityTimer = InactivityBehaviour.MAX;
             cursorPos = context.ReadValue<Vector2>();
         };
 
-        inputs.Cursor.DoClick.performed += (context) => { click = true; };
-        inputs.Cursor.DoClick.canceled += (context) => { click = false; };
+        inputs.Cursor.DoClick.performed += (context) => 
+        {
+
+            InactivityBehaviour.inactivityTimer = InactivityBehaviour.MAX;
+            click = true; 
+        
+        };
+        inputs.Cursor.DoClick.canceled += (context) => 
+        {
+            InactivityBehaviour.inactivityTimer = InactivityBehaviour.MAX;
+            click = false; 
+        };
 
         ApplyImage(anim[0], scales[0]);
         animTimer = 0f;

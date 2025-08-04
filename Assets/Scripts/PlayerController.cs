@@ -141,6 +141,8 @@ public sealed class PlayerController : MonoBehaviour
     void InputHandler(InputAction action)
     {
 
+        InactivityBehaviour.inactivityTimer = InactivityBehaviour.MAX;
+
         if (!playerBehaviour) return;
 
         if (playerBehaviour.isDead)

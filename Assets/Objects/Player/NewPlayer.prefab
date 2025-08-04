@@ -1006,6 +1006,7 @@ MonoBehaviour:
       Data4: 1289083007
     Path: event:/PlayerSounds/PlayerStep
   frameRate: 10
-  speedParticles: []
+  speedParticles:
+  - {fileID: 0}
   spawnBuffer: 0
   newMods: 0

@@ -380,14 +380,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
 
         if (!IsHost) return;
-
         GameStateDataPacket currentGameState = new GameStateDataPacket();
 
         currentGameState.currentGameMode = scoreManager.gameMode;
         currentGameState.mods = (float[]) Mods.at.Clone();
 
         RoundTripCollectorClientRpc(currentGameState);
-
     }
 
     bool FetchSkinValidity()
@@ -439,6 +437,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         PlayerFactoryDataPacket playerFactoryData = new PlayerFactoryDataPacket();
 
+        playerFactoryData.selectedMap = currentGameState.selectedMap;
         playerFactoryData.steamId = SteamClient.SteamId.Value;
         playerFactoryData.networkId = NetworkManager.LocalClientId;
         playerFactoryData.skinFrames = FetchFramePixels();
@@ -476,6 +475,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         UpdateRigidBody();
         UpdateHealth();
         UpdatePlayerReady(localSquare.ready);
+
+        if (IsHost)
+        {
+            scoreManager.UpdateModeAsHost(scoreManager.gameMode);
+            UpdateSelectedMap(localSquare.selectedMap);
+        }
 
     }
 
@@ -522,6 +527,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     private void SetPlayerInitialData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
     {
         newPlayer.id = playerData.networkId;
+        newPlayer.selectedMap = playerData.selectedMap;
     }
 
     public void SetPlayerSkinData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
@@ -573,6 +579,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         public ulong steamId;
         public ulong networkId;
 
+        public int selectedMap;
+
         public int skinFrameCount;
         public float skinAnimationSpeed;
         public byte[] skinFrames;
@@ -582,6 +590,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             serializer.SerializeValue(ref steamId);
             serializer.SerializeValue(ref networkId);
 
+            serializer.SerializeValue(ref selectedMap);
+
             serializer.SerializeValue(ref skinFrameCount);
             serializer.SerializeValue(ref skinAnimationSpeed);
             serializer.SerializeValue(ref skinFrames);
@@ -590,12 +600,13 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     public struct GameStateDataPacket : INetworkSerializable
     {
-
+        public int selectedMap;
         public float[] mods;
         public ScoreManager.Mode currentGameMode;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
+            serializer.SerializeValue(ref selectedMap);
             serializer.SerializeValue(ref mods);
             serializer.SerializeValue(ref currentGameMode);
         }

@@ -6,7 +6,6 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-[BurstCompile]
 public sealed class ButtonHoverAnimation : MonoBehaviour
 {
     [SerializeField]
@@ -77,7 +76,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     [SerializeField]
     private SoundInteractionClickType soundInteractionClickType;
 
-    [BurstCompile]
     private void Awake()
     {
         uIAudio = Resources.Load<UIAudio>("UIAudio");
@@ -146,7 +144,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         onClickedSize -= animationType == AnimationType.Expand ? offsetSizeClickedExpand : offsetSizeClickedStretch;
     }
 
-    [BurstCompile]
     private void OnEnable()
     {
         SetupEventTriggers();
@@ -161,7 +158,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         ExitHover();
     }
 
-    [BurstCompile]
     private void Update()
     {
         Animate();
@@ -171,7 +167,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
     #region Setup
 
-    [BurstCompile]
     private void OnHover()
     {
         if (soundInteractionHoverType == SoundInteractionHoverType.Normal && isHovering == false) uIAudio.PlayHover(1f);
@@ -205,7 +200,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         }
     }
 
-    [BurstCompile]
     public void ExitHover()
     {
         input.Disable();
@@ -236,7 +230,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         if (animatingClick) RunClickEvent();
     }
 
-    [BurstCompile]
     public void ButtonClick()
     {
         if (animatingClick) return;
@@ -251,7 +244,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         toSize = onClickedSize;
     }
 
-    [BurstCompile]
     private void Animate()
     {
         animationTimer =
@@ -264,7 +256,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
                 animationTimer < 1 ? animationTimer + (Time.deltaTime / exitHoverTransitionTime) : 1;
     }
 
-    [BurstCompile]
     private void SetupEventTriggers()
     {
         EventTrigger eventTrigger = GetComponent<EventTrigger>();
@@ -290,7 +281,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         if (eventTrigger) Destroy(gameObject.GetComponent<EventTrigger>());
     }
 
-    [BurstCompile]
     private void OnDestroy()
     {
         if (isHovering)
@@ -319,7 +309,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
     #endregion Setup
 
-    [BurstCompile]
     private void ApplyAnimation()
     {
         if (animatingClick)
@@ -347,7 +336,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         rectTransform.sizeDelta = currentSize;
     }
 
-    [BurstCompile]
     public void RunClickEvent()
     {
         fromSize = rectTransform.sizeDelta;
