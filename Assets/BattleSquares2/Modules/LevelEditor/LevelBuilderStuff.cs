@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -85,6 +86,9 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         mapParent.SetParent(levelOutput, true);
 
         BuildProxies();
+
+        BuildStencils();
+
         CleanupBuilder();
     }
 
@@ -112,6 +116,20 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         GC.WaitForPendingFinalizers();
         GC.Collect();
         GC.WaitForPendingFinalizers();
+    }
+
+    void BuildStencils()
+    {
+
+        List<Transform>[] animationGroups = animatedAnimationsAwaitingShapes.Values.ToArray();
+
+        BuiltShapeBehaviour[] group0 = staticParent.GetComponentsInChildren<BuiltShapeBehaviour>();
+
+        for (int i = 0; i < group0.Length; i++) group0[i].AssignStencil(0);
+
+        for (int i = 0; i < animationGroups.Length; i++)
+            for (int j = 0; j < animationGroups[i].Count; j++) 
+                animationGroups[i][j].GetComponent<BuiltShapeBehaviour>().AssignStencil(i + 1);
     }
 
     void BuildProxies()

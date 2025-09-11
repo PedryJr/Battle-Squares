@@ -3,7 +3,7 @@ Shader "*MyShaders/SpriteLitStencil"
     Properties
     {
 
-        _Stencil("Stencil", Int) = 1
+        _StencilGroup("Stencil", 2D) = "white" {}
         _MainTex("Diffuse", 2D) = "white" {}
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
@@ -23,14 +23,6 @@ Shader "*MyShaders/SpriteLitStencil"
         Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
         Cull Off
         ZWrite [_ZWrite]
-
-        Stencil 
-        {
-
-            Ref [_Stencil]
-            Comp Equal
-
-        }
 
         Pass
         {
@@ -73,6 +65,9 @@ Shader "*MyShaders/SpriteLitStencil"
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DebugMipmapStreamingMacros.hlsl"
+
+            TEXTURE2D(_StencilGroup);
+            SAMPLER(sampler_StencilGroup);
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
@@ -136,7 +131,17 @@ Shader "*MyShaders/SpriteLitStencil"
 
                 SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
 
-                return CombinedShapeLightShared(surfaceData, inputData);
+                float testStencil = 1.0 / 1.0;
+                float sampleStencil = SAMPLE_TEXTURE2D(_StencilGroup, sampler_StencilGroup, i.lightingUV);
+
+                if(testStencil == sampleStencil)
+                {
+
+                    return CombinedShapeLightShared(surfaceData, inputData);
+                }
+
+                return 0;
+
             }
             ENDHLSL
         }

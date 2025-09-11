@@ -1,8 +1,7 @@
-Shader "*MyShaders/Shape"
+Shader "*MyShaders/StencilDraw"
 {
     Properties
     {
-        _Stencil("Stencil", Int) = 1
         _StencilGroup("Stencil Texture", 2D) = "white" {}
         _MainTex("Diffuse", 2D) = "white" {}
         _MaskTex("Mask", 2D) = "white" {}
@@ -20,18 +19,8 @@ Shader "*MyShaders/Shape"
     {
         Tags {"Queue" = "Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
 
-        Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
         Cull Off
         ZWrite [_ZWrite]
-
-        // Stencil 
-        // {
-
-        //     Ref [_Stencil]
-        //     Comp Always
-        //     Pass Replace
-
-        // }
 
         Pass
         {
@@ -68,13 +57,13 @@ Shader "*MyShaders/Shape"
                 float2  uv          : TEXCOORD0;
                 half2   lightingUV  : TEXCOORD1;
                 float3  positionWS  : TEXCOORD2;
+                float4 stencilID    : TEXCOORD3;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
             struct FragOutput
             {
                 half4 myOut        : SV_Target0;
-                half4 myStencil        : SV_Target1;
             };
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
@@ -104,7 +93,7 @@ Shader "*MyShaders/Shape"
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Pos5)
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Pos6)
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Pos7)
-                UNITY_DEFINE_INSTANCED_PROP(float4, _MyColor)
+                UNITY_DEFINE_INSTANCED_PROP(float4, _Stencil)
             UNITY_INSTANCING_BUFFER_END(Props)
 
             #if USE_SHAPE_LIGHT_TYPE_0
@@ -151,8 +140,9 @@ Shader "*MyShaders/Shape"
                 o.positionWS = TransformObjectToWorld(localPos.xyz);
                 o.uv = v.uv;
                 o.lightingUV = half2(ComputeScreenPos(o.positionCS / o.positionCS.w).xy);
+                o.stencilID = UNITY_ACCESS_INSTANCED_PROP(Props, _Stencil);
 
-                o.color = v.color * UNITY_ACCESS_INSTANCED_PROP(Props, _MyColor) * unity_SpriteColor;
+                o.color = v.color * unity_SpriteColor;
                 return o;
             }
 
@@ -163,19 +153,8 @@ Shader "*MyShaders/Shape"
 
                 FragOutput o;
 
-                const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
-                const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
-                SurfaceData2D surfaceData;
-                InputData2D inputData;
-
-                InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
-                InitializeInputData(i.uv, i.lightingUV, inputData);
-
-                SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
-
-                o.myOut = CombinedShapeLightShared(surfaceData, inputData);
-
-                half stencil = SAMPLE_TEXTURE2D(_StencilGroup, sampler_StencilGroup, i.uv);
+                o.myOut = i.stencilID;
+                //o.myOut = 0.5f;
 
                 return o;
             }

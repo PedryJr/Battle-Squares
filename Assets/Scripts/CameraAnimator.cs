@@ -8,6 +8,11 @@ using static PlayerSynchronizer;
 
 public sealed class CameraAnimator : MonoBehaviour
 {
+    [SerializeField]
+    Camera stencilRenderer;
+    [SerializeField]
+    RenderTexture stencilTexture;
+
     public float fps = 6000;
     public float fpsCapture;
     public float oneSecondTimer = 0;
@@ -155,7 +160,26 @@ public sealed class CameraAnimator : MonoBehaviour
 
         cameraTransform.position = Vector3.Lerp(cameraTransform.position, toPos, Time.deltaTime * 6.5f * multiplier1);
         aCamera.orthographicSize = math.lerp(aCamera.orthographicSize, Mathf.Lerp(fromOrthoSize, toOrthoSize, cameraLerp), Time.deltaTime * 10);
+
+        stencilRenderer.orthographicSize = aCamera.orthographicSize;
+    
+        if(lastXSize != aCamera.pixelWidth)
+        {
+            lastXSize = aCamera.pixelWidth;
+            stencilTexture.width = lastXSize;
+        }
+
+        if (lastYSize != aCamera.pixelHeight)
+        {
+            lastYSize = aCamera.pixelHeight;
+            stencilTexture.height = lastYSize;
+        }
+
     }
+
+
+    public int lastXSize;
+    public int lastYSize;
 
     private float multiplier1;
     private float multiplier2;

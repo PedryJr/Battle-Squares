@@ -16,7 +16,8 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     {
         shapeRenderer = GetComponent<MeshRenderer>();
         TEMPFUNC();
-        GetComponent<MeshFilter>().sharedMesh = octagonalMesh;       
+        GetComponent<MeshFilter>().sharedMesh = octagonalMesh;
+        stencilRenderer.GetComponent<MeshFilter>().sharedMesh = octagonalMesh;
     }
 
     void TEMPFUNC()
@@ -89,6 +90,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
     public static VertexAttributeDescriptor GetOctagonalAttribute => new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 2);
 
+    Vector2[] correctedPoints;
     public void ApplyShape(SimplifiedShapeData simplifiedShapeData, int indexedId, LevelBuilderStuff builder, bool isStatic)
     {
         this.isStatic = isStatic;
@@ -100,7 +102,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         len = param.y;
         wid = param.z;
 
-        Vector2[] correctedPoints = new Vector2[8];
+        correctedPoints = new Vector2[8];
         for (int i = 0; i < correctedPoints.Length; i++)
         {
             float yToAdd = 0;
@@ -147,7 +149,8 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         {
             propertyBlock.SetColor("_MyColor", animatedColor);
         }
-            shapeRenderer.SetPropertyBlock(propertyBlock);
+
+        shapeRenderer.SetPropertyBlock(propertyBlock);
 
     }
 
@@ -174,6 +177,23 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         }
 
         return animatorIndex;
+    }
+
+    [SerializeField]
+    MeshRenderer stencilRenderer;
+    public void AssignStencil(int stencilValueInt)
+    {
+        MaterialPropertyBlock stencilProperty = new MaterialPropertyBlock();
+
+        float stencilValue = 1f / (stencilValueInt + 1f);
+        Debug.Log(stencilValue);
+        stencilProperty.SetVector("_Stencil", new Vector4(stencilValue, stencilValue, stencilValue, stencilValue));
+        for(int i = 0; i < correctedPoints.Length; i++)
+        {
+            stencilProperty.SetVector($"_Pos{i}", new Vector4(correctedPoints[i].x, correctedPoints[i].y, 0f, 1f));
+        }
+
+        stencilRenderer.SetPropertyBlock(stencilProperty);
     }
 
     public static bool EvaluateStatic(int indexedId)

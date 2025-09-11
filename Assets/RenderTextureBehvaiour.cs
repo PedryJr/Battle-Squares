@@ -8,7 +8,8 @@ public class RenderTextureBehvaiour : MonoBehaviour
     RenderTexture stencilRT;
     void Start()
     {
-        colorRT = new RenderTexture(Camera.main.pixelWidth, Camera.main.pixelHeight, 24, RenderTextureFormat.ARGB32);
+        colorRT.width = Camera.main.pixelWidth;
+        colorRT.height = Camera.main.pixelHeight;
         stencilRT = new RenderTexture(Camera.main.pixelWidth, Camera.main.pixelHeight, 0, RenderTextureFormat.R8);
         Camera.main.SetTargetBuffers(new RenderBuffer[]
         {
