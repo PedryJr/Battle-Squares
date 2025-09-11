@@ -96,6 +96,7 @@ public sealed class VoiceHandle : NetworkBehaviour
             {
 
                 Vector3 newPos = attatchedPlayer.transform.position;
+                if(!cameraTransform) cameraTransform = Camera.main.transform;
                 newPos.z = cameraTransform.position.z - 5;
 
                 transform.position = newPos;

@@ -9,9 +9,12 @@ using static PlayerSynchronizer;
 using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
 
+
 [BurstCompile]
 public sealed class ProjectileBehaviour : MonoBehaviour
 {
+
+    const Int32 ENVIRONTMENT_MASK = 0b00000000000000000000001000000000;
 
     public float initDamage;
 
@@ -575,9 +578,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         }
 
         rb.linearVelocity = vel;
-        rb.position = hasStuckToPoint ? pointStuckAt : pos;
+        rb.position = hasStuckToPoint ? rb.position : pos;
         rb.angularVelocity = ang;
         rb.rotation = hasStuckToPoint ? stickyNormalAngle : rot;
+        if (hasStuckToPoint) transform.localPosition = pointStuckAt;
+
 
     }
 
@@ -894,8 +899,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
             if (closesPoint.transform)
             {
+                transform.SetParent(closesPoint.transform, true);
                 stickySurfaceNormal = closesPoint.normal;
-                pointStuckAt = closesPoint.point;
+                transform.position = closesPoint.point;
+                pointStuckAt = transform.localPosition;
                 hasStuckToPoint = true;
                 stickyNormalAngle = Mathf.Atan2(stickySurfaceNormal.y, stickySurfaceNormal.x) * Mathf.Rad2Deg;
                 rb.position = pointStuckAt;
@@ -991,14 +998,14 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         if (!owningPlayer) return;
         if (!hitMark) return;
 
-        RaycastHit2D point = GetClosestEnvironmentPoint(rb.position);
+        RaycastHit2D point = GetClosestEnvironmentPoint(rb.position, out Transform toParent);
         Vector3 hitMarkPos = new Vector3(point.point.x, point.point.y, transform.position.z);
 
         if(aoe) hitMarkPos = new Vector3(boom.transform.position.x, boom.transform.position.y, transform.position.z);
 
         float angle = math.degrees(math.atan2(point.normal.y, point.normal.x));
 
-        HitMarkBehaviour newHitMark = Instantiate(hitMark, hitMarkPos, Quaternion.Euler(0, 0, angle), null);
+        HitMarkBehaviour newHitMark = Instantiate(hitMark, hitMarkPos, Quaternion.Euler(0, 0, angle), toParent);
 
         UnityEngine.Color color = owningPlayer.playerDarkerColor;
         newHitMark.spawnColor = new UnityEngine.Color(color.r * 0.86f, color.g * 0.86f, color.b * 0.86f, 1f);
@@ -1033,7 +1040,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             float angle = (i * angleStep) + rb.rotation;
             Vector2 direction = new Vector2(math.cos(math.radians(angle)), math.sin(math.radians(angle)));
 
-            RaycastHit2D hit = Physics2D.Raycast(origin, direction);
+            RaycastHit2D hit = Physics2D.Raycast(origin, direction, 100f, ENVIRONTMENT_MASK);
 
             if (hit.collider != null && hit.distance < shortestDistance)
             {
@@ -1047,6 +1054,37 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         return shortestHit;
 
     }
+
+    RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, out Transform objectHit)
+    {
+        objectHit = null;
+        int rayCount = 4;
+
+        float angleStep = 360f / rayCount;
+        RaycastHit2D shortestHit = default;
+        float shortestDistance = math.INFINITY;
+
+        for (int i = 0; i < rayCount; i++)
+        {
+            float angle = (i * angleStep) + rb.rotation;
+            Vector2 direction = new Vector2(math.cos(math.radians(angle)), math.sin(math.radians(angle)));
+
+            RaycastHit2D hit = Physics2D.Raycast(origin, direction, 100f, ENVIRONTMENT_MASK);
+
+            if (hit.collider != null && hit.distance < shortestDistance)
+            {
+
+                shortestDistance = hit.distance;
+                shortestHit = hit;
+                objectHit = hit.transform;
+
+            }
+        }
+
+        return shortestHit;
+
+    }
+
     [BurstCompile]
     public void HitReg()
     {

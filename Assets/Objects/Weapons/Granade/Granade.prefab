@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 3230000773134604271}
   - component: {fileID: -3438963122069973725}
   - component: {fileID: -3148651319717881892}
+  - component: {fileID: 3464717598176822791}
   m_Layer: 7
   m_Name: Granade
   m_TagString: Untagged
@@ -88,6 +89,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -109,6 +112,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 1
@@ -253,8 +257,11 @@ MonoBehaviour:
     syncSpeed: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    alignDirection: 0
   projectileTrailBehaviour: {fileID: 0}
-  externalTrailRef: {fileID: 4519005768283276661, guid: 08767c478a3d3d6469a0485dad922769, type: 3}
+  externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0
   lifeTimeMultiplier: 0
   externalTrailSpawnRate: 0
@@ -331,6 +338,57 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3464717598176822791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066612454653962984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
+    origin:
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 5
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 0.2
+    positionWarpFallof: 1
+    positionWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
+    enableRotationWarp: 0
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
+    enableSwirl: 0
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 1
+    pulsationFrequency: 20
+    pulsationAmplitude: 1
+    pulsationFallof: 1
+    pulsationRadius: 4
 --- !u!1 &8047464109496563407
 GameObject:
   m_ObjectHideFlags: 0
@@ -5213,6 +5271,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5234,6 +5294,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 3

@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -112,6 +112,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 8534203388352075567}
   image: {fileID: 1326890982135693202}
+  playerData:
+    id: 0
+    steamId: 0
+    square: {fileID: 0}
+    name: 
+    pfp: {fileID: 0}
+    texture: {fileID: 0}
 --- !u!1 &5617571971720970969
 GameObject:
   m_ObjectHideFlags: 0

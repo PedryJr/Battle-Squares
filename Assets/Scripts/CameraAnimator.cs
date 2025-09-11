@@ -13,7 +13,7 @@ public sealed class CameraAnimator : MonoBehaviour
     public float oneSecondTimer = 0;
     public float initCameraTimer = 0;
     public float introTimer = 0;
-    private float z = -20;
+    public float z = -20;
 
     public float soundUpdateTimer;
 
@@ -65,6 +65,7 @@ public sealed class CameraAnimator : MonoBehaviour
 
     public void PlayTheme(EventReference battleThemeReference)
     {
+        if(battleThemeInstance.isValid()) battleThemeInstance.release();
         battleThemeInstance = RuntimeManager.CreateInstance(battleThemeReference);
         battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
         battleThemeInstance.start();

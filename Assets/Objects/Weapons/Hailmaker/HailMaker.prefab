@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 3230000773134604271}
   - component: {fileID: 1066894796322893754}
   - component: {fileID: -3438963122069973725}
+  - component: {fileID: 5738669385438196354}
   m_Layer: 7
   m_Name: HailMaker
   m_TagString: Untagged
@@ -171,6 +172,14 @@ MonoBehaviour:
       Data3: -2074649164
       Data4: -1205273768
     Path: event:/VFX/Hailmaker/Shot
+  aliveReference:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  aliveSound: 0
   hitSoundReference:
     Guid:
       Data1: 533881192
@@ -244,6 +253,10 @@ MonoBehaviour:
     sync: 0
     syncSpeed: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    alignDirection: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 8693188006018225575, guid: b7309d4061fd2d24595d018c9d96d408, type: 3}
   multiplySpawnrateByLifetime: 1
@@ -322,6 +335,57 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &5738669385438196354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066612454653962984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
+    origin:
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 5
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 2
+    positionWarpFallof: 1
+    positionWarpRadius: 1
+    enableScaleWarp: 1
+    scaleWarpStrength: -2
+    scaleWarpFalloff: 1
+    scaleWarpRadius: 1
+    enableRotationWarp: 0
+    rotationWarpStrength: 10
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 1
+    enableSwirl: 1
+    swirlStrength: 2
+    swirlFalloff: 1
+    swirlRadius: 1
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &8047464109496563407
 GameObject:
   m_ObjectHideFlags: 0

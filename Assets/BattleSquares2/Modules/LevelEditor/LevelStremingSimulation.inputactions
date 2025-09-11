@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "name": "LevelStremingSimulation",
+    "maps": [
+        {
+            "name": "Simulate",
+            "id": "c4dae6ba-93e0-4258-9159-c364e78b291c",
+            "actions": [
+                {
+                    "name": "Start",
+                    "type": "Button",
+                    "id": "a92e57c1-1bfa-4ff1-9793-ed0c62616210",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Chunk",
+                    "type": "Button",
+                    "id": "ea466ec9-42ba-4492-b8c3-24526f24b1c9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "BuildMap",
+                    "type": "Button",
+                    "id": "3d93c9f8-a4d4-4000-b79b-266a32e711a6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "89479b2c-176a-44c2-98fd-53a714517441",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Start",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "beb59a8d-17be-4f66-9ae7-e655b15d79de",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Chunk",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "02485b01-6380-4d9c-8e28-a4fad9a20c1b",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BuildMap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

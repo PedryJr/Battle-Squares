@@ -1,0 +1,727 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &470278016373709538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1032199906703583616}
+  - component: {fileID: 1796527227319198795}
+  m_Layer: 0
+  m_Name: Edit Forcefield (4)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1032199906703583616
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470278016373709538}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01252, y: 0, z: 1.5023301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4766324730508452268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1796527227319198795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470278016373709538}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0.00001
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0.00001
+    origin:
+      x: -9.481486
+      y: -2.3015828
+    rotation: 0
+    warpSpeed: 20
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 2
+    enablePositionWarp: 0
+    positionWarpStrength: -1
+    positionWarpFallof: 3
+    positionWarpRadius: 5
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.2
+    scaleWarpFalloff: 2
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 6.21
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
+    enableSwirl: 0
+    swirlStrength: 0.3
+    swirlFalloff: 1
+    swirlRadius: 5
+    enablePulsation: 1
+    pulsationFrequency: 4
+    pulsationAmplitude: 0.1
+    pulsationFallof: 2.2
+    pulsationRadius: 5
+--- !u!1 &776643258494153505
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4099421959536789744}
+  - component: {fileID: 4707209466754407137}
+  m_Layer: 0
+  m_Name: Edit Forcefield (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &4099421959536789744
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 776643258494153505}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01252, y: 0, z: 1.5023301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4766324730508452268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4707209466754407137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 776643258494153505}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0.00001
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0.00001
+    origin:
+      x: -9.481486
+      y: -2.3015828
+    rotation: 0
+    warpSpeed: 20
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 2
+    enablePositionWarp: 0
+    positionWarpStrength: -1
+    positionWarpFallof: 3
+    positionWarpRadius: 5
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.2
+    scaleWarpFalloff: 2
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 6.21
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
+    enableSwirl: 0
+    swirlStrength: 0.3
+    swirlFalloff: 1
+    swirlRadius: 5
+    enablePulsation: 1
+    pulsationFrequency: 4
+    pulsationAmplitude: 0.1
+    pulsationFallof: 2.2
+    pulsationRadius: 5
+--- !u!1 &1396072962573971140
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7062932281055072367}
+  - component: {fileID: 220743234342373788}
+  m_Layer: 0
+  m_Name: Edit Forcefield
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &7062932281055072367
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396072962573971140}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01252, y: 0, z: 1.5023301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4766324730508452268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &220743234342373788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396072962573971140}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0.00001
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0.00001
+    origin:
+      x: -9.481486
+      y: -2.3015828
+    rotation: 0
+    warpSpeed: 20
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 2
+    enablePositionWarp: 0
+    positionWarpStrength: -1
+    positionWarpFallof: 3
+    positionWarpRadius: 5
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.2
+    scaleWarpFalloff: 2
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 6.21
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
+    enableSwirl: 0
+    swirlStrength: 0.3
+    swirlFalloff: 1
+    swirlRadius: 5
+    enablePulsation: 1
+    pulsationFrequency: 4
+    pulsationAmplitude: 0.1
+    pulsationFallof: 2.2
+    pulsationRadius: 5
+--- !u!1 &1492090092345683004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7641269006062832515}
+  - component: {fileID: 3482416387629078651}
+  m_Layer: 0
+  m_Name: Edit Forcefield (7)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &7641269006062832515
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492090092345683004}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01252, y: 0, z: 1.5023301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4766324730508452268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3482416387629078651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492090092345683004}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0.00001
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0.00001
+    origin:
+      x: -9.481486
+      y: -2.3015828
+    rotation: 0
+    warpSpeed: 20
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 2
+    enablePositionWarp: 0
+    positionWarpStrength: -1
+    positionWarpFallof: 3
+    positionWarpRadius: 5
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.2
+    scaleWarpFalloff: 2
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 6.21
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
+    enableSwirl: 0
+    swirlStrength: 0.3
+    swirlFalloff: 1
+    swirlRadius: 5
+    enablePulsation: 1
+    pulsationFrequency: 4
+    pulsationAmplitude: 0.1
+    pulsationFallof: 2.2
+    pulsationRadius: 5
+--- !u!1 &2388161371375359627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5419716144420573814}
+  - component: {fileID: 5883179423709512498}
+  m_Layer: 0
+  m_Name: Edit Forcefield (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &5419716144420573814
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2388161371375359627}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01252, y: 0, z: 1.5023301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4766324730508452268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5883179423709512498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2388161371375359627}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0.00001
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0.00001
+    origin:
+      x: -9.481486
+      y: -2.3015828
+    rotation: 0
+    warpSpeed: 20
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 2
+    enablePositionWarp: 0
+    positionWarpStrength: -1
+    positionWarpFallof: 3
+    positionWarpRadius: 5
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.2
+    scaleWarpFalloff: 2
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 6.21
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
+    enableSwirl: 0
+    swirlStrength: 0.3
+    swirlFalloff: 1
+    swirlRadius: 5
+    enablePulsation: 1
+    pulsationFrequency: 4
+    pulsationAmplitude: 0.1
+    pulsationFallof: 2.2
+    pulsationRadius: 5
+--- !u!1 &3198043604171846238
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4766324730508452268}
+  - component: {fileID: 9151329639727943150}
+  m_Layer: 0
+  m_Name: ShapeContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4766324730508452268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3198043604171846238}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 128, z: -2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7062932281055072367}
+  - {fileID: 5419716144420573814}
+  - {fileID: 4099421959536789744}
+  - {fileID: 5064256356943513576}
+  - {fileID: 1032199906703583616}
+  - {fileID: 7953399138617350171}
+  - {fileID: 1111570842896670904}
+  - {fileID: 7641269006062832515}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9151329639727943150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3198043604171846238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 438ac164fa30cf94da37c56f79788b10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShapeContainer
+  mousePosOnGenerate: {x: 0, y: 0}
+  mousePosOnRelease: {x: 0, y: 0}
+  _material: {fileID: 2100000, guid: f2cd34d07e336e04cac0ca84eadd0fc1, type: 2}
+  _mimicPrefab: {fileID: 4766324730508452268, guid: d687ab33f5ba9254cb1509f2a926d5ff, type: 3}
+  _editEffect: {fileID: 7591915812291981306, guid: 95761b9a4837b8f4bb5974d8239dcec6, type: 3}
+  _dragMod: {fileID: 0}
+  mirrorX: 0
+  mirrorY: 0
+  scale: 0
+--- !u!1 &4290484013753040034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7953399138617350171}
+  - component: {fileID: 4840006929488938115}
+  m_Layer: 0
+  m_Name: Edit Forcefield (5)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &7953399138617350171
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4290484013753040034}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01252, y: 0, z: 1.5023301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4766324730508452268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4840006929488938115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4290484013753040034}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0.00001
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0.00001
+    origin:
+      x: -9.481486
+      y: -2.3015828
+    rotation: 0
+    warpSpeed: 20
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 2
+    enablePositionWarp: 0
+    positionWarpStrength: -1
+    positionWarpFallof: 3
+    positionWarpRadius: 5
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.2
+    scaleWarpFalloff: 2
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 6.21
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
+    enableSwirl: 0
+    swirlStrength: 0.3
+    swirlFalloff: 1
+    swirlRadius: 5
+    enablePulsation: 1
+    pulsationFrequency: 4
+    pulsationAmplitude: 0.1
+    pulsationFallof: 2.2
+    pulsationRadius: 5
+--- !u!1 &4729452604706853817
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1111570842896670904}
+  - component: {fileID: 277512662651253586}
+  m_Layer: 0
+  m_Name: Edit Forcefield (6)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1111570842896670904
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4729452604706853817}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01252, y: 0, z: 1.5023301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4766324730508452268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &277512662651253586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4729452604706853817}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0.00001
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0.00001
+    origin:
+      x: -9.481486
+      y: -2.3015828
+    rotation: 0
+    warpSpeed: 20
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 2
+    enablePositionWarp: 0
+    positionWarpStrength: -1
+    positionWarpFallof: 3
+    positionWarpRadius: 5
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.2
+    scaleWarpFalloff: 2
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 6.21
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
+    enableSwirl: 0
+    swirlStrength: 0.3
+    swirlFalloff: 1
+    swirlRadius: 5
+    enablePulsation: 1
+    pulsationFrequency: 4
+    pulsationAmplitude: 0.1
+    pulsationFallof: 2.2
+    pulsationRadius: 5
+--- !u!1 &7865693698544090147
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5064256356943513576}
+  - component: {fileID: 2221931361255230353}
+  m_Layer: 0
+  m_Name: Edit Forcefield (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &5064256356943513576
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7865693698544090147}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01252, y: 0, z: 1.5023301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4766324730508452268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2221931361255230353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7865693698544090147}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0.00001
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0.00001
+    origin:
+      x: -9.481486
+      y: -2.3015828
+    rotation: 0
+    warpSpeed: 20
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 2
+    enablePositionWarp: 0
+    positionWarpStrength: -1
+    positionWarpFallof: 3
+    positionWarpRadius: 5
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.2
+    scaleWarpFalloff: 2
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 6.21
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
+    enableSwirl: 0
+    swirlStrength: 0.3
+    swirlFalloff: 1
+    swirlRadius: 5
+    enablePulsation: 1
+    pulsationFrequency: 4
+    pulsationAmplitude: 0.1
+    pulsationFallof: 2.2
+    pulsationRadius: 5

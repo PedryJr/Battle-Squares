@@ -20,6 +20,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameOverScene/GameOver.unity
     guid: 5c2c77325f3338e46b9daab4be3d198c
+  - enabled: 1
+    path: Assets/BattleSquares2/Modules/LevelEditor/EditorScene.unity
+    guid: 3c73cbe264d461a41af890d20def0415
+  - enabled: 1
+    path: Assets/BattleSquares2/Modules/LevelEditor/LevelBuilderScene.unity
+    guid: ec18a4778b8468543a7a76b103a6b97e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b7b47f3acca291845b09de5e59848083, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: caeeeb8e8f605dc42866145ecbfdef4a, type: 3}

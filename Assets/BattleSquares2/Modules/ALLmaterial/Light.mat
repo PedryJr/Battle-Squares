@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Light
+  m_Shader: {fileID: 4800000, guid: ad785df6a2a1db94bae003e39f0772e4, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _ALPHADSTBLEND_ONEMINUSSRCALPHA
+  - _ALPHASRCBLEND_ONE
+  - _BLENDDST_ONEMINUSSRCALPHA
+  - _BLENDOP_ADD
+  - _BLENDOP_DISABLED
+  - _BLENDSRC_SRCALPHA
+  - _COLORDSTBLEND_ONEMINUSSRCALPHA
+  - _COLORSRCBLEND_SRCALPHA
+  - _COLOR_RED
+  - _DSTBLEND_ONEMINUSDSTALPHA
+  - _FACECULLING_OFF
+  - _KOLOR_DISABLED
+  - _KOLOR_RED
+  - _SRCBLEND_DSTCOLOR
+  - _SRCBLEND_GREATER
+  - _ZTESTMODE_LEQUAL
+  - _ZWRITE_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaDstBlend: 8
+    - _AlphaSrcBlend: 0
+    - _BlendDst: 10
+    - _BlendMode: 0
+    - _BlendOp: 0
+    - _BlendSrc: 5
+    - _Color: 0
+    - _ColorDstBlend: 8
+    - _ColorSrcBlend: 3
+    - _DstBlend: 10
+    - _EnableExternalAlpha: 0
+    - _FaceCulling: 0
+    - _Kolor: 0
+    - _SrcBlend: 5
+    - _ZTestMode: 4
+    - _ZTestValue: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _BlendMode: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
+using static ListPersistendLevels;
 
 public sealed class MapLoaderBehaviour : MonoBehaviour
 {
@@ -48,20 +50,45 @@ public sealed class MapLoaderBehaviour : MonoBehaviour
         for(int mapId = 0; mapId < mapSynchronizer.mapTypes[mapType].maps.Length; mapId++)
         {
 
-            LoadMapImage(mapSynchronizer.mapTypes[mapType].maps[mapId].icon, mapId);
+            LoadMapImage_LEGACY(mapSynchronizer.mapTypes[mapType].maps[mapId].icon, mapId);
 
         }
 
+        LevelPathPointer levelPathPointer = new LevelPathPointer();
+        levelPathPointer.LoadPaths();
+        foreach (var item in levelPathPointer.indexes) LoadMapImage(item);
+
     }
 
-    void LoadMapImage(Sprite sprite, int mapId)
+    void LoadMapImage_LEGACY(Sprite sprite, int mapId)
     {
         GameObject newIcon = Instantiate(mapIconTemplate, transform);
         Image icon = newIcon.GetComponent<Image>();
         SelectMapButtonBehaviour mapButton = newIcon.GetComponent<SelectMapButtonBehaviour>();
+        mapButton.legacy = true;
 
         icon.sprite = sprite;
         mapButton.mapId = mapId;
+
+        loadedMaps.Add(newIcon);
+    }
+
+    void LoadMapImage(string levelName)
+    {
+        LevelPrep levelPrep = new LevelPrep();
+        GameObject newIcon = Instantiate(mapIconTemplate, transform);
+        Image icon = newIcon.GetComponent<Image>();
+        SelectMapButtonBehaviour mapButton = newIcon.GetComponent<SelectMapButtonBehaviour>();
+        mapButton.levelPrep = levelPrep;
+
+        mapButton.levelPrep.levelName = levelName;
+        mapButton.legacy = false;
+        mapButton.mapId = -1;
+
+        mapButton.levelPrep.LoadCompiledLeved(levelName);
+
+        icon.preserveAspect = true;
+        icon.sprite = mapButton.levelPrep.RasterizeLevel();
 
         loadedMaps.Add(newIcon);
     }

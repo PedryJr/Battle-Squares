@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4906225790021184956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5237876103792303207}
+  - component: {fileID: 6322990862558035638}
+  m_Layer: 0
+  m_Name: -- Example ForceField --
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5237876103792303207
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4906225790021184956}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0.706079, w: -0.7081331}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6322990862558035638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4906225790021184956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0.00001
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0.00001
+    origin:
+      x: -21.365788
+      y: 14.011736
+    rotation: 270.07635
+    warpSpeed: 1
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 2
+    enablePositionWarp: 1
+    positionWarpStrength: 0.48
+    positionWarpFallof: 4.34
+    positionWarpRadius: 1.46
+    enableScaleWarp: 1
+    scaleWarpStrength: -1.38
+    scaleWarpFalloff: 4.96
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 2.01
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
+    enableSwirl: 1
+    swirlStrength: 1.51
+    swirlFalloff: 6.51
+    swirlRadius: 2.17
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 1
+    pulsationFallof: 1
+    pulsationRadius: 5

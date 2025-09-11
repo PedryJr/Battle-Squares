@@ -616,7 +616,7 @@ MonoBehaviour:
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30
-    EnsureNetworkVariableLengthSafety: 1
+    EnsureNetworkVariableLengthSafety: 0
     EnableSceneManagement: 1
     ForceSamePrefabs: 1
     RecycleNetworkIds: 0
@@ -698,6 +698,7 @@ GameObject:
   - component: {fileID: 7766882706945389863}
   - component: {fileID: 7766882706945389864}
   - component: {fileID: 7766882706945389865}
+  - component: {fileID: 7766882706945389866}
   m_Layer: 0
   m_Name: Synchronizer
   m_TagString: Sync
@@ -1472,7 +1473,7 @@ MonoBehaviour:
     aoeDamage: 0
     baseDamage: 4
     damageTimeScale: 0
-    recoil: -5.1
+    recoil: -5.5
     enableMorph: 1
     targetMorph: {x: 1.3, y: 0.2, z: 1}
     timeToMorph: 0.165
@@ -2171,6 +2172,51 @@ MonoBehaviour:
   state: 
   largeImage: 24
   largeText: Battle Squares
+--- !u!114 &7766882706945389866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 265590ff259baf549bb00ad7a11e8243, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  ShowTopMostFoldoutHeaderGroup: 1
+  levelPrep:
+    levelName: 
+    byteSize: 0
+    levelExpectation:
+      levelHashCode: 0
+      shapeCount: 0
+      animationCount: 0
+      lightCount: 0
+      spawnCount: 0
+    simplifiedShapeDataArray: []
+    simplifiedAnimationDataArray: []
+    lightPositions: []
+    spawnPositions: []
+  levelReciever:
+    loadingCompleted: 0
+    levelName: 
+    levelExpectation:
+      levelHashCode: 0
+      shapeCount: 0
+      animationCount: 0
+      lightCount: 0
+      spawnCount: 0
+    recievedChunks:
+      levelHashCode: 0
+      shapeCount: 0
+      animationCount: 0
+      lightCount: 0
+      spawnCount: 0
+    simplifiedShapeDataArray: []
+    simplifiedAnimationDataArray: []
+    lightPositions: []
+    spawnPositions: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

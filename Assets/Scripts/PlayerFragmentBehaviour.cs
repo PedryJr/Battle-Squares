@@ -36,7 +36,7 @@ public sealed class PlayerFragmentBehaviour : MonoBehaviour
         transform.localScale = Vector3.zero;
 
         startPosition = playerConstructor.position + new Vector3(Random.Range(-randomDistance, randomDistance), 0, 0);
-        startPosition.z = 0;
+        startPosition.z = transform.position.z;
         transform.position = startPosition;
 
         this.spawnEffect = spawnEffect;
@@ -56,6 +56,8 @@ public sealed class PlayerFragmentBehaviour : MonoBehaviour
         timer += Time.deltaTime;
         timer = Mathf.Clamp(timer, 0, buildingTime);
 
+        float keepZ = transform.position.z;
+
         transform.position = Vector2.Lerp(startPosition, targetPosition, MyExtentions.EaseOutQuad(timer / buildingTime));
         transform.localScale = Vector2.Lerp(Vector3.zero, targetScale, Mathf.SmoothStep(0, 1, timer / buildingTime));
 
@@ -63,6 +65,10 @@ public sealed class PlayerFragmentBehaviour : MonoBehaviour
         transform.localPosition = transform.localPosition + (transform.localPosition.normalized * slottingLerp);
 
         if (finalFragment && timer >= buildingTime && !spawnEffect.deleteFragmentBehaviours) spawnEffect.deleteFragmentBehaviours = true;
+        
+        Vector3 posCopy = transform.position;
+        posCopy.z = keepZ;
+        transform.position = posCopy;
 
     }
 

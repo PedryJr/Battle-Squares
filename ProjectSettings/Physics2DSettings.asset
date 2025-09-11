@@ -16,14 +16,14 @@ Physics2DSettings:
   m_BaumgarteScale: 0.2
   m_BaumgarteTimeOfImpactScale: 0.75
   m_TimeToSleep: 0.5
-  m_LinearSleepTolerance: 0.01
+  m_LinearSleepTolerance: 0.03
   m_AngularSleepTolerance: 2
   m_DefaultContactOffset: 0.015
   m_ContactThreshold: 0.015
   m_JobOptions:
     serializedVersion: 2
     useMultithreading: 1
-    useConsistencySorting: 1
+    useConsistencySorting: 0
     m_InterpolationPosesPerJob: 100
     m_NewContactsPerJob: 30
     m_CollideContactsPerJob: 100

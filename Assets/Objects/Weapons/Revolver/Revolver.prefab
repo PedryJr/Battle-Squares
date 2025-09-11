@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3230000773134604271}
   - component: {fileID: 1066894796322893754}
   - component: {fileID: -3438963122069973725}
+  - component: {fileID: 1694199888061291303}
   m_Layer: 7
   m_Name: Revolver
   m_TagString: Untagged
@@ -57,6 +58,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -78,6 +81,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 1
@@ -140,6 +144,14 @@ MonoBehaviour:
       Data3: 226132131
       Data4: 1720554927
     Path: event:/VFX/Base/Gun Shot
+  aliveReference:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  aliveSound: 0
   hitSoundReference:
     Guid:
       Data1: 533881192
@@ -213,6 +225,10 @@ MonoBehaviour:
     sync: 0
     syncSpeed: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    alignDirection: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0
@@ -291,6 +307,57 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &1694199888061291303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066612454653962984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
+    origin:
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 3.1
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 2.09
+    positionWarpFallof: 2.43
+    positionWarpRadius: 1
+    enableScaleWarp: 1
+    scaleWarpStrength: -1
+    scaleWarpFalloff: 1
+    scaleWarpRadius: 2
+    enableRotationWarp: 0
+    rotationWarpStrength: 4.47
+    rotationWarpFalloff: 2.11
+    rotationWarpRadius: 3.91
+    enableSwirl: 0
+    swirlStrength: 3
+    swirlFalloff: 1
+    swirlRadius: 4
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &7151540191759701396
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,6 +444,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -398,6 +467,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 0

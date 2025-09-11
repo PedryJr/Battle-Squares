@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 3230000773134604271}
   - component: {fileID: -3438963122069973725}
   - component: {fileID: -3148651319717881892}
+  - component: {fileID: 855227751092256241}
   m_Layer: 7
   m_Name: Boomerang
   m_TagString: Untagged
@@ -171,6 +172,14 @@ MonoBehaviour:
       Data3: 226132131
       Data4: 1720554927
     Path: event:/VFX/Base/Gun Shot
+  aliveReference:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  aliveSound: 0
   hitSoundReference:
     Guid:
       Data1: 533881192
@@ -244,6 +253,10 @@ MonoBehaviour:
     sync: 0
     syncSpeed: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    alignDirection: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 4519005768283276661, guid: 523bc30e379c2c14ca135b3e7ce48ab5, type: 3}
   multiplySpawnrateByLifetime: 0
@@ -322,6 +335,57 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &855227751092256241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066612454653962984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
+    origin:
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 5
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 2
+    positionWarpFallof: 1
+    positionWarpRadius: 2
+    enableScaleWarp: 1
+    scaleWarpStrength: -1
+    scaleWarpFalloff: 1
+    scaleWarpRadius: 2
+    enableRotationWarp: 0
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
+    enableSwirl: 0
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 1
+    pulsationFrequency: 20
+    pulsationAmplitude: -2
+    pulsationFallof: 1
+    pulsationRadius: 3
 --- !u!1 &8047464109496563407
 GameObject:
   m_ObjectHideFlags: 0

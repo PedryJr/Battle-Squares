@@ -1,12 +1,13 @@
-using Netcode.Transports.Facepunch;
-using Steamworks;
 using System;
 using System.Collections.Generic;
+using Netcode.Transports.Facepunch;
+using Steamworks;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static PlayerSynchronizer;
 
 public sealed class PlayerSynchronizer : NetworkBehaviour
 {
@@ -24,6 +25,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     public PlayerBehaviour localSquare;
 
+    MapStreamSynchronizer mapStreamSynchronizer;
     ProjectileManager projectileManager;
     LocalSteamData localSteamData;
     ScoreManager scoreManager;
@@ -449,16 +451,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlayerFactoryServerRpc(PlayerFactoryDataPacket playerData)
-    {
-        PlayerFactoryClientRpc(playerData);
-    }
+    public void PlayerFactoryServerRpc(PlayerFactoryDataPacket playerData) => PlayerFactoryClientRpc(playerData);
 
     [ClientRpc]
-    public void PlayerFactoryClientRpc(PlayerFactoryDataPacket playerData)
-    {
-        PlayerFactory(ref playerData);
-    }
+    public void PlayerFactoryClientRpc(PlayerFactoryDataPacket playerData) => PlayerFactory(ref playerData);
     public void PlayerFactory(ref PlayerFactoryDataPacket playerData)
     {
         Debug.Log("Player Factory RPC\n" +
@@ -479,7 +475,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if (IsHost)
         {
             scoreManager.UpdateModeAsHost(scoreManager.gameMode);
-            UpdateSelectedMap(localSquare.selectedMap);
+            UpdateSelectedMap(localSquare.selectedMap, localSquare.selectedLegacyMap);
         }
 
     }
@@ -502,6 +498,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     private void SpawnPlayer(ref PlayerBehaviour newPlayer)
     {
         newPlayer.SpawnEffect();
+        if (newPlayer.GetID() == NetworkManager.LocalClientId && !IsHost) mapStreamSynchronizer.OnJoinMapRequestServerRpc();
     }
 
     private void SetPlayerLocality(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
@@ -618,7 +615,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         for (int modIndex = 0; modIndex < mods.Length; modIndex++) Mods.at[modIndex] = mods[modIndex];
     }
     private void FixedUpdate() => UpdatePlayerData();
-    float clientConnectionsStatusTimer = 0;
+    //float clientConnectionsStatusTimer = 0;
     private void Update()
     {
 
@@ -881,31 +878,37 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
     
-    public void UpdateSelectedMap(int map)
+    public void FetchMapOnJoin()
+    {
+
+    }
+
+    public void UpdateSelectedMap(int map, bool legacy)
     {
 
         if (!IsHost) return;
-        UpdateSelectedMapClientRpc(map);
+        UpdateSelectedMapClientRpc(map, legacy);
 
     }
     
     [ClientRpc]
-    void UpdateSelectedMapClientRpc(int map)
+    void UpdateSelectedMapClientRpc(int map, bool legacy)
     {
 
         if (playerIdentities == null) return;
 
         foreach (PlayerData player in playerIdentities)
         {
-            StoreSelectedMap(player, map);
+            StoreSelectedMap(player, map, legacy);
         }
 
     }
     
-    void StoreSelectedMap(PlayerData player, int map)
+    void StoreSelectedMap(PlayerData player, int map, bool legacy)
     {
 
         player.square.selectedMap = map;
+        player.square.selectedLegacyMap = legacy;
 
     }
 

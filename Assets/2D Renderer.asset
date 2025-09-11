@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6559430120445127687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: ColorBlitRendererFeature
+  m_EditorClassIdentifier: Assembly-CSharp::ColorBlitRendererFeature
+  m_Active: 1
+  m_Shader: {fileID: 0}
+  m_Intensity: 0
+  m_Material: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,6 +43,9 @@ MonoBehaviour:
   m_RendererFeatures: []
   m_RendererFeatureMap: 
   m_UseNativeRenderPass: 0
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_TransparencySortMode: 2
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
   m_HDREmulationScale: 1
@@ -47,9 +66,9 @@ MonoBehaviour:
   m_UseDepthStencilBuffer: 1
   m_UseCameraSortingLayersTexture: 0
   m_CameraSortingLayersTextureBound: -1
-  m_CameraSortingLayerDownsamplingMethod: 3
-  m_MaxLightRenderTextureCount: 0
-  m_MaxShadowRenderTextureCount: 0
+  m_CameraSortingLayerDownsamplingMethod: 0
+  m_MaxLightRenderTextureCount: 2
+  m_MaxShadowRenderTextureCount: 2
   m_PostProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_DefaultMaterialType: 0
   m_DefaultCustomMaterial: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}

@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: -3438963122069973725}
   - component: {fileID: -3148651319717881892}
   - component: {fileID: 6532073882242602851}
+  - component: {fileID: 6733730071239434078}
   m_Layer: 7
   m_Name: Katana
   m_TagString: Untagged
@@ -172,6 +173,14 @@ MonoBehaviour:
       Data3: 514360735
       Data4: -1938883303
     Path: event:/VFX/Katana/Shot
+  aliveReference:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  aliveSound: 0
   hitSoundReference:
     Guid:
       Data1: 533881192
@@ -245,6 +254,10 @@ MonoBehaviour:
     sync: 0
     syncSpeed: 0
     slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    alignDirection: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0
@@ -369,6 +382,57 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 5}
   m_EdgeRadius: 0
+--- !u!114 &6733730071239434078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066612454653962984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
+    origin:
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 3
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 3
+    positionWarpFallof: 1
+    positionWarpRadius: 1
+    enableScaleWarp: 1
+    scaleWarpStrength: -1
+    scaleWarpFalloff: 1
+    scaleWarpRadius: 3
+    enableRotationWarp: 0
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
+    enableSwirl: 0
+    swirlStrength: 3
+    swirlFalloff: 1
+    swirlRadius: 4
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &8047464109496563407
 GameObject:
   m_ObjectHideFlags: 0

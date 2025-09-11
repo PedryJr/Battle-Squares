@@ -6,10 +6,19 @@ using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 [BurstCompile]
 public sealed class PlayerBehaviour : MonoBehaviour
 {
+
+    [SerializeField]
+    Light2D playerLight;
+
+    [SerializeField]
+    ProximityPixelSenssor sensor;
+
+    public bool selectedLegacyMap = true;
     public int selectedMap;
     public ulong id;
 
@@ -197,9 +206,13 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
             }
 
-            deathChamber = GameObject.FindGameObjectWithTag("Death").transform;
+            GameObject deathObj = GameObject.FindGameObjectWithTag("Death");
+            GameObject spawnObj = GameObject.FindGameObjectWithTag("Spawn");
 
-            if(isLocalPlayer) spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
+            if (deathObj) deathChamber = deathObj.transform;
+            else deathChamber = spawnObj.transform;
+
+            if (isLocalPlayer) spawn = spawnObj.transform;
 
             RevivePlayer();
 
@@ -480,7 +493,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
         spriteRenderer.color = playerDarkerColor;
         healthbar.color = playerColor;
         newColor = false;
-
+        sensor.gridSpaceColor.color = playerColor;
+        playerLight.color = playerColor;
     }
 
     public Friend friend;
@@ -528,6 +542,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
         hpBarScale = Vector3.one * (healthPoints / maxHealthPoints);
         nozzlePosition = nozzleTransform.position;
         healthbar.transform.localScale = hpBarScale;
+        sensor.transform.localPosition = Vector3.zero;
+        playerLight.transform.localPosition = Vector3.zero;
         ApplyPlayerAnimation();
 
         if (timeSinceHit < 1) timeSinceHit += Time.deltaTime * 3.5f;

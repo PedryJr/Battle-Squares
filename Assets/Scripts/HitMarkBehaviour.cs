@@ -5,6 +5,9 @@ using UnityEngine;
 public sealed class HitMarkBehaviour : MonoBehaviour
 {
 
+    [SerializeField]
+    ImpactForceBehaviour impactForce;
+    public float zPos;
     public float timer;
     float timeAlive = 25;
     public byte ownerId;
@@ -46,6 +49,8 @@ public sealed class HitMarkBehaviour : MonoBehaviour
     private void Awake()
     {
 
+        impactForce = Instantiate(impactForce, transform.position, transform.rotation, null);
+
         if (randomRotation)
         {
 
@@ -53,11 +58,12 @@ public sealed class HitMarkBehaviour : MonoBehaviour
             {
 
                 stage.transform.rotation = Quaternion.Euler(0, 0, Random.Range(0f, 360f));
-
             }
 
         }
 
+        GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
+        transform.position += new Vector3(0, 0, LevelBuilderStuff.STENCIL_OFFSET);
     }
 
     [BurstCompile]

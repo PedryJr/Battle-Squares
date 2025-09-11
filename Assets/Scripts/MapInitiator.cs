@@ -1,9 +1,16 @@
 using System;
+using FMODUnity;
 using UnityEngine;
 using static ScoreManager;
 
 public sealed class MapInitiator : MonoBehaviour
 {
+
+    [SerializeField]
+    GameObject legacyLight;
+
+    [SerializeField]
+    GameObject levelBuilder;
 
     MapTypes[] mapTypes;
 
@@ -11,9 +18,26 @@ public sealed class MapInitiator : MonoBehaviour
 
     public MapBehaviour activeMap;
 
+    [SerializeField]
+    public EventReference defaultTheme;
+
     public void InitPresetMap(int index, Mode activeMode)
     {
 
+        if (index < 0) InitMap();
+        else InitLegacyMap(index, activeMode);
+
+    }
+
+    void InitMap()
+    {
+        FindAnyObjectByType<CameraAnimator>().PlayTheme(defaultTheme);
+        legacyLight.SetActive(false);
+        levelBuilder = Instantiate(levelBuilder);
+    }
+
+    void InitLegacyMap(int index, Mode activeMode)
+    {
         mapSynchronizer = FindAnyObjectByType<MapSynchronizer>();
         mapTypes = mapSynchronizer.mapTypes;
 
@@ -29,7 +53,6 @@ public sealed class MapInitiator : MonoBehaviour
             : activeMode == Mode.CTF ? InitCTF(index)
             : null;
         activeMap.gameObject.SetActive(true);
-
     }
 
     MapBehaviour InitDM(int index)

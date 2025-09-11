@@ -1,7 +1,11 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public sealed class EditorSwitchBehaviour : MonoBehaviour
 {
+    [SerializeField]
+    string LevelEditorSceneName;
 
     bool editorCanvasOn = false;
 
@@ -13,22 +17,32 @@ public sealed class EditorSwitchBehaviour : MonoBehaviour
 
     [SerializeField]
 
-    public void TOGGLEEDITOR()
+    public void TOGGLEEDITOR(Variant variant)
     {
-
-        editorCanvasOn = !editorCanvasOn;
-
-        if (editorCanvasOn)
+        if(variant == Variant.Skin)
         {
-            editorCanvas.gameObject.SetActive(true);
-            mainCanvas.gameObject.SetActive(false);
-        }
-        else
-        {
-            editorCanvas.gameObject.SetActive(false);
-            mainCanvas.gameObject.SetActive(true);
-        }
+            editorCanvasOn = !editorCanvasOn;
 
+            if (editorCanvasOn)
+            {
+                editorCanvas.gameObject.SetActive(true);
+                mainCanvas.gameObject.SetActive(false);
+            }
+            else
+            {
+                editorCanvas.gameObject.SetActive(false);
+                mainCanvas.gameObject.SetActive(true);
+            }
+        }
+        else SceneManager.LoadScene(LevelEditorSceneName);
+
+    }
+
+    [Serializable]
+    public enum Variant : byte
+    {
+        Skin,
+        Level
     }
 
 }

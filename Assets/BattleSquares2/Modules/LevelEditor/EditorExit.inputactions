@@ -1,0 +1,95 @@
+{
+    "version": 1,
+    "name": "EditorExit",
+    "maps": [
+        {
+            "name": "MousePos",
+            "id": "aef3da3c-a36b-4bf9-b544-af611c237bfd",
+            "actions": [
+                {
+                    "name": "Call",
+                    "type": "Value",
+                    "id": "3726e1ad-7dae-4072-884c-5dfeedbdaa5f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "InteractSmall",
+                    "type": "Button",
+                    "id": "7c49409f-356c-4971-9cd7-750d3f623dbf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "InteractBig",
+                    "type": "Button",
+                    "id": "cf644ed1-77af-4bcb-9d9d-ae3fc1b31eac",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SceneSwapTest",
+                    "type": "Button",
+                    "id": "9c53802b-1a46-44d7-aaa2-06600df96e7b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d3ef2030-9180-41be-b969-0251fd5a805f",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Call",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bfa8045d-b45b-4473-9088-0c44787eb68e",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InteractSmall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "394bc050-7f10-49c0-bfc8-f2cdabb6ea95",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InteractBig",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a8f02018-aee8-4bad-89c0-dceb811dfa06",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SceneSwapTest",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

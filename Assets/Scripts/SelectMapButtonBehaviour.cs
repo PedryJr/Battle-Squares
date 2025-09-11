@@ -3,6 +3,10 @@ using UnityEngine;
 
 public sealed class SelectMapButtonBehaviour : MonoBehaviour
 {
+    #region BS2
+    public LevelPrep levelPrep = null;
+    public bool legacy = true;
+    #endregion
 
     [NonSerialized]
     public int mapId;
@@ -19,8 +23,16 @@ public sealed class SelectMapButtonBehaviour : MonoBehaviour
     public void SELECT()
     {
 
-        playerSynchronizer.UpdateSelectedMap(mapId);
+        playerSynchronizer.localSquare.selectedLegacyMap = legacy;
 
+        MapStreamSynchronizer.SetGlobalLevelPrep(levelPrep);
+        playerSynchronizer.UpdateSelectedMap(mapId, legacy);
+/*        if (legacy)
+        {
+            playerSynchronizer.UpdateSelectedMap(mapId, legacy);
+            MapStreamSynchronizer.SetGlobalLevelPrep(null);
+        }
+        else MapStreamSynchronizer.SetGlobalLevelPrep(levelPrep);*/
     }
 
 }

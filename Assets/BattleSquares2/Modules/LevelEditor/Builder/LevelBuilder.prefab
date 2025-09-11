@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1222249331715986846
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6581166812186130205}
+  - component: {fileID: 9065514830198556854}
+  m_Layer: 0
+  m_Name: LevelBuilder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6581166812186130205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222249331715986846}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.6720004, y: 2.9423604, z: -50.038605}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9065514830198556854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222249331715986846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3938c734266a1945878676ffdb4b355, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightStrength: 1
+  mapSpawns: {fileID: 4535757479683771385, guid: 8b477556397d89b4fad181a255aead00, type: 3}
+  aMapSpawn: {fileID: 5549121867906140843, guid: 880e6b62950242c4c9e481a38c9ebef1, type: 3}
+  animationGroup: {fileID: 4585592504556234382, guid: 787d9432786ee5045ab1a8a68e1c7aa5, type: 3}
+  gameLight: {fileID: 12423000886993399, guid: 8ad9f7ab980015448abefb5b7af596e0, type: 3}
+  staticParent: {fileID: 3808558879538828391, guid: 22637f60e6345e549bb30e18d1fe0691, type: 3}
+  builtShapeStaticTemplate: {fileID: 1592273718196173774, guid: 64473335a97d7e741ac90b0be86bf1a2, type: 3}
+  builtShapeDynamicTemplate: {fileID: 1592273718196173774, guid: 4385bbeff0093744a9bf677163571d19, type: 3}
+  levelOutput: {fileID: 0}

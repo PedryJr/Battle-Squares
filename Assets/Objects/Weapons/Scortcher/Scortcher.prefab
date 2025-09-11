@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 1066894796322893754}
   - component: {fileID: -3438963122069973725}
   - component: {fileID: 3786788688331823776}
+  - component: {fileID: 2274154555645370788}
   m_Layer: 7
   m_Name: Scortcher
   m_TagString: Untagged
@@ -256,6 +257,7 @@ MonoBehaviour:
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
+    alignDirection: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 8693188006018225575, guid: 147091b030c1eb643b5f27bf276d093a, type: 3}
   multiplySpawnrateByLifetime: 1
@@ -380,6 +382,57 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 4.0650754, y: 2.5}
   m_EdgeRadius: 0
+--- !u!114 &2274154555645370788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066612454653962984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0
+    saturationBoost: 0
+  sensorData:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
+    origin:
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 3
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
+    positionWarpRadius: 1
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
+    enableRotationWarp: 0
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
+    enableSwirl: 0
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 1
+    pulsationFrequency: 20
+    pulsationAmplitude: 1
+    pulsationFallof: 1
+    pulsationRadius: 2
 --- !u!1 &8047464109496563407
 GameObject:
   m_ObjectHideFlags: 0
