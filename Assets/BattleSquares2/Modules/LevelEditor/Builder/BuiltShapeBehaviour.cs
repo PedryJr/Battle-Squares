@@ -194,6 +194,9 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         }
 
         stencilRenderer.SetPropertyBlock(stencilProperty);
+
+        gameObject.AddComponent<StencilInfectorBehaviour>().SetStencil(stencilValueInt);
+
     }
 
     public static bool EvaluateStatic(int indexedId)

@@ -57,17 +57,16 @@ Shader "*MyShaders/SpriteLitStencil"
                 half4   color       : COLOR;
                 float2  uv          : TEXCOORD0;
                 half2   lightingUV  : TEXCOORD1;
-                #if defined(DEBUG_DISPLAY)
-                float3  positionWS  : TEXCOORD2;
-                #endif
+                half4   screenPos  : TEXCOORD2;
+                half4   stencilOut : TEXCOORD3;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DebugMipmapStreamingMacros.hlsl"
 
-            TEXTURE2D(_StencilGroup);
-            SAMPLER(sampler_StencilGroup);
+            sampler2D _StencilGroup;
+
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
@@ -80,6 +79,10 @@ Shader "*MyShaders/SpriteLitStencil"
             CBUFFER_START(UnityPerMaterial)
                 half4 _Color;
             CBUFFER_END
+
+            UNITY_INSTANCING_BUFFER_START(Props)
+                UNITY_DEFINE_INSTANCED_PROP(float4, _HitMarkStencil)
+            UNITY_INSTANCING_BUFFER_END(Props)
 
             #if USE_SHAPE_LIGHT_TYPE_0
             SHAPE_LIGHT(0)
@@ -96,24 +99,32 @@ Shader "*MyShaders/SpriteLitStencil"
             #if USE_SHAPE_LIGHT_TYPE_3
             SHAPE_LIGHT(3)
             #endif
+            #define UnityObjectToClipPos(v) mul(UNITY_MATRIX_MVP, v)
+
 
             Varyings CombinedShapeLightVertex(Attributes v)
             {
+
                 Varyings o = (Varyings)0;
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 UNITY_SKINNED_VERTEX_COMPUTE(v);
 
                 SetUpSpriteInstanceProperties();
+                float4 clipPos = mul(UNITY_MATRIX_MVP, v.positionOS);
                 v.positionOS = UnityFlipSprite(v.positionOS, unity_SpriteProps.xy);
                 o.positionCS = TransformObjectToHClip(v.positionOS);
-                #if defined(DEBUG_DISPLAY)
-                o.positionWS = TransformObjectToWorld(v.positionOS);
-                #endif
+
+                half4 positionWS = mul (UNITY_MATRIX_MVP, v.positionOS);
+                
+
                 o.uv = v.uv;
                 o.lightingUV = half2(ComputeScreenPos(o.positionCS / o.positionCS.w).xy);
 
+                o.screenPos = clipPos;
+
                 o.color = v.color * _Color * unity_SpriteColor;
+                o.stencilOut = UNITY_ACCESS_INSTANCED_PROP(Props, _HitMarkStencil).x;
                 return o;
             }
 
@@ -121,6 +132,8 @@ Shader "*MyShaders/SpriteLitStencil"
 
             half4 CombinedShapeLightFragment(Varyings i) : SV_Target
             {
+                float2 screenUV = i.screenPos.xy * 0.5 + 0.5;
+                screenUV.y = 1.0 - screenUV.y; // Flip if needed
                 const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
                 SurfaceData2D surfaceData;
@@ -129,18 +142,19 @@ Shader "*MyShaders/SpriteLitStencil"
                 InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
                 InitializeInputData(i.uv, i.lightingUV, inputData);
 
-                SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
+                int _HitMarkStencil = i.stencilOut * 255;
+                int sampleStencil = tex2D(_StencilGroup, i.lightingUV * 255);
 
-                float testStencil = 1.0 / 1.0;
-                float sampleStencil = SAMPLE_TEXTURE2D(_StencilGroup, sampler_StencilGroup, i.lightingUV);
-
-                if(testStencil == sampleStencil)
+                if(_HitMarkStencil == sampleStencil)
                 {
-
                     return CombinedShapeLightShared(surfaceData, inputData);
                 }
 
-                return 0;
+                return half4(0, 0, 0, 0);
+    //                 float2 screenUV = (i.screenPos.xy / i.screenPos.w) * 0.5 + 0.5;
+    // screenUV.y = 1.0 - screenUV.y;
+
+    // return float4(screenUV, 0, 1); // visualize UVs
 
             }
             ENDHLSL

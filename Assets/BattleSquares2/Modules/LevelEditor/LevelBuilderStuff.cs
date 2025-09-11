@@ -123,22 +123,26 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
         List<Transform>[] animationGroups = animatedAnimationsAwaitingShapes.Values.ToArray();
 
-        BuiltShapeBehaviour[] group0 = staticParent.GetComponentsInChildren<BuiltShapeBehaviour>();
+        foreach (var item in builtShapes) item.AssignStencil(1, false);
 
-        for (int i = 0; i < group0.Length; i++) group0[i].AssignStencil(0);
+        for (int i = 0; i < testList.Count; i++) testList[i].AddComponent<StencilInfectorBehaviour>().SetStencil(1);
+
 
         for (int i = 0; i < animationGroups.Length; i++)
             for (int j = 0; j < animationGroups[i].Count; j++) 
-                animationGroups[i][j].GetComponent<BuiltShapeBehaviour>().AssignStencil(i + 1);
+                animationGroups[i][j].GetComponent<BuiltShapeBehaviour>().AssignStencil(i + 1, true);
     }
 
     void BuildProxies()
     {
+        testList = new List<GameObject>();
         CompositeCollider2D composite = staticParent.GetComponent<CompositeCollider2D>();
         composite.GenerateGeometry();
         int paths = composite.pathCount;
         for (int i = 0; i < paths; i++) BuildPath(i, composite);
     }
+
+    List<GameObject> testList;
 
     void BuildPath(int index, CompositeCollider2D composite)
     {
@@ -148,6 +152,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         composite.GetPath(index, points);
 
         GameObject test = new GameObject("Test");
+        testList.Add(test);
         test.layer = 9;
         test.transform.position = composite.transform.position;
         PolygonCollider2D col = test.AddComponent<PolygonCollider2D>();
