@@ -51,7 +51,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
     public void Awake()
     {
-        STENCIL_OFFSET = -4.0f;
+        STENCIL_OFFSET = 0.1f;
         animatedAnimationsAwaitingShapes = new Dictionary<int, List<Transform>>();
         builtShapes = new List<BuiltShapeBehaviour>();
 
@@ -123,36 +123,50 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
         List<Transform>[] animationGroups = animatedAnimationsAwaitingShapes.Values.ToArray();
 
-        foreach (var item in builtShapes) item.AssignStencil(1, false);
+        //foreach (var item in builtShapes) item.AssignStencil(1f, false);
+/*
+        int stencilAccumulation = 0;
 
-        for (int i = 0; i < testList.Count; i++) testList[i].AddComponent<StencilInfectorBehaviour>().SetStencil(1);
+        for (int i = 0; i < testList.Count; i++) testList[i].AddComponent<StencilInfectorBehaviour>();
+
 
 
         for (int i = 0; i < animationGroups.Length; i++)
             for (int j = 0; j < animationGroups[i].Count; j++) 
-                animationGroups[i][j].GetComponent<BuiltShapeBehaviour>().AssignStencil(i + 1, true);
+                animationGroups[i][j].GetComponent<BuiltShapeBehaviour>().AssignStencil(stencilAccumulation++, true);*/
     }
 
     void BuildProxies()
     {
-        testList = new List<GameObject>();
+        stencilAccumulation++;
         CompositeCollider2D composite = staticParent.GetComponent<CompositeCollider2D>();
         composite.GenerateGeometry();
         int paths = composite.pathCount;
-        for (int i = 0; i < paths; i++) BuildPath(i, composite);
+        for (int i = 0; i < paths; i++) BuildPath(i, composite, stencilAccumulation);
+        MeshRenderer[] meshRenderersInComposite = staticParent.GetComponentsInChildren<MeshRenderer>();
+        for (int i = 0; i < meshRenderersInComposite.Length; i++)
+        {
+            if (meshRenderersInComposite[i].gameObject.name.Equals("BuiltShapeStencil"))
+            {
+                MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
+                BuiltShapeBehaviour shape = meshRenderersInComposite[i].transform.parent.GetComponent<BuiltShapeBehaviour>();
+
+
+                shape.AssignStencil(stencilAccumulation, false);
+
+            }
+        }
     }
 
-    List<GameObject> testList;
 
-    void BuildPath(int index, CompositeCollider2D composite)
+    void BuildPath(int index, CompositeCollider2D composite, int stencil)
     {
 
         int pointCount = composite.GetPathPointCount(index);
         Vector2[] points = new Vector2[pointCount];
         composite.GetPath(index, points);
 
-        GameObject test = new GameObject("Test");
-        testList.Add(test);
+        GameObject test = new GameObject("StaticShape");
         test.layer = 9;
         test.transform.position = composite.transform.position;
         PolygonCollider2D col = test.AddComponent<PolygonCollider2D>();
@@ -162,7 +176,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         shadowCaster2D.castingOption = ShadowCaster2D.ShadowCastingOptions.CastAndSelfShadow;
         ShadowCaster2DController shadowController2D = test.AddComponent<ShadowCaster2DController>();
         shadowController2D.UpdateFromCollider();
-
+        test.AddComponent<StencilInfectorBehaviour>().SetStencil(stencil);
     }
 
     void BuildAllMapSpawns()
@@ -179,8 +193,14 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             ComplexAnimationData complexAnimationData = ConvertFromSimpleAnimationData(simplifiedAnimationDatas[item.Key]);
             LevelAnimationGroup levelAnimationGroup = Instantiate(animationGroup);
             levelAnimationGroup.ConstructComplex(complexAnimationData);
-            foreach (var item1 in item.Value) item1.SetParent(levelAnimationGroup.transform, true);
+            foreach (var item1 in item.Value)
+            {
+                item1.SetParent(levelAnimationGroup.transform, true);
+                item1.GetComponent<BuiltShapeBehaviour>().AssignStencil(stencilAccumulation, true);
+            }
+            levelAnimationGroup.gameObject.AddComponent<StencilInfectorBehaviour>().SetStencil(stencilAccumulation / 2048f);
             levelAnimationGroup.transform.SetParent(mapParent, true);
+            stencilAccumulation++;
         }
     }
 
@@ -193,6 +213,8 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             light.intensity = lightStrength / simplifiedLightData.Length;
         }
     }
+
+    int stencilAccumulation = 0;
 
     void BuildAllShapes()
     {

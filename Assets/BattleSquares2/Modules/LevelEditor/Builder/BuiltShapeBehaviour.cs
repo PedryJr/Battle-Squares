@@ -90,7 +90,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
     public static VertexAttributeDescriptor GetOctagonalAttribute => new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 2);
 
-    Vector2[] correctedPoints;
+    public Vector2[] correctedPoints;
     public void ApplyShape(SimplifiedShapeData simplifiedShapeData, int indexedId, LevelBuilderStuff builder, bool isStatic)
     {
         this.isStatic = isStatic;
@@ -181,12 +181,12 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
     [SerializeField]
     MeshRenderer stencilRenderer;
-    public void AssignStencil(int stencilValueInt)
+    public void AssignStencil(float stencilValueInt, bool spawnStencilInfector)
     {
+
+        float stencilValue = stencilValueInt / 2048f;
         MaterialPropertyBlock stencilProperty = new MaterialPropertyBlock();
 
-        float stencilValue = 1f / (stencilValueInt + 1f);
-        Debug.Log(stencilValue);
         stencilProperty.SetVector("_Stencil", new Vector4(stencilValue, stencilValue, stencilValue, stencilValue));
         for(int i = 0; i < correctedPoints.Length; i++)
         {
@@ -195,7 +195,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
         stencilRenderer.SetPropertyBlock(stencilProperty);
 
-        gameObject.AddComponent<StencilInfectorBehaviour>().SetStencil(stencilValueInt);
+        if(spawnStencilInfector) gameObject.AddComponent<StencilInfectorBehaviour>().SetStencil(stencilValueInt);
 
     }
 

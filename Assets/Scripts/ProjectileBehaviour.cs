@@ -1007,7 +1007,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         HitMarkBehaviour newHitMark = Instantiate(hitMark, hitMarkPos, Quaternion.Euler(0, 0, angle), toParent);
 
-        newHitMark.AssignStencil(toParent.GetComponent<StencilInfectorBehaviour>().GetStencil());
+        StencilInfectorBehaviour stencilInfectorBehaviour;
+        if (toParent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
+        else if (toParent.parent && toParent.parent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
+        else if (toParent.parent && toParent.parent.parent && toParent.parent.parent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
 
         UnityEngine.Color color = owningPlayer.playerDarkerColor;
         newHitMark.spawnColor = new UnityEngine.Color(color.r * 0.86f, color.g * 0.86f, color.b * 0.86f, 1f);

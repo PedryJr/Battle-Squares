@@ -117,7 +117,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public string playerName;
 
     public float h;
-    float s, v;
+    public float s, v;
     public bool isDead = false;
 
     public int kills;

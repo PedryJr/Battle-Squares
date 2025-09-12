@@ -20,6 +20,7 @@ Shader "*MyShaders/SpriteLitStencil"
     {
         Tags {"Queue" = "Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
 
+        ZTest Always
         Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
         Cull Off
         ZWrite [_ZWrite]
@@ -130,10 +131,10 @@ Shader "*MyShaders/SpriteLitStencil"
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
 
+            #define DecodeFloatToUint(f) (asuint(f) & 0xBFFFFFFF)
+
             half4 CombinedShapeLightFragment(Varyings i) : SV_Target
             {
-                float2 screenUV = i.screenPos.xy * 0.5 + 0.5;
-                screenUV.y = 1.0 - screenUV.y; // Flip if needed
                 const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
                 SurfaceData2D surfaceData;
@@ -142,19 +143,22 @@ Shader "*MyShaders/SpriteLitStencil"
                 InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
                 InitializeInputData(i.uv, i.lightingUV, inputData);
 
-                int _HitMarkStencil = i.stencilOut * 255;
-                int sampleStencil = tex2D(_StencilGroup, i.lightingUV * 255);
+                float _hitMarkStencil = i.stencilOut.x * 2048.0;
+                float sampleStencil = tex2D(_StencilGroup, i.lightingUV).x * 2048.0;
 
-                if(_HitMarkStencil == sampleStencil)
+
+                float compA, compB;
+                compA = _hitMarkStencil;
+                compB = sampleStencil;
+
+                float diff = abs(compB - compA);
+
+                if((uint) compB == (uint) compA)
                 {
                     return CombinedShapeLightShared(surfaceData, inputData);
                 }
 
                 return half4(0, 0, 0, 0);
-    //                 float2 screenUV = (i.screenPos.xy / i.screenPos.w) * 0.5 + 0.5;
-    // screenUV.y = 1.0 - screenUV.y;
-
-    // return float4(screenUV, 0, 1); // visualize UVs
 
             }
             ENDHLSL

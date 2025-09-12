@@ -66,10 +66,14 @@ public sealed class HitMarkBehaviour : MonoBehaviour
         transform.position += new Vector3(0, 0, LevelBuilderStuff.STENCIL_OFFSET);
     }
 
-    public void AssignStencil(int stencil)
+    public void AssignStencil(float stencil)
     {
+
+        Debug.Log(stencil);
+
+        stencil = stencil / 2048f;
         MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
-        materialPropertyBlock.SetVector("_HitMarkStencil", new Vector4(1, 1, 1, 1));
+        materialPropertyBlock.SetVector("_HitMarkStencil", new Vector4(stencil, stencil, stencil, stencil));
         GetComponentInChildren<SpriteRenderer>().SetPropertyBlock(materialPropertyBlock);
     }
 

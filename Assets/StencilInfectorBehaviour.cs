@@ -3,8 +3,8 @@ using UnityEngine;
 public class StencilInfectorBehaviour : MonoBehaviour
 {
 
-    int Stencil;
-    public void SetStencil(int stencil) => Stencil = stencil;
-    public int GetStencil() => Stencil;
+    float Stencil;
+    public void SetStencil(float stencil) => Stencil = stencil;
+    public float GetStencil() => Stencil;
 
 }

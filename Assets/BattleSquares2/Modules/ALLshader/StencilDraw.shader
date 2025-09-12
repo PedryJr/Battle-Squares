@@ -53,7 +53,7 @@ Shader "*MyShaders/StencilDraw"
             struct Varyings
             {
                 float4  positionCS  : SV_POSITION;
-                half4   color       : COLOR;
+                float4   color       : COLOR;
                 float2  uv          : TEXCOORD0;
                 half2   lightingUV  : TEXCOORD1;
                 float3  positionWS  : TEXCOORD2;
@@ -63,7 +63,7 @@ Shader "*MyShaders/StencilDraw"
 
             struct FragOutput
             {
-                half4 myOut        : SV_Target0;
+                float4 myOut        : SV_Target0;
             };
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"

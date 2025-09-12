@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "DebugToggleInputs",
+    "maps": [
+        {
+            "name": "Main",
+            "id": "dd847cd6-919d-4172-b6a0-5b9d88d8c747",
+            "actions": [
+                {
+                    "name": "Toggle",
+                    "type": "Button",
+                    "id": "f381f99b-e448-4c3d-ac52-09946ef177d5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7b7fe640-ab82-4da4-a2e9-ad30ddb3056a",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

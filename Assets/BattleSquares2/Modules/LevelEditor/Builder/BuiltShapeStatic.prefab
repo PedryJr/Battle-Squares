@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8102726563713640308}
   - component: {fileID: 6819917693913872202}
   m_Layer: 15
-  m_Name: BuiltShapeStatic
+  m_Name: BuiltShapeStencil
   m_TagString: Stepping
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
