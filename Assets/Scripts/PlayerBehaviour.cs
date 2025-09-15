@@ -116,8 +116,12 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     public string playerName;
 
-    public float h;
-    public float s, v;
+
+    public float dS = 1f;
+    public float dV = 0.59f;
+    public float h = 0.0f;
+    public float s = 0.6f;
+    public float v = 0.81f;
     public bool isDead = false;
 
     public int kills;
@@ -162,18 +166,30 @@ public sealed class PlayerBehaviour : MonoBehaviour
         SceneManager.sceneLoaded += SceneManager_OnLoad;
         hpBarScale = Vector3.one;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        Color.RGBToHSV(new Color(0.639804f, 0.2080392f, 0.2080392f, 1f), out h, out s, out v);
+        //Color.RGBToHSV(new Color(0.639804f, 0.2080392f, 0.2080392f, 1f), out h, out s, out v);
         h = UnityEngine.Random.Range(0f, 1f);
-        playerColor = Color.HSVToRGB(h, s * 1.15f, v * 0.83f);
+
+        dS = 1f;
+        dV = 0.59f;
+        h = 0.0f;
+        s = 0.6f;
+        v = 0.81f;
+
+        playerColor = Color.HSVToRGB(h, s, v);
+        ApplyColors();
+
+/*        playerColor = Color.HSVToRGB(h, s * 1.15f, v * 0.83f);
         playerDarkerColor = Color.HSVToRGB(h, s * 0.95f, v * 0.95f);
 
         healthbar.color = playerColor;
-        spriteRenderer.color = playerDarkerColor;
+        spriteRenderer.color = playerDarkerColor;*/
 
     }
     [BurstCompile]
     private void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
     {
+
+        
 
         if (this)
         {
@@ -483,11 +499,14 @@ public sealed class PlayerBehaviour : MonoBehaviour
     }
 
     [BurstCompile]
-    void ApplyColors()
+    public void ApplyColors()
     {
+        
+        float temps, tempv;
+        Color.RGBToHSV(playerColor, out h, out temps, out tempv);
+        playerColor = Color.HSVToRGB(h, s, v);
 
-        Color.RGBToHSV(playerColor, out h, out s, out v);
-        playerDarkerColor = Color.HSVToRGB(h, s * 0.96f, v * 0.80f);
+        playerDarkerColor = Color.HSVToRGB(h, s * dS, v * dV);
         nozzleBehaviour.owningPlayerColor = playerColor;
         nozzleBehaviour.owningPlayerDarkerColor = playerDarkerColor;
         spriteRenderer.color = playerDarkerColor;

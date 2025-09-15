@@ -68,7 +68,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         hunter = GetComponent<Hunter>();
         scoreManager = GetComponent<ScoreManager>();
         for (int i = 0; i < defaultSkin.Length; i++) defaultSkin[i] = true;
-
+        
     }
 
     void ConnectionApproval(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
@@ -877,10 +877,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         player.ready = ready;
 
     }
-    
+
     public void FetchMapOnJoin()
     {
-
     }
 
     public void UpdateSelectedMap(int map, bool legacy)

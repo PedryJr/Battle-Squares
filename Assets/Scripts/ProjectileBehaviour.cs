@@ -254,7 +254,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         else
         {
 
-            spriteRenderer.color = data.projectileColor;
+            spriteRenderer.color = data.projectileColor / 2;
             generalParticleColor = data.projectileDarkerColor;
 
         }
@@ -1014,6 +1014,13 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         UnityEngine.Color color = owningPlayer.playerDarkerColor;
         newHitMark.spawnColor = new UnityEngine.Color(color.r * 0.86f, color.g * 0.86f, color.b * 0.86f, 1f);
+
+        float h, s, v;
+        Color.RGBToHSV(newHitMark.spawnColor, out h, out s, out v);
+        v /= 1.85f;
+        s *= 1.5f;
+        newHitMark.spawnColor = Color.HSVToRGB(h, s, v);
+
         newHitMark.fadeColor = new UnityEngine.Color(color.r, color.g, color.b, 0f);
 
         foreach (SpawnStageBehaviour spawnStage in newHitMark.spawnStages)

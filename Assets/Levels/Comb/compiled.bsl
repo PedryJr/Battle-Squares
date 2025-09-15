@@ -1,14 +1,126 @@
 {
   "levelName": "Comb",
-  "byteSize": 2986,
+  "byteSize": 3098,
   "levelExpectation": {
-    "levelHashCode": -1282720746,
-    "shapeCount": 320,
+    "levelHashCode": -1571858716,
+    "shapeCount": 334,
     "animationCount": 12,
     "lightCount": 1,
     "spawnCount": 4
   },
   "simplifiedShapeDataArray": [
+    {
+      "coord": {
+        "data": "kYE="
+      },
+      "param": {
+        "data": "//8BawAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "b4E="
+      },
+      "param": {
+        "data": "gAABawAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "kIA="
+      },
+      "param": {
+        "data": "3/8CAgAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "cIA="
+      },
+      "param": {
+        "data": "n/8CAgAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "koI="
+      },
+      "param": {
+        "data": "IAACAgAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "boI="
+      },
+      "param": {
+        "data": "YAACAgAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "kYo="
+      },
+      "param": {
+        "data": "//8BawAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "b4o="
+      },
+      "param": {
+        "data": "gAABawAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "kIs="
+      },
+      "param": {
+        "data": "IAACAgAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "cIs="
+      },
+      "param": {
+        "data": "YAACAgAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "kok="
+      },
+      "param": {
+        "data": "3/8CAgAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "bok="
+      },
+      "param": {
+        "data": "n/8CAgAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "kII="
+      },
+      "param": {
+        "data": "v/8E+CAA"
+      }
+    },
+    {
+      "coord": {
+        "data": "cII="
+      },
+      "param": {
+        "data": "v/8E+CAA"
+      }
+    },
     {
       "coord": {
         "data": "irc="
@@ -2599,15 +2711,15 @@
         }
       ],
       "linkedShapes": [
-        252,
-        250,
+        266,
+        264,
+        268,
         254,
-        240,
-        238,
-        239,
-        251,
-        249,
-        253
+        252,
+        253,
+        265,
+        263,
+        267
       ]
     },
     {
@@ -2635,55 +2747,55 @@
         },
         {
           "data": "cY8="
-        }
-      ],
-      "linkedShapes": [
-        246,
-        242,
-        244,
-        248,
-        241,
-        243,
-        245,
-        247
-      ]
-    },
-    {
-      "animationParams": {
-        "data": "eJY="
-      },
-      "segmentCoords": [
-        {
-          "data": "eHo="
-        },
-        {
-          "data": "eHo="
-        },
-        {
-          "data": "eHs="
-        },
-        {
-          "data": "eHs="
-        },
-        {
-          "data": "eHs="
-        },
-        {
-          "data": "eHo="
-        },
-        {
-          "data": "eHo="
         }
       ],
       "linkedShapes": [
         260,
-        258,
         256,
+        258,
         262,
         255,
         257,
         259,
         261
+      ]
+    },
+    {
+      "animationParams": {
+        "data": "eJY="
+      },
+      "segmentCoords": [
+        {
+          "data": "eHo="
+        },
+        {
+          "data": "eHo="
+        },
+        {
+          "data": "eHs="
+        },
+        {
+          "data": "eHs="
+        },
+        {
+          "data": "eHs="
+        },
+        {
+          "data": "eHo="
+        },
+        {
+          "data": "eHo="
+        }
+      ],
+      "linkedShapes": [
+        274,
+        272,
+        270,
+        276,
+        269,
+        271,
+        273,
+        275
       ]
     },
     {
@@ -2714,187 +2826,187 @@
         }
       ],
       "linkedShapes": [
-        269,
-        267,
-        271,
-        263,
-        264,
-        265,
-        266,
-        270,
-        268
-      ]
-    },
-    {
-      "animationParams": {
-        "data": "c2Q="
-      },
-      "segmentCoords": [
-        {
-          "data": "i4U="
-        },
-        {
-          "data": "i4U="
-        },
-        {
-          "data": "iYU="
-        },
-        {
-          "data": "iYU="
-        },
-        {
-          "data": "iYU="
-        },
-        {
-          "data": "i4U="
-        },
-        {
-          "data": "i4U="
-        }
-      ],
-      "linkedShapes": [
-        279,
-        276,
-        278,
-        277
-      ]
-    },
-    {
-      "animationParams": {
-        "data": "c2Q="
-      },
-      "segmentCoords": [
-        {
-          "data": "iYo="
-        },
-        {
-          "data": "iYo="
-        },
-        {
-          "data": "i4o="
-        },
-        {
-          "data": "i4o="
-        },
-        {
-          "data": "i4o="
-        },
-        {
-          "data": "iYo="
-        },
-        {
-          "data": "iYo="
-        }
-      ],
-      "linkedShapes": [
-        272,
-        273,
-        275,
-        274
-      ]
-    },
-    {
-      "animationParams": {
-        "data": "aWQ="
-      },
-      "segmentCoords": [
-        {
-          "data": "fYw="
-        },
-        {
-          "data": "fYw="
-        },
-        {
-          "data": "fYg="
-        },
-        {
-          "data": "fYY="
-        },
-        {
-          "data": "fYQ="
-        },
-        {
-          "data": "fYE="
-        },
-        {
-          "data": "fYE="
-        },
-        {
-          "data": "fYE="
-        },
-        {
-          "data": "fYQ="
-        },
-        {
-          "data": "fYY="
-        },
-        {
-          "data": "fYg="
-        },
-        {
-          "data": "fYw="
-        },
-        {
-          "data": "fYw="
-        }
-      ],
-      "linkedShapes": [
-        282,
-        280,
-        286,
-        284
-      ]
-    },
-    {
-      "animationParams": {
-        "data": "aWQ="
-      },
-      "segmentCoords": [
-        {
-          "data": "g4E="
-        },
-        {
-          "data": "g4E="
-        },
-        {
-          "data": "g4Q="
-        },
-        {
-          "data": "g4Y="
-        },
-        {
-          "data": "g4g="
-        },
-        {
-          "data": "g4w="
-        },
-        {
-          "data": "g4w="
-        },
-        {
-          "data": "g4w="
-        },
-        {
-          "data": "g4g="
-        },
-        {
-          "data": "g4Y="
-        },
-        {
-          "data": "g4Q="
-        },
-        {
-          "data": "g4E="
-        },
-        {
-          "data": "g4E="
-        }
-      ],
-      "linkedShapes": [
-        287,
+        283,
         281,
         285,
-        283
+        277,
+        278,
+        279,
+        280,
+        284,
+        282
+      ]
+    },
+    {
+      "animationParams": {
+        "data": "c2Q="
+      },
+      "segmentCoords": [
+        {
+          "data": "i4U="
+        },
+        {
+          "data": "i4U="
+        },
+        {
+          "data": "iYU="
+        },
+        {
+          "data": "iYU="
+        },
+        {
+          "data": "iYU="
+        },
+        {
+          "data": "i4U="
+        },
+        {
+          "data": "i4U="
+        }
+      ],
+      "linkedShapes": [
+        293,
+        290,
+        292,
+        291
+      ]
+    },
+    {
+      "animationParams": {
+        "data": "c2Q="
+      },
+      "segmentCoords": [
+        {
+          "data": "iYo="
+        },
+        {
+          "data": "iYo="
+        },
+        {
+          "data": "i4o="
+        },
+        {
+          "data": "i4o="
+        },
+        {
+          "data": "i4o="
+        },
+        {
+          "data": "iYo="
+        },
+        {
+          "data": "iYo="
+        }
+      ],
+      "linkedShapes": [
+        286,
+        287,
+        289,
+        288
+      ]
+    },
+    {
+      "animationParams": {
+        "data": "aWQ="
+      },
+      "segmentCoords": [
+        {
+          "data": "fYw="
+        },
+        {
+          "data": "fYw="
+        },
+        {
+          "data": "fYg="
+        },
+        {
+          "data": "fYY="
+        },
+        {
+          "data": "fYQ="
+        },
+        {
+          "data": "fYE="
+        },
+        {
+          "data": "fYE="
+        },
+        {
+          "data": "fYE="
+        },
+        {
+          "data": "fYQ="
+        },
+        {
+          "data": "fYY="
+        },
+        {
+          "data": "fYg="
+        },
+        {
+          "data": "fYw="
+        },
+        {
+          "data": "fYw="
+        }
+      ],
+      "linkedShapes": [
+        296,
+        294,
+        300,
+        298
+      ]
+    },
+    {
+      "animationParams": {
+        "data": "aWQ="
+      },
+      "segmentCoords": [
+        {
+          "data": "g4E="
+        },
+        {
+          "data": "g4E="
+        },
+        {
+          "data": "g4Q="
+        },
+        {
+          "data": "g4Y="
+        },
+        {
+          "data": "g4g="
+        },
+        {
+          "data": "g4w="
+        },
+        {
+          "data": "g4w="
+        },
+        {
+          "data": "g4w="
+        },
+        {
+          "data": "g4g="
+        },
+        {
+          "data": "g4Y="
+        },
+        {
+          "data": "g4Q="
+        },
+        {
+          "data": "g4E="
+        },
+        {
+          "data": "g4E="
+        }
+      ],
+      "linkedShapes": [
+        301,
+        295,
+        299,
+        297
       ]
     },
     {

@@ -55,7 +55,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -135,16 +135,16 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 1
   m_FalloffIntensity: 1
-  m_Color: {r: 0.44949704, g: 0.53103733, b: 0.118917815, a: 1}
+  m_Color: {r: 0.81213206, g: 0.32685003, b: 0.32685003, a: 1}
   m_Intensity: 0.2
   m_LightVolumeIntensity: 1
-  m_LightVolumeEnabled: 0
+  m_LightVolumeEnabled: 1
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
   m_AlphaBlendOnOverlap: 0
-  m_OverlapOperation: 0
+  m_OverlapOperation: 1
   m_NormalMapDistance: 13.99
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
@@ -160,7 +160,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 6
+  m_PointLightOuterRadius: 12
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -306,7 +306,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -435,7 +435,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -490,7 +490,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 2
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
@@ -1155,7 +1155,11 @@ MonoBehaviour:
   playerColor: {r: 0, g: 0, b: 0, a: 0}
   playerDarkerColor: {r: 0, g: 0, b: 0, a: 0}
   playerName: 
+  dS: 0.96
+  dV: 0.8
   h: 0
+  s: 0
+  v: 0
   isDead: 1
   kills: 0
   killStreak: 0
