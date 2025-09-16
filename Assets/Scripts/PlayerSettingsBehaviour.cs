@@ -80,8 +80,8 @@ public sealed class PlayerSettingsBehaviour : MonoBehaviour
         float h, s, v, lerp;
         Color targetColor, targetDarkerColor, finalImageColor, finalImageDarkerColor, finalTextColor, initButtonColor;
 
-        targetColor = selectedPlayer.playerColor;
-        targetDarkerColor = selectedPlayer.playerDarkerColor;
+        targetColor = selectedPlayer.PlayerColor.PrimaryColor;
+        targetDarkerColor = selectedPlayer.PlayerColor.SecondaryColor;
         visibilityTimer = Mathf.Clamp01(visibilityTimer + (Time.deltaTime / timeToShow));
 
         targetColor *= 0.8f;
@@ -118,7 +118,7 @@ public sealed class PlayerSettingsBehaviour : MonoBehaviour
             if (visibilityTimer >= 1)
             {
 
-                if(lastPlayerColor != selectedPlayer.playerColor)
+                if(lastPlayerColor != selectedPlayer.PlayerColor.PrimaryColor)
                 {
 
                     buttons[i].toColor = initButtonColor;
@@ -148,7 +148,7 @@ public sealed class PlayerSettingsBehaviour : MonoBehaviour
             if (mutedLogo.activeSelf != false) mutedLogo.SetActive(false);
         }
 
-        lastPlayerColor = selectedPlayer.playerColor;
+        lastPlayerColor = selectedPlayer.PlayerColor.PrimaryColor;
 
     }
 

@@ -20,7 +20,7 @@ public sealed class ProjectileTrailBehaviour : MonoBehaviour
     private void Start()
     {
         trails = attatchedParticles.trails;
-        if(trails.enabled) trails.colorOverTrail = GetComponentInParent<ProjectileBehaviour>().owningPlayer.playerDarkerColor;
+        if(trails.enabled) trails.colorOverTrail = GetComponentInParent<ProjectileBehaviour>().owningPlayer.PlayerColor.ParticleColor;
         transform.SetParent(null, true);
         transform.position = target.position;
         attatchedParticles.Play();

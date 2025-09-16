@@ -350,11 +350,11 @@ MonoBehaviour:
     swirlStrength: 3
     swirlFalloff: 1
     swirlRadius: 4
-    enablePulsation: 0
-    pulsationFrequency: 0
-    pulsationAmplitude: 0
-    pulsationFallof: 0
-    pulsationRadius: 0
+    enablePulsation: 1
+    pulsationFrequency: 200
+    pulsationAmplitude: 5
+    pulsationFallof: 1
+    pulsationRadius: 1
 --- !u!1 &7151540191759701396
 GameObject:
   m_ObjectHideFlags: 0

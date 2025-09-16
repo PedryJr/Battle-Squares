@@ -19,6 +19,7 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
     private int recordSecondaryRemaining;
 
     private NozzleBehaviour nozzleBehaviour;
+    private PlayerColoringBehaviour playerColoringBehaviour;
 
     private VisualElement[] ammoVisualizers;
 
@@ -29,7 +30,9 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
     {
         emptyColor = GetComponent<Image>().color;
 
-        nozzleBehaviour = FindAnyObjectByType<PlayerSynchronizer>().localSquare.nozzleBehaviour;
+        PlayerSynchronizer playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
+        nozzleBehaviour = playerSynchronizer.localSquare.nozzleBehaviour;
+        playerColoringBehaviour = playerSynchronizer.localSquare.PlayerColor;
 
         if (primary)
         {
@@ -90,16 +93,12 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
 
             if (ammoVisualizers[i].transition2)
             {
-                color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, math.smoothstep(0, 1, ammoVisualizers[i].timer));
+                color = Color.Lerp(emptyColor, playerColoringBehaviour.AmmoColor, math.smoothstep(0, 1, ammoVisualizers[i].timer));
             }
             else
             {
-                color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, ammoVisualizers[i].timer);
+                color = Color.Lerp(emptyColor, playerColoringBehaviour.AmmoColor, ammoVisualizers[i].timer);
             }
-            color.r *= 0.8f;
-            color.g *= 0.8f;
-            color.b *= 0.8f;
-            color.a = 1;
             ammoVisualizers[i].image.color = color;
         }
     }
@@ -137,16 +136,12 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
             if (ammoVisualizers[i].timer == 0) ammoVisualizers[i].transition2 = true;
             if (ammoVisualizers[i].transition2)
             {
-                color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, math.smoothstep(0, 1, ammoVisualizers[i].timer));
+                color = Color.Lerp(emptyColor, playerColoringBehaviour.AmmoColor, math.smoothstep(0, 1, ammoVisualizers[i].timer));
             }
             else
             {
-                color = Color.Lerp(emptyColor, nozzleBehaviour.owningPlayerColor, ammoVisualizers[i].timer);
+                color = Color.Lerp(emptyColor, playerColoringBehaviour.AmmoColor, ammoVisualizers[i].timer);
             }
-            color.r *= 0.8f;
-            color.g *= 0.8f;
-            color.b *= 0.8f;
-            color.a = 1;
             ammoVisualizers[i].image.color = color;
         }
     }

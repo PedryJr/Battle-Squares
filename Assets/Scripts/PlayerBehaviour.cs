@@ -18,6 +18,10 @@ public sealed class PlayerBehaviour : MonoBehaviour
     [SerializeField]
     ProximityPixelSenssor sensor;
 
+    [SerializeField]
+    PlayerColoringBehaviour coloringComponent;
+    public PlayerColoringBehaviour PlayerColor => coloringComponent;
+
     public bool selectedLegacyMap = true;
     public int selectedMap;
     public ulong id;
@@ -111,17 +115,11 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     public Vector3 spawnPosition;
 
-    public Color playerColor;
-    public Color playerDarkerColor;
+/*    public Color playerColor;
+    public Color playerDarkerColor;*/
 
     public string playerName;
 
-
-    public float dS = 1f;
-    public float dV = 0.59f;
-    public float h = 0.0f;
-    public float s = 0.6f;
-    public float v = 0.81f;
     public bool isDead = false;
 
     public int kills;
@@ -169,13 +167,13 @@ public sealed class PlayerBehaviour : MonoBehaviour
         //Color.RGBToHSV(new Color(0.639804f, 0.2080392f, 0.2080392f, 1f), out h, out s, out v);
         h = UnityEngine.Random.Range(0f, 1f);
 
-        dS = 1f;
-        dV = 0.59f;
+        darkenSaturation = 1f;
+        darkenValue = 0.59f;
         h = 0.0f;
-        s = 0.6f;
-        v = 0.81f;
+        Saturation = 0.6f;
+        Value = 0.81f;
 
-        playerColor = Color.HSVToRGB(h, s, v);
+        //playerColor = Color.HSVToRGB(h, Saturation, Value);
         ApplyColors();
 
 /*        playerColor = Color.HSVToRGB(h, s * 1.15f, v * 0.83f);
@@ -498,23 +496,69 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
+
+
+
+
+    public float darkenSaturation = 1f;
+    public float darkenValue = 0.59f;
+    public float Saturation = 0.6f;
+    public float Value = 0.81f;
+    public float h = 0.0f;
+
     [BurstCompile]
     public void ApplyColors()
     {
-        
-        float temps, tempv;
-        Color.RGBToHSV(playerColor, out h, out temps, out tempv);
-        playerColor = Color.HSVToRGB(h, s, v);
 
-        playerDarkerColor = Color.HSVToRGB(h, s * dS, v * dV);
-        nozzleBehaviour.owningPlayerColor = playerColor;
-        nozzleBehaviour.owningPlayerDarkerColor = playerDarkerColor;
-        spriteRenderer.color = playerDarkerColor;
-        healthbar.color = playerColor;
+        spriteRenderer.color = PlayerColor.ExposedHealthColor;
+        healthbar.color = PlayerColor.PrimaryColor;
+        nozzleBehaviour.spriteRenderer.color = PlayerColor.NozzleColor;
+        sensor.gridSpaceColor.color = PlayerColor.PrimaryColor;
+        playerLight.color = PlayerColor.LightColor;
+        /*        float temps, tempv;
+                Color.RGBToHSV(playerColor, out h, out temps, out tempv);
+
+                //Color references
+                playerColor = Color.HSVToRGB(h, Saturation, Value);
+                playerDarkerColor = Color.HSVToRGB(h, Saturation * darkenSaturation, Value * darkenValue);
+
+                //Projectile Color
+                nozzleBehaviour.owningPlayerColor = playerColor;
+
+                //Projectile particles Color
+                nozzleBehaviour.owningPlayerDarkerColor = playerDarkerColor;
+
+                //Player Color
+                spriteRenderer.color = playerDarkerColor;
+
+                //Health bar Color
+                healthbar.color = playerColor;
+
+                //Behind GridForces Color
+                sensor.gridSpaceColor.color = playerColor;
+
+                //Light Color
+                playerLight.color = playerColor;*/
+
+        //Flag
         newColor = false;
-        sensor.gridSpaceColor.color = playerColor;
-        playerLight.color = playerColor;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public Friend friend;
 
@@ -554,7 +598,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         if(!steamDataApplied && steamDataAvalible) ApplySteamData();
 
-        if(newColor) ApplyColors();
+        /*if(newColor)*/ ApplyColors();
 
         oneSecondTimer += Time.deltaTime * 10;
         dataUpdateHighSpeedTimer += Time.deltaTime * 2;
@@ -674,12 +718,12 @@ public sealed class PlayerBehaviour : MonoBehaviour
             return;
         }
 
-        Color playerFrozenBright = Color.Lerp(playerColor, frozenColor, 0.35f);
+/*        Color playerFrozenBright = Color.Lerp(playerColor, frozenColor, 0.35f);
         Color playerFrozenDark = Color.Lerp(playerDarkerColor, frozenColor, 0.3f);
 
         healthbar.color = Color.Lerp(playerColor, playerFrozenBright, Mathf.Clamp01((rb.linearDamping / 70f) - 0.00142f));
         spriteRenderer.color = Color.Lerp(playerDarkerColor, playerFrozenDark, Mathf.Clamp01((rb.linearDamping / 70f) - 0.00142f));
-        nozzleBehaviour.spriteRenderer.color = Color.Lerp(playerDarkerColor, playerFrozenDark, Mathf.Clamp01((rb.linearDamping / 70f) - 0.00142f));
+        nozzleBehaviour.spriteRenderer.color = Color.Lerp(playerDarkerColor, playerFrozenDark, Mathf.Clamp01((rb.linearDamping / 70f) - 0.00142f));*/
 
         if (isDead != lastDeathState)
         {
@@ -835,8 +879,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
     void ApplyRecievedData()
     {
 
-        healthbar.color = playerColor;
-        spriteRenderer.color = playerDarkerColor;
+/*        healthbar.color = playerColor;
+        spriteRenderer.color = playerDarkerColor;*/
 
         float lerp = GetFrameRateLerp();
 

@@ -16,8 +16,7 @@ public sealed class ParticleColorApplicant : MonoBehaviour
         {
 
             MainModule mainModule = emitter.main;
-            mainModule.startColor = player.playerDarkerColor;
-
+            mainModule.startColor = player.PlayerColor.ParticleColor;
             emitter.Emit(1);
 
         }

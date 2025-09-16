@@ -48,7 +48,7 @@ public sealed class ModSlider : MonoBehaviour
 
         float h, s, v;
 
-        Color activeColor = playerSynchronizer.localSquare.playerColor;
+        Color activeColor = playerSynchronizer.localSquare.PlayerColor.PrimaryColor;
 
         Color baseColor = activeColor;
         Vector3 baseNormalized = new Vector3(baseColor.r, baseColor.g, baseColor.b).normalized;
@@ -58,8 +58,8 @@ public sealed class ModSlider : MonoBehaviour
         Color cursorDarkerColor = normalColor * 0.38f;
 
         CursorBehaviour.SetColor(
-            playerSynchronizer.localSquare.playerColor * 1.5f,
-            playerSynchronizer.localSquare.playerDarkerColor * 0.8f);
+            playerSynchronizer.localSquare.PlayerColor.CursorDefaultColor,
+            playerSynchronizer.localSquare.PlayerColor.CursorHoverColor);
 
         activeColor.r *= 0.8f;
         activeColor.g *= 0.8f;

@@ -22,7 +22,7 @@ public sealed class ScoreBoard : MonoBehaviour
 
         text.text = player.square.score.ToString();
 
-        image.color = player.square.playerColor;
+        image.color = player.square.PlayerColor.PrimaryColor;
 
     }
 

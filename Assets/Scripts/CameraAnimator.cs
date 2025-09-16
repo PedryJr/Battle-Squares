@@ -140,7 +140,7 @@ public sealed class CameraAnimator : MonoBehaviour
             lastI = i;
             transitionTimer = 0;
             fromOrthoSize = aCamera.orthographicSize;
-            toOrthoSize = 12.5f + Mathf.Clamp((i - 1) * 2f, 0, 2.8f);
+            toOrthoSize = 14.5f + Mathf.Clamp((i - 1) * 2f, 0, 2.8f);
             multiplier1 = 0.1f;
         }
 

@@ -350,7 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f4632b225973440a33f4664413ac05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 6551420707577298823}
   primary: 0
   secondary: 1
   owningPlayerColor: {r: 0, g: 0, b: 0, a: 0}
@@ -386,6 +386,7 @@ GameObject:
   - component: {fileID: 1591663170527077912}
   - component: {fileID: 6379561886144100054}
   - component: {fileID: 955279136659326086}
+  - component: {fileID: 2995831169349222189}
   m_Layer: 6
   m_Name: NewPlayer
   m_TagString: Player
@@ -1104,6 +1105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLight: {fileID: 3159344491717468697}
   sensor: {fileID: 4821608779394464332}
+  coloringComponent: {fileID: 2995831169349222189}
   selectedLegacyMap: 1
   selectedMap: 0
   id: 0
@@ -1133,7 +1135,7 @@ MonoBehaviour:
   score: 0
   flag: {fileID: 0}
   rb: {fileID: 0}
-  nozzleBehaviour: {fileID: 0}
+  nozzleBehaviour: {fileID: 2067117489913102363}
   playerController: {fileID: 0}
   pfp: {fileID: 0}
   chatBubbleBehaviour: {fileID: 0}
@@ -1152,14 +1154,7 @@ MonoBehaviour:
       Data4: 26429710
     Path: event:/VFX/Player/Death/BasicDeath
   spawnPosition: {x: 0, y: 0, z: 0}
-  playerColor: {r: 0, g: 0, b: 0, a: 0}
-  playerDarkerColor: {r: 0, g: 0, b: 0, a: 0}
   playerName: 
-  dS: 0.96
-  dV: 0.8
-  h: 0
-  s: 0
-  v: 0
   isDead: 1
   kills: 0
   killStreak: 0
@@ -1180,5 +1175,90 @@ MonoBehaviour:
       Data4: 1289083007
     Path: event:/PlayerSounds/PlayerStep
   frameRate: 10
+  darkenSaturation: 1
+  darkenValue: 0.59
+  Saturation: 0.6
+  Value: 0.81
+  h: 0
   spawnBuffer: 0
   newMods: 0
+--- !u!114 &2995831169349222189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9203004307750521883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e4e1d37174382b41a08597c29fd31b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  primaryColor:
+    saturation: 0.633
+    value: 0.865
+    alpha: 1
+  secondaryColor:
+    saturation: 0.633
+    value: 0.661
+    alpha: 1
+  exposedHealthColor:
+    saturation: 1
+    value: 0.511
+    alpha: 1
+  nozzleColor:
+    saturation: 0.793
+    value: 1
+    alpha: 1
+  projectileColor:
+    saturation: 1
+    value: 1
+    alpha: 1
+  particleColor:
+    saturation: 0.459
+    value: 1
+    alpha: 1
+  chatBubbleColor:
+    saturation: 1
+    value: 1
+    alpha: 1
+  dogTagColor:
+    saturation: 0.633
+    value: 0.661
+    alpha: 1
+  hitMarkColor:
+    saturation: 0.677
+    value: 1
+    alpha: 1
+  pfpBorderNotReadyColor:
+    saturation: 0.651
+    value: 0.988
+    alpha: 1
+  pfpBorderIsReadyColor:
+    saturation: 0.536
+    value: 0.431
+    alpha: 1
+  cursorColorOnHover:
+    saturation: 1
+    value: 1
+    alpha: 1
+  cursorColorOffHover:
+    saturation: 0.838
+    value: 0.53
+    alpha: 1
+  selectedWeaponColor:
+    saturation: 1
+    value: 1
+    alpha: 1
+  uiKnobColor:
+    saturation: 0
+    value: 0
+    alpha: 0
+  ammoColor:
+    saturation: 0.639
+    value: 1
+    alpha: 1
+  lightColor:
+    saturation: 1
+    value: 0.511
+    alpha: 1

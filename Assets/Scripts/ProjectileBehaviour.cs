@@ -246,16 +246,16 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         if (stickToSender)
         {
 
-            spriteRenderer.color = data.projectileDarkerColor;
-            generalParticleColor = data.projectileDarkerColor;
+            spriteRenderer.color = owningPlayer.PlayerColor.ProjectileColor;
+            generalParticleColor = owningPlayer.PlayerColor.ParticleColor;
             owningPlayer.nozzleBehaviour.transform.localScale = Vector3.zero;
 
         }
         else
         {
 
-            spriteRenderer.color = data.projectileColor / 2;
-            generalParticleColor = data.projectileDarkerColor;
+            spriteRenderer.color = owningPlayer.PlayerColor.ProjectileColor;
+            generalParticleColor = owningPlayer.PlayerColor.ParticleColor;
 
         }
 
@@ -1007,23 +1007,18 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         HitMarkBehaviour newHitMark = Instantiate(hitMark, hitMarkPos, Quaternion.Euler(0, 0, angle), toParent);
 
+        newHitMark.ownerId = (byte)ownerId;
+        newHitMark.owner = owningPlayer;
         StencilInfectorBehaviour stencilInfectorBehaviour;
         if (toParent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
         else if (toParent.parent && toParent.parent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
         else if (toParent.parent && toParent.parent.parent && toParent.parent.parent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
 
-        UnityEngine.Color color = owningPlayer.playerDarkerColor;
-        newHitMark.spawnColor = new UnityEngine.Color(color.r * 0.86f, color.g * 0.86f, color.b * 0.86f, 1f);
-
-        float h, s, v;
-        Color.RGBToHSV(newHitMark.spawnColor, out h, out s, out v);
-        v /= 1.85f;
-        s *= 1.5f;
-        newHitMark.spawnColor = Color.HSVToRGB(h, s, v);
-
+        Color color = owningPlayer.PlayerColor.HitMarkColor;
+        newHitMark.spawnColor = color;
         newHitMark.fadeColor = new UnityEngine.Color(color.r, color.g, color.b, 0f);
 
-        foreach (SpawnStageBehaviour spawnStage in newHitMark.spawnStages)
+/*        foreach (SpawnStageBehaviour spawnStage in newHitMark.spawnStages)
         {
 
             foreach (SpriteRenderer spriteRenderer in spawnStage.sprites)
@@ -1033,7 +1028,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
             }
 
-        }
+        }*/
 
 
     }

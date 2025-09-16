@@ -131,7 +131,7 @@ public sealed class ChatBubbleBehaviour : MonoBehaviour
 
     public void ApplyMessage(string message, PlayerBehaviour attatchedPlayer)
     {
-        Color messageColor = attatchedPlayer.playerDarkerColor;
+        Color messageColor = attatchedPlayer.PlayerColor.ChatBoxColor;
         messageColor.a = 1;
 
         messageField.color = messageColor;

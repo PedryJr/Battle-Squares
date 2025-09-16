@@ -11,6 +11,7 @@ public sealed class HitMarkBehaviour : MonoBehaviour
     public float timer;
     float timeAlive = 25;
     public byte ownerId;
+    public PlayerBehaviour owner;
     int skipPhysicsSteps;
     bool spawned;
     float fadeOut = 0;
@@ -66,6 +67,8 @@ public sealed class HitMarkBehaviour : MonoBehaviour
         transform.position += new Vector3(0, 0, LevelBuilderStuff.STENCIL_OFFSET);
     }
 
+
+
     public void AssignStencil(float stencil)
     {
 
@@ -80,7 +83,7 @@ public sealed class HitMarkBehaviour : MonoBehaviour
     [BurstCompile]
     private void Update()
     {
-
+        spawnColor = owner.PlayerColor.HitMarkColor;
         timer += Time.deltaTime;
         if (timer > timeAlive) fadeOut = (timer - timeAlive) * 4;
 
@@ -101,8 +104,7 @@ public sealed class HitMarkBehaviour : MonoBehaviour
             }
 
         }
-
-        if (fadeOut > 1)
+        else if (fadeOut >= 1)
         {
 
             foreach (SpawnStageBehaviour spawnStageBehaviour in spawnStages)
@@ -116,6 +118,19 @@ public sealed class HitMarkBehaviour : MonoBehaviour
             }
 
             Destroy(gameObject);
+        }
+        else
+        {
+            foreach (SpawnStageBehaviour spawnStageBehaviour in spawnStages)
+            {
+
+                foreach (SpriteRenderer spriteRenderer in spawnStageBehaviour.sprites)
+                {
+                    if (!spriteRenderer.enabled) continue;
+                    spriteRenderer.color = spawnColor;
+                }
+
+            }
         }
 
     }

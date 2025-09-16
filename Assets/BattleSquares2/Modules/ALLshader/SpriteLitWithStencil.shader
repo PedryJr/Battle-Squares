@@ -155,6 +155,7 @@ Shader "*MyShaders/SpriteLitStencil"
 
                 if((uint) compB == (uint) compA)
                 {
+                    return main;
                     return CombinedShapeLightShared(surfaceData, inputData);
                 }
 

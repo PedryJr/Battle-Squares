@@ -53,7 +53,7 @@ public sealed class PlayerColorSelector : MonoBehaviour
         }
 
         float h, s, v;
-        Color.RGBToHSV(playerSynchronizer.localSquare.playerColor, out h, out s, out v);
+        Color.RGBToHSV(playerSynchronizer.localSquare.PlayerColor.PrimaryColor, out h, out s, out v);
 
         UpdateHueKnob(Mathf.Lerp(0, h, timer));
 
@@ -74,8 +74,8 @@ public sealed class PlayerColorSelector : MonoBehaviour
         Color cursorDarkerColor = normalColor * 0.38f;
 
         CursorBehaviour.SetColor(
-            playerSynchronizer.localSquare.playerColor * 1.5f,
-            playerSynchronizer.localSquare.playerDarkerColor * 0.8f);
+            playerSynchronizer.localSquare.PlayerColor.CursorDefaultColor,
+            playerSynchronizer.localSquare.PlayerColor.CursorHoverColor);
 
         selectedColor.r *= 0.8f;
         selectedColor.g *= 0.8f;
@@ -91,7 +91,7 @@ public sealed class PlayerColorSelector : MonoBehaviour
 
         float h, s, v;
 
-        selectedColor = playerSynchronizer.localSquare.playerColor;
+        selectedColor = playerSynchronizer.localSquare.PlayerColor.PrimaryColor;
 
         Color baseColor = selectedColor;
         Vector3 baseNormalized = new Vector3(baseColor.r, baseColor.g, baseColor.b).normalized;
@@ -101,8 +101,8 @@ public sealed class PlayerColorSelector : MonoBehaviour
         Color cursorDarkerColor = normalColor * 0.38f;
 
         CursorBehaviour.SetColor(
-            playerSynchronizer.localSquare.playerColor * 1.5f,
-            playerSynchronizer.localSquare.playerDarkerColor * 0.8f);
+            playerSynchronizer.localSquare.PlayerColor.CursorDefaultColor,
+            playerSynchronizer.localSquare.PlayerColor.CursorHoverColor);
 
         selectedColor.r *= 0.8f;
         selectedColor.g *= 0.8f;

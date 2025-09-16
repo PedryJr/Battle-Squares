@@ -30,18 +30,15 @@ public sealed class KnobHueUpdater : MonoBehaviour
 
         float h, s, v;
 
-        Color activeColor = playerSynchronizer.localSquare.playerColor;
+        Color activeColor = playerSynchronizer.localSquare.PlayerColor.PrimaryColor;
 
         Color baseColor = activeColor;
         Vector3 baseNormalized = new Vector3(baseColor.r, baseColor.g, baseColor.b).normalized;
         Color normalColor = new Color(baseNormalized.x, baseNormalized.y, baseNormalized.z);
 
-        Color cursorColor = normalColor * 0.6f;
-        Color cursorDarkerColor = normalColor * 0.38f;
-
         CursorBehaviour.SetColor(
-            playerSynchronizer.localSquare.playerColor * 1.5f,
-            playerSynchronizer.localSquare.playerDarkerColor * 0.8f);
+            playerSynchronizer.localSquare.PlayerColor.CursorDefaultColor,
+            playerSynchronizer.localSquare.PlayerColor.CursorHoverColor);
 
         activeColor.r *= 0.8f;
         activeColor.g *= 0.8f;

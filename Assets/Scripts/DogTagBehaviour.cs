@@ -45,11 +45,11 @@ public sealed class DogTagBehaviour : MonoBehaviour
             players.Add(player.square);
         }
 
-        spriteRenderer.color = owningPlayer.playerColor;
+        spriteRenderer.color = owningPlayer.PlayerColor.DogTagColor;
 
         Material particleMaterial = dogTagParticles.material;
         dogTagParticles.material = particleMaterial;
-        dogTagParticles.material.color = owningPlayer.playerDarkerColor;
+        dogTagParticles.material.color = owningPlayer.PlayerColor.ParticleColor;
 
         rb.linearVelocity = startVelocity;
 
@@ -135,7 +135,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
         player = playerSynchronizer.GetPlayerById(playerId);
         if (player)
         {
-            Color particleColor = player.playerDarkerColor;
+            Color particleColor = player.PlayerColor.ParticleColor;
             Vector3 position = player.rb.position;
             position.z = transform.position.z;
 

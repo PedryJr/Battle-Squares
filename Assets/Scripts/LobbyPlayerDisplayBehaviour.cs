@@ -55,7 +55,7 @@ public sealed class LobbyPlayerDisplayBehaviour : MonoBehaviour
         readyLerp = MyExtentions.EaseOutQuad(timer);
 
         pfp.color = Color.Lerp(unreadyColor * 0.9f, readyColor * 0.9f, readyLerp);
-        border.color = Color.Lerp(assignedPlayer.playerDarkerColor * 0.9f, assignedPlayer.playerColor * 0.9f, readyLerp);
+        border.color = Color.Lerp(assignedPlayer.PlayerColor.PfpBorderIsReadyColor, assignedPlayer.PlayerColor.PfpBorderNotReadyColor, readyLerp);
 
         if (assignedPlayer.pfp) pfp.sprite = assignedPlayer.pfp;
 

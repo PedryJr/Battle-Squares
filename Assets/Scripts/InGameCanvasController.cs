@@ -95,12 +95,7 @@ public sealed class InGameCanvasController : MonoBehaviour
             inputField.ActivateInputField();
             TMP_Text[] fields = inputField.GetComponentsInChildren<TMP_Text>();
 
-            foreach ( TMP_Text field in fields)
-            {
-
-                field.color = playerSynchronizer.localSquare.playerDarkerColor;
-
-            }
+            foreach ( TMP_Text field in fields) field.color = playerSynchronizer.localSquare.PlayerColor.ChatBoxColor;
 
         }
         else

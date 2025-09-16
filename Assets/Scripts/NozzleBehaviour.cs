@@ -131,7 +131,6 @@ public sealed class NozzleBehaviour : MonoBehaviour
                     globalNozzleDirection - (relativePositionToPlayer / 3.5f),
                     Quaternion.Euler(0, 0, 
                     math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
-                    particleColor,
                     primary);
             }
         }
@@ -143,7 +142,6 @@ public sealed class NozzleBehaviour : MonoBehaviour
                 projectileManager.SpawnParticles(
                     globalNozzleDirection - (relativePositionToPlayer / 3.5f),
                     Quaternion.Euler(0, 0, math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
-                    particleColor,
                     secondary);
             }
         }

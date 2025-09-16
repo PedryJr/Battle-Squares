@@ -2,6 +2,7 @@ Shader "*MyShaders/Shape"
 {
     Properties
     {
+        _ColorOverride("ColorOverride", Color) = (1, 1, 1, 1)
         _Stencil("Stencil", Int) = 1
         _StencilGroup("Stencil Texture", 2D) = "white" {}
         _MainTex("Diffuse", 2D) = "white" {}
@@ -123,6 +124,8 @@ Shader "*MyShaders/Shape"
             SHAPE_LIGHT(3)
             #endif
 
+            half4 _ColorOverride;
+
             Varyings CombinedShapeLightVertex(Attributes v)
             {
                 Varyings o = (Varyings)0;
@@ -163,7 +166,8 @@ Shader "*MyShaders/Shape"
 
                 FragOutput o;
 
-                const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+                //const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+                const half4 main = _ColorOverride * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
                 SurfaceData2D surfaceData;
                 InputData2D inputData;

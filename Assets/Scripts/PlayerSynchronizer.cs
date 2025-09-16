@@ -751,12 +751,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void UpdateColor()
     {
         ulong sourceId = networkManager.LocalClientId;
-        byte[] data = new byte[4]
+        byte[] data = new byte[2]
         {
             (byte) sourceId,
-            (byte) math.round(localSquare.playerColor.r * 256),
-            (byte) math.round(localSquare.playerColor.g * 256),
-            (byte) math.round(localSquare.playerColor.b * 256)
+            (byte) math.round(localSquare.PlayerColor.ReadColorHue * 256)
         };
 
         UpdateColortRpc(data);
@@ -776,7 +774,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     void StoreColorData(PlayerBehaviour player, byte[] data)
     {
 
-        player.playerColor = new UnityEngine.Color(data[1] / 256f, data[2] / 256f, data[3] / 256f);
+        player.PlayerColor.SetColorHue(data[1] / 256f);
         player.newColor = true;
 
     }
@@ -966,7 +964,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 if (responsiblePlayer) affectedPlayer.killStreak++;
 
                 kill = true;
-                PlayerDeathEffect(affectedPlayer.rb.position, affectedPlayer.playerDarkerColor);
+                PlayerDeathEffect(affectedPlayer.rb.position, affectedPlayer.PlayerColor.ParticleColor);
                 hunter.Kill(affectedId, responsibleId);
                 affectedPlayer.KillPlayer();
 
@@ -1012,16 +1010,18 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     
     public Color UpdatePlayerColor(float value)
     {
-
+/*
         float h, s, v;
         Color.RGBToHSV(localSquare.playerColor, out h, out s, out v);
         h = value;
-        localSquare.playerColor = Color.HSVToRGB(h, s, v);
+        localSquare.playerColor = Color.HSVToRGB(h, s, v);*/
+
+        localSquare.PlayerColor.SetColorHue(value);
         localSquare.newColor = true;
 
         UpdateColor();
 
-        return localSquare.playerColor;
+        return localSquare.PlayerColor.PrimaryColor;
 
     }
     

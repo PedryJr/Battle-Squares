@@ -109,13 +109,13 @@ public sealed class PlayerSpawnEffectBehaviour : MonoBehaviour
             if (fragmentBehaviours[i].darkerColor)
             {
 
-                fragments[i].color = Color.Lerp(fragmentBehaviours[i].startColor, playerBehaviour.playerDarkerColor, colorAnimation.Evaluate(timer / maxTime));
+                fragments[i].color = Color.Lerp(fragmentBehaviours[i].startColor, playerBehaviour.PlayerColor.PrimaryColor, colorAnimation.Evaluate(timer / maxTime));
 
             }
             else
             {
 
-                fragments[i].color = Color.Lerp(fragmentBehaviours[i].startColor, playerBehaviour.playerColor, colorAnimation.Evaluate(timer / maxTime));
+                fragments[i].color = Color.Lerp(fragmentBehaviours[i].startColor, playerBehaviour.PlayerColor.SecondaryColor, colorAnimation.Evaluate(timer / maxTime));
 
             }
 

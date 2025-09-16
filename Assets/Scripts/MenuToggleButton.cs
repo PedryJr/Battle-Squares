@@ -1,9 +1,9 @@
 using TMPro;
 using UnityEngine;
 
-public sealed class ModToggleButton : MonoBehaviour
+public sealed class MenuToggleButton : MonoBehaviour
 {
-
+    
     [SerializeField]
     GameObject[] modsOnObjects;
 
@@ -25,13 +25,10 @@ public sealed class ModToggleButton : MonoBehaviour
 
     private void Awake()
     {
-
         if (!oneWay)
         {
-
             if (modMenuOn)
             {
-
                 foreach (GameObject obj in modsOnObjects)
                 {
                     obj.SetActive(true);
@@ -41,11 +38,9 @@ public sealed class ModToggleButton : MonoBehaviour
                 {
                     obj.SetActive(false);
                 }
-
             }
             else
             {
-
                 foreach (GameObject obj in modsOnObjects)
                 {
                     obj.SetActive(false);
@@ -55,11 +50,8 @@ public sealed class ModToggleButton : MonoBehaviour
                 {
                     obj.SetActive(true);
                 }
-
             }
-
         }
-
     }
 
     public void TOGGLE()

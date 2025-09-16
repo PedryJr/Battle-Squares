@@ -46,11 +46,7 @@ public sealed class ChatContainer : MonoBehaviour
         {
             if (sentId == playerIdentities[i].id)
             {
-                contextContainer.color = UnityEngine.Color.Lerp(
-                    playerIdentities[i].square.playerColor,
-                    playerIdentities[i].square.playerDarkerColor,
-                    0.5f);
-
+                contextContainer.color = playerIdentities[i].square.PlayerColor.ChatBoxColor;
                 return;
             }
         }

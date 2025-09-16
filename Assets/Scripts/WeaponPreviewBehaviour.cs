@@ -54,7 +54,7 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
             }
         }
 
-        Color colorReference = playerSynchronizer.localSquare.playerColor;
+        Color colorReference = playerSynchronizer.localSquare.PlayerColor.SelectedWeaponColor;
         Vector3 colorVector = new Vector3(colorReference.r, colorReference.g, colorReference.b).normalized;
         Color displayColor = new Color(colorVector.x, colorVector.y, colorVector.z, 1);
 

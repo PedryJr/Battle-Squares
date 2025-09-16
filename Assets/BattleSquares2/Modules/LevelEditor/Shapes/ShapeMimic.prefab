@@ -497,6 +497,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mimicColor: {r: 0.39607844, g: 0.39607844, b: 0.39607844, a: 1}
+  originalPosition: {x: 0, y: 0, z: 0}
+  offsetPosition: {x: 0, y: 0, z: 0}
+  vertices: []
+  meshIndices: 
   staticShape: 1
   reorderedVerts: []
   worldLayer:
@@ -515,8 +519,7 @@ MonoBehaviour:
   reset: 0
   inside:
     coord:
-      x: 0
-      y: 0
+      data: 
     param:
       xBytes: 0
       yBytes: 0
@@ -548,7 +551,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4c951828a24a029459395efdfd02e172, type: 2}
+  - {fileID: 2100000, guid: 57d43abb5c643c54e9824ecd9d91ef3e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
