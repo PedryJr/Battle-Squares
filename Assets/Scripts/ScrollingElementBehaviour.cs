@@ -1,9 +1,8 @@
-using Unity.Burst;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-[BurstCompile]
+
 public sealed class ScrollingElementBehaviour : MonoBehaviour
 {
 
@@ -11,20 +10,6 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
     ScrollRect scrollRect;
     SpriteRenderer spriteRenderer;
     Image image;
-
-    Vector2 offHoveredSize;
-    Vector2 onHoveredSize;
-    Vector2 onClickedSize;
-    Vector2 currentSize;
-    Vector2 offsetSizeStretch;
-    Vector2 offsetSizeExpand;
-    Vector2 offsetSizeClickedStretch;
-    Vector2 offsetSizeClickedExpand;
-    Vector2 fromSize;
-    Vector2 toSize;
-    Vector2 initSize;
-    Vector2 tmpPos;
-    Vector2 tmpSize;
 
     public Color offHoveredColor;
     public Color currentColor;
@@ -46,9 +31,7 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
     [SerializeField]
     bool dormant;
 
-    float animationTimer;
 
-    [BurstCompile]
     private void Awake()
     {
 
@@ -91,7 +74,7 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+
     private void OnEnable()
     {
 
@@ -101,7 +84,7 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+
     void OnHover()
     {
 
@@ -112,7 +95,7 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
         PlayerController.uiRegs += 1;
 
     }
-    [BurstCompile]
+
     public void ExitHover()
     {
 
@@ -123,7 +106,7 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
         PlayerController.uiRegs = Mathf.Clamp01(PlayerController.uiRegs - 1);
 
     }
-    [BurstCompile]
+
     void SetupEventTriggers()
     {
 
@@ -141,7 +124,7 @@ public sealed class ScrollingElementBehaviour : MonoBehaviour
         eventTrigger.triggers.Add(pointerExitEntry);
 
     }
-    [BurstCompile]
+
     private void OnDestroy()
     {
 

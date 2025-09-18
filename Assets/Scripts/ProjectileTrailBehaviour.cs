@@ -5,8 +5,18 @@ using static UnityEngine.ParticleSystem;
 public sealed class ProjectileTrailBehaviour : MonoBehaviour
 {
 
+    public Quaternion localRotation;
+    public Vector3 localPosition;
+    public Vector3 localScale;
+
     [SerializeField]
-    Transform target;
+    bool enableCheckOnParent = false;
+
+    [SerializeField]
+    public bool allowDisableEnableFromRemote = false;
+
+    [SerializeField]
+    public Transform target;
 
     [SerializeField]
     ParticleSystem attatchedParticles;
@@ -17,10 +27,18 @@ public sealed class ProjectileTrailBehaviour : MonoBehaviour
     bool stateCheck;
     bool deadProjectile;
 
+    private void Awake()
+    {
+        localRotation = transform.localRotation;
+        localPosition = transform.localPosition;
+        localScale = transform.localScale;
+    }
+
     private void Start()
     {
         trails = attatchedParticles.trails;
         if(trails.enabled) trails.colorOverTrail = GetComponentInParent<ProjectileBehaviour>().owningPlayer.PlayerColor.ParticleColor;
+        if(allowDisableEnableFromRemote) GetComponentInParent<ProjectileBehaviour>().loopreferencedTail = this;
         transform.SetParent(null, true);
         transform.position = target.position;
         attatchedParticles.Play();
@@ -51,9 +69,32 @@ public sealed class ProjectileTrailBehaviour : MonoBehaviour
 
     void NormalUpdate()
     {
+        bool targetActive = false;
+        if (enableCheckOnParent) targetActive = target.parent.gameObject.activeSelf;
+        else targetActive = target.gameObject.activeSelf;
 
-        transform.position = target.position;
+        if (targetActive)
+        {
+            if (!attatchedParticles.isPlaying) attatchedParticles.Play();
+            transform.position = target.position;
+            transform.rotation = target.rotation;
+        }
+        else
+        {
+            if (attatchedParticles.isPlaying)
+            {
+                attatchedParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            }
+            else if (allowDisableEnableFromRemote && attatchedParticles.particleCount <= 0)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
 
     }
+
+    public bool CanBeReused() => !attatchedParticles.isPlaying;
+    public void ForceRelease() => target = null;
 
 }

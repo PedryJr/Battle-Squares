@@ -1,7 +1,7 @@
 using UnityEngine;
 using static DragAndScrollMod;
 
-public class NewLevelListing : MonoBehaviour
+public sealed class NewLevelListing : MonoBehaviour
 {
 
     static NewLevelCreator currentLevelCreator = null;

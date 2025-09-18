@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using static AnimationAnchor;
 
-public class LevelAnimationGroup : MonoBehaviour
+public sealed class LevelAnimationGroup : MonoBehaviour
 {
     bool constructed = false;
     Spline2D animationPath;

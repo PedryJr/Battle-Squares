@@ -18,6 +18,7 @@ public sealed class LevelEditorInitializer : MonoBehaviour
 
     private void Awake()
     {
+        QualitySettings.SetQualityLevel(1);
         TEMPFUNC();
         _dragMod = FindAnyObjectByType<DragAndScrollMod>();
 
@@ -43,6 +44,10 @@ public sealed class LevelEditorInitializer : MonoBehaviour
         };
     }
 
+    private void OnDestroy()
+    {
+        QualitySettings.SetQualityLevel(0);
+    }
     public struct EditModeChangeData
     {
         public EditorMode PreviousMode;

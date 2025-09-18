@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StencilInfectorBehaviour : MonoBehaviour
+public sealed class StencilInfectorBehaviour : MonoBehaviour
 {
     [SerializeField]
     float Stencil;

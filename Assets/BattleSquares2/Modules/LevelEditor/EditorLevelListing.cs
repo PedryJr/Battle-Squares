@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static DragAndScrollMod;
 
-public class EditorLevelListing : MonoBehaviour
+public sealed class EditorLevelListing : MonoBehaviour
 {
 
     [SerializeField]

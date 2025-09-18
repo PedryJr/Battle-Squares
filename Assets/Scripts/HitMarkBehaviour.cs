@@ -72,9 +72,6 @@ public sealed class HitMarkBehaviour : MonoBehaviour
 
     public void AssignStencil(float stencil)
     {
-
-        Debug.Log(stencil);
-
         stencil = stencil / 2048f;
         MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
         materialPropertyBlock.SetVector("_HitMarkStencil", new Vector4(stencil, stencil, stencil, stencil));

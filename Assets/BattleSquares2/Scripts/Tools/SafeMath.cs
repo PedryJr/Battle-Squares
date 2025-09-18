@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using Unity.Burst;
-using Unity.Mathematics;
-using static Unity.Mathematics.math;
+using Unity.Mathematics; 
 
 [BurstCompile(FloatPrecision = FloatPrecision.Low, FloatMode = FloatMode.Fast, DisableDirectCall = false, DisableSafetyChecks = false, OptimizeFor = OptimizeFor.Performance)]
 public struct SafeMathDep

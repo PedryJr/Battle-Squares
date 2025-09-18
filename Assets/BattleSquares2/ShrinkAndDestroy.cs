@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ShrinkAndDestroy : MonoBehaviour
+public sealed class ShrinkAndDestroy : MonoBehaviour
 {
 
     public float timeToDestroy = 1f;

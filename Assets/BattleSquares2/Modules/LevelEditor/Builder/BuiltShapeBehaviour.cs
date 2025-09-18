@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -19,7 +20,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         GetComponent<MeshFilter>().sharedMesh = octagonalMesh;
         stencilRenderer.GetComponent<MeshFilter>().sharedMesh = octagonalMesh;
     }
-
+    [MethodImpl(512)]
     void TEMPFUNC()
     {
         if (BuiltShapeBehaviour.octagonalMesh) return;
@@ -51,6 +52,8 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     const float OctaOffset = 0.001f;
     const float OctaCorn = 0.2071068f + OctaOffset;
     const float OctaStra = 0.5f + OctaOffset;
+
+    public const float ShadowEdgeTrim = 25f;
 
     public static Vector3[] GetOctagonalVerticesVec3 => InternalOctagonalVerticesVec3;
     public static Vector2[] GetOctagonalVerticesVec2 => InternalOctagonalVerticesVec2;
@@ -91,6 +94,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     public static VertexAttributeDescriptor GetOctagonalAttribute => new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 2);
 
     public Vector2[] correctedPoints;
+    [MethodImpl(512)]
     public void ApplyShape(SimplifiedShapeData simplifiedShapeData, int indexedId, LevelBuilderStuff builder, bool isStatic)
     {
         this.isStatic = isStatic;
@@ -156,7 +160,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
     bool isStatic = true;
     public bool IsStatic => isStatic;
-
+    [MethodImpl(512)]
     public static int EvaluateAnimationIndex(int indexedId)
     {
         int animatorIndex = -1;
@@ -181,6 +185,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
     [SerializeField]
     MeshRenderer stencilRenderer;
+    [MethodImpl(512)]
     public void AssignStencil(float stencilValueInt, bool spawnStencilInfector)
     {
 
@@ -198,7 +203,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         if(spawnStencilInfector) gameObject.AddComponent<StencilInfectorBehaviour>().SetStencil(stencilValueInt);
 
     }
-
+    [MethodImpl(512)]
     public static bool EvaluateStatic(int indexedId)
     {
         bool isStatic = true;

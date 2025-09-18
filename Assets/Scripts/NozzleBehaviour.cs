@@ -82,11 +82,6 @@ public sealed class NozzleBehaviour : MonoBehaviour
 
         intensity = math.clamp(intensity - Time.deltaTime / 5f, 0, 1);
 
-        Color nozzleColor = owningPlayerDarkerColor;
-        Color particleColor = nozzleColor;
-
-        spriteRenderer.color = nozzleColor;
-
         if (playerBehaviour == null) return;
         if (playerController == null) return;
         if (projectileManager == null) return;

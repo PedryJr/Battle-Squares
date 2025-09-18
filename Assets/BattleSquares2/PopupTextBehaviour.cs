@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class PopupTextBehaviour : MonoBehaviour
+public sealed class PopupTextBehaviour : MonoBehaviour
 {
 
     [SerializeField]

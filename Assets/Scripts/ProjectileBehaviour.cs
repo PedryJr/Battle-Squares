@@ -2,6 +2,7 @@ using FMOD.Studio;
 using FMODUnity;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
@@ -10,11 +11,12 @@ using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
 
 
-[BurstCompile]
-public sealed class ProjectileBehaviour : MonoBehaviour
+public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehaviour>
 {
 
     const Int32 ENVIRONTMENT_MASK = 0b00000000000000000000001000000000;
+
+    public ProjectileTrailBehaviour loopreferencedTail;
 
     public float initDamage;
 
@@ -34,6 +36,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     public bool IsLocalProjectile;
 
+    [SerializeField]
     public Rigidbody2D rb;
 
     public PlayerBehaviour owningPlayer;
@@ -79,10 +82,13 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     [SerializeField]
     public HitMarkBehaviour hitMark;
 
+    [SerializeField]
     ParticleSystemRenderer trailParticles;
+    [SerializeField]
     ParticleSystem trailParticleSystem;
     MainModule trailMainModule;
 
+    [SerializeField]
     SpriteRenderer spriteRenderer;
 
     CameraAnimator cameraAnimator;
@@ -109,6 +115,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     List<PlayerBehaviour> playersHit;
     List<FlagBehaviour> flagsHit;
 
+    [SerializeField]
     Collider2D projectileCollider;
 
     [SerializeField]
@@ -141,23 +148,48 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     float initRot;
 
     static Dictionary<ulong, Material> trailMaterials = new Dictionary<ulong, Material>();
+    float audioTimer;
+    Vector2 homingDirection = Vector2.zero;
+    float rotate;
+    float startRotate;
+    bool lastSticky;
+    float lingeringTimer;
+    List<PlayerBehaviour> playersCollidingWith;
+    bool flipRotation = true;
+    Vector3 pointStuckAt;
+    Vector2 stickySurfaceNormal;
+    float stickyNormalAngle;
+    bool hasStuckToPoint;
+    static Dictionary<ulong, Material> impactMaterials = new Dictionary<ulong, Material>();
 
-    [BurstCompile]
-    private void Awake()
+    public uint spawnId = 0;
+
+    public ProjectileManager.ProjectileType projectileType;
+
+    [MethodImpl(512)]
+    private void OnValidate()
     {
-
         projectileCollider = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         trailParticles = GetComponentInChildren<ParticleSystemRenderer>();
         trailParticleSystem = trailParticles.GetComponent<ParticleSystem>();
+    }
+    [MethodImpl(512)]
+    private void Awake()
+    {
+/*        projectileCollider = GetComponent<Collider2D>();
+        rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        trailParticles = GetComponentInChildren<ParticleSystemRenderer>();
+        trailParticleSystem = trailParticles.GetComponent<ParticleSystem>();*/
         if(trailParticleSystem) trailMainModule = trailParticleSystem.main;
         cameraAnimator = Camera.main.GetComponent<CameraAnimator>();
         playersHit = new List<PlayerBehaviour>();
         flagsHit = new List<FlagBehaviour>();
         playersCollidingWith = new List<PlayerBehaviour>();
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     private void Start()
     {
 
@@ -189,10 +221,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+    [MethodImpl(512)]
     public void InitializeBullet(ref ProjectileInitData data)
     {
-
+        spawnId = data.id;
         initDamage = data.baseDamage;
         aoeDamage = data.aoeDamage * Mods.at[7];
         damageScaleOverTime = data.damageTimeScale;
@@ -220,8 +252,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         projectileManager = data.projectileManager;
         IsLocalProjectile = data.IsLocalProjectile;
-
-        chargePlayerEndScale = transform.localScale;
 
         rb.linearVelocity = velocity;
         rb.angularVelocity = data.spinSpeed;
@@ -336,7 +366,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         this.data.knockback *= Mods.at[12];
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     private void Update()
     {
 
@@ -346,9 +376,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    float audioTimer;
-
-    [BurstCompile]
+    [MethodImpl(512)]
     void GlobalUpdate()
     {
 
@@ -447,9 +475,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    Vector3 chargePlayerEndScale;
-    Vector2 homingDirection = Vector2.zero;
-    [BurstCompile]
+    [MethodImpl(512)]
     private void LateUpdate()
     {
 
@@ -462,11 +488,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    float rotate;
-    float startRotate;
-    bool lastSticky;
-
-    [BurstCompile]
+    [MethodImpl(512)]
     private void FixedUpdate()
     {
 
@@ -586,9 +608,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    float lingeringTimer;
-
-    [BurstCompile]
+    [MethodImpl(512)]
     void LocalUpdate()
     {
 
@@ -679,6 +699,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnTriggerStay2D(Collider2D collision)
     {
 
@@ -712,14 +733,15 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnTriggerEnter2D(Collider2D collider)
     {
 
         CollisionCheck(collider.gameObject);
 
     }
-    [BurstCompile]
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
@@ -727,17 +749,18 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnCollisionExit2D(Collision2D collision)
     {
         CollisionCancell(collision.gameObject);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnTriggerExit2D(Collider2D collision)
     {
         CollisionCancell(collision.gameObject);
     }
-
-    [BurstCompile]
+    [MethodImpl(512)]
     void CollisionCheck(GameObject collidedWith)
     {
 
@@ -756,9 +779,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    List<PlayerBehaviour> playersCollidingWith;
-
-    [BurstCompile]
+    [MethodImpl(512)]
     void CollisionCancell(GameObject collidedWith)
     {
 
@@ -766,8 +787,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         if (playerBehaviour) playersCollidingWith.Remove(playerBehaviour);
 
     }
-
-    [BurstCompile]
+    [MethodImpl(512)]
     void PlayerCollisionCheck(PlayerBehaviour playerBehaviour)
     {
         if (playerBehaviour.isLocalPlayer) return;
@@ -827,7 +847,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         }
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     void ProjectileCollisionCheck(ProjectileBehaviour projectileBehaviour)
     {
 
@@ -841,7 +861,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         }
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     void FlagCollisionCheck(FlagBehaviour flag)
     {
 
@@ -882,13 +902,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    bool flipRotation = true;
-    Vector3 pointStuckAt;
-    Vector2 stickySurfaceNormal;
-    float stickyNormalAngle;
-    bool hasStuckToPoint;
-
-    [BurstCompile]
+    [MethodImpl(512)]
     void EnvironmentCollisionCheck()
     {
 
@@ -929,7 +943,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         }
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     public void OnDespawn(bool hit)
     {
 
@@ -937,9 +951,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    static Dictionary<ulong, Material> impactMaterials = new Dictionary<ulong, Material>();
-
-    [BurstCompile]
+    [MethodImpl(512)]
     void DestroyThisProjectile(bool hit)
     {
 
@@ -988,10 +1000,12 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         }
 
-        Destroy(gameObject);
+        projectileManager.ReleaseProjectile(spawnId, projectileType);
+
+        //Destroy(gameObject);
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     public void SpawnHitMark(bool aoe)
     {
 
@@ -1017,22 +1031,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         Color color = owningPlayer.PlayerColor.HitMarkColor;
         newHitMark.spawnColor = color;
         newHitMark.fadeColor = new UnityEngine.Color(color.r, color.g, color.b, 0f);
-
-/*        foreach (SpawnStageBehaviour spawnStage in newHitMark.spawnStages)
-        {
-
-            foreach (SpriteRenderer spriteRenderer in spawnStage.sprites)
-            {
-
-                spriteRenderer.color = newHitMark.spawnColor;
-
-            }
-
-        }*/
-
-
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin)
     {
 
@@ -1061,7 +1061,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         return shortestHit;
 
     }
-
+    [MethodImpl(512)]
     RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, out Transform objectHit)
     {
         objectHit = null;
@@ -1092,7 +1092,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+    [MethodImpl(512)]
     public void HitReg()
     {
 
@@ -1121,33 +1121,173 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
-    private void OnDestroy()
+    [MethodImpl(512)]
+    public void Release()
     {
-
         shotInstance.release();
 
-        for (int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
+        //for (int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
 
         owningPlayer.transform.localScale = Vector3.one;
         owningPlayer.nozzleBehaviour.transform.localScale = Vector3.one * 0.4f;
 
         if (aliveSound)
         {
-
             aliveInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             aliveInstance.release();
+        }
+    }
 
+    [MethodImpl(512)]
+    public void Revert(ProjectileBehaviour original)
+    {
+        initDamage = original.initDamage;
+
+        damageScaleOverTime = original.damageScaleOverTime;
+        damage = original.damage;
+        aoeDamage = original.aoeDamage;
+        syncTimer = original.syncTimer;
+        speedModifier = original.speedModifier;
+
+        projectileID = original.projectileID;
+        IsLocalProjectile = original.IsLocalProjectile;
+        owningPlayer = original.owningPlayer;
+
+        timeAlive = original.timeAlive;
+        fullTimeAlive = original.fullTimeAlive;
+
+        projectileManager = original.projectileManager;
+        holdable = original.holdable;
+        travelDistance = original.travelDistance;
+        lastPos = original.lastPos;
+
+        recoil = original.recoil;
+        destroyed = original.destroyed;
+        returnToSender = original.returnToSender;
+        stickToSender = original.stickToSender;
+        instaDestroy = original.instaDestroy;
+        skipAoeOnHit = original.skipAoeOnHit;
+
+        ownerId = original.ownerId;
+        melee = original.melee;
+        hit = original.hit;
+        sync = original.sync;
+        flipFlop = original.flipFlop;
+
+        stuck = original.stuck;
+        stuckTo = original.stuckTo;
+
+        impactParticle = original.impactParticle;
+        hitMark = original.hitMark;
+
+        generalParticleColor = original.generalParticleColor;
+
+        shotReference = original.shotReference;
+        aliveReference = original.aliveReference;
+        aliveSound = original.aliveSound;
+        hitSoundReference = original.hitSoundReference;
+
+        shotInstance = original.shotInstance;
+        aliveInstance = original.aliveInstance;
+
+        playerHit = original.playerHit;
+        closestPlayer = original.closestPlayer;
+        flagHit = original.flagHit;
+
+        multiplySpawnrateByLifetime = original.multiplySpawnrateByLifetime;
+        lifeTimeMultiplier = original.lifeTimeMultiplier;
+        externalTrailSpawnRate = original.externalTrailSpawnRate;
+        externalTrailSpawnTimer = original.externalTrailSpawnTimer;
+
+        morphLerp = original.morphLerp;
+        startMorph = original.startMorph;
+        endMorph = original.endMorph;
+
+        meleeStartDirection = original.meleeStartDirection;
+        meleeEndDirection = original.meleeEndDirection;
+        meleeStartRot = original.meleeStartRot;
+        meleeEndRot = original.meleeEndRot;
+        initRot = original.initRot;
+
+        audioTimer = original.audioTimer;
+        homingDirection = original.homingDirection;
+        rotate = original.rotate;
+        startRotate = original.startRotate;
+        lastSticky = original.lastSticky;
+        lingeringTimer = original.lingeringTimer;
+
+        flipRotation = original.flipRotation;
+        pointStuckAt = original.pointStuckAt;
+        stickySurfaceNormal = original.stickySurfaceNormal;
+        stickyNormalAngle = original.stickyNormalAngle;
+        hasStuckToPoint = original.hasStuckToPoint;
+
+        spawnId = original.spawnId;
+        projectileType = original.projectileType;
+
+        playersHit = new List<PlayerBehaviour>();
+        flagsHit = new List<FlagBehaviour>();
+        playersCollidingWith = new List<PlayerBehaviour>();
+
+        float pitch = 1f + UnityEngine.Random.Range(-0.08f, 0.08f);
+
+        if (math.abs(data.burst) != 0) return;
+
+        shotInstance = RuntimeManager.CreateInstance(shotReference);
+        shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+        shotInstance.setParameterByName("Power", data.speed / 65f);
+        shotInstance.setVolume(MySettings.volume);
+        shotInstance.setPitch(pitch);
+        shotInstance.start();
+
+        if (aliveSound)
+        {
+            aliveInstance = RuntimeManager.CreateInstance(aliveReference);
+            aliveInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+            aliveInstance.setParameterByName("Power", data.speed / 65f);
+            aliveInstance.setVolume(MySettings.volume);
+            aliveInstance.setPitch(pitch);
+            aliveInstance.start();
+        }
+
+        spriteRenderer.enabled = original.spriteRenderer.enabled;
+        if (loopreferencedTail)
+        {
+            if(loopreferencedTail.CanBeReused())
+            {
+                loopreferencedTail.transform.position = transform.position;
+                loopreferencedTail.gameObject.SetActive(true);
+            }
+            else
+            {
+                ProjectileTrailBehaviour originalTrail = original.GetComponentInChildren<ProjectileTrailBehaviour>();
+                loopreferencedTail.ForceRelease();
+                loopreferencedTail = Instantiate(originalTrail, transform);
+                loopreferencedTail.target = boom;
+                loopreferencedTail.transform.localScale = originalTrail.transform.localScale;
+            }
+        }
+    }
+    [MethodImpl(512)]
+    private void OnDestroy()
+    {
+
+        for (int i = 0; i < projectileManager.weapons.Length; i++)
+        {
+            if(projectileManager.weapons[i].type == projectileType)
+            {
+                projectileManager.weapons[i].pool.RemoveFromSystem(this, spawnId);
+                break;
+            }
         }
 
     }
 
 }
-[BurstCompile]
+
 [Serializable]
 public struct ProjectileInitData
 {
-
     public ProjectileManager projectileManager;
     public PlayerBehaviour owningPlayer;
     public Vector2 position;
@@ -1206,6 +1346,4 @@ public struct ProjectileInitData
     public float lingeringDamage;
     public float lingeringFrequency;
     public bool alignDirection;
-
-
 }

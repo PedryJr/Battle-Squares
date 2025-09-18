@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class TabModeObject : MonoBehaviour
+public sealed class TabModeObject : MonoBehaviour
 {
 
     public Action tabModeEnabled = () => { };

@@ -136,6 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834e424b774252c409e40ae9d752e5b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loopreferencedTail: {fileID: 0}
   initDamage: 2
   boom: {fileID: 2345000804440483264}
   damageScaleOverTime: 0
@@ -145,7 +146,7 @@ MonoBehaviour:
   speedModifier: 0
   projectileID: 0
   IsLocalProjectile: 0
-  rb: {fileID: 0}
+  rb: {fileID: -3438963122069973725}
   owningPlayer: {fileID: 0}
   timeAlive: 0
   fullTimeAlive: 0
@@ -165,6 +166,9 @@ MonoBehaviour:
   flipFlop: 0
   impactParticle: {fileID: 7289681851009581468, guid: b29b397a02cadfe46adaf535059a9ac4, type: 3}
   hitMark: {fileID: 7378723969388511367, guid: 4881170d60918d54e9aff5bb4332aff9, type: 3}
+  trailParticles: {fileID: 227063848627397678}
+  trailParticleSystem: {fileID: 8440552164618030048}
+  spriteRenderer: {fileID: 1625723881570478094}
   shotReference:
     Guid:
       Data1: 1515475320
@@ -187,6 +191,7 @@ MonoBehaviour:
       Data3: -1733238086
       Data4: 1170857750
     Path: event:/VFX/Base/Gun Hit
+  projectileCollider: {fileID: 1066894796322893754}
   data:
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}
@@ -262,6 +267,8 @@ MonoBehaviour:
   multiplySpawnrateByLifetime: 0
   lifeTimeMultiplier: 0
   externalTrailSpawnRate: 0
+  spawnId: 0
+  projectileType: 0
 --- !u!61 &1066894796322893754
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -432,6 +439,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce85ea8a00e1774c886e8a79cdd39f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localRotation: {x: 0, y: 0, z: 0, w: 0}
+  localPosition: {x: 0, y: 0, z: 0}
+  localScale: {x: 0, y: 0, z: 0}
+  enableCheckOnParent: 0
+  allowDisableEnableFromRemote: 0
   target: {fileID: 5893324798774376400}
   attatchedParticles: {fileID: 8440552164618030048}
 --- !u!198 &8440552164618030048

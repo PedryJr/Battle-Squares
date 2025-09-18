@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class PermaLightBehvaiour : MonoBehaviour
+public sealed class PermaLightBehvaiour : MonoBehaviour
 {
 
     Transform cachedTransform;

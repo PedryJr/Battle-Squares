@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Resources;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -48,7 +46,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
     public Dictionary<int, List<Transform>> animatedAnimationsAwaitingShapes;
 
     public static float STENCIL_OFFSET = 0.0f;
-
+    [MethodImpl(512)]
     public void Awake()
     {
         STENCIL_OFFSET = 0.1f;
@@ -64,6 +62,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
     private void OnDestroy() => STENCIL_OFFSET = 0.0f;
 
+    [MethodImpl(512)]
     void BuildLevelFromScratch()
     {
         if (CachedMapIsInvalid())
@@ -91,7 +90,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
         CleanupBuilder();
     }
-
+    [MethodImpl(512)]
     void CleanupBuilder()
     {
         Destroy(staticParent.GetComponent<CompositeCollider2D>());
@@ -117,12 +116,12 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         GC.Collect();
         GC.WaitForPendingFinalizers();
     }
-
+    [MethodImpl(512)]
     void BuildStencils()
     {
-
+/*
         List<Transform>[] animationGroups = animatedAnimationsAwaitingShapes.Values.ToArray();
-
+*/
         //foreach (var item in builtShapes) item.AssignStencil(1f, false);
 /*
         int stencilAccumulation = 0;
@@ -135,7 +134,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             for (int j = 0; j < animationGroups[i].Count; j++) 
                 animationGroups[i][j].GetComponent<BuiltShapeBehaviour>().AssignStencil(stencilAccumulation++, true);*/
     }
-
+    [MethodImpl(512)]
     void BuildProxies()
     {
         stencilAccumulation++;
@@ -158,7 +157,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         }
     }
 
-
+    [MethodImpl(512)]
     void BuildPath(int index, CompositeCollider2D composite, int stencil)
     {
 
@@ -178,14 +177,14 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         shadowController2D.UpdateFromCollider();
         test.AddComponent<StencilInfectorBehaviour>().SetStencil(stencil);
     }
-
+    [MethodImpl(512)]
     void BuildAllMapSpawns()
     {
         mapSpawns = Instantiate(mapSpawns, levelOutput);
         foreach (ByteCoord spawn in simplifiedSpawnData) Instantiate(aMapSpawn, spawn.GetPosition(), Quaternion.identity, mapSpawns.transform);
         mapSpawns.InitializeSpawns();
     }
-
+    [MethodImpl(512)]
     void BuildAllAnimations()
     {
         foreach (KeyValuePair<int, List<Transform>> item in animatedAnimationsAwaitingShapes)
@@ -203,7 +202,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             stencilAccumulation++;
         }
     }
-
+    [MethodImpl(512)]
     void BuildAllLights()
     {
         foreach (var item in simplifiedLightData)
@@ -214,8 +213,8 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         }
     }
 
-    int stencilAccumulation = 0;
-
+    int stencilAccumulation = 1;
+    [MethodImpl(512)]
     void BuildAllShapes()
     {
         for (int i = 0; i < loadedSimplifiedShapeData.Length; i++)
@@ -236,7 +235,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
         staticParent.GetComponent<CompositeCollider2D>().edgeRadius = 0f;
     }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool CachedMapIsInvalid()
     {
         if (loadedSimplifiedShapeData == null) return true;

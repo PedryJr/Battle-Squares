@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using NUnit.Framework;
+using System.Collections.Generic; 
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.U2D;
-using static Unity.Collections.AllocatorManager;
 
-public class LevelLoader : MonoBehaviour
+public sealed class LevelLoader : MonoBehaviour
 {
 
     Level? currentlyLoadedLevel;

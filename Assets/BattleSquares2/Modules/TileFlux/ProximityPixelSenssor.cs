@@ -4,16 +4,10 @@ using static ProximityPixelationSystem;
 using System;
 using Unity.Collections;
 using UnityEngine.SceneManagement;
+using System.Runtime.CompilerServices;
 
 
-
-
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-public class ProximityPixelSenssor : MonoBehaviour
+public sealed class ProximityPixelSenssor : MonoBehaviour
 {
     Transform cachedTransform;
     private void Awake() => cachedTransform = transform;
@@ -80,7 +74,7 @@ public class ProximityPixelSenssor : MonoBehaviour
         public float saturationBoost;
     }
 
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void DemolishField() => Destroy(gameObject);
 
 }

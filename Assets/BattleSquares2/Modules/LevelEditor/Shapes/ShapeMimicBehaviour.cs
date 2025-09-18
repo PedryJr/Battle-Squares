@@ -5,8 +5,7 @@ using Newtonsoft.Json;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using static BinaryVectors;
-using static ShapeMimicBehaviour;
+using static BinaryVectors; 
 
 public sealed class ShapeMimicBehaviour : MonoBehaviour
 {

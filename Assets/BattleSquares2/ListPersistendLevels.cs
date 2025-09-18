@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using UnityEngine;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
-public class ListPersistendLevels : MonoBehaviour
+public sealed class ListPersistendLevels : MonoBehaviour
 {
 
     [SerializeField]

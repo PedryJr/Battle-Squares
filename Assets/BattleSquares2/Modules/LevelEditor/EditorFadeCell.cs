@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EditorFadeCell : MonoBehaviour
+public sealed class EditorFadeCell : MonoBehaviour
 {
 
     RectTransform imageTransform;

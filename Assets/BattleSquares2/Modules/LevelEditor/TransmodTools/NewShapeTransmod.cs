@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.U2D;
 
-public class NewShapeTransmod : LevelTransMod
+public sealed class NewShapeTransmod : LevelTransMod
 {
 
     [SerializeField]

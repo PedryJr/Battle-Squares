@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class KillOffWhenNotPlaying : MonoBehaviour
+public sealed class KillOffWhenNotPlaying : MonoBehaviour
 {
 
     [SerializeField]

@@ -1,12 +1,11 @@
-using System;
-using System.IO;
+using System; 
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class LevelEditorButton : MonoBehaviour
+public sealed class LevelEditorButton : MonoBehaviour
 {
 
 

@@ -2408,7 +2408,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 312.0769, y: -38.461487}
+  m_AnchoredPosition: {x: 312.0769, y: -38.461517}
   m_SizeDelta: {x: 500, y: -900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &534734269
@@ -5314,7 +5314,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 312.0769, y: -346.15387}
+  m_AnchoredPosition: {x: 312.0769, y: -346.15393}
   m_SizeDelta: {x: 500, y: -900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1260692905
@@ -6004,7 +6004,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 312.0769, y: -192.30774}
+  m_AnchoredPosition: {x: 312.0769, y: -192.30771}
   m_SizeDelta: {x: 500, y: -900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1366306374
@@ -7341,7 +7341,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
+  m_AllowDynamicResolution: 1
   m_ForceIntoRT: 0
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
@@ -7355,7 +7355,7 @@ Transform:
   m_GameObject: {fileID: 1651306544}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: -100}
+  m_LocalPosition: {x: 0, y: 0, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7378,12 +7378,12 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
-  m_VolumeFrameworkUpdateModeOption: 2
+  m_VolumeFrameworkUpdateModeOption: 0
   m_RenderPostProcessing: 1
   m_Antialiasing: 2
   m_AntialiasingQuality: 2
@@ -10289,8 +10289,8 @@ MonoBehaviour:
   m_UseNormalMap: 0
   m_ShadowsEnabled: 1
   m_ShadowIntensity: 0.5
-  m_ShadowSoftness: 0
-  m_ShadowSoftnessFalloffIntensity: 0
+  m_ShadowSoftness: 0.101
+  m_ShadowSoftnessFalloffIntensity: 0.5
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:

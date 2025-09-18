@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using TMPro;
-using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using static DragAndScrollMod;

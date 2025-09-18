@@ -64,8 +64,8 @@ Material:
     - _ExponentialNoise: 0.31
     - _Tiling: 16.7
     - _ZWrite: 1
-    - _fallofExponential: 1
-    - _maxIntensity: 1
+    - _fallofExponential: 15
+    - _maxIntensity: 3
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 
-public class MyLog : MonoBehaviour
+public sealed class MyLog : MonoBehaviour
 {
     public static MyLog Instance;
 

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class SplineDrag : MonoBehaviour
+public sealed class SplineDrag : MonoBehaviour
 {
 
     [SerializeField]

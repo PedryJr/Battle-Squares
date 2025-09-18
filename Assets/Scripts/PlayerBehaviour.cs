@@ -1,14 +1,15 @@
+using System;
+using System.Runtime.CompilerServices;
 using FMOD.Studio;
 using FMODUnity;
 using Steamworks;
-using System;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
-[BurstCompile]
+ 
 public sealed class PlayerBehaviour : MonoBehaviour
 {
 
@@ -145,7 +146,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     Transform playerTransform;
     Hunter hunter;
 
-    [BurstCompile]
+    [MethodImpl(512)]
     private void Awake()
     {
 
@@ -183,7 +184,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         spriteRenderer.color = playerDarkerColor;*/
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     private void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
     {
 
@@ -245,7 +246,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         }
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     public void AssertSteamDataAvalible(ulong steamId)
     {
 
@@ -254,10 +255,10 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+    [MethodImpl(512)]
     private void Start()
     {
-
+        PlayerColor.SetColorHue(UnityEngine.Random.Range(0f, 1f));
         try
         {
 
@@ -313,6 +314,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     ParticleColorApplicant[] speedParticles;
 
     int speedParticleSwitcher;
+    [MethodImpl(512)]
     public void SpawnEffect()
     {
 
@@ -333,7 +335,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     EventReference playerSlap;
     EventInstance playerSlapSound;
 
-    [BurstCompile]
+    [MethodImpl(512)]
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
@@ -348,7 +350,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
                 if (!isLocalPlayer || SceneManager.GetActiveScene().name.Equals("LobbyScene"))
                 {
 
-                    Vector2 toCam = Camera.main.transform.position - transform.position;
+                    Vector2 toCam = Camera.main.transform.position - playerTransform.position;
                     float soundDirection = ConvertVector2ToAngle(toCam.normalized);
                     float distance = toCam.magnitude;
 
@@ -376,7 +378,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         }
 
     }
-
+    [MethodImpl(512)]
     public float ConvertVector2ToAngle(Vector2 direction)
     {
         float angleInRadians = Mathf.Atan2(direction.x, -direction.y);
@@ -390,7 +392,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         return angleInDegrees;
     }
-
+    [MethodImpl(512)]
     public void CreateTextureFromBoolArray10BY10(bool[] boolArray, byte frameIndex)
     {
 
@@ -419,7 +421,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         if (frameIndex == 0) spriteRenderer.sprite = bodyFrames[frameIndex];
 
     }
-
+    [MethodImpl(512)]
     public void CreateTextureFromBoolArray4BY4(bool[] boolArray, byte frameIndex)
     {
 
@@ -465,14 +467,14 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public float frameRate = 10;
     int animationIndex;
     int lastAnimationIndex;
-
+    [MethodImpl(512)]
     public void AnimatePlayer()
     {
 
         animationTimer = 1;
 
     }
-
+    [MethodImpl(512)]
     void ApplyPlayerAnimation()
     {
 
@@ -506,10 +508,10 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public float Value = 0.81f;
     public float h = 0.0f;
 
-    [BurstCompile]
+    [MethodImpl(512)]
     public void ApplyColors()
     {
-
+        PlayerColor.RefreshColorComponents();
         spriteRenderer.color = PlayerColor.ExposedHealthColor;
         healthbar.color = PlayerColor.PrimaryColor;
         nozzleBehaviour.spriteRenderer.color = PlayerColor.NozzleColor;
@@ -562,7 +564,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     public Friend friend;
 
-    [BurstCompile]
+    [MethodImpl(512)]
     void ApplySteamData()
     {
         GetImageData(steamId);
@@ -570,7 +572,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         playerName = friend.Name;
         steamDataApplied = true;
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     public async void GetImageData(SteamId steamId)
     {
 
@@ -592,13 +594,13 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+    [MethodImpl(512)]
     private void Update()
     {
 
         if(!steamDataApplied && steamDataAvalible) ApplySteamData();
 
-        /*if(newColor)*/ ApplyColors();
+        if(newColor) ApplyColors();
 
         oneSecondTimer += Time.deltaTime * 10;
         dataUpdateHighSpeedTimer += Time.deltaTime * 2;
@@ -622,10 +624,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
             oneSecondTimer = 0;
 
         }
-        else
-        {
-            fpsCapture += 10;
-        }
+        else fpsCapture += 10;
 
         if (isLocalPlayer)
         {
@@ -633,19 +632,10 @@ public sealed class PlayerBehaviour : MonoBehaviour
             if (climax > 0) climax -= Time.deltaTime * 0.3f;
             else if (climax < 0) climax = 0;
 
-            if (rb.position.y < -60)
-            {
-                RespawnPlayer();
-            }
+            if (rb.position.y < -60) RespawnPlayer();
 
         }
-        else
-        {
-
-            ApplyRecievedData();
-            CalculateNozzleMovementFromData();
-
-        }
+        else CalculateNozzleMovementFromData();
 
         if (rb.linearDamping > 0.1f) rb.linearDamping -= Time.deltaTime * 80;
         if (rb.angularDamping > 0.1f) rb.angularDamping -= Time.deltaTime * 80;
@@ -662,7 +652,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     bool lastDeathState = false;
     float deathTimer;
     public bool spawnBuffer = false;
-    [BurstCompile]
+    [MethodImpl(512)]
     private void LateUpdate()
     {
 
@@ -697,7 +687,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         {
             deathTimer += Time.deltaTime;
             rb.position = deathChamber.position;
-            transform.position = deathChamber.position;
+            playerTransform.position = deathChamber.position;
             if (deathTimer > 2) RevivePlayer();
         }
         else
@@ -710,7 +700,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         if (spawnBuffer)
         {
 
-            transform.position = spawn.position;
+            playerTransform.position = spawn.position;
             rb.position = spawn.position;
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0;
@@ -756,7 +746,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     public bool newMods;
 
-    [BurstCompile]
+    [MethodImpl(512)]
     public void KillPlayer()
     {
 
@@ -775,7 +765,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
             if (isLocalPlayer) mapSynchronizer.SpawnDogTag((byte) id, rb.position, rb.rotation, rb.linearVelocity / 2);
             if (isLocalPlayer) rb.position = deathChamber.position;
-            if (isLocalPlayer) playerTransform.position = new Vector3(deathChamber.position.x, deathChamber.position.y, transform.position.z);
+            if (isLocalPlayer) playerTransform.position = new Vector3(deathChamber.position.x, deathChamber.position.y, playerTransform.position.z);
             healthPoints = maxHealthPoints;
             climax = 1;
             isDead = true;
@@ -783,7 +773,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         }
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     public void RevivePlayer()
     {
 
@@ -802,7 +792,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
             rb.simulated = true;
             isDead = false;
             scoreDeducted = false;
-            transform.position = deathChamber.position;
+            playerTransform.position = deathChamber.position;
             rb.position = deathChamber.position;
             if (playerSpawnEffectBehaviour)
             {
@@ -849,7 +839,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     public void RespawnPlayer()
     {
 
@@ -863,7 +853,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         playerTransform.position = spawn.transform.position;
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     void UpdateDataToSend()
     {
 
@@ -871,29 +861,12 @@ public sealed class PlayerBehaviour : MonoBehaviour
         rotation = rb.rotation;
         velocity = rb.linearVelocity;
         angularVelocity = rb.angularVelocity;
-        localNozzlePosition = nozzleTransform.position - transform.position;
+        localNozzlePosition = nozzleTransform.position - playerTransform.position;
         nozzleRotation = nozzleTransform.rotation.eulerAngles.z;
 
     }
-    [BurstCompile]
-    void ApplyRecievedData()
-    {
 
-/*        healthbar.color = playerColor;
-        spriteRenderer.color = playerDarkerColor;*/
-
-        float lerp = GetFrameRateLerp();
-
-    }
-    [BurstCompile]
-    public float GetFrameRateLerp()
-    {
-
-
-        return math.smoothstep(0, 1, timeSinceHit);
-
-    }
-    [BurstCompile]
+    [MethodImpl(512)]
     void CalculateNozzleMovementFromInput()
     {
 
@@ -928,7 +901,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         if (shouldSync) playerSynchronizer.UpdateNozzle();
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     void CalculateNozzleMovementFromData()
     {
 
@@ -940,7 +913,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
             toPos,
             math.smoothstep(0, 1, newNozzleLerp));
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     public void ApplyRecoil()
     {
 
@@ -953,7 +926,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         playerSynchronizer.UpdateNozzle();
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     void CalculateNozzleRotation()
     {
         nozzleTransform.rotation = Quaternion.Euler(
@@ -963,7 +936,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
                 (nozzleTransform.position - playerTransform.position).y,
                 (nozzleTransform.position - playerTransform.position).x)));
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     public void AnimateNozzle(Vector3 from, Vector3 to)
     {
 
@@ -972,17 +945,14 @@ public sealed class PlayerBehaviour : MonoBehaviour
         nozzleInputDirection = playerController.GetDirection();
 
     }
-    [BurstCompile]
+    [MethodImpl(512)]
     private void FixedUpdate()
     {
 
         if (isLocalPlayer)
         {
-
             CalculateNozzleMovementFromInput();
-
             UpdateDataToSend();
-
         }
 
         flipFlop = !flipFlop;
@@ -990,11 +960,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         if (controlled)
         {
-
             ApplyTargetMovement();
-
             ReAdjustMovementValues();
-
         }
 
     }
@@ -1009,16 +976,16 @@ public sealed class PlayerBehaviour : MonoBehaviour
     Vector2 jumpVelocity;
     Vector2 jumpDirection;
     float jumpLimiter;
+
+    [MethodImpl(512)]
     void SetMovementParameters(bool newMod)
     {
 
         if (newMod)
         {
-
             acceleration = 130f * Mods.at[8];
             maxSpeed = 23.5f * Mods.at[1];
             newMods = false;
-
         }
 
         movementDirection = Vector2.Lerp(movementDirection, playerController.finalDirection, math.clamp(Time.deltaTime * 100, 0, 1));
@@ -1041,18 +1008,17 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+    [MethodImpl(512)]
     void ApplyTargetMovement()
     {
 
         rb.AddForce(movementDirection * acceleration * forceLimiter, ForceMode2D.Force);
 
-        if (math.abs(rb.angularVelocity / 360) < 1f)
-            rb.AddTorque(-movementDirection.x / 0.85f, ForceMode2D.Force);
+        if (math.abs(rb.angularVelocity / 360) < 1f) rb.AddTorque(-movementDirection.x / 0.85f, ForceMode2D.Force);
 
     }
 
-    [BurstCompile]
+    [MethodImpl(512)]
     void ReAdjustMovementValues()
     {
 
@@ -1068,10 +1034,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         nozzleTransform.localPosition = new Vector2(math.clamp(nPosX, -1, 1), math.clamp(nPosY, -1, 1));
 
     }
-
-    public byte GetID()
-    {
-        return (byte) id;
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public byte GetID() => (byte) id;
 
 }

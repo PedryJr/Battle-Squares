@@ -3,7 +3,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
-public unsafe class EditorTabMenu : MonoBehaviour
+public sealed unsafe class EditorTabMenu : MonoBehaviour
 {
     DragAndScrollMod dragAndScrollMod;
 

@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class WorldLight : MonoBehaviour
+public sealed class WorldLight : MonoBehaviour
 {
 
     bool markedForDestruction = false;

@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Netcode.Transports.Facepunch;
-using Steamworks;
-using Unity.Burst;
+using Steamworks; 
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static PlayerSynchronizer;
+using UnityEngine.SceneManagement; 
 
 public sealed class PlayerSynchronizer : NetworkBehaviour
 {
@@ -773,10 +772,8 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     
     void StoreColorData(PlayerBehaviour player, byte[] data)
     {
-
         player.PlayerColor.SetColorHue(data[1] / 256f);
         player.newColor = true;
-
     }
     
     public void UpdateHealth()
@@ -1010,11 +1007,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     
     public Color UpdatePlayerColor(float value)
     {
-/*
-        float h, s, v;
-        Color.RGBToHSV(localSquare.playerColor, out h, out s, out v);
-        h = value;
-        localSquare.playerColor = Color.HSVToRGB(h, s, v);*/
 
         localSquare.PlayerColor.SetColorHue(value);
         localSquare.newColor = true;
@@ -1065,21 +1057,17 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         messageReciever.CreateNewMessage(message, source);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public PlayerBehaviour GetPlayerById(byte id)
     {
-        foreach (PlayerData player in playerIdentities)
-        {
-            if ((byte)player.id == id) return player.square;
-        }
+        foreach (PlayerData player in playerIdentities) if ((byte)player.id == id) return player.square;
         return null;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public PlayerBehaviour GetPlayerById(ulong id)
     {
-        foreach (PlayerData player in playerIdentities)
-        {
-            if (player.id == id) return player.square;
-        }
+        foreach (PlayerData player in playerIdentities) if (player.id == id) return player.square;
         return null;
     }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class LevelEditorPreviewBehaviour : MonoBehaviour
+public sealed class LevelEditorPreviewBehaviour : MonoBehaviour
 {
 
     DragAndScrollMod _dragMod;

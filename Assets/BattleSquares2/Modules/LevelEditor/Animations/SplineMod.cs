@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class SplineMod : MonoBehaviour
+public sealed class SplineMod : MonoBehaviour
 {
     const MethodImplOptions inline = MethodImplOptions.AggressiveInlining;
 

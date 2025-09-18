@@ -11,14 +11,9 @@ public sealed class PlayerColorSelector : MonoBehaviour
 
     Color selectedColor = new Color(0.4f, 0.4f, 0.4f, 1f);
 
-
-
-    float awakeColorTimer;
-
-    private Coroutine colorAnimation;
     bool animating = true;
 
-    float timer;
+    float timer = 0;
 
     public Slider slider;
 
@@ -52,10 +47,7 @@ public sealed class PlayerColorSelector : MonoBehaviour
             animating = false;
         }
 
-        float h, s, v;
-        Color.RGBToHSV(playerSynchronizer.localSquare.PlayerColor.PrimaryColor, out h, out s, out v);
-
-        UpdateHueKnob(Mathf.Lerp(0, h, timer));
+        UpdateHueKnob(Mathf.Lerp(0, playerSynchronizer.localSquare.PlayerColor.ReadColorHue, timer));
 
     }
 
@@ -97,9 +89,6 @@ public sealed class PlayerColorSelector : MonoBehaviour
         Vector3 baseNormalized = new Vector3(baseColor.r, baseColor.g, baseColor.b).normalized;
         Color normalColor = new Color(baseNormalized.x, baseNormalized.y, baseNormalized.z);
 
-        Color cursorColor = normalColor * 0.6f;
-        Color cursorDarkerColor = normalColor * 0.38f;
-
         CursorBehaviour.SetColor(
             playerSynchronizer.localSquare.PlayerColor.CursorDefaultColor,
             playerSynchronizer.localSquare.PlayerColor.CursorHoverColor);
@@ -111,16 +100,18 @@ public sealed class PlayerColorSelector : MonoBehaviour
 
         Color.RGBToHSV(selectedColor, out h, out s, out v);
 
-        if (playerSynchronizer.localSquare.h == 0)
+        float playerH = playerSynchronizer.localSquare.PlayerColor.ReadColorHue;
+
+        if (playerH == 0)
         {
-            h = MyExtentions.EaseInOutCubic(hue / (playerSynchronizer.localSquare.h + 0.0001f)) * (playerSynchronizer.localSquare.h + 0.0001f);
+            h = MyExtentions.EaseInOutCubic(hue / (playerH + 0.0001f)) * (playerH + 0.0001f);
         }
         else
         {
-            h = MyExtentions.EaseInOutCubic(hue / playerSynchronizer.localSquare.h) * playerSynchronizer.localSquare.h;
+            h = MyExtentions.EaseInOutCubic(hue / playerH) * playerH;
         }
 
-        if(playerSynchronizer.localSquare.h == hue)
+        if(playerH == hue)
         {
             h = hue;
         }

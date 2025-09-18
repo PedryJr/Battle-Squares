@@ -1,7 +1,8 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class PlayerColoringBehaviour : MonoBehaviour
+public sealed class PlayerColoringBehaviour : MonoBehaviour
 {
 
     private float hue = 0f;
@@ -64,7 +65,7 @@ public class PlayerColoringBehaviour : MonoBehaviour
     [SerializeField] ColorComponent lightColor;
     public Color LightColor => lightColor.ActiveColor;
 
-    private void RefreshColorComponents()
+    public void RefreshColorComponents()
     {
         primaryColor.SetHue(hue);
         secondaryColor.SetHue(hue);
@@ -85,24 +86,6 @@ public class PlayerColoringBehaviour : MonoBehaviour
         lightColor.SetHue(hue);
     }
 
-    private void Awake()
-    {
-        
-    }
-
-    private void Start()
-    {
-        
-    }
-
-/*    private void Update()
-    {
-        RefreshColorComponents();
-    }*/
-
-
-
-
     [Serializable]
     public struct ColorComponent
     {
@@ -112,6 +95,7 @@ public class PlayerColoringBehaviour : MonoBehaviour
 
         [HideInInspector] private Color activeColor;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetHue(float hue)
         {
             activeColor = Color.HSVToRGB(hue, saturation, value, true);

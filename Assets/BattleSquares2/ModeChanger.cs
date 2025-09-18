@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ModeChanger : MonoBehaviour
+public sealed class ModeChanger : MonoBehaviour
 {
     [SerializeField]
     EditorMode mode;

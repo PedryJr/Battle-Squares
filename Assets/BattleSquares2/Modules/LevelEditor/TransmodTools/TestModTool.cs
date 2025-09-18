@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TestModTool : LevelTransMod
+public sealed class TestModTool : LevelTransMod
 {
 
     SpriteRenderer spriteRenderer;

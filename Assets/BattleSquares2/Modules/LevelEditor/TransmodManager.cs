@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TransmodManager : MonoBehaviour
+public sealed class TransmodManager : MonoBehaviour
 {
     [SerializeField]
     float TransmodMaximumInteractionDistance = 1.5f;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Swapper : MonoBehaviour
+public sealed class Swapper : MonoBehaviour
 {
 
     EditorExit input;

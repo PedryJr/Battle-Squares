@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AnchorBehaviour : MonoBehaviour
+public sealed class AnchorBehaviour : MonoBehaviour
 {
 
 }

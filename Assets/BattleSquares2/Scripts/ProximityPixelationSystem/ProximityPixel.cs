@@ -1,9 +1,5 @@
-using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Unity.Mathematics;
-using UnityEngine;
-using UnityEngine.Rendering;
+using UnityEngine; 
 using static ProximityPixelationSystem;
 
 public sealed unsafe class ProximityPixel : MonoBehaviour
