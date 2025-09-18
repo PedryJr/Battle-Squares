@@ -95,10 +95,10 @@ public class PlayerColoringBehaviour : MonoBehaviour
         
     }
 
-    private void Update()
+/*    private void Update()
     {
         RefreshColorComponents();
-    }
+    }*/
 
 
 

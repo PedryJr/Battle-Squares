@@ -2,6 +2,16 @@ Shader "*MyShaders/BackdropShader"
 {
     Properties
     {
+
+        _ExponentialNoise("Exponential Noise", Float) = 1
+        _ColorStrength("Color strength", Float) = 1
+        _ColorToEffect("Color or effect weight", Float) = 1
+        _Tiling("Tiling amount", Float) = 1
+        _fallofExponential("Fallof Exponential", Float) = 1
+        _maxIntensity("Max Intensity", Float) = 1
+
+        _EnergyTexture("Energy Tex", 2D) = "white" {}
+
         _MainTex("Diffuse", 2D) = "white" {}
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
@@ -62,6 +72,9 @@ Shader "*MyShaders/BackdropShader"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DebugMipmapStreamingMacros.hlsl"
 
+            TEXTURE2D(_EnergyTexture);
+            SAMPLER(sampler_EnergyTexture);
+
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             UNITY_TEXTURE_STREAMING_DEBUG_VARS_FOR_TEX(_MainTex);
@@ -90,6 +103,11 @@ Shader "*MyShaders/BackdropShader"
             SHAPE_LIGHT(3)
             #endif
 
+            float _Tiling;
+            float _ColorToEffect;
+            float _ColorStrength;
+            float _ExponentialNoise;
+
             Varyings CombinedShapeLightVertex(Attributes v)
             {
                 Varyings o = (Varyings)0;
@@ -101,7 +119,7 @@ Shader "*MyShaders/BackdropShader"
                 v.positionOS = UnityFlipSprite(v.positionOS, unity_SpriteProps.xy);
                 o.positionCS = TransformObjectToHClip(v.positionOS);
                 o.positionWS = TransformObjectToWorld(v.positionOS);
-                o.uv = v.uv;
+                o.uv = v.uv * _Tiling;
                 o.lightingUV = float2(ComputeScreenPos(o.positionCS / o.positionCS.w).xy);
 
                 o.color = v.color * _Color * unity_SpriteColor;
@@ -111,8 +129,25 @@ Shader "*MyShaders/BackdropShader"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
             #include "Assets/BattleSquares2/Scripts/ProximityPixelationSystem/SampleProximityColorBuffer.hlsl"
 
+            float4 SampleFromEnergy(float2 uv)
+            {
+                return 
+                (
+                    pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.x + 0.1, _CosTime.x) / 7), _ExponentialNoise) * 
+                     pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.y, _CosTime.y  + 0.1) / 7), _ExponentialNoise)  * 
+                     pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.z  + 0.1, _CosTime.z) / 7), _ExponentialNoise)  * 
+                     pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.w, _CosTime.w  + 0.1) / 7), _ExponentialNoise) 
+                );
+            }
+
             float4 CombinedShapeLightFragment(Varyings i) : SV_Target
             {
+
+
+                float colorWeight = _ColorToEffect;
+                float effectWeight = 1 - colorWeight;
+
+                const float4 energyColor1 = SampleFromEnergy(i.uv);
                 const float4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 const float4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
                 SurfaceData2D surfaceData;
@@ -130,7 +165,7 @@ Shader "*MyShaders/BackdropShader"
                 spriteColor.xyz = SampleProximityColor(spriteColor.xyz, i.positionWS.xy);
                 //spriteColor.w = 1;
 
-                return spriteColor;
+                return (spriteColor * colorWeight * _ColorStrength) + (spriteColor * energyColor1 * effectWeight);
             }
             ENDHLSL
         }

@@ -212,31 +212,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
-    color: {r: 0.118917815, g: 0.53103733, b: 0.25907016, a: 1}
-    radius: 100
-    saturationBoost: 5
+    color: {r: 0.865, g: 0.317455, b: 0.317455, a: 1}
+    radius: 50
+    saturationBoost: 20
   sensorData:
     colorValue:
-      x: 0.118917815
-      y: 0.53103733
-      z: 0.25907016
-    colorRadius: 100
+      x: 0.865
+      y: 0.317455
+      z: 0.317455
+    colorRadius: 20
     origin:
-      x: -22.164442
-      y: 14.010126
-    rotation: 269.99597
+      x: -10.056405
+      y: -8.541437
+    rotation: 303.95023
     warpSpeed: 2
-    chroma: 0
+    chroma: 3.25
     enableBlockerInfluence: 0
     blockerFalloff: 2
-    enablePositionWarp: 0
-    positionWarpStrength: 0.1
-    positionWarpFallof: 1
-    positionWarpRadius: 4
-    enableScaleWarp: 0
-    scaleWarpStrength: -0.25
-    scaleWarpFalloff: 1
-    scaleWarpRadius: 3
+    enablePositionWarp: 1
+    positionWarpStrength: 2.6
+    positionWarpFallof: 10
+    positionWarpRadius: 2
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.125
+    scaleWarpFalloff: 10
+    scaleWarpRadius: 2
     enableRotationWarp: 0
     rotationWarpStrength: 1
     rotationWarpFalloff: 1
@@ -1195,40 +1195,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   primaryColor:
-    saturation: 0.633
-    value: 0.865
+    saturation: 0.639
+    value: 0.816
     alpha: 1
   secondaryColor:
     saturation: 0.633
     value: 0.661
     alpha: 1
   exposedHealthColor:
-    saturation: 1
-    value: 0.511
+    saturation: 0.56
+    value: 0.567
     alpha: 1
   nozzleColor:
-    saturation: 0.793
-    value: 1
+    saturation: 0.613
+    value: 0.974
     alpha: 1
   projectileColor:
     saturation: 1
     value: 1
     alpha: 1
   particleColor:
-    saturation: 0.459
-    value: 1
+    saturation: 0.613
+    value: 0.974
     alpha: 1
   chatBubbleColor:
-    saturation: 1
-    value: 1
+    saturation: 0.59
+    value: 0.605
     alpha: 1
   dogTagColor:
     saturation: 0.633
     value: 0.661
     alpha: 1
   hitMarkColor:
-    saturation: 0.677
-    value: 1
+    saturation: 0.883
+    value: 0.726
     alpha: 1
   pfpBorderNotReadyColor:
     saturation: 0.651
@@ -1260,5 +1260,5 @@ MonoBehaviour:
     alpha: 1
   lightColor:
     saturation: 1
-    value: 0.511
-    alpha: 1
+    value: 1
+    alpha: 0.414

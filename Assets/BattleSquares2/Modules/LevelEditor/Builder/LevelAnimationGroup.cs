@@ -1,4 +1,6 @@
 using System.Runtime.CompilerServices;
+using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 using static AnimationAnchor;
 
@@ -10,6 +12,13 @@ public class LevelAnimationGroup : MonoBehaviour
     public float animationTimer = 0;
     public float animationSpeed;
     public float animationOffset;
+
+    Transform cachedTransform;
+
+    private void Awake()
+    {
+        cachedTransform = transform;
+    }
 
     public void ConstructComplex(ComplexAnimationData data)
     {
@@ -23,6 +32,7 @@ public class LevelAnimationGroup : MonoBehaviour
         constructed = true;
     }
 
+    [MethodImpl(512)]
     private void Update()
     {
         if (!constructed) return;
@@ -30,30 +40,41 @@ public class LevelAnimationGroup : MonoBehaviour
         animationTimer += Time.deltaTime * animationSpeed;
         float eval = Mathf.Repeat(animationTimer + animationOffset, 1f);
         Vector2 evalPosition = animationPath.Evaluate(eval);
-        float keepZ = transform.position.z;
+        float keepZ = cachedTransform.position.z;
         Vector3 animatedPosition = evalPosition;
         animatedPosition.z = keepZ;
-        transform.position = animatedPosition;
+        cachedTransform.position = animatedPosition;
     }
 
 }
 
+[BurstCompile]
 [System.Serializable]
 public struct Spline2D
 {
+    [BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Low, OptimizeFor = OptimizeFor.Performance, DisableSafetyChecks = true)]
     [System.Serializable]
     private struct BezierSegment
     {
-        public Vector2 P0, P1, P2, P3;
+        public float2 P0, P1, P2, P3;
+        private float2 _unused;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public BezierSegment(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3)
+        public BezierSegment(float2 p0, float2 p1, float2 p2, float2 p3)
         {
             P0 = p0; P1 = p1; P2 = p2; P3 = p3;
+            _unused = float2.zero;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Vector2 Evaluate(float t)
+        public float2 Evaluate(float t)
+        {
+            EvaluateBursted(ref _unused, t, P0, P1, P2, P3);
+            return _unused;
+        }
+
+        [BurstCompile]
+        private static void EvaluateBursted(ref float2 cache, in float t, in float2 P0, in float2 P1, in float2 P2, in float2 P3)
         {
             float u = 1f - t;
             float tt = t * t;
@@ -61,7 +82,7 @@ public struct Spline2D
             float uuu = uu * u;
             float ttt = tt * t;
 
-            return (uuu * P0) +
+            cache = (uuu * P0) +
                    (3f * uu * t * P1) +
                    (3f * u * tt * P2) +
                    (ttt * P3);

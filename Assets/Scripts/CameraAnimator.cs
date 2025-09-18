@@ -1,6 +1,7 @@
 using FMOD.Studio;
 using FMODUnity;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -88,6 +89,7 @@ public sealed class CameraAnimator : MonoBehaviour
     private float cameraLerp;
     private Vector3 toPos;
 
+    [MethodImpl(512)]
     private void Update()
     {
 

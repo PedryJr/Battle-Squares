@@ -278,6 +278,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         if (jobHandle.IsCompleted) return;
         jobHandle.Complete();
     }
+
     public void AddForceFieldBlocker(ForceFieldBlockerData forceFieldBlockerData) => nativeForceFieldBlockers.Add(forceFieldBlockerData);
     public void AddProximitySensor(ref GridSpaceForceField newData) => nativeProximitySensors.Add(newData);
     public void AssertMainCamera(Camera newMainCamera) => mainCamera = newMainCamera;
@@ -303,7 +304,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
             gameState = gameState,
         };
 
-        positionCompute = proximitySensorCalculation.Schedule(iterations, 32);
+        positionCompute = proximitySensorCalculation.Schedule(iterations, 64);
 
         nativeProximitySensors.Clear();
         nativeForceFieldBlockers.Clear();

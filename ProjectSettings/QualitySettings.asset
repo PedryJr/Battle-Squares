@@ -22,7 +22,7 @@ QualitySettings:
     globalTextureMipmapLimit: 0
     textureMipmapLimitSettings: []
     anisotropicTextures: 0
-    antiAliasing: 2
+    antiAliasing: 0
     softParticles: 1
     softVegetation: 1
     realtimeReflectionProbes: 0
@@ -67,6 +67,7 @@ QualitySettings:
     Nintendo Switch: 0
     PS4: 0
     PS5: 0
+    Server: 0
     Stadia: 0
     Standalone: 0
     WebGL: 0
