@@ -5,6 +5,25 @@ using UnityEngine;
 public sealed class PlayerColoringBehaviour : MonoBehaviour
 {
 
+    [SerializeField] Material playerMaterial;
+    [SerializeField] Material projectileMaterial;
+    [SerializeField] Material particleMaterial;
+
+    private void Awake()
+    {
+        playerMaterial = Instantiate(playerMaterial);
+        projectileMaterial = Instantiate(projectileMaterial);
+        particleMaterial = Instantiate(particleMaterial);
+
+        playerMaterial.enableInstancing = true;
+        projectileMaterial.enableInstancing = true;
+        particleMaterial.enableInstancing = true;
+    }
+
+    public void AssignMaterialToProjectile(SpriteRenderer projectileRenderer) => projectileRenderer.sharedMaterial = projectileMaterial;
+    public void AssignMaterialToPlayer(SpriteRenderer playerRenderer) => playerRenderer.sharedMaterial = playerMaterial;
+    public void AssignMaterialToParticleRenderer(ParticleSystemRenderer particleRenderer) => particleRenderer.sharedMaterial = particleMaterial;
+
     private float hue = 0f;
     public void SetColorHue(float hue)
     {

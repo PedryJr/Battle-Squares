@@ -20,6 +20,7 @@ public sealed class ProjectileTrailBehaviour : MonoBehaviour
 
     [SerializeField]
     ParticleSystem attatchedParticles;
+    ProjectileBehaviour attatchedProjectile;
 
     TrailModule trails;
 
@@ -37,8 +38,11 @@ public sealed class ProjectileTrailBehaviour : MonoBehaviour
     private void Start()
     {
         trails = attatchedParticles.trails;
-        if(trails.enabled) trails.colorOverTrail = GetComponentInParent<ProjectileBehaviour>().owningPlayer.PlayerColor.ParticleColor;
-        if(allowDisableEnableFromRemote) GetComponentInParent<ProjectileBehaviour>().loopreferencedTail = this;
+        attatchedProjectile = GetComponentInParent<ProjectileBehaviour>();
+
+        if (trails.enabled) trails.colorOverTrail = attatchedProjectile.owningPlayer.PlayerColor.ParticleColor;
+        if (allowDisableEnableFromRemote) attatchedProjectile.loopreferencedTail = this;
+
         transform.SetParent(null, true);
         transform.position = target.position;
         attatchedParticles.Play();
@@ -69,6 +73,7 @@ public sealed class ProjectileTrailBehaviour : MonoBehaviour
 
     void NormalUpdate()
     {
+        if (trails.enabled) trails.colorOverTrail = attatchedProjectile.owningPlayer.PlayerColor.ParticleColor;
         bool targetActive = false;
         if (enableCheckOnParent) targetActive = target.parent.gameObject.activeSelf;
         else targetActive = target.gameObject.activeSelf;

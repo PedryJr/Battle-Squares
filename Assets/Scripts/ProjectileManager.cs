@@ -127,8 +127,6 @@ public sealed class ProjectileManager : NetworkBehaviour
         owningPlayer = playerSynchronizer.GetPlayerById(sourceId);
 
         projectileBehaviour = weapons[weaponIndex].pool.GetFromPool(position, Quaternion.identity, null, projectileID);
-        projectileBehaviour.projectileType = type;
-        //projectileBehaviour = Instantiate(weapons[weaponIndex].projectile, position, Quaternion.identity, null).GetComponent<ProjectileBehaviour>();
         projectileBehaviour.flipFlop = flipFlop;
 
         ProjectileInitData data = WeaponToProjectileData(ref weapons[weaponIndex], projectileID, position, direction, burstData, fluctuation, owningPlayer);
@@ -148,9 +146,10 @@ public sealed class ProjectileManager : NetworkBehaviour
     ProjectileInitData WeaponToProjectileData(ref Weapon weapon, uint projectileID, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, PlayerBehaviour owningPlayer)
     {
 
-        return new() 
+        return new()
         {
-
+            original = weapon.pool.GetOriginal,
+            projectileType = weapon.type,
             projectileManager = this,
             owningPlayer = owningPlayer,
             IsLocalProjectile = owningPlayer.isLocalPlayer,
@@ -659,6 +658,7 @@ public sealed class ProjectileManager : NetworkBehaviour
 public sealed class MyObjectPool<T> where T : Component, IRevert<T>
 {
     private T prefab;
+    public T GetOriginal => prefab;
     private Dictionary<uint, T> activeObjects;
     private List<T> inactiveObjects;
 
