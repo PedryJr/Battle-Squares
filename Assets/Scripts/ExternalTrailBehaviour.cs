@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
 
 public sealed class ExternalTrailBehaviour : MonoBehaviour
 {
@@ -12,31 +10,13 @@ public sealed class ExternalTrailBehaviour : MonoBehaviour
     ParticleSystemRenderer[] renderers;
     bool activated;
 
-    static Dictionary<ulong, Material> externTrailMats = new Dictionary<ulong, Material>();
-
-    private void Awake()
-    {
-    }
-
-    public void Play(Color color, ulong id)
+    public void Play(Color color, ulong id, PlayerBehaviour owningPlayer)
     {
 
         for (int i = 0; i < renderers.Length; i++)
         {
 
-            Material mat;
-
-            if(externTrailMats.ContainsKey(id)) mat = externTrailMats[id];
-            else
-            {
-                mat = Instantiate(renderers[0].material);
-                externTrailMats.Add(id, mat);
-            }
-
-            mat.color = color;
-            for (int j = 0; j < renderers[i].materials.Length; j++) Destroy(renderers[i].materials[j]);
-
-            renderers[i].material = mat;
+            owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(renderers[i], particles[i]);
             particles[i].Play();
 
         }

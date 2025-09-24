@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.Burst;
 using UnityEngine;
@@ -8,6 +9,22 @@ using UnityEngine.UI;
 
 public sealed class ButtonHoverAnimation : MonoBehaviour
 {
+
+    private int funcTracker = -1;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void CallFromUpdateManager(in ButtonHoverAnimation obj) => obj.MyUpdate();
+
+
+
+
+
+
+
+
+
+
+
     [SerializeField]
     private RectTransform rectTransform;
 
@@ -144,8 +161,11 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         onClickedSize -= animationType == AnimationType.Expand ? offsetSizeClickedExpand : offsetSizeClickedStretch;
     }
 
-    private void OnEnable()
+    private unsafe void OnEnable()
     {
+
+        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<ButtonHoverAnimation>.Instance.Register(&CallFromUpdateManager, this, trackerPtr);
+
         SetupEventTriggers();
 
         rectTransform.sizeDelta = offHoveredSize;
@@ -156,12 +176,13 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         }
 
         ExitHover();
+        MyUpdate();
     }
 
-    private void Update()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void MyUpdate()
     {
         Animate();
-
         ApplyAnimation();
     }
 
@@ -244,6 +265,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         toSize = onClickedSize;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Animate()
     {
         animationTimer =
@@ -275,6 +297,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         eventTrigger.triggers.Add(pointerClickEntry);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RemoveTriggers()
     {
         EventTrigger eventTrigger = gameObject.GetComponent<EventTrigger>();
@@ -298,8 +321,11 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         clickEvent.RemoveAllListeners();
     }
 
-    private void OnDisable()
+    private unsafe void OnDisable()
     {
+
+        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<ButtonHoverAnimation>.Instance.Unregister(trackerPtr);
+
         clickEvent.RemoveAllListeners();
 
         EventTrigger eventTrigger = GetComponent<EventTrigger>();
@@ -336,6 +362,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         rectTransform.sizeDelta = currentSize;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RunClickEvent()
     {
         fromSize = rectTransform.sizeDelta;

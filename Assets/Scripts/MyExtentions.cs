@@ -1,13 +1,16 @@
 using System;
-using UnityEngine;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using Unity.Mathematics;
-using System.Text;
+using UnityEngine;
 public static class MyExtentions
 {
 
     public static int scoreCapture;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] EncodePosition(float x, float y)
     {
 
@@ -34,6 +37,7 @@ public static class MyExtentions
 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static (float, float) DecodePosition(byte[] bytes)
     {
 
@@ -59,6 +63,7 @@ public static class MyExtentions
 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] EncodeRotation(float rotation)
     {
 
@@ -75,6 +80,7 @@ public static class MyExtentions
 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float DecodeRotation(byte[] bytes)
     {
 
@@ -92,6 +98,7 @@ public static class MyExtentions
 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] EncodeFloat(float value)
     {
 
@@ -111,168 +118,71 @@ public static class MyExtentions
 
     }
 
-    public static float DecodeFloat(byte[] bytes)
-    {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float DecodeFloat(byte[] bytes) => -1000.0f + ((((bytes[0] << 16) | (bytes[1] << 8) | bytes[2]) / 16777215.0f) * (int)(1000.0f - -1000.0f));
 
-        if (bytes.Length != 3)
-            throw new ArgumentException("Input must be exactly 3 bytes.");
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static byte[] EncodeNozzlePosition(float x, float y) => new byte[] { (byte)((math.clamp(x, -1, 1) + 1.0f) * 127.5f), (byte)((math.clamp(y, -1, 1) + 1.0f) * 127.5f) };
 
-        int scaledValue = (bytes[0] << 16) | (bytes[1] << 8) | bytes[2];
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static (float, float) DecodeNozzlePosition(byte[] bytes) => ((bytes[0] / 127.5f) - 1.0f, (bytes[1] / 127.5f) - 1.0f);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float EaseInOutCubic(float x) => x < 0.5 ? 4 * x * x * x : 1 - (float) math.pow(-2 * x + 2, 3) / 2;
 
-        float minValue = -1000.0f;
-        float maxValue = 1000.0f;
-        int range = (int)(maxValue - minValue);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float EaseInExpo(float x) => x == 0 ? 0 : (float)math.pow(2, 10 * x - 10);
 
-        float value = minValue + ((scaledValue / 16777215.0f) * range);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float EaseInQuad(float x) => x * x;
 
-        return value;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float EaseOutQuad(float x) => 1 - (1 - x) * (1 - x);
 
-    }
-
-    public static byte[] EncodeNozzlePosition(float x, float y)
-    {
-
-        x = math.clamp(x, -1, 1);
-        y = math.clamp(y, -1, 1);
-
-        byte scaledX = (byte)((x + 1.0f) * 127.5f);
-        byte scaledY = (byte)((y + 1.0f) * 127.5f);
-
-        return new byte[] { scaledX, scaledY };
-
-    }
-
-    public static (float, float) DecodeNozzlePosition(byte[] bytes)
-    {
-
-        byte scaledX = bytes[0];
-        byte scaledY = bytes[1];
-
-        float x = (scaledX / 127.5f) - 1.0f;
-        float y = (scaledY / 127.5f) - 1.0f;
-
-        return (x, y);
-
-    }
-
-    public static float EaseInOutCubic(float x)
-    {
-
-        if (x < 0.5)
-        {
-
-            return 4 * x * x * x;
-
-        }
-        else
-        {
-
-            return 1 - (float) math.pow(-2 * x + 2, 3) / 2;
-
-        }
-
-    }
-
-    public static float EaseInExpo(float x)
-    {
-
-        return x == 0 ? 0 : (float) math.pow(2, 10 * x - 10);
-
-    }
-
-    public static float EaseInQuad(float x)
-    {
-
-        return x * x;
-
-    }
-
-    public static float EaseOutQuad(float x)
-    {
-
-        return 1 - (1 - x) * (1 - x);
-
-    }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 AngleToNormalizedCoordinate(float angle)
     {
-
         float radians = math.radians(angle);
-
-        float x = math.cos(radians);
-        float y = math.sin(radians);
-
-        return new Vector2(x, y).normalized;
-
-    }
-    public static string SanitizeMessage(string message)
-    {
-
-        message = message.Length > 120 ? message.Substring(0, 120) : message;
-        message = Regex.Replace(message,
-            @"[^\p{L}\p{N}\p{Sc}\p{Sm}\p{Mn}\p{Pc}\p{Pd}\p{Zs}.,<>{}|_+=!?;:'""\-\(\)]",
-            string.Empty);
-
-        return message;
-
+        return new Vector2(math.cos(radians), math.sin(radians)).normalized;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string SanitizeMessage(string message) => Regex.Replace(message.Length > 120 ? message.Substring(0, 120) : message,
+            @"[^\p{L}\p{N}\p{Sc}\p{Sm}\p{Mn}\p{Pc}\p{Pd}\p{Zs}.,<>{}|_+=!?;:'""\-\(\)]", string.Empty);
 
-    public static float EaseOnHover(float x)
-    {
 
-        return 1 - math.pow(1 - x, 5);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float EaseOnHover(float x) => 1 - math.pow(1 - x, 5);
 
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float EaseOffHover(float x) => ((1.70158f + 1) * x * x * x - 1.70158f * x * x) + (math.exp(-4.1f * x) * math.sin(-3.8f * x));
 
-    public static float EaseOffHover(float x)
-    {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float EaseOnClick(float x) => 1 - math.pow(1 - x, 5);
 
-        float f1, f2, sum;
-        float a, b;
-        a = 4.1f;
-        b = -3.8f;
-
-        f1 = (1.70158f + 1) * x * x * x - 1.70158f * x * x;
-        f2 = math.exp(-a * x) * math.sin(b * x);
-
-        sum = f1 + f2;
-
-        return sum;
-
-    }
-
-    public static float EaseOnClick(float x)
-    {
-
-        return 1 - math.pow(1 - x, 5);
-
-    }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] BoolArrayToByteArray(bool[] boolArray)
     {
+
+        int boolCount = boolArray.Length;
         int byteCount = (boolArray.Length + 7) / 8;
         byte[] byteArray = new byte[byteCount];
 
-        for (int i = 0; i < boolArray.Length; i++)
-        {
-            if (boolArray[i])
-            {
-                byteArray[i / 8] |= (byte)(1 << (i % 8));
-            }
-        }
+        ref byte byteSpace = ref MemoryMarshal.GetReference(byteArray.AsSpan());
+        ref bool searchSpace = ref MemoryMarshal.GetReference(boolArray.AsSpan());
 
+        for (int i = 0; i < boolCount; i++) if (Unsafe.Add(ref searchSpace, i)) Unsafe.Add(ref byteSpace, i / 8) |= (byte)(1 << (i % 8));
         return byteArray;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool[] ByteArrayToBoolArray(byte[] byteArray, int boolArrayLength)
     {
         bool[] boolArray = new bool[boolArrayLength];
 
-        for (int i = 0; i < boolArrayLength; i++)
-        {
-            boolArray[i] = (byteArray[i / 8] & (1 << (i % 8))) != 0;
-        }
+        ref byte byteSpace = ref MemoryMarshal.GetReference(byteArray.AsSpan());
+        ref bool searchSpace = ref MemoryMarshal.GetReference(boolArray.AsSpan());
+
+        for (int i = 0; i < boolArrayLength; i++) Unsafe.Add(ref searchSpace, i) = (Unsafe.Add(ref byteSpace, i / 8) & (1 << (i % 8))) != 0;
 
         return boolArray;
     }
@@ -281,32 +191,26 @@ public static class MyExtentions
     {
         if (boolArray.Length != 116)
         {
-            throw new ArgumentException("Boolean array must have exactly 116 elements.");
+            boolArray = new bool[116];
+            ref bool defaultSS = ref MemoryMarshal.GetReference(boolArray.AsSpan());
+            for (int i = 0; i < boolArray.Length; i++) Unsafe.Add(ref defaultSS, i) = true;
         }
 
         byte[] byteArray = new byte[16];
 
-        for (int i = 0; i < boolArray.Length; i++)
-        {
-            if (boolArray[i])
-            {
-                byteArray[i / 8] |= (byte)(1 << (i % 8));
-            }
-        }
+        ref byte byteSpace = ref MemoryMarshal.GetReference(byteArray.AsSpan());
+        ref bool searchSpace = ref MemoryMarshal.GetReference(boolArray.AsSpan());
+
+        for (int i = 0; i < boolArray.Length; i++) if (Unsafe.Add(ref searchSpace, i)) Unsafe.Add(ref byteSpace, i / 8) |= (byte)(1 << (i % 8));
 
         StringBuilder hexString = new StringBuilder(byteArray.Length * 2);
-        foreach (byte b in byteArray)
-        {
-            hexString.Append(b.ToString("X2"));
-        }
+
+        for (int i = 0; i < byteArray.Length; i++) hexString.Append(Unsafe.Add(ref byteSpace, i).ToString("X2"));
 
         StringBuilder formattedString = new StringBuilder();
         for (int i = 0; i < hexString.Length; i += 8)
         {
-            if (i > 0)
-            {
-                formattedString.Append('-');
-            }
+            if (i > 0) formattedString.Append('-');
             formattedString.Append(hexString.ToString().Substring(i, 8));
         }
 

@@ -297,7 +297,7 @@ MonoBehaviour:
   clickEvent:
     m_PersistentCalls:
       m_Calls: []
-  offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColor: {r: 0.21960784, g: 0.22352941, b: 0.23137255, a: 1}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}

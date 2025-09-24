@@ -1,9 +1,11 @@
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public sealed class PlayerColoringBehaviour : MonoBehaviour
 {
+    private float hue = 0f;
 
     [SerializeField] Material playerMaterial;
     [SerializeField] Material projectileMaterial;
@@ -20,12 +22,24 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         particleMaterial.enableInstancing = true;
     }
 
-    public void AssignMaterialToProjectile(SpriteRenderer projectileRenderer) => projectileRenderer.sharedMaterial = projectileMaterial;
-    public void AssignMaterialToPlayer(SpriteRenderer playerRenderer) => playerRenderer.sharedMaterial = playerMaterial;
-    public void AssignMaterialToParticleRenderer(ParticleSystemRenderer particleRenderer) => particleRenderer.sharedMaterial = particleMaterial;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void AssignMaterialToProjectile(in SpriteRenderer projectileRenderer) => projectileRenderer.sharedMaterial = projectileMaterial;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void AssignMaterialToPlayer(in SpriteRenderer playerRenderer) => playerRenderer.sharedMaterial = playerMaterial;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void AssignMaterialToParticleRenderer(in ParticleSystemRenderer particleRenderer, in ParticleSystem particleSystem)
+    {
+        particleMaterial.color = ParticleColor;
+        particleRenderer.sharedMaterial = particleMaterial;
+        particleRenderer.trailMaterial = particleMaterial;
+        particleRenderer.applyActiveColorSpace = true;
 
-    private float hue = 0f;
-    public void SetColorHue(float hue)
+        MainModule mainModuleForParticles = particleSystem.main;
+        mainModuleForParticles.startColor = Color.white;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetColorHue(in float hue)
     {
         this.hue = hue;
         RefreshColorComponents();
@@ -84,6 +98,7 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
     [SerializeField] ColorComponent lightColor;
     public Color LightColor => lightColor.ActiveColor;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RefreshColorComponents()
     {
         primaryColor.SetHue(hue);
@@ -115,7 +130,7 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         [HideInInspector] private Color activeColor;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetHue(float hue)
+        public void SetHue(in float hue)
         {
             activeColor = Color.HSVToRGB(hue, saturation, value, true);
             activeColor.a = alpha;

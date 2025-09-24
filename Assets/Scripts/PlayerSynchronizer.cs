@@ -441,11 +441,11 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         playerFactoryData.selectedMap = currentGameState.selectedMap;
         playerFactoryData.steamId = SteamClient.SteamId.Value;
         playerFactoryData.networkId = NetworkManager.LocalClientId;
-        playerFactoryData.skinFrames = FetchFramePixels();
+/*        playerFactoryData.skinFrames = FetchFramePixels();
         playerFactoryData.skinFrameCount = FetchFrameCount();
-        playerFactoryData.skinAnimationSpeed = FetchFrameAnimation();
+        playerFactoryData.skinAnimationSpeed = FetchFrameAnimation();*/
 
-        if(IsHost) PlayerFactoryClientRpc(playerFactoryData);
+        if (IsHost) PlayerFactoryClientRpc(playerFactoryData);
         else PlayerFactoryServerRpc(playerFactoryData);
     }
 
@@ -458,10 +458,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     {
         Debug.Log("Player Factory RPC\n" +
             $"Source ID: {playerData.networkId}\n" +
-            $"Source SteamID: {playerData.steamId}\n" +
+            $"Source SteamID: {playerData.steamId}\n"/* +
             $"Skin data: {playerData.skinFrames.Length}\n" +
             $"Skin frames: {playerData.skinFrameCount}\n" +
-            $"Skin speed: {playerData.skinAnimationSpeed}");
+            $"Skin speed: {playerData.skinAnimationSpeed}"*/);
 
         if (IsNewPlayer(playerData.networkId)) InstantiateNewPlayer(ref playerData);
 
@@ -485,7 +485,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         SetPlayerInitialData(ref newPlayer, ref playerData);
 
-        SetPlayerSkinData(ref newPlayer, ref playerData);
+        //SetPlayerSkinData(ref newPlayer, ref playerData);
 
         SetPlayerLocality(ref newPlayer, ref playerData);
 
@@ -496,8 +496,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     private void SpawnPlayer(ref PlayerBehaviour newPlayer)
     {
+        Debug.Log("Spawning a player on local client!");
         newPlayer.SpawnEffect();
-        if (newPlayer.GetID() == NetworkManager.LocalClientId && !IsHost) mapStreamSynchronizer.OnJoinMapRequestServerRpc();
+        if(IsHost) UpdateSelectedMap(localSquare.selectedMap, localSquare.selectedLegacyMap);
+        RequestPlayerSkinServerRpc(NetworkManager.LocalClientId, newPlayer.id);
     }
 
     private void SetPlayerLocality(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
@@ -506,7 +508,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         localSquare = newPlayer;
         FindAnyObjectByType<PlayerController>().SetTargetController(localSquare);
-
     }
 
     private void SetPlayerSyncData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
@@ -526,24 +527,73 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         newPlayer.selectedMap = playerData.selectedMap;
     }
 
-    public void SetPlayerSkinData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestPlayerSkinServerRpc(ulong requesterID, ulong skinOwnerID) => RequestPlayerSkinClientRpc(requesterID, skinOwnerID);
+
+    [ClientRpc]
+    public void RequestPlayerSkinClientRpc(ulong requesterID, ulong skinOwnerID)
+    {
+        if (localSquare.id != skinOwnerID) return;
+        SkinDataPacket skinDataPacket = new SkinDataPacket
+        {
+            skinFrames = FetchFramePixels(),
+            skinFrameCount = FetchFrameCount(),
+            skinAnimationSpeed = FetchFrameAnimation(),
+        };
+
+        Debug.Log(skinDataPacket.skinFrames);
+        Debug.Log(skinDataPacket.skinFrameCount);
+        Debug.Log(skinDataPacket.skinAnimationSpeed);
+
+        SendPlayerSkinData(requesterID, skinOwnerID, ref skinDataPacket);
+    }
+
+    public void SendPlayerSkinData(ulong requesterID, ulong skinOwnerID, ref SkinDataPacket skinDataPacket)
+    {
+        if (IsHost)
+        {
+            ClientRpcParams clientRpcParams = default;
+            clientRpcParams.Send.TargetClientIds = new ulong[] { requesterID };
+            SendPlayerSkinDataClientRpc(requesterID, skinOwnerID, skinDataPacket, clientRpcParams);
+        }
+        else SendPlayerSkinDataServerRpc(requesterID, skinOwnerID, skinDataPacket);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SendPlayerSkinDataServerRpc(ulong requesterID, ulong skinOwnerID, SkinDataPacket skinDataPacket)
+    {
+        ClientRpcParams clientRpcParams = default;
+        clientRpcParams.Send.TargetClientIds = new ulong[] { requesterID };
+        SendPlayerSkinDataClientRpc(requesterID, skinOwnerID, skinDataPacket, clientRpcParams);
+    }
+
+    [ClientRpc]
+    public void SendPlayerSkinDataClientRpc(ulong requesterID, ulong skinOwnerID, SkinDataPacket skinDataPacket, ClientRpcParams clientRpcParams = default)
+    {
+        if (localSquare.id != requesterID) return;
+        PlayerBehaviour player = GetPlayerById(skinOwnerID);
+        SetPlayerSkinData(ref player, ref skinDataPacket);
+    }
+
+
+    public void SetPlayerSkinData(ref PlayerBehaviour newPlayer, ref SkinDataPacket skinData)
     {
 
-        newPlayer.nozzleFrames = new Sprite[playerData.skinFrameCount];
-        newPlayer.bodyFrames = new Sprite[playerData.skinFrameCount];
-        newPlayer.frameRate = playerData.skinAnimationSpeed;
+        newPlayer.nozzleFrames = new Sprite[skinData.skinFrameCount];
+        newPlayer.bodyFrames = new Sprite[skinData.skinFrameCount];
+        newPlayer.frameRate = skinData.skinAnimationSpeed;
 
         byte[] frameBuffer = new byte[15];
         bool[] skinBuffer;
         int frameBufferIndex = 0;
 
-        for (int frameIndex = 0; frameIndex < playerData.skinFrameCount; frameIndex++)
+        for (int frameIndex = 0; frameIndex < skinData.skinFrameCount; frameIndex++)
         {
 
             for (int i = 0; i < 15; i++, frameBufferIndex++)
             {
 
-                frameBuffer[i] = playerData.skinFrames[frameBufferIndex];
+                frameBuffer[i] = skinData.skinFrames[frameBufferIndex];
 
             }
 
@@ -569,6 +619,19 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
+    public struct SkinDataPacket : INetworkSerializable
+    {
+        public int skinFrameCount;
+        public float skinAnimationSpeed;
+        public byte[] skinFrames;
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref skinFrameCount);
+            serializer.SerializeValue(ref skinAnimationSpeed);
+            serializer.SerializeValue(ref skinFrames);
+        }
+    }
+
     public struct PlayerFactoryDataPacket : INetworkSerializable
     {
 
@@ -577,9 +640,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
         public int selectedMap;
 
-        public int skinFrameCount;
+/*        public int skinFrameCount;
         public float skinAnimationSpeed;
-        public byte[] skinFrames;
+        public byte[] skinFrames;*/
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -588,9 +651,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
             serializer.SerializeValue(ref selectedMap);
 
-            serializer.SerializeValue(ref skinFrameCount);
+/*            serializer.SerializeValue(ref skinFrameCount);
             serializer.SerializeValue(ref skinAnimationSpeed);
-            serializer.SerializeValue(ref skinFrames);
+            serializer.SerializeValue(ref skinFrames);*/
         }
     }
 

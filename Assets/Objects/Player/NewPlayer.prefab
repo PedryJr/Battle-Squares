@@ -138,10 +138,10 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 1
   m_FalloffIntensity: 1
-  m_Color: {r: 0.81213206, g: 0.32685003, b: 0.32685003, a: 1}
-  m_Intensity: 0.2
+  m_Color: {r: 1, g: 0, b: 0.72098255, a: 0.414}
+  m_Intensity: 0.1
   m_LightVolumeIntensity: 1
-  m_LightVolumeEnabled: 1
+  m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
@@ -162,8 +162,8 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 12
+  m_PointLightInnerRadius: 0.5
+  m_PointLightOuterRadius: 25.25
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -215,21 +215,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
-    color: {r: 0.865, g: 0.317455, b: 0.317455, a: 1}
-    radius: 50
+    color: {r: 0.816, g: 0.294576, b: 0.6705136, a: 1}
+    radius: 30
     saturationBoost: 20
   sensorData:
     colorValue:
-      x: 0.865
-      y: 0.317455
-      z: 0.317455
-    colorRadius: 20
+      x: 0.816
+      y: 0.294576
+      z: 0.6705136
+    colorRadius: 30
     origin:
-      x: -10.056405
-      y: -8.541437
-    rotation: 303.95023
+      x: -1.2294571
+      y: -5.97464
+    rotation: 270.01324
     warpSpeed: 2
-    chroma: 3.25
+    chroma: 0
     enableBlockerInfluence: 0
     blockerFalloff: 2
     enablePositionWarp: 1
@@ -1232,7 +1232,7 @@ MonoBehaviour:
   particleColor:
     saturation: 0.613
     value: 0.974
-    alpha: 1
+    alpha: 0
   chatBubbleColor:
     saturation: 0.59
     value: 0.605

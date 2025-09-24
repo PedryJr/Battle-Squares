@@ -1,12 +1,30 @@
 using Steamworks;
 using Steamworks.Data;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using TMPro;
 using UnityEngine;
 
 public sealed class LobbyBehaviour : MonoBehaviour
 {
+
+    private int funcTracker = -1;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void CallFromUpdateManager(in LobbyBehaviour obj) => obj.MyUpdate();
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private unsafe void OnEnable()
+    {
+        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<LobbyBehaviour>.Instance.Register(&CallFromUpdateManager, this, trackerPtr);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private unsafe void OnDisable()
+    {
+        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<LobbyBehaviour>.Instance.Unregister(trackerPtr);
+    }
 
     [SerializeField]
     public TextMeshProUGUI lobbyName;
@@ -143,7 +161,7 @@ public sealed class LobbyBehaviour : MonoBehaviour
 
     float avalibilityUpdateTime;
 
-    private void Update()
+    private void MyUpdate()
     {
 
         avalibilityUpdateTime += Time.deltaTime;
@@ -164,7 +182,7 @@ public sealed class LobbyBehaviour : MonoBehaviour
         if(ownerId.Value == SteamClient.SteamId.Value)
         {
 
-            borderImage.color = new UnityEngine.Color(0.4627451f, 0.4627451f, 0.4627451f, 1f);
+            //borderImage.color = new UnityEngine.Color(0.4627451f, 0.4627451f, 0.4627451f, 1f);
 
             if (firstLoad && !lobbyLoader.lobbyPreview.GetComponent<LobbyBehaviour>().activated)
             {
@@ -175,12 +193,12 @@ public sealed class LobbyBehaviour : MonoBehaviour
         }else if (lobby.GetData("Avalible").Equals("true"))
         {
 
-            borderImage.color = new UnityEngine.Color(0.213937f, 0.349f, 0.2229412f, 1f);
+            //borderImage.color = new UnityEngine.Color(0.213937f, 0.349f, 0.2229412f, 1f);
         }
         else
         {
 
-            borderImage.color = new UnityEngine.Color(0.3490196f, 0.2156863f, 0.2156863f, 1f);
+            //borderImage.color = new UnityEngine.Color(0.3490196f, 0.2156863f, 0.2156863f, 1f);
 
         }
 

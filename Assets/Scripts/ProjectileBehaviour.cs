@@ -2,25 +2,19 @@ using FMOD.Studio;
 using FMODUnity;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 using static PlayerSynchronizer;
-using static UnityEditor.PlayerSettings;
 using static UnityEngine.ParticleSystem;
-using static UnityEngine.Rendering.DebugUI.Table;
 using Color = UnityEngine.Color;
 
 
-public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehaviour>
+[BurstCompile]
+public sealed class ProjectileBehaviour : MonoBehaviour
 {
 
-    const Int32 AgressiveOptimization = 512; 
-    const Int32 AggressiveInlining = 256; 
     const Int32 ENVIRONTMENT_MASK = 0b00000000000000000000001000000000;
-
-    public ProjectileTrailBehaviour loopreferencedTail;
 
     public float initDamage;
 
@@ -40,7 +34,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
 
     public bool IsLocalProjectile;
 
-    [SerializeField]
     public Rigidbody2D rb;
 
     public PlayerBehaviour owningPlayer;
@@ -86,13 +79,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
     [SerializeField]
     public HitMarkBehaviour hitMark;
 
-    [SerializeField]
     ParticleSystemRenderer trailParticles;
-    [SerializeField]
     ParticleSystem trailParticleSystem;
     MainModule trailMainModule;
 
-    [SerializeField]
     SpriteRenderer spriteRenderer;
 
     CameraAnimator cameraAnimator;
@@ -119,7 +109,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
     List<PlayerBehaviour> playersHit;
     List<FlagBehaviour> flagsHit;
 
-    [SerializeField]
     Collider2D projectileCollider;
 
     [SerializeField]
@@ -152,40 +141,24 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
     float initRot;
 
     static Dictionary<ulong, Material> trailMaterials = new Dictionary<ulong, Material>();
-    float audioTimer;
-    Vector2 homingDirection = Vector2.zero;
-    float rotate;
-    float startRotate;
-    bool lastSticky;
-    float lingeringTimer;
-    List<PlayerBehaviour> playersCollidingWith;
-    bool flipRotation = true;
-    Vector3 pointStuckAt;
-    Vector2 stickySurfaceNormal;
-    float stickyNormalAngle;
-    bool hasStuckToPoint;
-    static Dictionary<ulong, Material> impactMaterials = new Dictionary<ulong, Material>();
 
-    public uint spawnId = 0;
-    public ProjectileManager.ProjectileType projectileType;
-
-    [MethodImpl(AgressiveOptimization)] void OnValidate()
+    [BurstCompile]
+    private void Awake()
     {
+
         projectileCollider = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         trailParticles = GetComponentInChildren<ParticleSystemRenderer>();
         trailParticleSystem = trailParticles.GetComponent<ParticleSystem>();
-    }
-    [MethodImpl(AgressiveOptimization)] void Awake()
-    {
-        if(trailParticleSystem) trailMainModule = trailParticleSystem.main;
+        if (trailParticleSystem) trailMainModule = trailParticleSystem.main;
         cameraAnimator = Camera.main.GetComponent<CameraAnimator>();
         playersHit = new List<PlayerBehaviour>();
         flagsHit = new List<FlagBehaviour>();
         playersCollidingWith = new List<PlayerBehaviour>();
     }
-    [MethodImpl(AgressiveOptimization)] void Start()
+    [BurstCompile]
+    private void Start()
     {
 
         float pitch = 1f + UnityEngine.Random.Range(-0.08f, 0.08f);
@@ -215,12 +188,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         if (cameraAnimator && IsLocalProjectile) cameraAnimator.Shake();
 
     }
-    
-    [MethodImpl(AgressiveOptimization)] public void InitializeBullet(ref ProjectileInitData data)
+
+    [BurstCompile]
+    public void InitializeBullet(ref ProjectileInitData data)
     {
-        spriteRenderer.enabled = data.original.enabled;
-        projectileType = data.projectileType;
-        spawnId = data.id;
+
         initDamage = data.baseDamage;
         aoeDamage = data.aoeDamage * Mods.at[7];
         damageScaleOverTime = data.damageTimeScale;
@@ -236,6 +208,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
 
         data.id++;
 
+        owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(trailParticles, trailParticleSystem);
+
         Vector2 initialOffset = new Vector2(data.fluctuation[0], data.fluctuation[1]);
         data.direction = (data.direction + initialOffset).normalized;
 
@@ -248,6 +222,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
 
         projectileManager = data.projectileManager;
         IsLocalProjectile = data.IsLocalProjectile;
+
+        chargePlayerEndScale = transform.localScale;
 
         rb.linearVelocity = velocity;
         rb.angularVelocity = data.spinSpeed;
@@ -267,13 +243,23 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         transform.rotation = rotationQ;
 
         if (data.noGravity) rb.gravityScale = 0f;
-        else rb.gravityScale *= Mods.at[5]; 
+        else rb.gravityScale *= Mods.at[5];
 
-        if (stickToSender) owningPlayer.nozzleBehaviour.transform.localScale = Vector3.zero;
+        if (stickToSender)
+        {
 
-        owningPlayer.PlayerColor.AssignMaterialToProjectile(spriteRenderer);
-        spriteRenderer.color = owningPlayer.PlayerColor.ProjectileColor;
-        generalParticleColor = owningPlayer.PlayerColor.ParticleColor;
+            spriteRenderer.color = owningPlayer.PlayerColor.ProjectileColor;
+            generalParticleColor = owningPlayer.PlayerColor.ParticleColor;
+            owningPlayer.nozzleBehaviour.transform.localScale = Vector3.zero;
+
+        }
+        else
+        {
+
+            spriteRenderer.color = owningPlayer.PlayerColor.ProjectileColor;
+            generalParticleColor = owningPlayer.PlayerColor.ParticleColor;
+
+        }
 
         if (trailParticles)
         {
@@ -328,9 +314,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
             data.id++;
             int burst = math.abs(data.burst);
 
-            Vector2 offset = new Vector2(data.burstData[burst * 2 -1] * -data.burst, data.burstData[(burst * 2) -2] * data.burst);
-            if(rb.linearVelocity.x < 0) offset.x *= -1;
-            if(rb.linearVelocity.y < 0) offset.y *= -1;
+            Vector2 offset = new Vector2(data.burstData[burst * 2 - 1] * -data.burst, data.burstData[(burst * 2) - 2] * data.burst);
+            if (rb.linearVelocity.x < 0) offset.x *= -1;
+            if (rb.linearVelocity.y < 0) offset.y *= -1;
             if (math.abs(rb.linearVelocity.x) < 0.001f || math.abs(rb.linearVelocity.x) < 0.001f) offset *= 2;
             burst--;
 
@@ -339,18 +325,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
             data.position += new Vector2(UnityEngine.Random.Range(-0, 0), UnityEngine.Random.Range(-0, 0));
             data.burst = (data.burst > 0 ? burst : -burst) * -1;
 
-            int weaponIndex = 0;
-            for (int i = 0; i < projectileManager.weapons.Length; i++)
-            {
-                if (projectileManager.weapons[i].type == projectileType)
-                {
-                    weaponIndex = i;
-                    break;
-                }
-            }
-
-            ProjectileBehaviour newBurst = projectileManager.weapons[weaponIndex].pool.GetFromPool(transform.position, transform.rotation, transform.parent, data.id);
-            newBurst.InitializeBullet(ref data);
+            GameObject newBurst = Instantiate(gameObject, transform.parent);
+            newBurst.GetComponent<ProjectileBehaviour>().InitializeBullet(ref data);
 
         }
 
@@ -362,31 +338,20 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         this.data.knockback *= Mods.at[12];
 
     }
-
-    [MethodImpl(AggressiveInlining)] void Update()
+    [BurstCompile]
+    private void Update()
     {
 
         if (IsLocalProjectile) LocalUpdate();
+
         GlobalUpdate();
 
     }
-    [MethodImpl(AggressiveInlining)] void LateUpdate()
-    {
 
-        if (stickToSender)
-        {
-            owningPlayer.transform.localScale = Vector3.Lerp(Vector3.one, data.targetMorph/5, math.clamp((timeAlive / data.timeToMorph) * 2, 0, 1));
-            transform.position = owningPlayer.transform.position;
-            owningPlayer.rb.rotation = rb.rotation;
-        }
+    float audioTimer;
 
-    }
-    [MethodImpl(AggressiveInlining)] void FixedUpdate()
-    {
-        PhysicsUpdate();
-    }
-
-    [MethodImpl(AgressiveOptimization)] void GlobalUpdate()
+    [BurstCompile]
+    void GlobalUpdate()
     {
 
         if (audioTimer < 1) audioTimer += Time.deltaTime * 20;
@@ -417,7 +382,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
             {
 
                 float deltaTime = 0;
-                if(multiplySpawnrateByLifetime) deltaTime = Time.deltaTime * math.lerp(1, 0, math.clamp(timeAlive/data.lifeTime, 0, 1)) * lifeTimeMultiplier;
+                if (multiplySpawnrateByLifetime) deltaTime = Time.deltaTime * math.lerp(1, 0, math.clamp(timeAlive / data.lifeTime, 0, 1)) * lifeTimeMultiplier;
                 else deltaTime = Time.deltaTime;
 
                 externalTrailSpawnTimer += deltaTime;
@@ -426,7 +391,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
                 {
 
                     ExternalTrailBehaviour externalTrail = Instantiate(externalTrailRef, transform.position, transform.rotation, null);
-                    if (externalTrail) externalTrail.Play(generalParticleColor, owningPlayer.id);
+                    if (externalTrail) externalTrail.Play(generalParticleColor, owningPlayer.id, owningPlayer);
 
                     externalTrailSpawnTimer -= externalTrailSpawnRate;
 
@@ -483,12 +448,155 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         else homingDirection = Vector2.zero;
 
     }
-    [MethodImpl(AgressiveOptimization)] void LocalUpdate()
+
+    Vector3 chargePlayerEndScale;
+    Vector2 homingDirection = Vector2.zero;
+    [BurstCompile]
+    private void LateUpdate()
+    {
+
+        if (stickToSender)
+        {
+            owningPlayer.transform.localScale = Vector3.Lerp(Vector3.one, data.targetMorph / 5, math.clamp((timeAlive / data.timeToMorph) * 2, 0, 1));
+            transform.position = owningPlayer.transform.position;
+            owningPlayer.rb.rotation = rb.rotation;
+        }
+
+    }
+
+    float rotate;
+    float startRotate;
+    bool lastSticky;
+
+    [BurstCompile]
+    private void FixedUpdate()
+    {
+
+        Vector2 vel, pos;
+        float ang, rot, oldRot;
+
+        damage += Time.deltaTime * (damageScaleOverTime * Mods.at[11]);
+        timeAlive += Time.deltaTime;
+        vel = rb.linearVelocity;
+        pos = rb.position;
+        ang = rb.angularVelocity;
+        rot = rb.rotation;
+        oldRot = rb.rotation;
+
+        if (lastSticky != hasStuckToPoint)
+        {
+            rb.gravityScale = 0;
+            lastSticky = hasStuckToPoint;
+        }
+
+        if (homingDirection != Vector2.zero)
+        {
+            rb.AddForce(homingDirection * data.homingStrength * Time.deltaTime * 50);
+        }
+
+        if (melee)
+        {
+            float meleePosLerp = data.meleePosAnimation.Evaluate(math.clamp(timeAlive / data.lifeTime, 0, 1));
+            Vector2 meleeDirection = Vector2.Lerp(meleeStartDirection, meleeEndDirection, meleePosLerp);
+            Vector2 meleeLocalPos = meleeDirection.normalized * data.meleeRange;
+            Vector2 meleeGlobalPos = meleeLocalPos + owningPlayer.rb.position;
+            pos = meleeGlobalPos;
+
+            float meleeRotLerp = data.meleeRotAnimation.Evaluate(math.clamp(timeAlive / data.lifeTime, 0, 1));
+            rot = initRot + math.lerp(meleeStartRot, meleeEndRot, meleeRotLerp);
+
+            if (trailParticleSystem)
+            {
+                MainModule main = trailParticleSystem.main;
+
+                Vector3 spriteSize = spriteRenderer.bounds.size;
+                main.startSizeX = spriteSize.x;
+                main.startSizeY = spriteSize.y;
+                main.startSizeZ = 1;
+
+                main.startRotation = math.radians(spriteRenderer.transform.eulerAngles.z);
+            }
+
+            vel = owningPlayer.rb.linearVelocity;
+
+            if (data.enableMorph)
+            {
+                morphLerp = data.morhpAnimation.Evaluate(math.clamp(timeAlive / data.timeToMorph, 0, 1));
+                transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
+            }
+
+            rb.linearVelocity = vel;
+            rb.position = pos;
+            rb.angularVelocity = ang;
+            rb.rotation = rot;
+            return;
+        }
+
+        if (data.spinSpeed > 0)
+        {
+            ang = ang / math.abs(ang) * data.spinSpeed;
+        }
+
+        if (stickToSender)
+        {
+            owningPlayer.rb.linearVelocity = vel;
+            rot = math.lerp(startRotate, rotate, timeAlive / data.lifeTime);
+            if (rot > 360f) rot -= 360f;
+            if (rot < 360f) rot += 360f;
+        }
+
+        if (data.enableMorph)
+        {
+            morphLerp = data.morhpAnimation.Evaluate(math.clamp(timeAlive / data.timeToMorph, 0, 1));
+            transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
+        }
+        vel += vel * (speedModifier * Time.deltaTime);
+
+        travelDistance += (pos - lastPos).magnitude;
+        lastPos = pos;
+
+        vel = Vector2.ClampMagnitude(vel, data.speedLimit);
+        if (vel.magnitude < data.minSpeed)
+        {
+            vel = vel.normalized * data.minSpeed;
+        }
+
+        (float posX, float posY) = (pos.x, pos.y);
+        pos = new Vector2(math.clamp(posX, -64, 64), math.clamp(posY, -64, 64));
+
+        if (rot > 360) rot -= 360;
+        if (rot < 0) rot += 360;
+
+        ang = math.clamp(ang, -1000, 1000);
+
+        if (data.alignDirection)
+        {
+            rot = math.degrees(math.atan2(vel.y, vel.x));
+            ang = (rot - rb.rotation) * Time.deltaTime;
+            if (projectileTrailBehaviour)
+            {
+                projectileTrailBehaviour.transform.rotation = transform.rotation;
+            }
+        }
+
+        rb.linearVelocity = vel;
+        rb.position = hasStuckToPoint ? rb.position : pos;
+        rb.angularVelocity = ang;
+        rb.rotation = hasStuckToPoint ? stickyNormalAngle : rot;
+        if (hasStuckToPoint) transform.localPosition = pointStuckAt;
+
+
+    }
+
+    float lingeringTimer;
+
+    [BurstCompile]
+    void LocalUpdate()
     {
 
         syncTimer += Time.deltaTime;
 
-        if(!destroyed && timeAlive > data.lifeTime) destroyed = true;
+        if (!destroyed && timeAlive > data.lifeTime) destroyed = true;
 
         if (destroyed)
         {
@@ -562,7 +670,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         else if (sync && syncTimer > data.syncSpeed)
         {
 
-            
+
 
             projectileManager.UpdateProjectile(this);
             syncTimer = 0;
@@ -572,139 +680,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         lingeringTimer += Time.deltaTime;
 
     }
-    [MethodImpl(AggressiveInlining)] void PhysicsUpdate()
-    {
 
-        damage += Time.deltaTime * (damageScaleOverTime * Mods.at[11]);
-        timeAlive += Time.deltaTime;
-
-        if (melee) MeleePhysics();
-        else KineticPhysics();
-    }
-    [MethodImpl(AgressiveOptimization)] void MeleePhysics()
-    {
-        Vector2 vel, pos;
-        float ang, rot;
-        vel = rb.linearVelocity;
-        pos = rb.position;
-        ang = rb.angularVelocity;
-        rot = rb.rotation;
-
-        float meleePosLerp = data.meleePosAnimation.Evaluate(math.clamp(timeAlive / data.lifeTime, 0, 1));
-        Vector2 meleeDirection = Vector2.Lerp(meleeStartDirection, meleeEndDirection, meleePosLerp);
-        Vector2 meleeLocalPos = meleeDirection.normalized * data.meleeRange;
-        Vector2 meleeGlobalPos = meleeLocalPos + owningPlayer.rb.position;
-        pos = meleeGlobalPos;
-
-        float meleeRotLerp = data.meleeRotAnimation.Evaluate(math.clamp(timeAlive / data.lifeTime, 0, 1));
-        rot = initRot + math.lerp(meleeStartRot, meleeEndRot, meleeRotLerp);
-
-        if (trailParticleSystem)
-        {
-            MainModule main = trailParticleSystem.main;
-
-            Vector3 spriteSize = spriteRenderer.bounds.size;
-            main.startSizeX = spriteSize.x;
-            main.startSizeY = spriteSize.y;
-            main.startSizeZ = 1;
-
-            main.startRotation = math.radians(spriteRenderer.transform.eulerAngles.z);
-        }
-
-        vel = owningPlayer.rb.linearVelocity;
-
-        if (data.enableMorph)
-        {
-            morphLerp = data.morhpAnimation.Evaluate(math.clamp(timeAlive / data.timeToMorph, 0, 1));
-            transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
-        }
-
-        rb.linearVelocity = vel;
-        rb.position = pos;
-        rb.angularVelocity = ang;
-        rb.rotation = rot;
-    }
-    [MethodImpl(AgressiveOptimization)] void KineticPhysics()
-    {
-        Vector2 vel, pos;
-        float ang, rot, oldRot;
-        vel = rb.linearVelocity;
-        pos = rb.position;
-        ang = rb.angularVelocity;
-        rot = rb.rotation;
-        oldRot = rot;
-
-        DisableGravityOnSticky();
-
-        AddHomingForce();
-
-        if (data.spinSpeed > 0)
-        {
-            ang = ang / math.abs(ang) * data.spinSpeed;
-        }
-
-        if (stickToSender)
-        {
-            owningPlayer.rb.linearVelocity = vel;
-            rot = math.lerp(startRotate, rotate, timeAlive / data.lifeTime);
-            if (rot > 360f) rot -= 360f;
-            if (rot < 360f) rot += 360f;
-        }
-
-        if (data.enableMorph)
-        {
-            morphLerp = data.morhpAnimation.Evaluate(math.clamp(timeAlive / data.timeToMorph, 0, 1));
-            transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
-        }
-        vel += vel * (speedModifier * Time.deltaTime);
-
-        travelDistance += (pos - lastPos).magnitude;
-        lastPos = pos;
-
-        vel = Vector2.ClampMagnitude(vel, data.speedLimit);
-        if (vel.magnitude < data.minSpeed)
-        {
-            vel = vel.normalized * data.minSpeed;
-        }
-
-        (float posX, float posY) = (pos.x, pos.y);
-        pos = new Vector2(math.clamp(posX, -64, 64), math.clamp(posY, -64, 64));
-
-        if (rot > 360) rot -= 360;
-        if (rot < 0) rot += 360;
-
-        ang = math.clamp(ang, -1000, 1000);
-
-        if (data.alignDirection)
-        {
-            rot = math.degrees(math.atan2(vel.y, vel.x));
-            ang = (rot - rb.rotation) * Time.deltaTime;
-            if (projectileTrailBehaviour)
-            {
-                projectileTrailBehaviour.transform.rotation = transform.rotation;
-            }
-        }
-
-        rb.linearVelocity = vel;
-        rb.position = hasStuckToPoint ? rb.position : pos;
-        rb.angularVelocity = ang;
-        rb.rotation = hasStuckToPoint ? stickyNormalAngle : rot;
-        if (hasStuckToPoint) transform.localPosition = pointStuckAt;
-    }
-    [MethodImpl(AgressiveOptimization)] void DisableGravityOnSticky()
-    {
-        if (lastSticky != hasStuckToPoint)
-        {
-            rb.gravityScale = 0;
-            lastSticky = hasStuckToPoint;
-        }
-    }
-    [MethodImpl(AgressiveOptimization)] void AddHomingForce()
-    {
-        if (homingDirection != Vector2.zero) rb.AddForce(homingDirection * data.homingStrength * Time.deltaTime * 50);
-    }
-
-    [MethodImpl(AggressiveInlining)] void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
 
         if (!IsLocalProjectile) return;
@@ -736,35 +713,34 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         }
 
     }
-    [MethodImpl(AggressiveInlining)] void OnTriggerEnter2D(Collider2D collider)
+
+    [BurstCompile]
+    private void OnTriggerEnter2D(Collider2D collider)
     {
 
         CollisionCheck(collider.gameObject);
 
     }
-    [MethodImpl(AggressiveInlining)] void OnCollisionEnter2D(Collision2D collision)
+    [BurstCompile]
+    private void OnCollisionEnter2D(Collision2D collision)
     {
 
         CollisionCheck(collision.gameObject);
 
     }
-    [MethodImpl(AggressiveInlining)] void OnCollisionExit2D(Collision2D collision)
+
+    private void OnCollisionExit2D(Collision2D collision)
     {
         CollisionCancell(collision.gameObject);
     }
-    [MethodImpl(AggressiveInlining)] void OnTriggerExit2D(Collider2D collision)
+
+    private void OnTriggerExit2D(Collider2D collision)
     {
         CollisionCancell(collision.gameObject);
     }
 
-    [MethodImpl(AgressiveOptimization)] void CollisionCancell(GameObject collidedWith)
-    {
-
-        PlayerBehaviour playerBehaviour = collidedWith.GetComponent<PlayerBehaviour>();
-        if (playerBehaviour) playersCollidingWith.Remove(playerBehaviour);
-
-    }
-    [MethodImpl(AgressiveOptimization)] void CollisionCheck(GameObject collidedWith)
+    [BurstCompile]
+    void CollisionCheck(GameObject collidedWith)
     {
 
         if (destroyed) return;
@@ -781,12 +757,24 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         if (projectileBehaviour) ProjectileCollisionCheck(projectileBehaviour);
 
     }
-    
-    [MethodImpl(AgressiveOptimization)] void PlayerCollisionCheck(PlayerBehaviour playerBehaviour)
+
+    List<PlayerBehaviour> playersCollidingWith;
+
+    [BurstCompile]
+    void CollisionCancell(GameObject collidedWith)
+    {
+
+        PlayerBehaviour playerBehaviour = collidedWith.GetComponent<PlayerBehaviour>();
+        if (playerBehaviour) playersCollidingWith.Remove(playerBehaviour);
+
+    }
+
+    [BurstCompile]
+    void PlayerCollisionCheck(PlayerBehaviour playerBehaviour)
     {
         if (playerBehaviour.isLocalPlayer) return;
         playerHit = playerBehaviour;
-        
+
         if (data.dieOnImpact)
         {
             destroyed = true;
@@ -809,7 +797,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
                     playerBehaviour.timeSinceHit = 0.25f;
                     projectileManager.HitRegProjectile(projectileID);
 
-                }else if (!data.oneTimeHit)
+                }
+                else if (!data.oneTimeHit)
                 {
 
                     if (data.melee || stickToSender) damage *= Mods.at[6];
@@ -841,18 +830,33 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         }
 
     }
-    [MethodImpl(AgressiveOptimization)] void FlagCollisionCheck(FlagBehaviour flag)
+    [BurstCompile]
+    void ProjectileCollisionCheck(ProjectileBehaviour projectileBehaviour)
+    {
+
+        if (projectileBehaviour.data.dontBlockProjectiles) return;
+
+        if (data.dieFromProjectiles)
+        {
+            destroyed = true;
+            spriteRenderer.enabled = false;
+            hit = true;
+        }
+
+    }
+    [BurstCompile]
+    void FlagCollisionCheck(FlagBehaviour flag)
     {
 
         bool skipHit = false;
 
         if (flag.activityState == FlagActivityState.Idle)
         {
-            if(flag.ownerId == ownerId) skipHit = true;
+            if (flag.ownerId == ownerId) skipHit = true;
         }
         else if (flag.activityState == FlagActivityState.FollowTarget)
         {
-            if(flag.playerBehaviour.id == ownerId) skipHit = true;
+            if (flag.playerBehaviour.id == ownerId) skipHit = true;
         }
 
         if (data.oneTimeHit)
@@ -880,7 +884,15 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         }
 
     }
-    [MethodImpl(AgressiveOptimization)] void EnvironmentCollisionCheck()
+
+    bool flipRotation = true;
+    Vector3 pointStuckAt;
+    Vector2 stickySurfaceNormal;
+    float stickyNormalAngle;
+    bool hasStuckToPoint;
+
+    [BurstCompile]
+    void EnvironmentCollisionCheck()
     {
 
         if (data.sticky)
@@ -920,87 +932,21 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         }
 
     }
-    [MethodImpl(AgressiveOptimization)] void ProjectileCollisionCheck(ProjectileBehaviour projectileBehaviour)
-    {
-
-        if (projectileBehaviour.data.dontBlockProjectiles) return;
-
-        if (data.dieFromProjectiles)
-        {
-            destroyed = true;
-            spriteRenderer.enabled = false;
-            hit = true;
-        }
-
-    }
-
-    [MethodImpl(AgressiveOptimization)] void OnDestroy()
-    {
-
-        for (int i = 0; i < projectileManager.weapons.Length; i++)
-        {
-            if(projectileManager.weapons[i].type == projectileType)
-            {
-                projectileManager.weapons[i].pool.RemoveFromSystem(this, spawnId);
-                break;
-            }
-        }
-
-    }
-    [MethodImpl(AgressiveOptimization)] public void Release()
-    {
-        shotInstance.release();
-
-        //for (int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
-
-        owningPlayer.transform.localScale = Vector3.one;
-        owningPlayer.nozzleBehaviour.transform.localScale = Vector3.one * 0.4f;
-
-        if (aliveSound)
-        {
-            aliveInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            aliveInstance.release();
-        }
-    }
-    [MethodImpl(AgressiveOptimization)] public void OnDespawn(bool hit)
+    [BurstCompile]
+    public void OnDespawn(bool hit)
     {
 
         DestroyThisProjectile(hit);
 
     }
-    [MethodImpl(AgressiveOptimization)] public void HitReg()
+
+    static Dictionary<ulong, Material> impactMaterials = new Dictionary<ulong, Material>();
+
+    [BurstCompile]
+    void DestroyThisProjectile(bool hit)
     {
 
-        EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
-        eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
-        eventInstance.setVolume(MySettings.volume);
-        eventInstance.start();
-
-        GameObject impactParticles = Instantiate(impactParticle, boom.transform.position, transform.rotation, null);
-
-        Material imapctMaterial;
-
-        ParticleSystemRenderer particleSystemRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
-
-        if (impactMaterials.ContainsKey(owningPlayer.id)) imapctMaterial = impactMaterials[owningPlayer.id];
-        else
-        {
-
-            imapctMaterial = Instantiate(particleSystemRenderer.material);
-            impactMaterials.Add(owningPlayer.id, imapctMaterial);
-
-        }
-
-        impactParticles.GetComponent<ParticleSystemRenderer>().material = imapctMaterial;
-        impactParticles.GetComponent<ParticleSystemRenderer>().material.color = generalParticleColor;
-
-    }
-
-
-    [MethodImpl(AgressiveOptimization)] void DestroyThisProjectile(bool hit)
-    {
-
-        if(data.senderSpeedOnDeath > 0)
+        if (data.senderSpeedOnDeath > 0)
         {
             owningPlayer.rb.linearVelocity = rb.linearVelocity.normalized * data.senderSpeedOnDeath;
         }
@@ -1045,12 +991,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
 
         }
 
-        projectileManager.ReleaseProjectile(spawnId, projectileType);
-
-        //Destroy(gameObject);
+        Destroy(gameObject);
 
     }
-    [MethodImpl(AgressiveOptimization)] public void SpawnHitMark(bool aoe)
+    [BurstCompile]
+    public void SpawnHitMark(bool aoe)
     {
 
         if (!owningPlayer) return;
@@ -1059,7 +1004,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         RaycastHit2D point = GetClosestEnvironmentPoint(rb.position, out Transform toParent);
         Vector3 hitMarkPos = new Vector3(point.point.x, point.point.y, transform.position.z);
 
-        if(aoe) hitMarkPos = new Vector3(boom.transform.position.x, boom.transform.position.y, transform.position.z);
+        if (aoe) hitMarkPos = new Vector3(boom.transform.position.x, boom.transform.position.y, transform.position.z);
 
         float angle = math.degrees(math.atan2(point.normal.y, point.normal.x));
 
@@ -1075,11 +1020,25 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         Color color = owningPlayer.PlayerColor.HitMarkColor;
         newHitMark.spawnColor = color;
         newHitMark.fadeColor = new UnityEngine.Color(color.r, color.g, color.b, 0f);
+
+        /*        foreach (SpawnStageBehaviour spawnStage in newHitMark.spawnStages)
+                {
+
+                    foreach (SpriteRenderer spriteRenderer in spawnStage.sprites)
+                    {
+
+                        spriteRenderer.color = newHitMark.spawnColor;
+
+                    }
+
+                }*/
+
+
     }
-    
-    [MethodImpl(AgressiveOptimization)] RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin)
+    [BurstCompile]
+    RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin)
     {
-        if(projectileCollider.isTrigger) origin -= (Vector2)(transform.right * 0.5f);
+
         int rayCount = 4;
 
         float angleStep = 360f / rayCount;
@@ -1105,9 +1064,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
         return shortestHit;
 
     }
-    [MethodImpl(AgressiveOptimization)] RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, out Transform objectHit)
+
+    RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, out Transform objectHit)
     {
-        if (projectileCollider.isTrigger) origin -= (Vector2)(transform.right * 0.5f);
         objectHit = null;
         int rayCount = 4;
 
@@ -1136,143 +1095,62 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IRevert<ProjectileBehav
 
     }
 
-    [MethodImpl(AgressiveOptimization)] public void Revert(ProjectileBehaviour original)
+    [BurstCompile]
+    public void HitReg()
     {
-        initDamage = original.initDamage;
 
-        damageScaleOverTime = original.damageScaleOverTime;
-        damage = original.damage;
-        aoeDamage = original.aoeDamage;
-        syncTimer = original.syncTimer;
-        speedModifier = original.speedModifier;
+        EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
+        eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
+        eventInstance.setVolume(MySettings.volume);
+        eventInstance.start();
 
-        projectileID = original.projectileID;
-        IsLocalProjectile = original.IsLocalProjectile;
-        owningPlayer = original.owningPlayer;
+        GameObject impactParticles = Instantiate(impactParticle, boom.transform.position, transform.rotation, null);
 
-        timeAlive = original.timeAlive;
-        fullTimeAlive = original.fullTimeAlive;
+        Material imapctMaterial;
 
-        projectileManager = original.projectileManager;
-        holdable = original.holdable;
-        travelDistance = original.travelDistance;
-        lastPos = original.lastPos;
+        ParticleSystemRenderer particleSystemRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
 
-        recoil = original.recoil;
-        destroyed = original.destroyed;
-        returnToSender = original.returnToSender;
-        stickToSender = original.stickToSender;
-        instaDestroy = original.instaDestroy;
-        skipAoeOnHit = original.skipAoeOnHit;
+        if (impactMaterials.ContainsKey(owningPlayer.id)) imapctMaterial = impactMaterials[owningPlayer.id];
+        else
+        {
 
-        ownerId = original.ownerId;
-        melee = original.melee;
-        hit = original.hit;
-        sync = original.sync;
-        flipFlop = original.flipFlop;
+            imapctMaterial = Instantiate(particleSystemRenderer.material);
+            impactMaterials.Add(owningPlayer.id, imapctMaterial);
 
-        stuck = original.stuck;
-        stuckTo = original.stuckTo;
+        }
 
-        impactParticle = original.impactParticle;
-        hitMark = original.hitMark;
+        impactParticles.GetComponent<ParticleSystemRenderer>().material = imapctMaterial;
+        impactParticles.GetComponent<ParticleSystemRenderer>().material.color = generalParticleColor;
 
-        generalParticleColor = original.generalParticleColor;
+    }
 
-        shotReference = original.shotReference;
-        aliveReference = original.aliveReference;
-        aliveSound = original.aliveSound;
-        hitSoundReference = original.hitSoundReference;
+    [BurstCompile]
+    private void OnDestroy()
+    {
 
-        shotInstance = original.shotInstance;
-        aliveInstance = original.aliveInstance;
+        shotInstance.release();
 
-        playerHit = original.playerHit;
-        closestPlayer = original.closestPlayer;
-        flagHit = original.flagHit;
+        for (int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
 
-        multiplySpawnrateByLifetime = original.multiplySpawnrateByLifetime;
-        lifeTimeMultiplier = original.lifeTimeMultiplier;
-        externalTrailSpawnRate = original.externalTrailSpawnRate;
-        externalTrailSpawnTimer = original.externalTrailSpawnTimer;
-
-        morphLerp = original.morphLerp;
-        startMorph = original.startMorph;
-        endMorph = original.endMorph;
-
-        meleeStartDirection = original.meleeStartDirection;
-        meleeEndDirection = original.meleeEndDirection;
-        meleeStartRot = original.meleeStartRot;
-        meleeEndRot = original.meleeEndRot;
-        initRot = original.initRot;
-
-        audioTimer = original.audioTimer;
-        homingDirection = original.homingDirection;
-        rotate = original.rotate;
-        startRotate = original.startRotate;
-        lastSticky = original.lastSticky;
-        lingeringTimer = original.lingeringTimer;
-
-        flipRotation = original.flipRotation;
-        pointStuckAt = original.pointStuckAt;
-        stickySurfaceNormal = original.stickySurfaceNormal;
-        stickyNormalAngle = original.stickyNormalAngle;
-        hasStuckToPoint = original.hasStuckToPoint;
-
-        spawnId = original.spawnId;
-        projectileType = original.projectileType;
-
-        playersHit = new List<PlayerBehaviour>();
-        flagsHit = new List<FlagBehaviour>();
-        playersCollidingWith = new List<PlayerBehaviour>();
-
-        float pitch = 1f + UnityEngine.Random.Range(-0.08f, 0.08f);
-
-        if (math.abs(data.burst) != 0) return;
-
-        shotInstance = RuntimeManager.CreateInstance(shotReference);
-        shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
-        shotInstance.setParameterByName("Power", data.speed / 65f);
-        shotInstance.setVolume(MySettings.volume);
-        shotInstance.setPitch(pitch);
-        shotInstance.start();
+        owningPlayer.transform.localScale = Vector3.one;
+        owningPlayer.nozzleBehaviour.transform.localScale = Vector3.one * 0.4f;
 
         if (aliveSound)
         {
-            aliveInstance = RuntimeManager.CreateInstance(aliveReference);
-            aliveInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
-            aliveInstance.setParameterByName("Power", data.speed / 65f);
-            aliveInstance.setVolume(MySettings.volume);
-            aliveInstance.setPitch(pitch);
-            aliveInstance.start();
+
+            aliveInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            aliveInstance.release();
+
         }
 
-        spriteRenderer.enabled = original.spriteRenderer.enabled;
-        if (loopreferencedTail)
-        {
-            if(loopreferencedTail.CanBeReused())
-            {
-                loopreferencedTail.transform.position = transform.position;
-                loopreferencedTail.gameObject.SetActive(true);
-            }
-            else
-            {
-                ProjectileTrailBehaviour originalTrail = original.GetComponentInChildren<ProjectileTrailBehaviour>();
-                loopreferencedTail.ForceRelease();
-                loopreferencedTail = Instantiate(originalTrail, transform);
-                loopreferencedTail.target = boom;
-                loopreferencedTail.transform.localScale = originalTrail.transform.localScale;
-            }
-        }
     }
 
 }
-
+[BurstCompile]
 [Serializable]
 public struct ProjectileInitData
 {
-    public ProjectileBehaviour original;
-    public ProjectileManager.ProjectileType projectileType;
+
     public ProjectileManager projectileManager;
     public PlayerBehaviour owningPlayer;
     public Vector2 position;
@@ -1331,4 +1209,6 @@ public struct ProjectileInitData
     public float lingeringDamage;
     public float lingeringFrequency;
     public bool alignDirection;
+
+
 }

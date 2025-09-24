@@ -392,6 +392,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         return angleInDegrees;
     }
+
     [MethodImpl(512)]
     public void CreateTextureFromBoolArray10BY10(bool[] boolArray, byte frameIndex)
     {
