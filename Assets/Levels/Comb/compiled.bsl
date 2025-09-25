@@ -2,7 +2,7 @@
   "levelName": "Comb",
   "byteSize": 3098,
   "levelExpectation": {
-    "levelHashCode": -1571858716,
+    "levelHashCode": 1216074227,
     "shapeCount": 334,
     "animationCount": 12,
     "lightCount": 1,
