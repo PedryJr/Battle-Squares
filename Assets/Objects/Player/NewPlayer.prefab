@@ -396,7 +396,7 @@ GameObject:
   m_Layer: 6
   m_Name: NewPlayer
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -444,7 +444,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: e1f3c24498569e54abd2775d059d5855, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1206,74 +1206,93 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e4e1d37174382b41a08597c29fd31b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
-  projectileMaterial: {fileID: 2100000, guid: b5bd41709d0b55f46a4764b38241f02c, type: 2}
-  particleMaterial: {fileID: 2100000, guid: 36373f57203063e4dae15c1bb968807f, type: 2}
+  hue: 0
+  EvenColorSpace: 0
+  playerMaterial: {fileID: -876546973899608171, guid: a1488dad8c03ba443a818f6b8ce37a0f, type: 3}
+  projectileMaterial: {fileID: -876546973899608171, guid: fbed87eedacfac4429ace8489234b829, type: 3}
+  particleMaterial: {fileID: -876546973899608171, guid: dad808b10b3ac2044a76c5ed232a1e80, type: 3}
   primaryColor:
-    saturation: 0.639
-    value: 0.816
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
     alpha: 1
   secondaryColor:
-    saturation: 0.633
-    value: 0.661
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
     alpha: 1
   exposedHealthColor:
-    saturation: 0.56
-    value: 0.567
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
     alpha: 1
   nozzleColor:
-    saturation: 0.613
-    value: 0.974
+    convertToLinear: 0
+    saturation: 0.728
+    value: 1
     alpha: 1
   projectileColor:
-    saturation: 1
+    convertToLinear: 0
+    saturation: 0.818
     value: 1
     alpha: 1
   particleColor:
-    saturation: 0.613
-    value: 0.974
-    alpha: 0
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
+    alpha: 1
   chatBubbleColor:
-    saturation: 0.59
-    value: 0.605
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
     alpha: 1
   dogTagColor:
-    saturation: 0.633
-    value: 0.661
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
     alpha: 1
   hitMarkColor:
-    saturation: 0.883
-    value: 0.726
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
     alpha: 1
   pfpBorderNotReadyColor:
-    saturation: 0.651
-    value: 0.988
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
     alpha: 1
   pfpBorderIsReadyColor:
-    saturation: 0.536
-    value: 0.431
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
     alpha: 1
   cursorColorOnHover:
-    saturation: 1
+    convertToLinear: 0
+    saturation: 0.818
     value: 1
     alpha: 1
   cursorColorOffHover:
-    saturation: 0.838
-    value: 0.53
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
     alpha: 1
   selectedWeaponColor:
-    saturation: 1
+    convertToLinear: 0
+    saturation: 0.818
     value: 1
     alpha: 1
   uiKnobColor:
-    saturation: 0
-    value: 0
-    alpha: 0
+    convertToLinear: 0
+    saturation: 0.818
+    value: 1
+    alpha: 1
   ammoColor:
-    saturation: 0.639
+    convertToLinear: 0
+    saturation: 0.818
     value: 1
     alpha: 1
   lightColor:
+    convertToLinear: 0
     saturation: 1
-    value: 1
-    alpha: 0.414
+    value: 0.075
+    alpha: 0.759

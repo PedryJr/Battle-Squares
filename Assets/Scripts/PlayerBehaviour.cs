@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using FMOD.Studio;
 using FMODUnity;
 using Steamworks;
-using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
@@ -116,8 +115,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     public Vector3 spawnPosition;
 
-/*    public Color playerColor;
-    public Color playerDarkerColor;*/
 
     public string playerName;
 
@@ -165,7 +162,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         SceneManager.sceneLoaded += SceneManager_OnLoad;
         hpBarScale = Vector3.one;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        //Color.RGBToHSV(new Color(0.639804f, 0.2080392f, 0.2080392f, 1f), out h, out s, out v);
+
         h = UnityEngine.Random.Range(0f, 1f);
 
         darkenSaturation = 1f;
@@ -174,17 +171,12 @@ public sealed class PlayerBehaviour : MonoBehaviour
         Saturation = 0.6f;
         Value = 0.81f;
 
-        //playerColor = Color.HSVToRGB(h, Saturation, Value);
+
         ApplyColors();
 
-/*        playerColor = Color.HSVToRGB(h, s * 1.15f, v * 0.83f);
-        playerDarkerColor = Color.HSVToRGB(h, s * 0.95f, v * 0.95f);
-
-        healthbar.color = playerColor;
-        spriteRenderer.color = playerDarkerColor;*/
 
     }
-    [MethodImpl(512)]
+
     private void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
     {
 
@@ -246,7 +238,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         }
 
     }
-    [MethodImpl(512)]
+
     public void AssertSteamDataAvalible(ulong steamId)
     {
 
@@ -255,10 +247,15 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
-    [MethodImpl(512)]
+
     private void Start()
     {
+        
         PlayerColor.SetColorHue(UnityEngine.Random.Range(0f, 1f));
+        PlayerColor.AssignMaterialToPlayer(spriteRenderer);
+        PlayerColor.AssignMaterialToPlayer(healthbar);
+        PlayerColor.AssignMaterialToPlayer(nozzleBehaviour.spriteRenderer);
+
         try
         {
 
@@ -314,7 +311,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     ParticleColorApplicant[] speedParticles;
 
     int speedParticleSwitcher;
-    [MethodImpl(512)]
+
     public void SpawnEffect()
     {
 
@@ -335,7 +332,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     EventReference playerSlap;
     EventInstance playerSlapSound;
 
-    [MethodImpl(512)]
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
@@ -378,7 +375,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         }
 
     }
-    [MethodImpl(512)]
+
     public float ConvertVector2ToAngle(Vector2 direction)
     {
         float angleInRadians = Mathf.Atan2(direction.x, -direction.y);
@@ -393,7 +390,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
         return angleInDegrees;
     }
 
-    [MethodImpl(512)]
     public void CreateTextureFromBoolArray10BY10(bool[] boolArray, byte frameIndex)
     {
 
@@ -422,7 +418,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         if (frameIndex == 0) spriteRenderer.sprite = bodyFrames[frameIndex];
 
     }
-    [MethodImpl(512)]
+
     public void CreateTextureFromBoolArray4BY4(bool[] boolArray, byte frameIndex)
     {
 
@@ -468,14 +464,14 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public float frameRate = 10;
     int animationIndex;
     int lastAnimationIndex;
-    [MethodImpl(512)]
+
     public void AnimatePlayer()
     {
 
         animationTimer = 1;
 
     }
-    [MethodImpl(512)]
+
     void ApplyPlayerAnimation()
     {
 
@@ -509,7 +505,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public float Value = 0.81f;
     public float h = 0.0f;
 
-    [MethodImpl(512)]
+
     public void ApplyColors()
     {
         PlayerColor.RefreshColorComponents();
@@ -518,54 +514,13 @@ public sealed class PlayerBehaviour : MonoBehaviour
         nozzleBehaviour.spriteRenderer.color = PlayerColor.NozzleColor;
         sensor.gridSpaceColor.color = PlayerColor.PrimaryColor;
         playerLight.color = PlayerColor.LightColor;
-        /*        float temps, tempv;
-                Color.RGBToHSV(playerColor, out h, out temps, out tempv);
-
-                //Color references
-                playerColor = Color.HSVToRGB(h, Saturation, Value);
-                playerDarkerColor = Color.HSVToRGB(h, Saturation * darkenSaturation, Value * darkenValue);
-
-                //Projectile Color
-                nozzleBehaviour.owningPlayerColor = playerColor;
-
-                //Projectile particles Color
-                nozzleBehaviour.owningPlayerDarkerColor = playerDarkerColor;
-
-                //Player Color
-                spriteRenderer.color = playerDarkerColor;
-
-                //Health bar Color
-                healthbar.color = playerColor;
-
-                //Behind GridForces Color
-                sensor.gridSpaceColor.color = playerColor;
-
-                //Light Color
-                playerLight.color = playerColor;*/
-
-        //Flag
         newColor = false;
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public Friend friend;
 
-    [MethodImpl(512)]
+
     void ApplySteamData()
     {
         GetImageData(steamId);
@@ -573,7 +528,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         playerName = friend.Name;
         steamDataApplied = true;
     }
-    [MethodImpl(512)]
+
     public async void GetImageData(SteamId steamId)
     {
 
@@ -595,13 +550,12 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
-    [MethodImpl(512)]
     private void Update()
     {
 
         if(!steamDataApplied && steamDataAvalible) ApplySteamData();
 
-        /*if(newColor) */ApplyColors();
+        ApplyColors();
 
         oneSecondTimer += Time.deltaTime * 10;
         dataUpdateHighSpeedTimer += Time.deltaTime * 2;
@@ -747,7 +701,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     public bool newMods;
 
-    [MethodImpl(512)]
+
     public void KillPlayer()
     {
 
@@ -774,12 +728,11 @@ public sealed class PlayerBehaviour : MonoBehaviour
         }
 
     }
-    [MethodImpl(512)]
+
     public void RevivePlayer()
     {
 
         spawnBuffer = false;
-
         hunter.Spawn((byte)id);
 
         if (!spawn)
@@ -835,12 +788,9 @@ public sealed class PlayerBehaviour : MonoBehaviour
                 playerSynchronizer.UpdateHealth();
 
             }
-
         }
-
-
     }
-    [MethodImpl(512)]
+
     public void RespawnPlayer()
     {
 
@@ -854,7 +804,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         playerTransform.position = spawn.transform.position;
 
     }
-    [MethodImpl(512)]
+
     void UpdateDataToSend()
     {
 
@@ -867,7 +817,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
-    [MethodImpl(512)]
+
     void CalculateNozzleMovementFromInput()
     {
 
@@ -902,7 +852,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         if (shouldSync) playerSynchronizer.UpdateNozzle();
 
     }
-    [MethodImpl(512)]
+
     void CalculateNozzleMovementFromData()
     {
 
@@ -914,7 +864,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
             toPos,
             math.smoothstep(0, 1, newNozzleLerp));
     }
-    [MethodImpl(512)]
+
     public void ApplyRecoil()
     {
 
@@ -927,7 +877,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         playerSynchronizer.UpdateNozzle();
 
     }
-    [MethodImpl(512)]
+
     void CalculateNozzleRotation()
     {
         nozzleTransform.rotation = Quaternion.Euler(
@@ -937,7 +887,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
                 (nozzleTransform.position - playerTransform.position).y,
                 (nozzleTransform.position - playerTransform.position).x)));
     }
-    [MethodImpl(512)]
+
     public void AnimateNozzle(Vector3 from, Vector3 to)
     {
 
@@ -946,7 +896,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         nozzleInputDirection = playerController.GetDirection();
 
     }
-    [MethodImpl(512)]
+
     private void FixedUpdate()
     {
 
@@ -978,7 +928,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     Vector2 jumpDirection;
     float jumpLimiter;
 
-    [MethodImpl(512)]
+
     void SetMovementParameters(bool newMod)
     {
 
@@ -1009,7 +959,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
-    [MethodImpl(512)]
+
     void ApplyTargetMovement()
     {
 
@@ -1019,7 +969,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
-    [MethodImpl(512)]
+
     void ReAdjustMovementValues()
     {
 

@@ -144,11 +144,6 @@ public sealed class LevelEditorInitializer : MonoBehaviour
         octagonalMesh.UploadMeshData(true);
 
         BuiltShapeBehaviour.octagonalMesh = octagonalMesh;
-/*
-        spriteAsMesh.indexFormat = IndexFormat.UInt32;
-
-        spriteAsMesh.SetIndices(triangles.ToArray(), MeshTopology.Triangles, 0);*/
-
     }
 
     private void Start() => CursorManager.Singleton.UseCursor(CursorManager.CursorType.LevelEditor);

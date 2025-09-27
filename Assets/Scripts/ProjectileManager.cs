@@ -222,48 +222,20 @@ public sealed class ProjectileManager : NetworkBehaviour
         byte[] rotation = MyExtentions.EncodeRotation(particleRotation.eulerAngles.z);
 
         particleData[3] = (byte)ignoreId;
-
         particleData[4] = (byte)projectileType;
-
         particleData[5] = rotation[0];
         particleData[6] = rotation[1];
 
         GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
-
-
-        Color particleColor = playerSynchronizer.GetPlayerById(ignoreId).PlayerColor.ParticleColor;
+        PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
 
         foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
         {
-
-            Material particleMaterial;
-            if (particleMaterials.ContainsKey(ignoreId)) particleMaterial = particleMaterials[ignoreId];
-            else
-            {
-                particleMaterial = Instantiate(particle.material);
-                particleMaterials.Add(ignoreId, particleMaterial);
-            }
-            for (int i = 0; i < particle.materials.Length; i++) Destroy(particle.materials[i]);
-            particle.material = particleMaterial;
-            particle.material.color = particleColor;
-
-            ParticleSystem.MainModule mainModule = particle.GetComponent<ParticleSystem>().main;
-            mainModule.startColor = particleColor;
-
+            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(particle, particle.GetComponent<ParticleSystem>());
         }
 
-        if (IsHost)
-        {
-
-            SpawnParticlesClientRpc(particlePosition, particleData);
-
-        }
-        if (!IsHost)
-        {
-
-            SpawnParticlesServerRpc(particlePosition, particleData);
-
-        }
+        if (IsHost) SpawnParticlesClientRpc(particlePosition, particleData);
+        if (!IsHost) SpawnParticlesServerRpc(particlePosition, particleData);
 
     }
     [BurstCompile]
@@ -274,7 +246,6 @@ public sealed class ProjectileManager : NetworkBehaviour
         ulong ignoreId = newParticleData[3];
         if (NetworkManager.LocalClientId == ignoreId) return;
 
-        Color particleColor = playerSynchronizer.GetPlayerById(ignoreId).PlayerColor.ParticleColor;
         ProjectileType projectileType = (ProjectileType)newParticleData[4];
         Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[5], newParticleData[6] }));
 
@@ -282,22 +253,11 @@ public sealed class ProjectileManager : NetworkBehaviour
         SpawnParticlesClientRpc(particlePosition, newParticleData);
 
         GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+        PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
 
         foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
         {
-            Material particleMaterial;
-            if (particleMaterials.ContainsKey(ignoreId)) particleMaterial = particleMaterials[ignoreId];
-            else
-            {
-                particleMaterial = Instantiate(particle.material);
-                particleMaterials.Add(ignoreId, particleMaterial);
-            }
-            for (int i = 0; i < particle.materials.Length; i++) Destroy(particle.materials[i]);
-            particle.material = particleMaterial;
-            particle.material.color = particleColor;
-
-            ParticleSystem.MainModule mainModule = particle.GetComponent<ParticleSystem>().main;
-            mainModule.startColor = particleColor;
+            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(particle, particle.GetComponent<ParticleSystem>());
         }
 
     }
@@ -309,7 +269,6 @@ public sealed class ProjectileManager : NetworkBehaviour
         ulong ignoreId = newParticleData[3];
         if (IsHost) return;
 
-        Color particleColor = playerSynchronizer.GetPlayerById(ignoreId).PlayerColor.ParticleColor;
         ProjectileType projectileType = (ProjectileType)newParticleData[4];
         Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[5], newParticleData[6] }));
 
@@ -317,22 +276,11 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (NetworkManager.LocalClientId == ignoreId) return;
 
         GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+        PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
 
         foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
         {
-            Material particleMaterial;
-            if (particleMaterials.ContainsKey(ignoreId)) particleMaterial = particleMaterials[ignoreId];
-            else
-            {
-                particleMaterial = Instantiate(particle.material);
-                particleMaterials.Add(ignoreId, particleMaterial);
-            }
-            for (int i = 0; i < particle.materials.Length; i++) Destroy(particle.materials[i]);
-            particle.material = particleMaterial;
-            particle.material.color = particleColor;
-
-            ParticleSystem.MainModule mainModule = particle.GetComponent<ParticleSystem>().main;
-            mainModule.startColor = particleColor;
+            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(particle, particle.GetComponent<ParticleSystem>());
         }
 
     }

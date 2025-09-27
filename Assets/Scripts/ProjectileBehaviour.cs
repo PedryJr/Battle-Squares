@@ -209,6 +209,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         data.id++;
 
         owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(trailParticles, trailParticleSystem);
+        owningPlayer.PlayerColor.AssignMaterialToProjectile(spriteRenderer);
+        
 
         Vector2 initialOffset = new Vector2(data.fluctuation[0], data.fluctuation[1]);
         data.direction = (data.direction + initialOffset).normalized;
@@ -390,8 +392,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
                 while (externalTrailSpawnTimer > externalTrailSpawnRate)
                 {
 
+                    Debug.Log("BRUUUH");
                     ExternalTrailBehaviour externalTrail = Instantiate(externalTrailRef, transform.position, transform.rotation, null);
-                    if (externalTrail) externalTrail.Play(generalParticleColor, owningPlayer.id, owningPlayer);
+                    if (externalTrail) externalTrail.Play(owningPlayer.PlayerColor.ParticleColor, owningPlayer.id, owningPlayer);
 
                     externalTrailSpawnTimer -= externalTrailSpawnRate;
 
@@ -966,9 +969,12 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
             GameObject impactParticles = Instantiate(impactParticle, boom.transform.position, Quaternion.Euler(0, 0, angle), null);
 
-            Material imapctMaterial;
+            //Material imapctMaterial;
 
-            ParticleSystemRenderer particleSystemRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
+            ParticleSystemRenderer impactParticleRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
+            ParticleSystem impactParticleSystem = impactParticles.GetComponent<ParticleSystem>();
+            owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(impactParticleRenderer, impactParticleSystem);
+/*            ParticleSystemRenderer particleSystemRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
 
             if (impactMaterials.ContainsKey(owningPlayer.id)) imapctMaterial = impactMaterials[owningPlayer.id];
             else
@@ -980,7 +986,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             }
             Destroy(particleSystemRenderer.material);
             particleSystemRenderer.material = imapctMaterial;
-            particleSystemRenderer.material.color = generalParticleColor;
+            particleSystemRenderer.material.color = generalParticleColor;*/
 
             if (timeAlive >= data.lifeTime)
             {

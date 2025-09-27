@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using static ProximityPixelationSystem;
 
+[BurstCompile]
 public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
 {
     public static ProximityPixelationSystem Singleton;
@@ -160,10 +161,6 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     [MethodImpl(512)]
     public void InitializeRenderer()
     {
-
-        Application.targetFrameRate = -1;
-        QualitySettings.vSyncCount = 0;
-
         spriteAsMesh = new Mesh();
 
         renderParams = new RenderParams(sharedSpriteMaterial);
@@ -171,15 +168,15 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         renderParams.layer = 10;
         renderParams.camera = Camera.main;
         renderParams.lightProbeProxyVolume = null;
-        renderParams.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
-        renderParams.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        renderParams.lightProbeUsage = LightProbeUsage.Off;
+        renderParams.shadowCastingMode = ShadowCastingMode.Off;
         renderParams.motionVectorMode = MotionVectorGenerationMode.Camera;
 
         mainCamera = Camera.main;
     }
 
     NativeArray<VertexAttributeDescriptor> layout;
-
+    
     private void Start()
     {
         layout = new NativeArray<VertexAttributeDescriptor>(3, Allocator.Persistent, NativeArrayOptions.ClearMemory);
@@ -197,7 +194,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     NativeArray<GameStateData> GetNativeGameState()
     {
-        NativeArray<GameStateData> gameStateData = new NativeArray<GameStateData>(1, Allocator.Persistent);
+        NativeArray<GameStateData> gameStateData = new NativeArray<GameStateData>(1, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 
         gameStateData[0] = new()
         {
@@ -283,6 +280,9 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     public void AddProximitySensor(ref GridSpaceForceField newData) => nativeProximitySensors.Add(newData);
     public void AssertMainCamera(Camera newMainCamera) => mainCamera = newMainCamera;
 
+
+
+
     void CalculateProximityPixels()
     {
 
@@ -312,6 +312,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         spriteAsMesh.SetVertexBufferParams(vertexDatas.Length, layout);
         spriteAsMesh.SetVertexBufferData(vertexDatas, 0, 0, vertexDatas.Length);
     }
+
 
     private void LateUpdate()
     {

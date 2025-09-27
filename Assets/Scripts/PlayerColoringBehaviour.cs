@@ -39,13 +39,13 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AssignMaterialToParticleRenderer(in ParticleSystemRenderer particleRenderer, in ParticleSystem particleSystem)
     {
-        particleMaterial.color = ParticleColor;
+        particleMaterial.color = Color.white;
         particleRenderer.sharedMaterial = particleMaterial;
         particleRenderer.trailMaterial = particleMaterial;
-        particleRenderer.applyActiveColorSpace = true;
+        particleRenderer.applyActiveColorSpace = false;
 
         MainModule mainModuleForParticles = particleSystem.main;
-        mainModuleForParticles.startColor = Color.white;
+        mainModuleForParticles.startColor = ParticleColor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -133,22 +133,27 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
     [Serializable]
     public struct ColorComponent
     {
-        [SerializeField, Range(0f, 2f)] private float saturation;
-        [SerializeField, Range(0f, 2f)] private float value;
-        [SerializeField, Range(0f, 2f)] private float alpha;
+        [SerializeField] bool convertToLinear;
+        [SerializeField, Range(0f, 1f)] private float saturation;
+        [SerializeField, Range(0f, 1f)] private float value;
+        [SerializeField, Range(0f, 1f)] private float alpha;
 
         [HideInInspector] private Color activeColor;
+        [HideInInspector] private Color activeColorLinear;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetHue(in float hue, bool EvenColorSpace)
         {
-            
-            if (EvenColorSpace) activeColor = PerceptuallyEvenHSVToRGB(hue, saturation, value);
+            if (EvenColorSpace) activeColor = PerceptuallyEvenHSVToRGB(hue, saturation, value * 0.99f);
             else activeColor = Color.HSVToRGB(hue, saturation, value, true);
             activeColor.a = alpha;
+            activeColorLinear.r = Mathf.Pow(activeColor.r, 1f / 2.2f);
+            activeColorLinear.g = Mathf.Pow(activeColor.g, 1f / 2.2f);
+            activeColorLinear.b = Mathf.Pow(activeColor.b, 1f / 2.2f);
+            activeColorLinear.a = alpha;
         }
 
-        public Color ActiveColor => activeColor;
+        public Color ActiveColor => convertToLinear ? activeColorLinear : activeColor;
 
 
         /// <summary>
