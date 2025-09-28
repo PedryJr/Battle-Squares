@@ -1206,26 +1206,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e4e1d37174382b41a08597c29fd31b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hue: 0
+  hue: 0.40163797
   EvenColorSpace: 0
   playerMaterial: {fileID: -876546973899608171, guid: a1488dad8c03ba443a818f6b8ce37a0f, type: 3}
   projectileMaterial: {fileID: -876546973899608171, guid: fbed87eedacfac4429ace8489234b829, type: 3}
   particleMaterial: {fileID: -876546973899608171, guid: dad808b10b3ac2044a76c5ed232a1e80, type: 3}
   primaryColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 1
+    value: 0.35
     alpha: 1
   secondaryColor:
     convertToLinear: 0
     saturation: 0.818
-    value: 1
+    value: 0
     alpha: 1
   exposedHealthColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
-    alpha: 1
+    saturation: 1
+    value: 0.682
+    alpha: 0.361
   nozzleColor:
     convertToLinear: 0
     saturation: 0.728

@@ -1,8 +1,8 @@
 {
-  "levelName": "New Level",
+  "levelName": "Gorgonzola",
   "byteSize": 196,
   "levelExpectation": {
-    "levelHashCode": 232146689,
+    "levelHashCode": 1038494379,
     "shapeCount": 20,
     "animationCount": 1,
     "lightCount": 1,

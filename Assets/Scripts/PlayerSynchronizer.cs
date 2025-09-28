@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Netcode.Transports.Facepunch;
-using Steamworks; 
+using Steamworks;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement; 
+using UnityEngine.SceneManagement;
 
-public sealed class PlayerSynchronizer : NetworkBehaviour
+public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 {
 
     public SkinData skinData;
@@ -1159,16 +1161,14 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         if (IsHost) SyncModsClientRpc(index, value);
 
     }
-    
+
     [ClientRpc]
     void SyncModsClientRpc(int index, float value)
     {
-
         Mods.at[index] = value;
-
     }
+
     [Serializable]
-    
     public struct PlayerData
     {
 

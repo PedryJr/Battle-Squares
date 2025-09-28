@@ -1,1 +1,1 @@
-{"indexes":["Comb","Core","Horizon","New Level"]}
+{"indexes":["New Level","Gorgonzola"]}
