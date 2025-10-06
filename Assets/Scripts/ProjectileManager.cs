@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.Burst;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 using static PlayerSynchronizer;
-using Random = System.Random;
-using Unity.Mathematics;
-using Unity.Burst;
 using static ProjectileManager;
+using Random = System.Random;
 
-[BurstCompile]
+
 public sealed class ProjectileManager : NetworkBehaviour
 {
 
@@ -27,7 +29,7 @@ public sealed class ProjectileManager : NetworkBehaviour
     public PlayerSynchronizer playerSynchronizer;
 
     float timer;
-    [BurstCompile]
+
     private void Awake()
     {
 
@@ -36,14 +38,14 @@ public sealed class ProjectileManager : NetworkBehaviour
         SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 
     }
-    [BurstCompile]
+
     private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
     {
 
         projectiles.Clear();
 
     }
-    [BurstCompile]
+
     private void Update()
     {
 
@@ -55,48 +57,72 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
 
     }
-    [BurstCompile]
+
     public void SpawnProjectile(ProjectileType type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
     {
 
         Weapon weapon = new Weapon();
-        uint projectileId = (uint)new System.Random().Next(0, 2147483640) + (uint)new System.Random().Next(0, 2147483640);
 
-        foreach (Weapon usedWeapon in weapons)
+        foreach (Weapon usedWeapon in weapons) if (usedWeapon.type == type) { weapon = usedWeapon; break; }
+
+        if (weapon.burst > 0)
         {
-            if (usedWeapon.type == type) { weapon = usedWeapon; break; }
-        }
 
-        float[] burstData = new float[weapon.burst * 2];
-        for (int i = 0; i < burstData.Length; i += 2)
-        {
-            burstData[i] = UnityEngine.Random.Range(2.7f, 3.45f);
-            burstData[i + 1] = UnityEngine.Random.Range(2.7f, 3.45f);
-        }
+            float directionAngle = Mathf.Atan2(direction.normalized.y, direction.normalized.x) * Mathf.Rad2Deg;
+            float burstAngleStep = weapon.burstSpread / weapon.burst;
+            float halfSpreadAngle = weapon.burstSpread / 2f;
+            
+            float startAngle = directionAngle - halfSpreadAngle;
 
+            for (int i = 0; i <= weapon.burst; i++)
+            {
+
+                float angleAtI = startAngle + (burstAngleStep * i);
+                if (angleAtI > 180f) angleAtI -= 360f;
+
+                Vector2 newDirection = MyExtentions.AngleToNormalizedCoordinate(angleAtI);
+
+                SpawnProjectileOnAllClients((byte)type, position, newDirection, shootingPlayer, weapon, i == 0);
+            }
+        }
+        else SpawnProjectileOnAllClients((byte)type, position, direction, shootingPlayer, weapon, true);
+
+    }
+
+    void SpawnProjectileOnAllClients(byte type, in Vector2 position, in Vector2 direction, PlayerBehaviour shootingPlayer, in Weapon weapon, bool playSound)
+    {
+        uint projectileId = GenerateProjectileId();
         float[] fluctuation = new float[2];
-        for (int i = 0; i < fluctuation.Length; i++)
-        {
-            fluctuation[i] = UnityEngine.Random.Range(-weapon.fluctuation, weapon.fluctuation);
-        }
+        for (int i = 0; i < fluctuation.Length; i++) fluctuation[i] = GenerateProjectileFluctuation(weapon);
 
         if (weapon.flipFlop) shootingPlayer.nozzleBehaviour.flipFlop = !shootingPlayer.nozzleBehaviour.flipFlop;
 
-        SpawnProjectileRpc((byte)NetworkManager.LocalClientId, projectileId, type, position, direction, burstData, fluctuation, shootingPlayer.nozzleBehaviour.flipFlop);
-        SpawnProjectileEvent((byte)NetworkManager.LocalClientId, projectileId, type, position, direction, burstData, fluctuation, shootingPlayer.nozzleBehaviour.flipFlop);
+        Boolean8 bitBool = new Boolean8();
+        bitBool.SetBool(0, shootingPlayer.nozzleBehaviour.flipFlop);
+        bitBool.SetBool(1, playSound);
+        byte bitBoolAsByte = bitBool.GetMask();
 
+        SpawnProjectileRpc((byte)NetworkManager.LocalClientId, projectileId, type, position, direction, fluctuation, bitBoolAsByte);
+        SpawnProjectileEvent((byte)NetworkManager.LocalClientId, projectileId, type, position, direction, fluctuation, bitBoolAsByte);
     }
-    [BurstCompile]
+
+
     [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void SpawnProjectileRpc(byte sourceId, uint projectileID, ProjectileType type, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, bool flipFlop)
+    void SpawnProjectileRpc(byte sourceId, uint projectileID, byte type, Vector2 position, Vector2 direction, float[] fluctuation, byte bitBoolAsByte)
     {
         if (sourceId == (byte)NetworkManager.LocalClientId) return;
-        SpawnProjectileEvent(sourceId, projectileID, type, position, direction, burstData, fluctuation, flipFlop);
+        SpawnProjectileEvent(sourceId, projectileID, type, position, direction, fluctuation, bitBoolAsByte);
     }
-    [BurstCompile]
-    void SpawnProjectileEvent(byte sourceId, uint projectileID, ProjectileType type, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, bool flipFlop)
-    {
 
+    void SpawnProjectileEvent(byte sourceId, uint projectileID, byte typeAsByte, Vector2 position, Vector2 direction, float[] fluctuation, byte bitBoolAsByte)
+    {
+        bool flipFlop, playSound;
+        Boolean8 bitBool = new Boolean8();
+        bitBool.SetMask(bitBoolAsByte);
+        flipFlop = bitBool.GetBool(0);
+        playSound = bitBool.GetBool(1);
+
+        ProjectileType type = (ProjectileType)typeAsByte;
         ProjectileBehaviour projectileBehaviour = null;
         PlayerBehaviour owningPlayer = null;
 
@@ -110,8 +136,9 @@ public sealed class ProjectileManager : NetworkBehaviour
 
         projectileBehaviour = Instantiate(weapon.projectile, position, Quaternion.identity, null).GetComponent<ProjectileBehaviour>();
         projectileBehaviour.flipFlop = flipFlop;
+        projectileBehaviour.playShootSound = playSound;
 
-        ProjectileInitData data = WeaponToProjectileData(ref weapon, projectileID, position, direction, burstData, fluctuation, owningPlayer);
+        ProjectileInitData data = WeaponToProjectileData(ref weapon, projectileID, position, direction, fluctuation, owningPlayer);
 
         projectileBehaviour.ownerId = owningPlayer.id;
         projectileBehaviour.InitializeBullet(ref data);
@@ -122,10 +149,9 @@ public sealed class ProjectileManager : NetworkBehaviour
         forceToAdd = -direction.normalized * multiplier1 * multiplier2;
         owningPlayer.rb.AddForce(forceToAdd, ForceMode2D.Impulse);
         owningPlayer.AnimatePlayer();
-
     }
-    [BurstCompile]
-    ProjectileInitData WeaponToProjectileData(ref Weapon weapon, uint projectileID, Vector2 position, Vector2 direction, float[] burstData, float[] fluctuation, PlayerBehaviour owningPlayer)
+
+    ProjectileInitData WeaponToProjectileData(ref Weapon weapon, uint projectileID, Vector2 position, Vector2 direction, float[] fluctuation, PlayerBehaviour owningPlayer)
     {
 
         return new()
@@ -141,9 +167,7 @@ public sealed class ProjectileManager : NetworkBehaviour
             position = position,
             projectileColor = owningPlayer.PlayerColor.ProjectileColor,
             projectileDarkerColor = owningPlayer.PlayerColor.ParticleColor,
-            burst = weapon.burst,
             lifeTime = weapon.lifeTime,
-            burstData = burstData,
             fluctuation = fluctuation,
             noGravity = weapon.noGravity,
             dieOnImpact = weapon.dieOnImpact,
@@ -190,15 +214,17 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
+    uint GenerateProjectileId() => (uint)new Random().Next(0, 2147483640) + (uint)new System.Random().Next(0, 2147483640);
+    float GenerateProjectileFluctuation(in Weapon weapon) => UnityEngine.Random.Range(-weapon.fluctuation, weapon.fluctuation);
+
     #region otherSyncs
-    [BurstCompile]
     public uint GenerateRandomUInt()
     {
         byte[] buffer = new byte[4];
         new Random().NextBytes(buffer);
         return BitConverter.ToUInt32(buffer, 0);
     }
-    [BurstCompile]
+
     GameObject GetNozzleParticle(ProjectileType projectileType)
     {
 
@@ -211,9 +237,6 @@ public sealed class ProjectileManager : NetworkBehaviour
         return null;
     }
 
-    static Dictionary<ulong, Material> particleMaterials = new Dictionary<ulong, Material>();
-    byte[] particleData = new byte[7];
-    [BurstCompile]
     public void SpawnParticles(Vector3 particlePosition, Quaternion particleRotation, ProjectileType projectileType)
     {
 
@@ -221,10 +244,11 @@ public sealed class ProjectileManager : NetworkBehaviour
 
         byte[] rotation = MyExtentions.EncodeRotation(particleRotation.eulerAngles.z);
 
-        particleData[3] = (byte)ignoreId;
-        particleData[4] = (byte)projectileType;
-        particleData[5] = rotation[0];
-        particleData[6] = rotation[1];
+        byte[] particleData = new byte[4];
+        particleData[0] = (byte)ignoreId;
+        particleData[1] = (byte)projectileType;
+        particleData[2] = rotation[0];
+        particleData[3] = rotation[1];
 
         GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
         PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
@@ -238,16 +262,16 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (!IsHost) SpawnParticlesServerRpc(particlePosition, particleData);
 
     }
-    [BurstCompile]
+
     [ServerRpc(RequireOwnership = false)]
     public void SpawnParticlesServerRpc(Vector3 particlePosition, byte[] newParticleData)
     {
 
-        ulong ignoreId = newParticleData[3];
+        ulong ignoreId = newParticleData[0];
         if (NetworkManager.LocalClientId == ignoreId) return;
 
-        ProjectileType projectileType = (ProjectileType)newParticleData[4];
-        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[5], newParticleData[6] }));
+        ProjectileType projectileType = (ProjectileType)newParticleData[1];
+        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[2], newParticleData[3] }));
 
 
         SpawnParticlesClientRpc(particlePosition, newParticleData);
@@ -261,7 +285,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
 
     }
-    [BurstCompile]
+
     [ClientRpc]
     public void SpawnParticlesClientRpc(Vector3 particlePosition, byte[] newParticleData)
     {
@@ -284,7 +308,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
 
     }
-    [BurstCompile]
+
     public void DespawnProjectile(uint projectileID, bool hit)
     {
 
@@ -323,7 +347,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
 
     }
-    [BurstCompile]
+
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void DespawnProjectileServerRpc(uint projectileID, bool hit)
     {
@@ -351,7 +375,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
 
     }
-    [BurstCompile]
+
     [ClientRpc(Delivery = RpcDelivery.Reliable)]
     public void DespawnProjectileClientRpc(uint projectileID, bool hit)
     {
@@ -379,7 +403,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
 
     }
-    [BurstCompile]
+
     public void HitRegProjectile(uint projectileID)
     {
 
@@ -412,7 +436,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
 
     }
-    [BurstCompile]
+
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void HitRegProjectileServerRpc(uint projectileID)
     {
@@ -434,7 +458,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
 
     }
-    [BurstCompile]
+
     [ClientRpc(Delivery = RpcDelivery.Reliable)]
     public void HitRegProjectileClientRpc(uint projectileID)
     {
@@ -457,7 +481,7 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
-    [BurstCompile]
+
     public void UpdateProjectile(ProjectileBehaviour instance)
     {
 
@@ -486,7 +510,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         NewUpdateProjectileRpc(data, instance.projectileID);
 
     }
-    [BurstCompile]
+
     [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
     public void NewUpdateProjectileRpc(byte[] data, uint projectileId)
     {
@@ -527,7 +551,6 @@ public sealed class ProjectileManager : NetworkBehaviour
 
 
     #endregion
-    [BurstCompile]
     [Serializable]
     public struct Weapon
     {
@@ -543,6 +566,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         public float lifeTime;
         public bool holdable;
         public int burst;
+        public float burstSpread;
         public int bounces;
         public float fluctuation;
         public bool noGravity;
@@ -590,7 +614,7 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
-    public enum ProjectileType
+    public enum ProjectileType : byte
     {
 
         Revolver,
@@ -609,4 +633,17 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
+    public struct Boolean8
+    {
+        private byte bits;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool GetBool(int index) => (bits & (1 << index)) != 0;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetBool(int index, bool value) => bits = (byte)((bits & ~(1 << index)) | ((value ? 1 : 0) << index));
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public byte GetMask() => bits;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetMask(byte mask) => bits = mask;
+    }
 }

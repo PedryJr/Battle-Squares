@@ -793,6 +793,7 @@ MonoBehaviour:
     lifeTime: 2
     holdable: 0
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0
     noGravity: 1
@@ -881,6 +882,7 @@ MonoBehaviour:
     lifeTime: 2
     holdable: 0
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0
     noGravity: 1
@@ -951,6 +953,7 @@ MonoBehaviour:
     lifeTime: 2
     holdable: 1
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0.07
     noGravity: 1
@@ -1021,6 +1024,7 @@ MonoBehaviour:
     lifeTime: 0.33
     holdable: 0
     burst: 4
+    burstSpread: 25
     bounces: 0
     fluctuation: 0
     noGravity: 1
@@ -1118,6 +1122,7 @@ MonoBehaviour:
     lifeTime: 1.5
     holdable: 0
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0
     noGravity: 1
@@ -1188,6 +1193,7 @@ MonoBehaviour:
     lifeTime: 1.5
     holdable: 0
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0
     noGravity: 0
@@ -1258,6 +1264,7 @@ MonoBehaviour:
     lifeTime: 3
     holdable: 0
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0
     noGravity: 1
@@ -1346,6 +1353,7 @@ MonoBehaviour:
     lifeTime: 0.45
     holdable: 0
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0
     noGravity: 1
@@ -1461,6 +1469,7 @@ MonoBehaviour:
     lifeTime: 0.165
     holdable: 0
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0
     noGravity: 1
@@ -1612,6 +1621,7 @@ MonoBehaviour:
     lifeTime: 2
     holdable: 0
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0
     noGravity: 1
@@ -1682,6 +1692,7 @@ MonoBehaviour:
     lifeTime: 0.7
     holdable: 1
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0.38
     noGravity: 1
@@ -1770,6 +1781,7 @@ MonoBehaviour:
     lifeTime: 5
     holdable: 1
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0.19
     noGravity: 0
@@ -1858,6 +1870,7 @@ MonoBehaviour:
     lifeTime: 4
     holdable: 0
     burst: 0
+    burstSpread: 0
     bounces: 0
     fluctuation: 0
     noGravity: 1

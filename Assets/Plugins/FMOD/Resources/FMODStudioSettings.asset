@@ -20,8 +20,8 @@ MonoBehaviour:
       Value: 0
       HasValue: 1
     LiveUpdatePort:
-      Value: 0
-      HasValue: 0
+      Value: 9264
+      HasValue: 1
     Overlay:
       Value: 1
       HasValue: 1
@@ -60,7 +60,7 @@ MonoBehaviour:
       HasValue: 0
     StaticPlugins:
       Value: []
-      HasValue: 0
+      HasValue: 1
     CallbackHandler:
       Value: {fileID: 0}
       HasValue: 0

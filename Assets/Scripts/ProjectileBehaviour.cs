@@ -9,8 +9,6 @@ using static PlayerSynchronizer;
 using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
 
-
-[BurstCompile]
 public sealed class ProjectileBehaviour : MonoBehaviour
 {
 
@@ -139,8 +137,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     float meleeStartRot;
     float meleeEndRot;
     float initRot;
-
-    static Dictionary<ulong, Material> trailMaterials = new Dictionary<ulong, Material>();
+    public bool playShootSound;
 
     [BurstCompile]
     private void Awake()
@@ -161,9 +158,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     private void Start()
     {
 
-        float pitch = 1f + UnityEngine.Random.Range(-0.08f, 0.08f);
+        if (!playShootSound) return;
 
-        if (math.abs(data.burst) != 0) return;
+        float pitch = 1f + UnityEngine.Random.Range(-0.08f, 0.08f);
 
         shotInstance = RuntimeManager.CreateInstance(shotReference);
         shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
@@ -265,18 +262,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         if (trailParticles)
         {
-
-            Material trailParticleMaterial;
-            if (trailMaterials.ContainsKey(data.owningPlayer.id)) trailParticleMaterial = trailMaterials[data.owningPlayer.id];
-            else
-            {
-                trailParticleMaterial = Instantiate(trailParticles.material);
-                trailMaterials.Add(data.owningPlayer.id, trailParticleMaterial);
-            }
-            Destroy(trailParticles.material);
-            trailParticles.material = trailParticleMaterial;
-            trailParticles.material.color = generalParticleColor;
-
+            owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(trailParticles, trailParticles.GetComponent<ParticleSystem>());
         }
 
         damage = initDamage * Mods.at[4];
@@ -310,27 +296,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         initRot = rb.rotation;
 
         this.data = data;
-
-        if (math.abs(data.burst) > 0)
-        {
-            data.id++;
-            int burst = math.abs(data.burst);
-
-            Vector2 offset = new Vector2(data.burstData[burst * 2 - 1] * -data.burst, data.burstData[(burst * 2) - 2] * data.burst);
-            if (rb.linearVelocity.x < 0) offset.x *= -1;
-            if (rb.linearVelocity.y < 0) offset.y *= -1;
-            if (math.abs(rb.linearVelocity.x) < 0.001f || math.abs(rb.linearVelocity.x) < 0.001f) offset *= 2;
-            burst--;
-
-            rb.linearVelocity = (rb.linearVelocity + offset).normalized * data.speed;
-            rb.angularVelocity = UnityEngine.Random.Range(15f, -15f);
-            data.position += new Vector2(UnityEngine.Random.Range(-0, 0), UnityEngine.Random.Range(-0, 0));
-            data.burst = (data.burst > 0 ? burst : -burst) * -1;
-
-            GameObject newBurst = Instantiate(gameObject, transform.parent);
-            newBurst.GetComponent<ProjectileBehaviour>().InitializeBullet(ref data);
-
-        }
 
         if (!IsLocalProjectile) gameObject.layer = LayerMask.NameToLayer("RemoteProjectile");
         projectileManager.projectiles.Add(this);
@@ -969,24 +934,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
             GameObject impactParticles = Instantiate(impactParticle, boom.transform.position, Quaternion.Euler(0, 0, angle), null);
 
-            //Material imapctMaterial;
-
             ParticleSystemRenderer impactParticleRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
             ParticleSystem impactParticleSystem = impactParticles.GetComponent<ParticleSystem>();
             owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(impactParticleRenderer, impactParticleSystem);
-/*            ParticleSystemRenderer particleSystemRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
-
-            if (impactMaterials.ContainsKey(owningPlayer.id)) imapctMaterial = impactMaterials[owningPlayer.id];
-            else
-            {
-
-                imapctMaterial = Instantiate(particleSystemRenderer.material);
-                impactMaterials.Add(owningPlayer.id, imapctMaterial);
-
-            }
-            Destroy(particleSystemRenderer.material);
-            particleSystemRenderer.material = imapctMaterial;
-            particleSystemRenderer.material.color = generalParticleColor;*/
 
             if (timeAlive >= data.lifeTime)
             {
@@ -1167,7 +1117,6 @@ public struct ProjectileInitData
     public bool IsLocalProjectile;
     public float acceleration;
     public float speed;
-    public int burst;
     public float lifeTime;
     public float[] fluctuation;
     public bool noGravity;

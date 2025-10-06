@@ -58,10 +58,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ColorStrength: 5.53
-    - _ColorToEffect: 0.1
+    - _ColorStrength: 1
+    - _ColorToEffect: 0.5
     - _EnableExternalAlpha: 0
-    - _ExponentialNoise: 0.31
+    - _ExponentialNoise: -0.19
     - _Tiling: 16.7
     - _ZWrite: 1
     - _fallofExponential: 1

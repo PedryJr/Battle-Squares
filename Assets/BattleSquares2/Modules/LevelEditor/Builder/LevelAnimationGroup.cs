@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Mathematics;
+using Unity.Netcode;
 using UnityEngine;
 using static AnimationAnchor;
 
@@ -37,7 +38,7 @@ public sealed class LevelAnimationGroup : MonoBehaviour
     {
         if (!constructed) return;
 
-        animationTimer += Time.deltaTime * animationSpeed;
+        animationTimer = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
         float eval = Mathf.Repeat(animationTimer + animationOffset, 1f);
         Vector2 evalPosition = animationPath.Evaluate(eval);
         float keepZ = cachedTransform.position.z;
