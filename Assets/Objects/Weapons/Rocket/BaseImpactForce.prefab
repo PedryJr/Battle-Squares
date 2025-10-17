@@ -62,22 +62,22 @@ MonoBehaviour:
     chroma: 0
     enableBlockerInfluence: 0
     blockerFalloff: 0
-    enablePositionWarp: 1
+    enablePositionWarp: 0
     positionWarpStrength: 2
     positionWarpFallof: 1
     positionWarpRadius: 3.6
-    enableScaleWarp: 0
-    scaleWarpStrength: 0
-    scaleWarpFalloff: 0
-    scaleWarpRadius: 0
+    enableScaleWarp: 1
+    scaleWarpStrength: -1
+    scaleWarpFalloff: 1
+    scaleWarpRadius: 2
     enableRotationWarp: 0
     rotationWarpStrength: 0
     rotationWarpFalloff: 0
     rotationWarpRadius: 0
-    enableSwirl: 0
-    swirlStrength: 0
-    swirlFalloff: 0
-    swirlRadius: 0
+    enableSwirl: 1
+    swirlStrength: 5
+    swirlFalloff: 1
+    swirlRadius: 3
     enablePulsation: 0
     pulsationFrequency: 0
     pulsationAmplitude: 0
@@ -145,22 +145,22 @@ MonoBehaviour:
     chroma: 0
     enableBlockerInfluence: 0
     blockerFalloff: 0
-    enablePositionWarp: 1
+    enablePositionWarp: 0
     positionWarpStrength: 2
     positionWarpFallof: 1
     positionWarpRadius: 3.6
-    enableScaleWarp: 0
-    scaleWarpStrength: 0
-    scaleWarpFalloff: 0
-    scaleWarpRadius: 0
+    enableScaleWarp: 1
+    scaleWarpStrength: -1
+    scaleWarpFalloff: 1
+    scaleWarpRadius: 2
     enableRotationWarp: 0
     rotationWarpStrength: 0
     rotationWarpFalloff: 0
     rotationWarpRadius: 0
-    enableSwirl: 0
-    swirlStrength: 0
-    swirlFalloff: 0
-    swirlRadius: 0
+    enableSwirl: 1
+    swirlStrength: 5
+    swirlFalloff: 1
+    swirlRadius: 2
     enablePulsation: 0
     pulsationFrequency: 0
     pulsationAmplitude: 0

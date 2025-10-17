@@ -89,6 +89,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -110,6 +112,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
@@ -198,7 +201,6 @@ MonoBehaviour:
     IsLocalProjectile: 0
     acceleration: 0
     speed: 0
-    burst: 0
     lifeTime: 0
     fluctuation: []
     noGravity: 0
@@ -262,6 +264,7 @@ MonoBehaviour:
   multiplySpawnrateByLifetime: 0
   lifeTimeMultiplier: 0
   externalTrailSpawnRate: 0
+  playShootSound: 0
 --- !u!50 &-3438963122069973725
 Rigidbody2D:
   serializedVersion: 5
@@ -374,18 +377,18 @@ MonoBehaviour:
     scaleWarpFalloff: 0
     scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 0
-    rotationWarpFalloff: 0
-    rotationWarpRadius: 0
+    rotationWarpStrength: 0.2
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 5
     enableSwirl: 0
     swirlStrength: 0
     swirlFalloff: 0
     swirlRadius: 0
     enablePulsation: 1
-    pulsationFrequency: 20
-    pulsationAmplitude: 1
-    pulsationFallof: 1
-    pulsationRadius: 4
+    pulsationFrequency: 16
+    pulsationAmplitude: 2.5
+    pulsationFallof: 2
+    pulsationRadius: 3
 --- !u!1 &8047464109496563407
 GameObject:
   m_ObjectHideFlags: 0
@@ -5268,6 +5271,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5289,6 +5294,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 3

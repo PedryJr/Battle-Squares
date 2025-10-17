@@ -89,6 +89,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -110,6 +112,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
@@ -198,7 +201,6 @@ MonoBehaviour:
     IsLocalProjectile: 0
     acceleration: 0
     speed: 0
-    burst: 0
     lifeTime: 0
     fluctuation: []
     noGravity: 0
@@ -262,6 +264,7 @@ MonoBehaviour:
   multiplySpawnrateByLifetime: 0
   lifeTimeMultiplier: 0
   externalTrailSpawnRate: 0.08
+  playShootSound: 0
 --- !u!50 &-3438963122069973725
 Rigidbody2D:
   serializedVersion: 5
@@ -364,24 +367,24 @@ MonoBehaviour:
     warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 0
-    enablePositionWarp: 1
-    positionWarpStrength: 2
+    blockerFalloff: 3
+    enablePositionWarp: 0
+    positionWarpStrength: -0.1
     positionWarpFallof: 1
-    positionWarpRadius: 2
+    positionWarpRadius: 3
     enableScaleWarp: 1
-    scaleWarpStrength: -1
-    scaleWarpFalloff: 1
-    scaleWarpRadius: 2
-    enableRotationWarp: 0
-    rotationWarpStrength: 0
-    rotationWarpFalloff: 0
-    rotationWarpRadius: 0
+    scaleWarpStrength: -0.1
+    scaleWarpFalloff: 0.1
+    scaleWarpRadius: 1
+    enableRotationWarp: 1
+    rotationWarpStrength: 4
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 2.2
     enableSwirl: 0
-    swirlStrength: 0
-    swirlFalloff: 0
-    swirlRadius: 0
-    enablePulsation: 1
+    swirlStrength: 2
+    swirlFalloff: 1
+    swirlRadius: 2
+    enablePulsation: 0
     pulsationFrequency: 20
     pulsationAmplitude: -2
     pulsationFallof: 1
@@ -5268,6 +5271,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5289,6 +5294,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 3
