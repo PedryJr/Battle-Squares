@@ -351,21 +351,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
-    color: {r: 0.35, g: 0, b: 0.31940234, a: 1}
+    color: {r: 0.554, g: 0.5160676, b: 0.09141002, a: 1}
     radius: 7.8
-    saturationBoost: 102.8
+    saturationBoost: 27.85
   sensorData:
     colorValue:
-      x: 0.35
-      y: 0
-      z: 0.31940234
+      x: 0.554
+      y: 0.5160676
+      z: 0.09141002
     colorRadius: 7.8
     origin:
-      x: -0.48157847
-      y: -5.97606
-    rotation: 270.08167
+      x: -0.6528262
+      y: -7.992456
+    rotation: 90.09174
     warpSpeed: 2
-    chroma: 0
+    chroma: -2
     enableBlockerInfluence: 0
     blockerFalloff: 2
     enablePositionWarp: 1
@@ -384,7 +384,7 @@ MonoBehaviour:
     swirlStrength: 0.01
     swirlFalloff: 4.46
     swirlRadius: 6
-    enablePulsation: 0
+    enablePulsation: 1
     pulsationFrequency: 10
     pulsationAmplitude: 0.15
     pulsationFallof: 4
@@ -632,7 +632,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3506166878856948221
 Transform:
   m_ObjectHideFlags: 0
@@ -1518,93 +1518,103 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e4e1d37174382b41a08597c29fd31b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hue: 0.40163797
+  hue: 0
   EvenColorSpace: 0
   playerMaterial: {fileID: -876546973899608171, guid: a1488dad8c03ba443a818f6b8ce37a0f, type: 3}
   projectileMaterial: {fileID: -876546973899608171, guid: fbed87eedacfac4429ace8489234b829, type: 3}
   particleMaterial: {fileID: -876546973899608171, guid: dad808b10b3ac2044a76c5ed232a1e80, type: 3}
   primaryColor:
     convertToLinear: 0
-    saturation: 1
-    value: 0.35
+    saturation: 0.835
+    value: 0.554
     alpha: 1
   secondaryColor:
     convertToLinear: 0
-    saturation: 0.818
+    saturation: 0.835
     value: 0
     alpha: 1
   exposedHealthColor:
     convertToLinear: 0
-    saturation: 1
-    value: 0.348
-    alpha: 0.361
+    saturation: 0.835
+    value: 0.628
+    alpha: 0.314
   nozzleColor:
     convertToLinear: 0
-    saturation: 0.728
+    saturation: 0.835
     value: 1
     alpha: 1
   projectileColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
-    alpha: 1
+    saturation: 0.835
+    value: 0.75
+    alpha: 0.75
   particleColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 0.835
+    value: 0.75
     alpha: 1
   chatBubbleColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 0.835
+    value: 0.75
     alpha: 1
   dogTagColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 0.835
+    value: 0.75
     alpha: 1
   hitMarkColor:
     convertToLinear: 0
-    saturation: 0.818
+    saturation: 0.5
     value: 1
+    alpha: 0
+  hitMarkFadeColor:
+    convertToLinear: 0
+    saturation: 0.835
+    value: 0.376
     alpha: 1
   pfpBorderNotReadyColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 0.835
+    value: 0.75
     alpha: 1
   pfpBorderIsReadyColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 0.835
+    value: 0.75
     alpha: 1
   cursorColorOnHover:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 0.835
+    value: 0.75
     alpha: 1
   cursorColorOffHover:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 0.835
+    value: 0.75
     alpha: 1
   selectedWeaponColor:
     convertToLinear: 0
-    saturation: 0.818
+    saturation: 0.755
+    value: 1
+    alpha: 1
+  highlightedWeaponColor:
+    convertToLinear: 0
+    saturation: 0.595
     value: 1
     alpha: 1
   uiKnobColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 0.835
+    value: 0.75
     alpha: 1
   ammoColor:
     convertToLinear: 0
-    saturation: 0.818
-    value: 1
+    saturation: 0.835
+    value: 0.75
     alpha: 1
   lightColor:
     convertToLinear: 0
-    saturation: 1
-    value: 0.075
+    saturation: 0.835
+    value: 0.223
     alpha: 0.759

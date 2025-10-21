@@ -701,6 +701,7 @@ GameObject:
   - component: {fileID: 7766882706945389864}
   - component: {fileID: 7766882706945389865}
   - component: {fileID: 7766882706945389866}
+  - component: {fileID: 7766882706945389867}
   m_Layer: 0
   m_Name: Synchronizer
   m_TagString: Sync
@@ -2177,6 +2178,19 @@ MonoBehaviour:
     simplifiedAnimationDataArray: []
     lightPositions: []
     spawnPositions: []
+--- !u!114 &7766882706945389867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243baf199fd19084b8d9539bbb6d4fbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  smallCornerOctagon: {fileID: -7428099741491018297, guid: 8192828f53e5bcf43aeaf229b7d45df5, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -220,8 +220,14 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
             foreach (var item in sensorObjects) if (item) item.CustomUpdate();
             CalculateProximityPixels();
             frameTimer = 0f;
-        }
+        }/*
+        TryGetColor();*/
     }
+
+/*    void TryGetColor()
+    {
+        if(WorldColors.Instance) renderParams.material.SetColor("_Color", WorldColors.GetPixelEffectColor());
+    }*/
 
     private void OnDestroy()
     {

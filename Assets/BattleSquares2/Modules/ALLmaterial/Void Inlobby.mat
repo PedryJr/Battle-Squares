@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Void Ingame
+  m_Name: Void Inlobby
   m_Shader: {fileID: 4800000, guid: 6b9bbcff111b67b4fa83526c34280de6, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -62,10 +62,10 @@ Material:
     - _ColorToEffect: 0.5
     - _EnableExternalAlpha: 0
     - _ExponentialNoise: -0.19
-    - _Tiling: 16.7
+    - _Tiling: 0.82978123
     - _ZWrite: 1
-    - _fallofExponential: 0.74
-    - _maxIntensity: 0.3
+    - _fallofExponential: 1
+    - _maxIntensity: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

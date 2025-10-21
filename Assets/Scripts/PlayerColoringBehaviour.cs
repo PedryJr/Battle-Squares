@@ -83,6 +83,8 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
 
     [SerializeField] ColorComponent hitMarkColor;
     public Color HitMarkColor => hitMarkColor.ActiveColor;
+    [SerializeField] ColorComponent hitMarkFadeColor;
+    public Color HitMarkFadeColor => hitMarkFadeColor.ActiveColor;
 
     [SerializeField] ColorComponent pfpBorderNotReadyColor;
     public Color PfpBorderNotReadyColor => pfpBorderNotReadyColor.ActiveColor;
@@ -98,6 +100,8 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
 
     [SerializeField] ColorComponent selectedWeaponColor;
     public Color SelectedWeaponColor => selectedWeaponColor.ActiveColor;
+    [SerializeField] ColorComponent highlightedWeaponColor;
+    public Color HighlightedWeaponColor => highlightedWeaponColor.ActiveColor;
 
     [SerializeField] ColorComponent uiKnobColor;
     public Color UIKnobColor => uiKnobColor.ActiveColor;
@@ -107,6 +111,7 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
 
     [SerializeField] ColorComponent lightColor;
     public Color LightColor => lightColor.ActiveColor;
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RefreshColorComponents()
@@ -128,6 +133,8 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         uiKnobColor.SetHue(hue, EvenColorSpace);
         ammoColor.SetHue(hue, EvenColorSpace);
         lightColor.SetHue(hue, EvenColorSpace);
+        hitMarkFadeColor.SetHue(hue, EvenColorSpace);
+        highlightedWeaponColor.SetHue(hue, EvenColorSpace);
     }
 
     [Serializable]

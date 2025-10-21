@@ -139,10 +139,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     float initRot;
     public bool playShootSound;
 
-    [BurstCompile]
+
     private void Awake()
     {
-
         projectileCollider = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -153,8 +152,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         playersHit = new List<PlayerBehaviour>();
         flagsHit = new List<FlagBehaviour>();
         playersCollidingWith = new List<PlayerBehaviour>();
+        spriteRenderer.sprite = AssetResources.GetSmallCornerOctagon;
     }
-    [BurstCompile]
+
     private void Start()
     {
 
@@ -186,7 +186,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+
     public void InitializeBullet(ref ProjectileInitData data)
     {
 
@@ -305,7 +305,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         this.data.knockback *= Mods.at[12];
 
     }
-    [BurstCompile]
+
     private void Update()
     {
 
@@ -317,7 +317,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     float audioTimer;
 
-    [BurstCompile]
+
     void GlobalUpdate()
     {
 
@@ -419,7 +419,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     Vector3 chargePlayerEndScale;
     Vector2 homingDirection = Vector2.zero;
-    [BurstCompile]
+
     private void LateUpdate()
     {
 
@@ -436,7 +436,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     float startRotate;
     bool lastSticky;
 
-    [BurstCompile]
     private void FixedUpdate()
     {
 
@@ -558,7 +557,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     float lingeringTimer;
 
-    [BurstCompile]
+
     void LocalUpdate()
     {
 
@@ -682,35 +681,14 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
-    private void OnTriggerEnter2D(Collider2D collider)
-    {
+    private void OnTriggerEnter2D(Collider2D collider) => CollisionCheck(collider.gameObject);
+    private void OnCollisionEnter2D(Collision2D collision) => CollisionCheck(collision.gameObject);
+    private void OnCollisionExit2D(Collision2D collision) => CollisionCancell(collision.gameObject);
+    private void OnTriggerExit2D(Collider2D collision) => CollisionCancell(collision.gameObject);
 
-        CollisionCheck(collider.gameObject);
 
-    }
-    [BurstCompile]
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-
-        CollisionCheck(collision.gameObject);
-
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        CollisionCancell(collision.gameObject);
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        CollisionCancell(collision.gameObject);
-    }
-
-    [BurstCompile]
     void CollisionCheck(GameObject collidedWith)
     {
-
         if (destroyed) return;
         if (!IsLocalProjectile) return;
 
@@ -723,12 +701,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         if (flagBehaviour) FlagCollisionCheck(flagBehaviour);
         if (environment && !stickToSender && !melee) EnvironmentCollisionCheck();
         if (projectileBehaviour) ProjectileCollisionCheck(projectileBehaviour);
-
     }
 
     List<PlayerBehaviour> playersCollidingWith;
-
-    [BurstCompile]
     void CollisionCancell(GameObject collidedWith)
     {
 
@@ -737,7 +712,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
     void PlayerCollisionCheck(PlayerBehaviour playerBehaviour)
     {
         if (playerBehaviour.isLocalPlayer) return;
@@ -798,7 +772,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         }
 
     }
-    [BurstCompile]
+
     void ProjectileCollisionCheck(ProjectileBehaviour projectileBehaviour)
     {
 
@@ -812,7 +786,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         }
 
     }
-    [BurstCompile]
+
     void FlagCollisionCheck(FlagBehaviour flag)
     {
 
@@ -859,7 +833,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     float stickyNormalAngle;
     bool hasStuckToPoint;
 
-    [BurstCompile]
+
     void EnvironmentCollisionCheck()
     {
 
@@ -900,17 +874,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         }
 
     }
-    [BurstCompile]
-    public void OnDespawn(bool hit)
-    {
 
-        DestroyThisProjectile(hit);
+    public void OnDespawn(bool hit) => DestroyThisProjectile(hit);
 
-    }
 
-    static Dictionary<ulong, Material> impactMaterials = new Dictionary<ulong, Material>();
-
-    [BurstCompile]
     void DestroyThisProjectile(bool hit)
     {
 
@@ -950,22 +917,26 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         Destroy(gameObject);
 
     }
-    [BurstCompile]
+
     public void SpawnHitMark(bool aoe)
     {
 
         if (!owningPlayer) return;
         if (!hitMark) return;
-
-        RaycastHit2D point = GetClosestEnvironmentPoint(rb.position, out Transform toParent);
+        RaycastHit2D point;
+        Transform toParent = null;
+        if (boom) point = GetClosestEnvironmentPoint(boom.position, out toParent);
+        else point = GetClosestEnvironmentPoint(rb.position, out toParent);
+        if (!toParent) return;
+        
         Vector3 hitMarkPos = new Vector3(point.point.x, point.point.y, transform.position.z);
-
+        
         if (aoe) hitMarkPos = new Vector3(boom.transform.position.x, boom.transform.position.y, transform.position.z);
-
+        
         float angle = math.degrees(math.atan2(point.normal.y, point.normal.x));
-
+        
         HitMarkBehaviour newHitMark = Instantiate(hitMark, hitMarkPos, Quaternion.Euler(0, 0, angle), toParent);
-
+        
         newHitMark.ownerId = (byte)ownerId;
         newHitMark.owner = owningPlayer;
         StencilInfectorBehaviour stencilInfectorBehaviour;
@@ -977,21 +948,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         newHitMark.spawnColor = color;
         newHitMark.fadeColor = new UnityEngine.Color(color.r, color.g, color.b, 0f);
 
-        /*        foreach (SpawnStageBehaviour spawnStage in newHitMark.spawnStages)
-                {
-
-                    foreach (SpriteRenderer spriteRenderer in spawnStage.sprites)
-                    {
-
-                        spriteRenderer.color = newHitMark.spawnColor;
-
-                    }
-
-                }*/
-
-
     }
-    [BurstCompile]
+
     RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin)
     {
 
@@ -1024,7 +982,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, out Transform objectHit)
     {
         objectHit = null;
-        int rayCount = 4;
+        int rayCount = 8;
 
         float angleStep = 360f / rayCount;
         RaycastHit2D shortestHit = default;
@@ -1039,11 +997,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
             if (hit.collider != null && hit.distance < shortestDistance)
             {
-
                 shortestDistance = hit.distance;
                 shortestHit = hit;
                 objectHit = hit.transform;
-
             }
         }
 
@@ -1051,7 +1007,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     }
 
-    [BurstCompile]
+
     public void HitReg()
     {
 
@@ -1062,25 +1018,13 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         GameObject impactParticles = Instantiate(impactParticle, boom.transform.position, transform.rotation, null);
 
-        Material imapctMaterial;
-
         ParticleSystemRenderer particleSystemRenderer = impactParticles.GetComponent<ParticleSystemRenderer>();
+        ParticleSystem particleSystem = impactParticles.GetComponent<ParticleSystem>();
 
-        if (impactMaterials.ContainsKey(owningPlayer.id)) imapctMaterial = impactMaterials[owningPlayer.id];
-        else
-        {
-
-            imapctMaterial = Instantiate(particleSystemRenderer.material);
-            impactMaterials.Add(owningPlayer.id, imapctMaterial);
-
-        }
-
-        impactParticles.GetComponent<ParticleSystemRenderer>().material = imapctMaterial;
-        impactParticles.GetComponent<ParticleSystemRenderer>().material.color = generalParticleColor;
-
+        owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(particleSystemRenderer, particleSystem);
     }
 
-    [BurstCompile]
+
     private void OnDestroy()
     {
 
@@ -1102,7 +1046,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     }
 
 }
-[BurstCompile]
+
 [Serializable]
 public struct ProjectileInitData
 {

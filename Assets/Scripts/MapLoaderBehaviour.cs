@@ -40,19 +40,23 @@ public sealed class MapLoaderBehaviour : MonoBehaviour
 
     void LoadNewMaps(int mapType)
     {
-
-        while(loadedMaps.Count > 0)
+        while (loadedMaps.Count > 0)
         {
             Destroy(loadedMaps[0]);
             loadedMaps.RemoveAt(0);
         }
+        /*        while(loadedMaps.Count > 0)
+                {
+                    Destroy(loadedMaps[0]);
+                    loadedMaps.RemoveAt(0);
+                }
 
-        for(int mapId = 0; mapId < mapSynchronizer.mapTypes[mapType].maps.Length; mapId++)
-        {
+                for(int mapId = 0; mapId < mapSynchronizer.mapTypes[mapType].maps.Length; mapId++)
+                {
 
-            LoadMapImage_LEGACY(mapSynchronizer.mapTypes[mapType].maps[mapId].icon, mapId);
+                    LoadMapImage_LEGACY(mapSynchronizer.mapTypes[mapType].maps[mapId].icon, mapId);
 
-        }
+                }*/
 
         LevelPathPointer levelPathPointer = new LevelPathPointer();
         levelPathPointer.LoadPaths();

@@ -12242,7 +12242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: febcfeb87b785e843b39f04789ebd108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skinTolerance: 45
+  skinTolerance: 44
   skinValue: 0
   frameIndex: 0
   pixelCount: 116

@@ -156,6 +156,10 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
         shapeRenderer.SetPropertyBlock(propertyBlock);
 
+        Vector3 pos = transform.localPosition;
+        pos.z = -0.8f;
+        transform.localPosition = pos;
+
     }
 
     bool isStatic = true;

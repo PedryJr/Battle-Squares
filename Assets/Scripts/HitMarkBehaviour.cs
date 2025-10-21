@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 public unsafe sealed class HitMarkBehaviour : MonoBehaviour
 {
 
+    private const float ShrinkSpeed = 8f;
+
     private int funcTracker = -1;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +31,7 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
     ImpactForceBehaviour impactForce;
     public float zPos;
     public float timer;
-    float timeAlive = 10;
+    float timeAlive = 40;
     public byte ownerId;
     public PlayerBehaviour owner;
     int skipPhysicsSteps;
@@ -66,7 +68,7 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
     public Color spawnColor;
     public Color fadeColor;
 
-    private const float TimeAlive = 35f;
+    private const float TimeAlive = 5f;
 
     private SpriteRenderer mainRenderer;
     private static MaterialPropertyBlock SharedBlock = null;
@@ -85,8 +87,7 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
         }
 
         mainRenderer = GetComponentInChildren<SpriteRenderer>();
-        if (mainRenderer != null)
-            mainRenderer.sortingOrder = 2;
+        if (mainRenderer != null) mainRenderer.sortingOrder = 2;
 
         transform.position += new Vector3(0, 0, LevelBuilderStuff.STENCIL_OFFSET);
     }
@@ -99,53 +100,60 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
         mainRenderer.SetPropertyBlock(SharedBlock);
     }
 
+    bool trackScaleInit;
+    Vector3 scaleFrom;
+
     private void MyUpdate()
     {
         float dt = Time.deltaTime;
-
-        spawnColor = owner.PlayerColor.HitMarkColor;
         timer += dt;
 
-        if (timer > TimeAlive) fadeOut = (timer - TimeAlive) * 4f;
+        Color hitmarkSpawnColor = owner.PlayerColor.HitMarkColor;
+        Color hitMarkFadeColor = owner.PlayerColor.HitMarkFadeColor;
+
+        spawnColor = Color.Lerp(hitmarkSpawnColor, hitMarkFadeColor, Mathf.Clamp01(Mathf.SmoothStep(0, 1, timer * (1f/0.15f))));
+
+        if (timer > TimeAlive) fadeOut += Time.deltaTime * ShrinkSpeed;
 
         SpawnStages(dt);
-
-        if (fadeOut > 0f)
-        {
-            float t = fadeOut;
-            int countSpawnStages = spawnStages.Length;
-            ref var spawnStageSearchSpace = ref MemoryMarshal.GetReference(spawnStages.AsSpan());
-            for (int i = 0; i < countSpawnStages; i++)
-            {
-                ref SpawnStageBehaviour stage = ref Unsafe.Add(ref spawnStageSearchSpace, i);
-                int countSprites = stage.sprites.Length;
-                ref var spriteSearchSpace = ref MemoryMarshal.GetReference(stage.sprites.AsSpan());
-                for (int j = 0; j < countSprites; j++)
-                {
-                    ref SpriteRenderer sr = ref Unsafe.Add(ref spriteSearchSpace, j);
-                    if (sr.enabled) sr.color = Color.Lerp(spawnColor, fadeColor, t);
-                }
-            }
-        }
 
         if (fadeOut >= 1f) Destroy(gameObject);
         else
         {
-            int countSpawnStages = spawnStages.Length;
-            ref var spawnStageSearchSpace = ref MemoryMarshal.GetReference(spawnStages.AsSpan());
-            for (int i = 0; i < countSpawnStages; i++)
+
+            if (fadeOut >= 0f)
             {
-                ref SpawnStageBehaviour stage = ref Unsafe.Add(ref spawnStageSearchSpace, i);
-                int countSprites = stage.sprites.Length;
-                ref var spriteSearchSpace = ref MemoryMarshal.GetReference(stage.sprites.AsSpan());
-                for (int j = 0; j < countSprites; j++)
+
+                if(!trackScaleInit)
                 {
-                    ref SpriteRenderer sr = ref Unsafe.Add(ref spriteSearchSpace, j);
-                    if (sr.enabled)
-                        sr.color = spawnColor;
+                    scaleFrom = transform.localScale;
+                    trackScaleInit = true;
                 }
+
+                transform.localScale = Vector3.Lerp(scaleFrom, Vector3.zero, MyExtentions.EaseInQuad(fadeOut));
+
+                int countSpawnStages = spawnStages.Length;
+                ref var spawnStageSearchSpace = ref MemoryMarshal.GetReference(spawnStages.AsSpan());
+                for (int i = 0; i < countSpawnStages; i++)
+                {
+                    ref SpawnStageBehaviour stage = ref Unsafe.Add(ref spawnStageSearchSpace, i);
+                    int countSprites = stage.sprites.Length;
+                    ref var spriteSearchSpace = ref MemoryMarshal.GetReference(stage.sprites.AsSpan());
+                    for (int j = 0; j < countSprites; j++)
+                    {
+                        ref SpriteRenderer sr = ref Unsafe.Add(ref spriteSearchSpace, j);
+                        if (sr.enabled)
+                            sr.color = spawnColor;
+                    }
+                }
+
             }
         }
+
+        Vector3 posBuffer = transform.position;
+        posBuffer.z += 0.001f * dt;
+        transform.position = posBuffer;
+
     }
 
     private void SpawnStages(float dt)

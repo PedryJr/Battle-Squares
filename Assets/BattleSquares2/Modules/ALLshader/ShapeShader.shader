@@ -125,6 +125,11 @@ Shader "*MyShaders/Shape"
             SHAPE_LIGHT(3)
             #endif
 
+            TEXTURE2D(_CameraDepthTexture);
+            SAMPLER(sampler_CameraDepthTexture);
+
+
+
             float _EnableColorOverride;
             half4 _ColorOverride;
 
@@ -162,6 +167,7 @@ Shader "*MyShaders/Shape"
             }
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             FragOutput CombinedShapeLightFragment(Varyings i)
             {
@@ -187,7 +193,27 @@ Shader "*MyShaders/Shape"
 
                 half stencil = SAMPLE_TEXTURE2D(_StencilGroup, sampler_StencilGroup, i.uv);
 
+
+                // Sample the hardware depth
+                float rawDepth = SAMPLE_TEXTURE2D(_CameraDepthTexture, sampler_CameraDepthTexture, i.uv).r;
+
+                // Convert to linear 0–1 depth
+                float linearDepth = Linear01Depth(rawDepth, _ZBufferParams);
+                float4 lol = float4(linearDepth, linearDepth, linearDepth, linearDepth);
+                
+                //o.myOut = lol / 10;
+
+                float incomingDepth = 1.0 / i.positionWS.z;
+
+                if(linearDepth == i.positionWS.z)
+                {
+                    o.myOut.a = 0;
+                }
+
+
                 return o;
+
+
             }
             ENDHLSL
         }

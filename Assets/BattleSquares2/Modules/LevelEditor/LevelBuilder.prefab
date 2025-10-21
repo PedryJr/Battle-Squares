@@ -344,9 +344,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e627c165ee67e874babb4b09b5eaaa04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackdropBehaviour
-  _fallofExponential: 1
-  _othersInfluenceOverMe: 0.004
-  _maxIntensity: 1
+  _fallofExponential: 0.74
+  _othersInfluenceOverMe: 0.06
+  _maxIntensity: 0.3
   backdropMaterial: {fileID: 2100000, guid: 63fb528208bc3f34d872981ac46d1253, type: 2}
 --- !u!1 &6801532356897613291
 GameObject:
@@ -484,6 +484,10 @@ PrefabInstance:
       propertyPath: levelOutput
       value: 
       objectReference: {fileID: 6590266317702339221}
+    - target: {fileID: 9065514830198556854, guid: e0157dd88c6a6f541bdbbd3b45a5ebc3, type: 3}
+      propertyPath: lightStrength
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

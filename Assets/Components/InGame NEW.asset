@@ -40,7 +40,7 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.267
+    m_Value: 0.384
   xMultiplier:
     m_OverrideState: 1
     m_Value: 1
@@ -48,11 +48,11 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 0.5
   center:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.5}
   scale:
     m_OverrideState: 1
-    m_Value: 0.99
+    m_Value: 1.006
 --- !u!114 &-408924971776885781
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
-  m_Name: InLobby NEW
+  m_Name: InGame NEW
   m_EditorClassIdentifier: 
   components:
   - {fileID: -5306956836702957536}

@@ -210,6 +210,9 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             Vector3 lightPosition = item.GetPosition();
             Light2D light = Instantiate(gameLight, lightPosition, Quaternion.identity, null);
             light.intensity = lightStrength / simplifiedLightData.Length;
+
+            WorldColors wc = FindAnyObjectByType<WorldColors>();
+            if (wc) wc.RegisterLight(light, lightStrength / simplifiedLightData.Length);
         }
     }
 

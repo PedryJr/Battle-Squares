@@ -3,6 +3,7 @@ Shader "*MyShaders/SpriteLitStencil"
     Properties
     {
 
+        _SpriteTex("Sprite", 2D) = "white" {}
         _StencilGroup("Stencil", 2D) = "white" {}
         _MainTex("Diffuse", 2D) = "white" {}
         _MaskTex("Mask", 2D) = "white" {}
@@ -75,6 +76,9 @@ Shader "*MyShaders/SpriteLitStencil"
 
             TEXTURE2D(_MaskTex);
             SAMPLER(sampler_MaskTex);
+
+            TEXTURE2D(_SpriteTex);
+            SAMPLER(sampler_SpriteTex);
 
             // NOTE: Do not ifdef the properties here as SRP batcher can not handle different layouts.
             CBUFFER_START(UnityPerMaterial)
@@ -155,7 +159,9 @@ Shader "*MyShaders/SpriteLitStencil"
 
                 if((uint) compB == (uint) compA)
                 {
-                    return i.color;
+                    half4 outputcolor = i.color;
+                    outputcolor.w = SAMPLE_TEXTURE2D(_SpriteTex, sampler_SpriteTex, i.uv).w;
+                    return outputcolor;
                     //return CombinedShapeLightShared(surfaceData, inputData);
                 }
 
