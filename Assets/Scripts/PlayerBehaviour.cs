@@ -20,7 +20,16 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     [SerializeField]
     PlayerColoringBehaviour coloringComponent;
+
     public PlayerColoringBehaviour PlayerColor => coloringComponent;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void AssignMaterialToProjectile(in SpriteRenderer projectileRenderer) => PlayerColor.AssignMaterialToProjectile(projectileRenderer);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void AssignMaterialToPlayer(in SpriteRenderer playerRenderer) => PlayerColor.AssignMaterialToPlayer(playerRenderer);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void AssignMaterialToParticleRenderer(in ParticleSystemRenderer particleRenderer, in ParticleSystem particleSystem) => PlayerColor.AssignMaterialToParticleRenderer(particleRenderer, particleSystem);
+
 
     public bool selectedLegacyMap = true;
     public int selectedMap;

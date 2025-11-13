@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Netcode.Transports.Facepunch;
 using Steamworks;
-using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
@@ -1026,7 +1024,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
                 if (responsiblePlayer) affectedPlayer.killStreak++;
 
                 kill = true;
-                PlayerDeathEffect(affectedPlayer.rb.position, affectedPlayer.PlayerColor.ParticleColor);
+                PlayerDeathEffect(affectedPlayer);
                 hunter.Kill(affectedId, responsibleId);
                 affectedPlayer.KillPlayer();
 
@@ -1053,21 +1051,21 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    public void PlayerDeathEffect(Vector3 particlePosition, Color particleColor)
+    public void PlayerDeathEffect(PlayerBehaviour deadPlayer)
     {
 
         localSquare.deathSoundInstance.setVolume(MySettings.volume);
         localSquare.deathSoundInstance.start();
 
-        GameObject newParticle = Instantiate(deathParticles, particlePosition, Quaternion.Euler(0, 0, 0), null);
+        GameObject newParticle = Instantiate(deathParticles, deadPlayer.rb.position, Quaternion.Euler(0, 0, 0), null);
 
-        foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
+        ParticleSystemRenderer[] particleSystemRenderers = newParticle.GetComponentsInChildren<ParticleSystemRenderer>();
+        ParticleSystem[] particleSystems = newParticle.GetComponentsInChildren<ParticleSystem>();
+
+        for (int i = 0; i < particleSystems.Length; i++)
         {
-            Material particleMaterial = Instantiate(particle.material);
-            particle.material = particleMaterial;
-            particle.material.color = particleColor;
+            deadPlayer.PlayerColor.AssignMaterialToParticleRenderer(particleSystemRenderers[i], particleSystems[i]);
         }
-
     }
     
     public Color UpdatePlayerColor(float value)
