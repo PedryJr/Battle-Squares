@@ -4,28 +4,6 @@ using UnityEngine;
 public unsafe sealed class SpawnStageBehaviour : MonoBehaviour
 {
 
-    /*    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Update()
-        {
-            MyUpdate();
-        }*/
-
-    private int funcTracker = -1; // this field is "owned" by the manager
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)] 
-    public static void CallFromUpdateManager(in SpawnStageBehaviour obj) => obj.MyUpdate();
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private unsafe void OnEnable()
-    {
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<SpawnStageBehaviour>.Instance.Register(&CallFromUpdateManager, this, trackerPtr);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private unsafe void OnDisable()
-    {
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<SpawnStageBehaviour>.Instance.Unregister(trackerPtr);
-    }
-
 
     [SerializeField]
     public float spawnTime;
@@ -68,7 +46,7 @@ public unsafe sealed class SpawnStageBehaviour : MonoBehaviour
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void MyUpdate()
+    public void Update()
     {
         if (!doScale) return;
 

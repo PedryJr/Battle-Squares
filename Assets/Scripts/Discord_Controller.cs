@@ -13,13 +13,13 @@ public sealed class Discord_Controller : MonoBehaviour
     private long time;
     public Discord.Discord discord;
 
+    public string username;
+
 
     void Start()
     {
-
         discord = new Discord.Discord(applicationID, (System.UInt64)Discord.CreateFlags.NoRequireDiscord);
         time = System.DateTimeOffset.Now.ToUnixTimeMilliseconds();
-
     }
 
     void Update()
@@ -45,6 +45,7 @@ public sealed class Discord_Controller : MonoBehaviour
         // Update Status every frame
         try
         {
+            if(username == string.Empty) username = discord.GetUserManager().GetCurrentUser().Username;
             var activityManager = discord.GetActivityManager();
             var activity = new Discord.Activity
             {

@@ -41,7 +41,7 @@ public sealed class ChatManager : NetworkBehaviour
 
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void SpreadMessageServerRpc(string context, ulong id, ulong ignoreId)
     {
         if (NetworkManager.LocalClientId == ignoreId) return;

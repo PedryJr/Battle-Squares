@@ -11,8 +11,6 @@ public sealed class CameraAnimator : MonoBehaviour
 {
     [SerializeField]
     Camera stencilRenderer;
-    [SerializeField]
-    RenderTexture stencilTexture;
 
     public float fps = 6000;
     public float fpsCapture;
@@ -164,18 +162,6 @@ public sealed class CameraAnimator : MonoBehaviour
         aCamera.orthographicSize = math.lerp(aCamera.orthographicSize, Mathf.Lerp(fromOrthoSize, toOrthoSize, cameraLerp), Time.deltaTime * 10);
 
         stencilRenderer.orthographicSize = aCamera.orthographicSize;
-    
-        if(lastXSize != aCamera.pixelWidth)
-        {
-            lastXSize = aCamera.pixelWidth;
-            stencilTexture.width = lastXSize;
-        }
-
-        if (lastYSize != aCamera.pixelHeight)
-        {
-            lastYSize = aCamera.pixelHeight;
-            stencilTexture.height = lastYSize;
-        }
 
     }
 

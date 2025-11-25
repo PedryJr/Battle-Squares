@@ -11,10 +11,15 @@ public sealed class SelectedMapDisplayer : MonoBehaviour
     MapStreamSynchronizer streamSynchronizer;
 
     [SerializeField]
+    Sprite loadingSprite;
+
+    [SerializeField]
     Image image;
 
     [SerializeField]
     TMP_Text arenaName;
+
+    Color imageColor;
      
     private void Awake()
     {
@@ -22,6 +27,7 @@ public sealed class SelectedMapDisplayer : MonoBehaviour
         mapSynchronizer = FindAnyObjectByType<MapSynchronizer>();
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         streamSynchronizer = FindAnyObjectByType<MapStreamSynchronizer>();
+        imageColor = image.color;
     }
 
     private void Update()
@@ -37,16 +43,39 @@ public sealed class SelectedMapDisplayer : MonoBehaviour
 
     void ShowCurrentMap()
     {
-        if(playerSynchronizer.IsHost)
+
+        Sprite mapSprite;
+        string mapName;
+
+        if (playerSynchronizer.IsHost)
         {
-            LoadMapImage(streamSynchronizer.levelPrep.RasterizeLevel());
-            LoadMapName(streamSynchronizer.levelPrep.levelName);
+            mapSprite = streamSynchronizer.levelPrep.RasterizeLevel();
+            mapName = streamSynchronizer.levelPrep.levelName;
         }
         else
         {
-            LoadMapImage(streamSynchronizer.levelReciever.RasterizeLevel());
-            LoadMapName(streamSynchronizer.levelReciever.levelName);
+
+            if (!streamSynchronizer.levelReciever.loadingCompleted)
+            {
+
+                mapSprite = loadingSprite;
+                mapName = "Loading...";
+            }
+            else
+            {
+                mapSprite = streamSynchronizer.levelReciever.RasterizeLevel();
+                mapName = streamSynchronizer.levelReciever.levelName;
+            }
         }
+
+        if (mapSprite == null)
+        {
+            mapSprite = loadingSprite;
+            mapName = "Loading failed!";
+        }
+
+        LoadMapImage(mapSprite);
+        LoadMapName(mapName);
     }
 
     void ShowCurrentMap_LEGACY(int mapType)
@@ -70,6 +99,7 @@ public sealed class SelectedMapDisplayer : MonoBehaviour
     void LoadMapImage(Sprite sprite)
     {
         if(sprite) image.sprite = sprite;
+        image.color = imageColor;
     }
 
     void LoadMapName(string name)

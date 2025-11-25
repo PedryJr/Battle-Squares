@@ -29,8 +29,9 @@ public class WorldColors : MonoBehaviour
         lights = new List<Light2D>();
     }
 
-    private void Update()
+    private void Start()
     {
+
         for (int i = lights.Count - 1; i >= 0; i--)
         {
             if (!lights[i]) lights.RemoveAt(i);
@@ -39,26 +40,11 @@ public class WorldColors : MonoBehaviour
                 lights[i].color = lightColor;
                 lights[i].intensity = maxLightStrength * lightDensity;
                 lights[i].shadowIntensity = shadowDesnity;
-                /*                lights[i].volumeIntensity = lightDensity;
-                                lights[i].shadowVolumeIntensity = shadowDesnity;*/
             }
         }
         pixelEffectMaterial.SetColor("_Color", pixeleffectColor);
         arenaMaterial.SetColor("_ColorOverride", arenaColor);
+
     }
-
-    /*    static WorldColors instance;
-        public static WorldColors Instance 
-        { 
-            get 
-            {
-                if (!instance) instance = FindAnyObjectByType<WorldColors>();
-                return instance;
-            }
-        }
-
-        public static Color GetPixelEffectColor() => Instance.pixeleffectColor;
-        public static Color GetGroundColor() => Instance.groundColor;
-        public static Color GetLightColor() => Instance.lightColor;*/
 
 }

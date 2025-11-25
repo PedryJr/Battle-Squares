@@ -11,6 +11,9 @@ public sealed class CopyBehaviour : MonoBehaviour
 
     string code;
 
+    float updateFrequency = 5;
+    float timer = 0;
+
     private void Start()
     {
         if (!NetworkManager.Singleton.IsHost) return;
@@ -20,6 +23,9 @@ public sealed class CopyBehaviour : MonoBehaviour
 
     private void Update()
     {
+        timer += Time.deltaTime * updateFrequency;
+        if (timer < 1) return;
+        timer = 0;
 
         if (!NetworkManager.Singleton.IsListening) return;
 

@@ -44,11 +44,11 @@ public class MapStreamSynchronizer : NetworkBehaviour
     }
 
 
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [ServerRpc(InvokePermission = RpcInvokePermission.Server, Delivery = RpcDelivery.Reliable)]
     public void OnJoinMapRequestServerRpc()
     {
         if (!IsHost) return;
-        /*if (playerSynchronizer.localSquare.selectedLegacyMap) */LevelChangedCallback(levelPrep);
+        LevelChangedCallback(levelPrep);
     }
 
     //ON HOST
@@ -78,7 +78,27 @@ public class MapStreamSynchronizer : NetworkBehaviour
     [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
     public void NotifyMapChangeClientRpc(LevelExpectation levelExpectation, string levelName)
     {
-        if(levelReciever != null) if (levelReciever.levelExpectation.levelHashCode == levelExpectation.levelHashCode) return;
+        if (levelReciever != null) if (levelReciever.levelExpectation.levelHashCode == levelExpectation.levelHashCode) return;
+        if (IsHost) return;
+        levelReciever = new LevelReciever(levelExpectation);
+        levelReciever.levelName = levelName;
+        RequestData();
+    }
+
+    public void RestreamMapByForce() => RestreamMapByForceServerRpc(NetworkManager.LocalClientId);
+
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    public void RestreamMapByForceServerRpc(ulong requester)
+    {
+        ClientRpcParams clientRpcParams = default;
+        clientRpcParams.Send.TargetClientIdsNativeArray = new NativeArray<ulong>(new ulong[] { requester }, Allocator.TempJob);
+        clientRpcParams.Receive = default;
+        RestreamMapByForceClientRpc(levelPrep.levelExpectation, levelPrep.levelName, clientRpcParams);
+    }
+
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
+    public void RestreamMapByForceClientRpc(LevelExpectation levelExpectation, string levelName, ClientRpcParams clientRpcParams)
+    {
         if (IsHost) return;
         levelReciever = new LevelReciever(levelExpectation);
         levelReciever.levelName = levelName;
@@ -88,8 +108,7 @@ public class MapStreamSynchronizer : NetworkBehaviour
     public void RequestData()
     {
         if (levelReciever.loadingCompleted) return;
-        if (!playerSynchronizer.localSquare) return;
-        FetchChunkServerRpc(levelReciever.recievedChunks, playerSynchronizer.localSquare.GetID());
+        FetchChunkServerRpc(levelReciever.recievedChunks, (byte) NetworkManager.LocalClientId);
     }
 
     //ON CLIENT
@@ -174,7 +193,7 @@ public class MapStreamSynchronizer : NetworkBehaviour
     }
 
     //ON HOST
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void FetchChunkServerRpc(LevelExpectation recievedChunks, byte requester)
     {
 
@@ -271,17 +290,29 @@ public class LevelReciever
 
         Mesh[] meshesToCleanUp = new Mesh[simplifiedShapeDataArray.Length + 1];
 
-        for (int i = 0; i < simplifiedShapeDataArray.Length; i++)
+        try
         {
-            shapes[i] = new CombineInstance()
+
+            for (int i = 0; i < simplifiedShapeDataArray.Length; i++)
             {
-                mesh = simplifiedShapeDataArray[i].GenerateWorldspaceMesh(),
-                transform = Matrix4x4.identity,
-                subMeshIndex = 0,
-                lightmapScaleOffset = Vector4.zero,
-                realtimeLightmapScaleOffset = Vector4.zero,
-            };
-            meshesToCleanUp[i] = shapes[i].mesh;
+                shapes[i] = new CombineInstance()
+                {
+                    mesh = simplifiedShapeDataArray[i].GenerateWorldspaceMesh(),
+                    transform = Matrix4x4.identity,
+                    subMeshIndex = 0,
+                    lightmapScaleOffset = Vector4.zero,
+                    realtimeLightmapScaleOffset = Vector4.zero,
+                };
+                meshesToCleanUp[i] = shapes[i].mesh;
+            }
+
+        }
+        catch
+        {
+            //Notify a synchronizer to refetch map?
+            Debug.LogWarning("Map has null ref byte arrays");
+            if(MapStreamSynchronizer.Instance) MapStreamSynchronizer.Instance.RestreamMapByForce();
+            return null;
         }
 
         Mesh combinedShapes = new Mesh();
@@ -383,17 +414,14 @@ public class LevelPrep
     [MethodImpl(MethodImplOptions.NoOptimization)]
     public void StoreFromAnchors(AnimationAnchor[] anchors, int[] mimicIDs)
     {
-        // Build lookup: global mimic ID ? local index
         Dictionary<int, int> idToIndex = new Dictionary<int, int>(mimicIDs.Length);
         for (int i = 0; i < mimicIDs.Length; i++)
             idToIndex[mimicIDs[i]] = i;
 
-        // Fill array
         for (int i = 0; i < simplifiedAnimationDataArray.Length; i++)
         {
             simplifiedAnimationDataArray[i] = anchors[i].GetSimplifiedAnimationData();
 
-            // Replace each linkedShape's global ID with local index
             for (int j = 0; j < simplifiedAnimationDataArray[i].linkedShapes.Length; j++)
             {
                 int globalID = simplifiedAnimationDataArray[i].linkedShapes[j];
@@ -403,7 +431,6 @@ public class LevelPrep
                 }
                 else
                 {
-                    // optional: warn or mark invalid
                     simplifiedAnimationDataArray[i].linkedShapes[j] = -1;
                 }
             }
