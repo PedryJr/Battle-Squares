@@ -1536,8 +1536,8 @@ MonoBehaviour:
   exposedHealthColor:
     convertToLinear: 0
     saturation: 0.835
-    value: 0.628
-    alpha: 0.314
+    value: 0.2
+    alpha: 1
   nozzleColor:
     convertToLinear: 0
     saturation: 0.835
