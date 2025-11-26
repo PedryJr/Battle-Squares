@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering.Universal;
 
-[ExecuteAlways]
 public class ThermalRenderer : MonoBehaviour
 {
 
@@ -12,8 +11,8 @@ public class ThermalRenderer : MonoBehaviour
     static RenderTexture renderTexture;
     public static Action<Texture> OnStencilChange = (e) => { };
 
+    [SerializeField]
     Camera mainCam;
-
     [SerializeField]
     Camera cam;
     [SerializeField]
@@ -24,12 +23,10 @@ public class ThermalRenderer : MonoBehaviour
 
     private void Awake()
     {
-        mainCam = GetComponentInParent<Camera>();
         OnStencilChange = (e) => { };
         renderTexture = new RenderTexture(2, 2, 24);
         w = 2;
         h = 2;
-        cam = GetComponent<Camera>();
         cam.targetTexture = renderTexture;
         TryResize();
         thermalScreen.SetTexture("_DistortionTexture", renderTexture);
@@ -45,19 +42,17 @@ public class ThermalRenderer : MonoBehaviour
     void TryResize()
     {
         int testW = Screen.width, testH = Screen.height;
-
         if (testW != w || testH != h)
         {
             w = testW;
             h = testH;
             Resize();
         }
+        cam.orthographicSize = mainCam.orthographicSize;
     }
 
     void Resize()
     {
-        cam.orthographic = mainCam.orthographic;
-        cam.orthographicSize = mainCam.orthographicSize;
         RenderTexture oldRt = cam.targetTexture;
         renderTexture = CreateNewStencil(w, h);
         cam.targetTexture = renderTexture;

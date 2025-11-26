@@ -1705,14 +1705,14 @@ MonoBehaviour:
     alpha: 0.314
   nozzleColor:
     convertToLinear: 0
-    saturation: 0.835
+    saturation: 0.614
     value: 1
     alpha: 1
   projectileColor:
     convertToLinear: 0
-    saturation: 0.835
-    value: 0.75
-    alpha: 0.75
+    saturation: 0.329
+    value: 1
+    alpha: 1
   particleColor:
     convertToLinear: 0
     saturation: 0.835
@@ -1741,12 +1741,12 @@ MonoBehaviour:
   pfpBorderNotReadyColor:
     convertToLinear: 0
     saturation: 0.835
-    value: 0.75
+    value: 0.188
     alpha: 1
   pfpBorderIsReadyColor:
     convertToLinear: 0
     saturation: 0.835
-    value: 0.75
+    value: 0.473
     alpha: 1
   cursorColorOnHover:
     convertToLinear: 0

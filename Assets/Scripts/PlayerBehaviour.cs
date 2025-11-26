@@ -564,7 +564,11 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
         if(!steamDataApplied && steamDataAvalible) ApplySteamData();
 
-        if(newColor) ApplyColors();
+#if UNITY_EDITOR
+        newColor = true;
+#endif
+
+        if (newColor) ApplyColors();
 
         oneSecondTimer += Time.deltaTime * 10;
         dataUpdateHighSpeedTimer += Time.deltaTime * 2;

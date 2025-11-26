@@ -26,10 +26,9 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         particleMaterial.enableInstancing = true;
     }
 
-/*    private void Update()
-    {
-        RefreshColorComponents();
-    }*/
+#if UNITY_EDITOR
+    private void Update() => RefreshColorComponents();
+#endif
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
