@@ -929,10 +929,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         else point = GetClosestEnvironmentPoint(rb.position, out toParent);
         if (!toParent) return;
         
-        Vector3 hitMarkPos = new Vector3(point.point.x, point.point.y, transform.position.z);
+        Vector3 hitMarkPos;
         
         if (aoe) hitMarkPos = new Vector3(boom.transform.position.x, boom.transform.position.y, transform.position.z);
-        
+        else hitMarkPos = new Vector3(point.point.x, point.point.y, transform.position.z);
+
         float angle = math.degrees(math.atan2(point.normal.y, point.normal.x));
         
         HitMarkBehaviour newHitMark = Instantiate(hitMark, hitMarkPos, Quaternion.Euler(0, 0, angle), toParent);
@@ -948,64 +949,75 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         newHitMark.spawnColor = color;
         newHitMark.fadeColor = new UnityEngine.Color(color.r, color.g, color.b, 0f);
 
+        Instantiate(AssetResources.PowerDot, hitMarkPos, transform.rotation, transform.parent);
+
     }
 
-    RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin)
+    const int DIRS_COUNT = 8;
+    readonly Vector2[] DIRS_8 =
     {
+        new Vector2( 1f,  0f), new Vector2( 0.7071f,  0.7071f),
+        new Vector2( 0f,  1f), new Vector2(-0.7071f,  0.7071f),
+        new Vector2(-1f,  0f), new Vector2(-0.7071f, -0.7071f),
+        new Vector2( 0f, -1f), new Vector2( 0.7071f, -0.7071f)
+    };
 
-        int rayCount = 4;
+    readonly RaycastHit2D[] hitBuffer = new RaycastHit2D[1];
 
-        float angleStep = 360f / rayCount;
-        RaycastHit2D shortestHit = default;
-        float shortestDistance = math.INFINITY;
+    RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, float maxDistance = 100f)
+    {
+        float shortestDistance = float.PositiveInfinity;
+        RaycastHit2D closestHit = default;
 
-        for (int i = 0; i < rayCount; i++)
+        for (int i = 0; i < DIRS_COUNT; i++)
         {
-            float angle = (i * angleStep) + rb.rotation;
-            Vector2 direction = new Vector2(math.cos(math.radians(angle)), math.sin(math.radians(angle)));
+            Vector2 dir = DIRS_8[i];
 
-            RaycastHit2D hit = Physics2D.Raycast(origin, direction, 100f, ENVIRONTMENT_MASK);
+            int hitCount = Physics2D.RaycastNonAlloc(origin, dir, hitBuffer, maxDistance, ENVIRONTMENT_MASK);
 
-            if (hit.collider != null && hit.distance < shortestDistance)
+            if (hitCount > 0)
             {
-
-                shortestDistance = hit.distance;
-                shortestHit = hit;
-
+                float dist = hitBuffer[0].distance;
+                if (dist < shortestDistance)
+                {
+                    shortestDistance = dist;
+                    closestHit = hitBuffer[0];
+                }
             }
         }
-
-        return shortestHit;
-
+        return closestHit;
     }
 
-    RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, out Transform objectHit)
+
+    RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, out Transform objectHit, float maxDistance = 100f)
     {
         objectHit = null;
-        int rayCount = 8;
 
-        float angleStep = 360f / rayCount;
-        RaycastHit2D shortestHit = default;
-        float shortestDistance = math.INFINITY;
+        float shortestDistance = float.PositiveInfinity;
+        RaycastHit2D closestHit = default;
 
-        for (int i = 0; i < rayCount; i++)
+        for (int i = 0; i < DIRS_COUNT; i++)
         {
-            float angle = (i * angleStep) + rb.rotation;
-            Vector2 direction = new Vector2(math.cos(math.radians(angle)), math.sin(math.radians(angle)));
+            Vector2 dir = DIRS_8[i];
 
-            RaycastHit2D hit = Physics2D.Raycast(origin, direction, 100f, ENVIRONTMENT_MASK);
+            int hitCount = Physics2D.RaycastNonAlloc(origin, dir, hitBuffer, maxDistance, ENVIRONTMENT_MASK);
 
-            if (hit.collider != null && hit.distance < shortestDistance)
+            if (hitCount > 0)
             {
-                shortestDistance = hit.distance;
-                shortestHit = hit;
-                objectHit = hit.transform;
+                float dist = hitBuffer[0].distance;
+                if (dist < shortestDistance)
+                {
+                    shortestDistance = dist;
+                    closestHit = hitBuffer[0];
+                }
             }
         }
 
-        return shortestHit;
-
+        if (closestHit.collider != null) objectHit = closestHit.collider.transform;
+        return closestHit;
     }
+
+
 
 
     public void HitReg()

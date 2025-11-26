@@ -59,6 +59,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,6 +82,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
@@ -168,7 +171,6 @@ MonoBehaviour:
     IsLocalProjectile: 0
     acceleration: 0
     speed: 0
-    burst: 0
     lifeTime: 0
     fluctuation: []
     noGravity: 0
@@ -232,6 +234,7 @@ MonoBehaviour:
   multiplySpawnrateByLifetime: 0
   lifeTimeMultiplier: 0
   externalTrailSpawnRate: 0
+  playShootSound: 0
 --- !u!50 &-3438963122069973725
 Rigidbody2D:
   serializedVersion: 5
@@ -427,7 +430,7 @@ Transform:
   m_GameObject: {fileID: 6487271758529186225}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.501, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8888889, y: 1.3333334, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5243,6 +5246,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5264,6 +5269,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 0

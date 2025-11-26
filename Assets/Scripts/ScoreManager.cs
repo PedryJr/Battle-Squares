@@ -155,7 +155,7 @@ public sealed class ScoreManager : NetworkBehaviour
 
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void UpdateScoreBoardServerRpc()
     {
         UpdateScoreBoardClientRpc();
@@ -214,7 +214,7 @@ public sealed class ScoreManager : NetworkBehaviour
 
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     void UpdateGameModeServerRpc(Mode gameMode)
     {
 

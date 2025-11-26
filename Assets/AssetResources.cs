@@ -4,6 +4,10 @@ public class AssetResources : MonoBehaviour
 {
 
     [SerializeField] Sprite smallCornerOctagon;
+    public static Sprite GetSmallCornerOctagon => Instance.smallCornerOctagon;
+
+    [SerializeField] PowerDotBehaviour powerDot;
+    public static PowerDotBehaviour PowerDot => Instance.powerDot;
 
     public static AssetResources Instance 
     { 
@@ -13,6 +17,5 @@ public class AssetResources : MonoBehaviour
 
     private void Awake() => Instance = this;
 
-    public static Sprite GetSmallCornerOctagon => Instance.smallCornerOctagon;
 
 }

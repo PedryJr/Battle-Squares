@@ -92,6 +92,9 @@ MonoBehaviour:
   assignedPlayer: {fileID: 0}
   border: {fileID: 6982744319546336873}
   pfp: {fileID: 4225676235290848294}
+  unreadyColor: {r: 0.105882354, g: 0.105882354, b: 0.105882354, a: 1}
+  readyColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  previewMode: 0
 --- !u!1 &2433863435470301017
 GameObject:
   m_ObjectHideFlags: 0

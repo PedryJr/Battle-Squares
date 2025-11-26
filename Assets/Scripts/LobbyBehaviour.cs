@@ -11,20 +11,6 @@ public sealed class LobbyBehaviour : MonoBehaviour
 
     private int funcTracker = -1;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CallFromUpdateManager(in LobbyBehaviour obj) => obj.MyUpdate();
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private unsafe void OnEnable()
-    {
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<LobbyBehaviour>.Instance.Register(&CallFromUpdateManager, this, trackerPtr);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private unsafe void OnDisable()
-    {
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<LobbyBehaviour>.Instance.Unregister(trackerPtr);
-    }
 
     [SerializeField]
     public TextMeshProUGUI lobbyName;
@@ -161,7 +147,7 @@ public sealed class LobbyBehaviour : MonoBehaviour
 
     float avalibilityUpdateTime;
 
-    private void MyUpdate()
+    private void Update()
     {
 
         avalibilityUpdateTime += Time.deltaTime;

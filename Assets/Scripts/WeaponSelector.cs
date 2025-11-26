@@ -6,23 +6,6 @@ using static ProjectileManager;
 public sealed class WeaponSelector : MonoBehaviour
 {
 
-    private int funcTracker = -1;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CallFromUpdateManager(in WeaponSelector obj) => obj.MyUpdate();
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private unsafe void OnEnable()
-    {
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<WeaponSelector>.Instance.Register(&CallFromUpdateManager, this, trackerPtr);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private unsafe void OnDisable()
-    {
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<WeaponSelector>.Instance.Unregister(trackerPtr);
-    }
-
     [SerializeField]
     public ProjectileType weaponType;
 
@@ -73,6 +56,9 @@ public sealed class WeaponSelector : MonoBehaviour
     public Sprite GetImage() => selectorImage.sprite;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void MyUpdate() => hoverAnimation.onHoveredColor = playerSynchronizer.localSquare.PlayerColor.HighlightedWeaponColor;
+    private void Update()
+    {
+        if(playerSynchronizer.localSquare) hoverAnimation.onHoveredColor = playerSynchronizer.localSquare.PlayerColor.HighlightedWeaponColor;
+    }
 
 }

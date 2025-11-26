@@ -263,7 +263,7 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void SpawnParticlesServerRpc(Vector3 particlePosition, byte[] newParticleData)
     {
 
@@ -290,19 +290,19 @@ public sealed class ProjectileManager : NetworkBehaviour
     public void SpawnParticlesClientRpc(Vector3 particlePosition, byte[] newParticleData)
     {
 
-        ulong ignoreId = newParticleData[3];
+        ulong ignoreId = newParticleData[0];
         if (IsHost) return;
-
-        ProjectileType projectileType = (ProjectileType)newParticleData[4];
-        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[5], newParticleData[6] }));
-
-
         if (NetworkManager.LocalClientId == ignoreId) return;
 
-        GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
-        PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
+        ProjectileType projectileType = (ProjectileType)newParticleData[1];
+        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[2], newParticleData[3] }));
 
-        foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
+        GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+
+        PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
+        ParticleSystemRenderer[] particleSystemRenderers = newParticle.GetComponentsInChildren<ParticleSystemRenderer>();
+
+        foreach (ParticleSystemRenderer particle in particleSystemRenderers)
         {
             shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(particle, particle.GetComponent<ParticleSystem>());
         }

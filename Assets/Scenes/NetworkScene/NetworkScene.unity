@@ -2293,6 +2293,7 @@ MonoBehaviour:
   state: 
   largeImage: 24
   largeText: Battle Squares
+  username: 
 --- !u!114 &7766882706945389866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2351,6 +2352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   smallCornerOctagon: {fileID: -7428099741491018297, guid: 8192828f53e5bcf43aeaf229b7d45df5, type: 3}
+  powerDot: {fileID: 1462027230021753929, guid: 637e5803263313a4492663443fd8322e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

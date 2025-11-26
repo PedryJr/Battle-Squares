@@ -43,7 +43,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     delegate void UpdatePFPStream();
     List<UpdatePFPStream> updatePFPStream;
 
-    public NetworkList<IdMatch> playerIdList = new NetworkList<IdMatch>(readPerm: NetworkVariableReadPermission.Everyone, writePerm: NetworkVariableWritePermission.Server);
+    public NetworkList<ulong> playerIdList = new NetworkList<ulong>(readPerm: NetworkVariableReadPermission.Everyone, writePerm: NetworkVariableWritePermission.Server);
 
     bool stopUpdate;
 
@@ -278,8 +278,8 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         {
             Destroy(playerToRemove.square.gameObject);
             playerIdentities = refreshedIdentities;
-
             DisconnectPlayerRemotelyClientRpc(id);
+            playerIdList.Remove(id);
         }
 
     }
@@ -330,7 +330,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [ClientRpc(RequireOwnership = true, Delivery = RpcDelivery.Reliable)]
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     public void KickPlayerClientRpc(byte id)
     {
 
@@ -441,27 +441,16 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         playerFactoryData.selectedMap = currentGameState.selectedMap;
         playerFactoryData.steamId = SteamClient.SteamId.Value;
         playerFactoryData.networkId = NetworkManager.LocalClientId;
-/*        playerFactoryData.skinFrames = FetchFramePixels();
-        playerFactoryData.skinFrameCount = FetchFrameCount();
-        playerFactoryData.skinAnimationSpeed = FetchFrameAnimation();*/
 
-        if (IsHost) PlayerFactoryClientRpc(playerFactoryData);
-        else PlayerFactoryServerRpc(playerFactoryData);
+        PlayerFactoryRpc(playerFactoryData);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void PlayerFactoryServerRpc(PlayerFactoryDataPacket playerData) => PlayerFactoryClientRpc(playerData);
-
-    [ClientRpc]
-    public void PlayerFactoryClientRpc(PlayerFactoryDataPacket playerData) => PlayerFactory(ref playerData);
-    public void PlayerFactory(ref PlayerFactoryDataPacket playerData)
+    [Rpc(SendTo.Everyone, RequireOwnership = false)]
+    public void PlayerFactoryRpc(PlayerFactoryDataPacket playerData)
     {
         Debug.Log("Player Factory RPC\n" +
             $"Source ID: {playerData.networkId}\n" +
-            $"Source SteamID: {playerData.steamId}\n"/* +
-            $"Skin data: {playerData.skinFrames.Length}\n" +
-            $"Skin frames: {playerData.skinFrameCount}\n" +
-            $"Skin speed: {playerData.skinAnimationSpeed}"*/);
+            $"Source SteamID: {playerData.steamId}\n");
 
         if (IsNewPlayer(playerData.networkId)) InstantiateNewPlayer(ref playerData);
 
@@ -471,11 +460,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         UpdateHealth();
         UpdatePlayerReady(localSquare.ready);
 
-        if (IsHost)
-        {
-            scoreManager.UpdateModeAsHost(scoreManager.gameMode);
-            UpdateSelectedMap(localSquare.selectedMap, localSquare.selectedLegacyMap);
-        }
+        if (IsHost) scoreManager.UpdateModeAsHost(scoreManager.gameMode);
 
     }
 
@@ -485,21 +470,30 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
         SetPlayerInitialData(ref newPlayer, ref playerData);
 
-        //SetPlayerSkinData(ref newPlayer, ref playerData);
-
         SetPlayerLocality(ref newPlayer, ref playerData);
 
         SetPlayerSyncData(ref newPlayer, ref playerData);
 
         SpawnPlayer(ref newPlayer);
+
+        if (!IsHost && newPlayer.GetID() == NetworkManager.LocalClientId)
+        {
+            if (MapStreamSynchronizer.Instance) MapStreamSynchronizer.Instance.RestreamMapByForce();
+        }
     }
 
     private void SpawnPlayer(ref PlayerBehaviour newPlayer)
     {
         Debug.Log("Spawning a player on local client!");
         newPlayer.SpawnEffect();
-        if(IsHost) UpdateSelectedMap(localSquare.selectedMap, localSquare.selectedLegacyMap);
-        RequestPlayerSkinServerRpc(NetworkManager.LocalClientId, newPlayer.id);
+        if (IsHost)
+        {
+            playerIdList.Add(newPlayer.id);
+            UpdateSelectedMap(localSquare.selectedMap, localSquare.selectedLegacyMap);
+        }
+        RequestPlayerSkinRpc(NetworkManager.LocalClientId, newPlayer.id);
+        clrUpdate = 1;
+        newPlayer.newColor = true;
     }
 
     private void SetPlayerLocality(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
@@ -527,11 +521,9 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         newPlayer.selectedMap = playerData.selectedMap;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestPlayerSkinServerRpc(ulong requesterID, ulong skinOwnerID) => RequestPlayerSkinClientRpc(requesterID, skinOwnerID);
 
-    [ClientRpc]
-    public void RequestPlayerSkinClientRpc(ulong requesterID, ulong skinOwnerID)
+    [Rpc(SendTo.Everyone, RequireOwnership = false)]
+    public void RequestPlayerSkinRpc(ulong requesterID, ulong skinOwnerID)
     {
         if (localSquare.id != skinOwnerID) return;
         SkinDataPacket skinDataPacket = new SkinDataPacket
@@ -556,11 +548,11 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
             clientRpcParams.Send.TargetClientIds = new ulong[] { requesterID };
             SendPlayerSkinDataClientRpc(requesterID, skinOwnerID, skinDataPacket, clientRpcParams);
         }
-        else SendPlayerSkinDataServerRpc(requesterID, skinOwnerID, skinDataPacket);
+        else SendPlayerSkinDataSRpc(requesterID, skinOwnerID, skinDataPacket);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void SendPlayerSkinDataServerRpc(ulong requesterID, ulong skinOwnerID, SkinDataPacket skinDataPacket)
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void SendPlayerSkinDataSRpc(ulong requesterID, ulong skinOwnerID, SkinDataPacket skinDataPacket)
     {
         ClientRpcParams clientRpcParams = default;
         clientRpcParams.Send.TargetClientIds = new ulong[] { requesterID };
@@ -640,20 +632,12 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
         public int selectedMap;
 
-/*        public int skinFrameCount;
-        public float skinAnimationSpeed;
-        public byte[] skinFrames;*/
-
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref steamId);
             serializer.SerializeValue(ref networkId);
 
             serializer.SerializeValue(ref selectedMap);
-
-/*            serializer.SerializeValue(ref skinFrameCount);
-            serializer.SerializeValue(ref skinAnimationSpeed);
-            serializer.SerializeValue(ref skinFrames);*/
         }
     }
 
@@ -677,7 +661,6 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         for (int modIndex = 0; modIndex < mods.Length; modIndex++) Mods.at[modIndex] = mods[modIndex];
     }
     private void FixedUpdate() => UpdatePlayerData();
-    //float clientConnectionsStatusTimer = 0;
     private void Update()
     {
 
@@ -685,35 +668,27 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         ping = rtt / 2;
     
     }
-    float rbUpdate, clrUpdate, clrUpdate2;
+
+    float clrUpdate, clrUpdate2;
+    bool rbFlip = false;
     void UpdatePlayerData()
     {
 
         float deltaTime = Time.deltaTime;
+        rbFlip = !rbFlip;
 
         if (stopUpdate) return;
         if (localSquare == null) return;
         if (playerIdentities == null) return;
 
-        if (rbUpdate > 1)
-        {
-            UpdateRigidBody();
-            rbUpdate -= 1;
-        }
+        if(rbFlip) UpdateRigidBody();
 
-        if (clrUpdate > 1)
+        if (clrUpdate > 0)
         {
             UpdateColor();
-            //UpdatePlayerReady(localSquare.ready);
-            clrUpdate = 0;
+            UpdatePlayerReady(localSquare.ready);
+            clrUpdate -= Time.deltaTime;
         }
-        else if (clrUpdate2 < 8)
-        {
-            clrUpdate += deltaTime * 20;
-            clrUpdate2 += deltaTime;
-        }
-        rbUpdate += deltaTime * 100f;
-
     }
     
     void StorePlayerRigidBodyData(PlayerBehaviour player, byte[] data)
@@ -903,7 +878,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     void UpdatePlayerReadyServerRpc(byte sourceId, bool ready)
     {
         UpdatePlayerReadyClientRpc(sourceId, ready);
@@ -978,7 +953,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void UpdatePlayerHealthServerRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
         UpdatePlayerHealthClientRpc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
@@ -1092,7 +1067,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         SpreadIngameMessageFunc(sanetizedMessage, playerId);
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     void SpreadInGameMessageServerRpc(string message, byte playerId)
     {
         SpreadInGameMessageClientRpc(message, playerId);

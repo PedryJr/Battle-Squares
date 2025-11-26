@@ -229,7 +229,7 @@ public sealed class LobbyLoader : MonoBehaviour
         {
             LobbyBehaviour oldListing = LobbiesV2[key];
             LobbiesV2.Remove(key);
-            Destroy(oldListing.gameObject);
+            if(oldListing) if(oldListing.gameObject) Destroy(oldListing.gameObject);
         }
     }
 

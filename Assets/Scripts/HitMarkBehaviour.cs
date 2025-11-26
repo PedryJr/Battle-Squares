@@ -9,23 +9,6 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
 
     private const float ShrinkSpeed = 8f;
 
-    private int funcTracker = -1;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CallFromUpdateManager(in HitMarkBehaviour obj) => obj.MyUpdate();
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnEnable()
-    {
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<HitMarkBehaviour>.Instance.Register(&CallFromUpdateManager, this, trackerPtr);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnDisable()
-    {
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<HitMarkBehaviour>.Instance.Unregister(trackerPtr);
-    }
-
 
     [SerializeField]
     ImpactForceBehaviour impactForce;
@@ -75,7 +58,7 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
 
     private void Awake()
     {
-        if(SharedBlock == null) SharedBlock = new MaterialPropertyBlock();
+        if (SharedBlock == null) SharedBlock = new MaterialPropertyBlock();
         impactForce = Instantiate(impactForce, transform.position, transform.rotation, null);
 
         if (randomRotation && spawnStages != null)
@@ -97,13 +80,20 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
     {
         float scaled = stencil / 2048f;
         SharedBlock.SetVector("_HitMarkStencil", new Vector4(scaled, scaled, scaled, scaled));
+        StencilRenderer.AssignTextureToProp(SharedBlock, "_StencilGroup");
+        mainRenderer.SetPropertyBlock(SharedBlock);
+    }
+
+    void AssignStencilTexture(Texture renderTexture)
+    {
+        SharedBlock.SetTexture("_StencilGroup", renderTexture);
         mainRenderer.SetPropertyBlock(SharedBlock);
     }
 
     bool trackScaleInit;
     Vector3 scaleFrom;
 
-    private void MyUpdate()
+    private void Update()
     {
         float dt = Time.deltaTime;
         timer += dt;
@@ -183,5 +173,15 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
                 if (grow) stage.doScale = true;
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        StencilRenderer.OnStencilChange += AssignStencilTexture;
+    }
+
+    private void OnDisable()
+    {
+        StencilRenderer.OnStencilChange -= AssignStencilTexture;
     }
 }

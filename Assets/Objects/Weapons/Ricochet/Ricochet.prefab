@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1066894796322893754}
   - component: {fileID: -3438963122069973725}
   - component: {fileID: 1694199888061291303}
+  - component: {fileID: 1481934151943740715}
   m_Layer: 7
   m_Name: Ricochet
   m_TagString: Untagged
@@ -135,7 +136,7 @@ MonoBehaviour:
   hit: 0
   sync: 0
   flipFlop: 0
-  impactParticle: {fileID: 7289681851009581468, guid: 69d34a0ca2a5b48489453ceacfcccbd1, type: 3}
+  impactParticle: {fileID: 7289681851009581468, guid: 37cb9d9a0a972eb4aaf3b03bb455f6ae, type: 3}
   hitMark: {fileID: 7378723969388511367, guid: 8cec5e615eff25d4783f982df3926e9f, type: 3}
   shotReference:
     Guid:
@@ -241,7 +242,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3066612454653962984}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 6200000, guid: d4b940ff4e435bd4392b5832f91a4b0b, type: 2}
@@ -358,6 +359,42 @@ MonoBehaviour:
     pulsationAmplitude: 5
     pulsationFallof: 1
     pulsationRadius: 1
+--- !u!58 &1481934151943740715
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066612454653962984}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: d4b940ff4e435bd4392b5832f91a4b0b, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
 --- !u!1 &7151540191759701396
 GameObject:
   m_ObjectHideFlags: 0
