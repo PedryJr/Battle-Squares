@@ -1931,6 +1931,166 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
+  - type: 13
+    projectile: {fileID: 3066612454653962984, guid: 27550b43085a7de4882ac02cc56e7667, type: 3}
+    launchParticle: {fileID: 7289681851009581468, guid: e8982626ed1f30b458bb9b3c8542a881, type: 3}
+    projectileAmmo: 4
+    reloadTime: 2.2
+    shootingInterval: 0.04
+    projectileSpeed: 30
+    projectileAcceleration: 0
+    lifeTime: 5
+    holdable: 0
+    burst: 0
+    burstSpread: 0
+    bounces: 0
+    fluctuation: 0
+    noGravity: 0
+    dieOnImpact: 1
+    damageOnImpact: 1
+    sticky: 0
+    aoe: 3
+    skipAoeOnTargetHit: 0
+    knockback: 13
+    speedLimit: 100
+    minSpeed: 0
+    aoeDamage: 8
+    baseDamage: 15
+    damageTimeScale: 0
+    recoil: 6
+    enableMorph: 0
+    targetMorph: {x: 0, y: 0, z: 0}
+    timeToMorph: 0
+    morphAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sync: 1
+    syncSpeed: 0.15
+    returnToSender: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    flipFlop: 0
+    homing: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 1
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    alignDirection: 0
+  - type: 14
+    projectile: {fileID: 3066612454653962984, guid: 00650469aa02ad9489e3ad7d2be1886a, type: 3}
+    launchParticle: {fileID: 7289681851009581468, guid: c1aadf80cfcfef94189ba6eb4428c9e6, type: 3}
+    projectileAmmo: 3
+    reloadTime: 2.3
+    shootingInterval: 0.04
+    projectileSpeed: 35
+    projectileAcceleration: 0
+    lifeTime: 1.5
+    holdable: 0
+    burst: 1
+    burstSpread: 3
+    bounces: 0
+    fluctuation: 0.04
+    noGravity: 1
+    dieOnImpact: 0
+    damageOnImpact: 1
+    sticky: 0
+    aoe: 0
+    skipAoeOnTargetHit: 0
+    knockback: 7
+    speedLimit: 100
+    minSpeed: 35
+    aoeDamage: 0
+    baseDamage: 2
+    damageTimeScale: 0
+    recoil: 8
+    enableMorph: 0
+    targetMorph: {x: 0, y: 0, z: 0}
+    timeToMorph: 0
+    morphAnimation:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sync: 1
+    syncSpeed: 0.15
+    returnToSender: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    flipFlop: 0
+    homing: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 1
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    alignDirection: 0
   nozzleParticles: {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
   projectiles: []
   localNozzle: {fileID: 0}

@@ -622,14 +622,16 @@ public sealed class ProjectileManager : NetworkBehaviour
         Minigun,
         Shotgun,
         Rocket,
-        Granade,
+        Grenade,
         Raygun,
         Charge,
         Katana,
         Boomerang,
         Hailmaker,
         Scortcher,
-        Bounzooka
+        Bounzooka,
+        Snowball,
+        Ricochet
 
     }
 
