@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60741558de6f8f74eb2886d48c299bc8, type: 3}
+  m_Name: Scortcher
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
+  specs:
+    icon: {fileID: 21300000, guid: cd89ef000a636064cb47ec96ce7d5381, type: 3}
+    projectile: {fileID: 3230000773134604271, guid: 7a460261f861aa64c82e30c947c476e1, type: 3}
+    launchParticle: {fileID: 4313180367996257349, guid: 752d8ec26064b1e47892dcc12571f6c3, type: 3}
+    bounceParticle: {fileID: 0}
+    impactParticle: {fileID: 4313180367996257349, guid: e79b53b365ec9594c8c88aaeb2891729, type: 3}
+    projectileAmmo: 7
+    reloadTime: 3.2
+    shootingInterval: 0.08
+    projectileSpeed: 50
+    projectileAcceleration: -5
+    lifeTime: 5
+    holdable: 1
+    burst: 0
+    burstSpread: 0
+    bounces: 0
+    fluctuation: 0.19
+    noGravity: 0
+    dieOnImpact: 0
+    damageOnImpact: 1
+    sticky: 1
+    aoe: 0
+    skipAoeOnTargetHit: 0
+    knockback: 1
+    speedLimit: 100
+    minSpeed: 0
+    aoeDamage: 0
+    baseDamage: 0
+    damageTimeScale: 0
+    recoil: 2.3
+    enableMorph: 0
+    targetMorph: {x: 0, y: 0, z: 1}
+    timeToMorph: 0
+    morphAnimation:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sync: 1
+    syncSpeed: 0.3
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 1
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    flipFlop: 0
+    homing: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 1
+    bounceOfPlayers: 0
+    slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 3
+    lingeringFrequency: 2.5
+    alignDirection: 0
+    typeID: 11
+    clampMorph: 1
+    bounceSpeedLoss: 0
+    bounceAngleTilt: 0
+    spawnOffsetPadding: 0

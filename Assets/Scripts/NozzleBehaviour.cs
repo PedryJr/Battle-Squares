@@ -2,6 +2,7 @@ using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 using static ProjectileManager;
+using static WeaponBuilder;
 
 [BurstCompile]
 public sealed class NozzleBehaviour : MonoBehaviour
@@ -12,8 +13,8 @@ public sealed class NozzleBehaviour : MonoBehaviour
     ProjectileManager projectileManager;
     public SpriteRenderer spriteRenderer;
 
-    public ProjectileType primary = ProjectileType.Revolver;
-    public ProjectileType secondary = ProjectileType.Revolver;
+    public ushort primary = 0;
+    public ushort secondary = 1;
 
     Vector2 relativePositionToPlayer = new ();
     Vector2 globalNozzleDirection = new();
@@ -70,8 +71,8 @@ public sealed class NozzleBehaviour : MonoBehaviour
         this.playerBehaviour = playerBehaviour;
         this.playerController = playerController;
 
-        UpdateWeaponTypes(ProjectileType.Sniper);
-        UpdateWeaponTypes(ProjectileType.Revolver);
+        UpdateWeaponTypes(0);
+        UpdateWeaponTypes(1);
 
         return this;
 
@@ -142,7 +143,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
         }
     }
     [BurstCompile]
-    bool ShootWeapon(ProjectileType type)
+    bool ShootWeapon(ushort type)
     {
 
         intensity += 0.2f;
@@ -204,7 +205,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
 
     }
     [BurstCompile]
-    public void UpdateWeaponTypes(ProjectileType newWeapon)
+    public void UpdateWeaponTypes(ushort newWeapon)
     {
         intensity = 0;
         primaryAmmo = 0;
@@ -227,26 +228,26 @@ public sealed class NozzleBehaviour : MonoBehaviour
         secondary = primary;
         primary = newWeapon;
 
-        foreach (Weapon weapon in projectileManager.weapons)
+        foreach (WeaponBuilder weapon in projectileManager.newWeapons)
         {
 
-            if(weapon.type == primary)
+            if(weapon.typeID == primary)
             {
 
-                primaryAmmo = weapon.projectileAmmo;
-                primaryFireTime = weapon.shootingInterval;
-                primaryReloadTime = weapon.reloadTime;
-                primaryHoldable = weapon.holdable;
+                primaryAmmo = weapon.GetProjectileAmmo;
+                primaryFireTime = weapon.GetShootingInterval;
+                primaryReloadTime = weapon.GetReloadTime;
+                primaryHoldable = weapon.GetHoldable;
 
             }
 
-            if(weapon.type == secondary)
+            if(weapon.typeID == secondary)
             {
 
-                secondaryAmmo = weapon.projectileAmmo;
-                secondaryFireTime = weapon.shootingInterval;
-                secondaryReloadTime = weapon.reloadTime;
-                secondaryHoldable = weapon.holdable;
+                secondaryAmmo = weapon.GetProjectileAmmo;
+                secondaryFireTime = weapon.GetShootingInterval;
+                secondaryReloadTime = weapon.GetReloadTime;
+                secondaryHoldable = weapon.GetHoldable;
 
             }
 

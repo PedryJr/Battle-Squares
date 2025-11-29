@@ -559,6 +559,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         SendPlayerSkinDataClientRpc(requesterID, skinOwnerID, skinDataPacket, clientRpcParams);
     }
 
+
     [ClientRpc]
     public void SendPlayerSkinDataClientRpc(ulong requesterID, ulong skinOwnerID, SkinDataPacket skinDataPacket, ClientRpcParams clientRpcParams = default)
     {

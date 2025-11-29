@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Mathematics;
@@ -9,14 +10,21 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using static PlayerSynchronizer;
 using static ProjectileManager;
+using static UnityEditor.Rendering.CameraUI;
+using static WeaponBuilder;
 using Random = System.Random;
 
 
 public sealed class ProjectileManager : NetworkBehaviour
 {
 
+
+
+/*    [SerializeField]
+    public Weapon[] weapons;*/
+
     [SerializeField]
-    public Weapon[] weapons;
+    public WeaponBuilder[] newWeapons;
 
     [SerializeField]
     GameObject nozzleParticles;
@@ -36,6 +44,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         projectiles = new List<ProjectileBehaviour>();
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
         SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+        for (ushort i = 0; i < newWeapons.Length; i++) newWeapons[i].ASSIGN_ID(i);
 
     }
 
@@ -58,12 +67,23 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
-    public void SpawnProjectile(ProjectileType type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
+    public void SpawnProjectile(ushort type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
     {
 
         Weapon weapon = new Weapon();
 
-        foreach (Weapon usedWeapon in weapons) if (usedWeapon.type == type) { weapon = usedWeapon; break; }
+        foreach (WeaponBuilder usedWeapon in newWeapons) if (usedWeapon.typeID == type) { weapon = usedWeapon.weapon; break; }
+
+        Vector2 correctedPositionToGround = position;
+        RaycastHit2D groundHit = Physics2D.Linecast(shootingPlayer.transform.position, position, ProjectileBehaviour.ENVIRONTMENT_MASK);
+        if (groundHit.transform)
+        {
+            float padding = weapon.spawnOffsetPadding;
+            float cutOff = Vector2.Distance(shootingPlayer.transform.position, position) - groundHit.distance;
+            cutOff += padding;
+            correctedPositionToGround -= direction.normalized * cutOff;
+        }
+        position = correctedPositionToGround;
 
         if (weapon.burst > 0)
         {
@@ -114,7 +134,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         SpawnProjectileEvent(sourceId, projectileID, type, position, direction, fluctuation, bitBoolAsByte);
     }
 
-    void SpawnProjectileEvent(byte sourceId, uint projectileID, byte typeAsByte, Vector2 position, Vector2 direction, float[] fluctuation, byte bitBoolAsByte)
+    void SpawnProjectileEvent(byte sourceId, uint projectileID, ushort typeID, Vector2 position, Vector2 direction, float[] fluctuation, byte bitBoolAsByte)
     {
         bool flipFlop, playSound;
         Boolean8 bitBool = new Boolean8();
@@ -122,7 +142,6 @@ public sealed class ProjectileManager : NetworkBehaviour
         flipFlop = bitBool.GetBool(0);
         playSound = bitBool.GetBool(1);
 
-        ProjectileType type = (ProjectileType)typeAsByte;
         ProjectileBehaviour projectileBehaviour = null;
         PlayerBehaviour owningPlayer = null;
 
@@ -130,17 +149,17 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector2 forceToAdd = new();
 
         float multiplier1, multiplier2;
-        foreach (Weapon usedWeapon in weapons) if (usedWeapon.type == type) { weapon = usedWeapon; break; }
+        foreach (WeaponBuilder usedWeapon in newWeapons) if (usedWeapon.typeID == typeID) { weapon = usedWeapon.weapon; break; }
 
         owningPlayer = playerSynchronizer.GetPlayerById(sourceId);
 
-        projectileBehaviour = Instantiate(weapon.projectile, position, Quaternion.identity, null).GetComponent<ProjectileBehaviour>();
+        projectileBehaviour = Instantiate(weapon.projectile, position, Quaternion.identity, null);
         projectileBehaviour.flipFlop = flipFlop;
         projectileBehaviour.playShootSound = playSound;
 
         ProjectileInitData data = WeaponToProjectileData(ref weapon, projectileID, position, direction, fluctuation, owningPlayer);
 
-        projectileBehaviour.ownerId = owningPlayer.id;
+        projectileBehaviour.ownerId = owningPlayer.GetID();
         projectileBehaviour.InitializeBullet(ref data);
 
         multiplier1 = weapon.recoil * Mods.at[13];
@@ -156,7 +175,6 @@ public sealed class ProjectileManager : NetworkBehaviour
 
         return new()
         {
-
             projectileManager = this,
             owningPlayer = owningPlayer,
             IsLocalProjectile = owningPlayer.isLocalPlayer,
@@ -185,7 +203,6 @@ public sealed class ProjectileManager : NetworkBehaviour
             targetMorph = weapon.targetMorph,
             timeToMorph = weapon.timeToMorph,
             sync = weapon.sync,
-            retornToSender = weapon.returnToSender,
             stickToSender = weapon.stickToSender,
             morhpAnimation = weapon.morphAnimation,
             melee = weapon.melee,
@@ -209,12 +226,23 @@ public sealed class ProjectileManager : NetworkBehaviour
             lingeringDamage = weapon.lingeringDamage,
             lingeringFrequency = weapon.lingeringFrequency,
             alignDirection = weapon.alignDirection,
-
+            bounces = weapon.bounces,
+            bounceParticle = weapon.bounceParticle,
+            impactParticle = weapon.impactParticle,
+            clampMorph = weapon.clampMorph,
+            bounceSpeedLoss = weapon.bounceSpeedLoss,
+            bounceAngleTilt = weapon.bounceAngleTilt,
         };
 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public WeaponBuilder GetWeaponBuilderByTypeId(ushort typeId) => newWeapons.First((newWeapon) => newWeapon.typeID == typeId);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     uint GenerateProjectileId() => (uint)new Random().Next(0, 2147483640) + (uint)new System.Random().Next(0, 2147483640);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     float GenerateProjectileFluctuation(in Weapon weapon) => UnityEngine.Random.Range(-weapon.fluctuation, weapon.fluctuation);
 
     #region otherSyncs
@@ -225,19 +253,19 @@ public sealed class ProjectileManager : NetworkBehaviour
         return BitConverter.ToUInt32(buffer, 0);
     }
 
-    GameObject GetNozzleParticle(ProjectileType projectileType)
+    ParticleBehaviour GetNozzleParticle(ushort projectileType)
     {
 
-        foreach (Weapon weapon in weapons)
+        foreach (WeaponBuilder weapon in newWeapons)
         {
 
-            if (weapon.type == projectileType) return weapon.launchParticle;
+            if (weapon.typeID == projectileType) return weapon.GetLaunchParticle;
 
         }
         return null;
     }
 
-    public void SpawnParticles(Vector3 particlePosition, Quaternion particleRotation, ProjectileType projectileType)
+    public void SpawnParticles(Vector3 particlePosition, Quaternion particleRotation, ushort projectileType)
     {
 
         ulong ignoreId = NetworkManager.LocalClientId;
@@ -246,65 +274,60 @@ public sealed class ProjectileManager : NetworkBehaviour
 
         byte[] particleData = new byte[4];
         particleData[0] = (byte)ignoreId;
-        particleData[1] = (byte)projectileType;
-        particleData[2] = rotation[0];
-        particleData[3] = rotation[1];
+        particleData[1] = rotation[0];
+        particleData[2] = rotation[1];
 
-        GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+        ParticleBehaviour newParticle = ParticlePool.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
         PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
 
-        foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
+        for(int i = 0; i < newParticle.ParticleSystems.Length; i++)
         {
-            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(particle, particle.GetComponent<ParticleSystem>());
+            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
         }
 
-        if (IsHost) SpawnParticlesClientRpc(particlePosition, particleData);
-        if (!IsHost) SpawnParticlesServerRpc(particlePosition, particleData);
+        if (IsHost) SpawnParticlesClientRpc(particlePosition, particleData, projectileType);
+        if (!IsHost) SpawnParticlesServerRpc(particlePosition, particleData, projectileType);
 
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    public void SpawnParticlesServerRpc(Vector3 particlePosition, byte[] newParticleData)
+    public void SpawnParticlesServerRpc(Vector3 particlePosition, byte[] newParticleData, ushort projectileType)
     {
 
         ulong ignoreId = newParticleData[0];
         if (NetworkManager.LocalClientId == ignoreId) return;
 
-        ProjectileType projectileType = (ProjectileType)newParticleData[1];
-        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[2], newParticleData[3] }));
+        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[1], newParticleData[1] }));
 
 
-        SpawnParticlesClientRpc(particlePosition, newParticleData);
+        SpawnParticlesClientRpc(particlePosition, newParticleData, projectileType);
 
-        GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+        ParticleBehaviour newParticle = ParticlePool.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
         PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
 
-        foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
+        for (int i = 0; i < newParticle.ParticleSystems.Length; i++)
         {
-            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(particle, particle.GetComponent<ParticleSystem>());
+            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
         }
 
     }
 
     [ClientRpc]
-    public void SpawnParticlesClientRpc(Vector3 particlePosition, byte[] newParticleData)
+    public void SpawnParticlesClientRpc(Vector3 particlePosition, byte[] newParticleData, ushort projectileType)
     {
 
         ulong ignoreId = newParticleData[0];
         if (IsHost) return;
         if (NetworkManager.LocalClientId == ignoreId) return;
 
-        ProjectileType projectileType = (ProjectileType)newParticleData[1];
-        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[2], newParticleData[3] }));
+        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[1], newParticleData[2] }));
 
-        GameObject newParticle = Instantiate(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
-
+        ParticleBehaviour newParticle = ParticlePool.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
         PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
-        ParticleSystemRenderer[] particleSystemRenderers = newParticle.GetComponentsInChildren<ParticleSystemRenderer>();
 
-        foreach (ParticleSystemRenderer particle in particleSystemRenderers)
+        for (int i = 0; i < newParticle.ParticleSystems.Length; i++)
         {
-            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(particle, particle.GetComponent<ParticleSystem>());
+            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
         }
 
     }
@@ -551,89 +574,6 @@ public sealed class ProjectileManager : NetworkBehaviour
 
 
     #endregion
-    [Serializable]
-    public struct Weapon
-    {
-
-        public ProjectileType type;
-        public GameObject projectile;
-        public GameObject launchParticle;
-        public int projectileAmmo;
-        public float reloadTime;
-        public float shootingInterval;
-        public float projectileSpeed;
-        public float projectileAcceleration;
-        public float lifeTime;
-        public bool holdable;
-        public int burst;
-        public float burstSpread;
-        public int bounces;
-        public float fluctuation;
-        public bool noGravity;
-        public bool dieOnImpact;
-        public bool damageOnImpact;
-        public bool sticky;
-        public float aoe;
-        public bool skipAoeOnTargetHit;
-        public float knockback;
-        public float speedLimit;
-        public float minSpeed;
-        public float aoeDamage;
-        public float baseDamage;
-        public float damageTimeScale;
-        public float recoil;
-        public bool enableMorph;
-        public Vector3 targetMorph;
-        public float timeToMorph;
-        public AnimationCurve morphAnimation;
-        public bool sync;
-        public float syncSpeed;
-        public bool returnToSender;
-        public bool stickToSender;
-        public bool melee;
-        public bool oneTimeHit;
-        public float meleeRange;
-        public float swingDegrees;
-        public float meleeRotation;
-        public AnimationCurve meleePosAnimation;
-        public AnimationCurve meleeRotAnimation;
-        public bool flipFlop;
-        public bool homing;
-        public float homingStrength;
-        public float homingDistance;
-        public float spinSpeed;
-        public bool rotationFlipOnImpact;
-        public bool dieFromProjectiles;
-        public bool dontBlockProjectiles;
-        public bool bounceOfPlayers;
-        public float slowDownAmount;
-        public float senderSpeedOnDeath;
-        public float lingeringDamage;
-        public float lingeringFrequency;
-        public bool alignDirection;
-
-    }
-
-    public enum ProjectileType : byte
-    {
-
-        Revolver,
-        Sniper,
-        Minigun,
-        Shotgun,
-        Rocket,
-        Grenade,
-        Raygun,
-        Charge,
-        Katana,
-        Boomerang,
-        Hailmaker,
-        Scortcher,
-        Bounzooka,
-        Snowball,
-        Ricochet
-
-    }
 
     public struct Boolean8
     {

@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60741558de6f8f74eb2886d48c299bc8, type: 3}
+  m_Name: Minigun
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
+  specs:
+    icon: {fileID: 21300000, guid: 9a8a19788be8d2848977b48f8aeaeffc, type: 3}
+    projectile: {fileID: 3230000773134604271, guid: 0e5e809c41fa5344a9148b72c5826481, type: 3}
+    launchParticle: {fileID: 4313180367996257349, guid: c2f50d2d9a5df5f4b9f0d3e1477fc04a, type: 3}
+    bounceParticle: {fileID: 0}
+    impactParticle: {fileID: 4313180367996257349, guid: b29b397a02cadfe46adaf535059a9ac4, type: 3}
+    projectileAmmo: 19
+    reloadTime: 1.65
+    shootingInterval: 0.08
+    projectileSpeed: 33
+    projectileAcceleration: -0.402
+    lifeTime: 2
+    holdable: 1
+    burst: 0
+    burstSpread: 0
+    bounces: 0
+    fluctuation: 0.07
+    noGravity: 1
+    dieOnImpact: 1
+    damageOnImpact: 1
+    sticky: 0
+    aoe: 0
+    skipAoeOnTargetHit: 0
+    knockback: 5
+    speedLimit: 100
+    minSpeed: 0
+    aoeDamage: 0
+    baseDamage: 2.3
+    damageTimeScale: 0
+    recoil: 4
+    enableMorph: 0
+    targetMorph: {x: 0, y: 0, z: 0}
+    timeToMorph: 0
+    morphAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sync: 0
+    syncSpeed: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    flipFlop: 0
+    homing: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 1
+    dontBlockProjectiles: 1
+    bounceOfPlayers: 0
+    slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    alignDirection: 0
+    typeID: 6
+    clampMorph: 1
+    bounceSpeedLoss: 0
+    bounceAngleTilt: 0
+    spawnOffsetPadding: 0

@@ -975,11 +975,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     void ApplyTargetMovement()
     {
-
         rb.AddForce(movementDirection * acceleration * forceLimiter, ForceMode2D.Force);
-
         if (math.abs(rb.angularVelocity / 360) < 1f) rb.AddTorque(-movementDirection.x / 0.85f, ForceMode2D.Force);
-
     }
 
 
@@ -998,6 +995,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         nozzleTransform.localPosition = new Vector2(math.clamp(nPosX, -1, 1), math.clamp(nPosY, -1, 1));
 
     }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public byte GetID() => (byte) id;
 

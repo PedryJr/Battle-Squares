@@ -76,7 +76,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3066612454653962984}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -89,6 +89,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -110,6 +112,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
@@ -163,7 +166,6 @@ MonoBehaviour:
   hit: 0
   sync: 0
   flipFlop: 0
-  impactParticle: {fileID: 7289681851009581468, guid: 83e84455d9b7f5d42a66ef25458f72ca, type: 3}
   hitMark: {fileID: 7378723969388511367, guid: 4881170d60918d54e9aff5bb4332aff9, type: 3}
   shotReference:
     Guid:
@@ -188,6 +190,8 @@ MonoBehaviour:
       Data4: 1170857750
     Path: event:/VFX/Base/Gun Hit
   data:
+    impactParticle: {fileID: 0}
+    bounceParticle: {fileID: 0}
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}
     position: {x: 0, y: 0}
@@ -198,7 +202,6 @@ MonoBehaviour:
     IsLocalProjectile: 0
     acceleration: 0
     speed: 0
-    burst: 0
     lifeTime: 0
     fluctuation: []
     noGravity: 0
@@ -214,7 +217,6 @@ MonoBehaviour:
     baseDamage: 0
     damageTimeScale: 0
     burstData: []
-    retornToSender: 0
     stickToSender: 0
     melee: 0
     meleeRange: 0
@@ -257,11 +259,14 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
+    bounces: 0
+    clampMorph: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 8693188006018225575, guid: b7309d4061fd2d24595d018c9d96d408, type: 3}
   multiplySpawnrateByLifetime: 1
   lifeTimeMultiplier: 2.5
   externalTrailSpawnRate: 0.15
+  playShootSound: 0
 --- !u!61 &1066894796322893754
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5205,6 +5210,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5226,6 +5233,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 0

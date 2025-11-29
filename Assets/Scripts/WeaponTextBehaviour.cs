@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using static ProjectileManager;
+using static WeaponBuilder;
 
 public sealed class WeaponTextBehaviour : MonoBehaviour
 {
@@ -28,10 +29,8 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
 
     private void Start()
     {
-
         equippedClassesField = GetComponent<TMP_Text>();
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
-
     }
 
     private void Update()
@@ -64,14 +63,14 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
                 foreach (WeaponDescription description in weaponDescriptions)
                 {
 
-                    if (weapon.GetComponent<WeaponPreviewBehaviour>().weaponType == description.weaponType)
+/*                    if (weapon.GetComponent<WeaponPreviewBehaviour>().weaponType == description.weaponType)
                     {
                         output = string.Empty;
                         if (!description.row1.Equals("")) output += description.row1;
                         if (!description.row2.Equals("")) output += "\n" + description.row2;
                         if (!description.row3.Equals("")) output += "\n" + description.row3;
                         if (!description.row4.Equals("")) output += "\n" + description.row4;
-                    }
+                    }*/
 
                 }
 
@@ -82,12 +81,12 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
         foreach (ButtonHoverAnimation selector in weaponSelectors)
         {
 
-            if (selector.isHovering)
+/*            if (selector.isHovering)
             {
 
-                output = selector.GetComponent<WeaponSelector>().weaponType.ToString();
+                //output = selector.GetComponent<WeaponSelector>().weaponType.ToString();
 
-            }
+            }*/
 
         }
 
@@ -107,7 +106,7 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
     [Serializable]
     public struct WeaponDescription
     {
-        public ProjectileType weaponType;
+        public ushort weaponType;
         public string row1;
         public string row2;
         public string row3;
