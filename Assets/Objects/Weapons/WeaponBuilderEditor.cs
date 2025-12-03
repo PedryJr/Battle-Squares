@@ -1,37 +1,22 @@
 #if UNITY_EDITOR
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.ShaderGraph.Serialization;
 using UnityEngine;
 
 [CustomEditor(typeof(WeaponBuilder))]
 [CanEditMultipleObjects]
 public class WeaponBuilderEditor : Editor
 {
-    /*
-    PSEUDOCODE / PLAN (detailed):
-    - Add a new serialized property field to represent a selectable Sprite icon in the weapon specs.
-    - Name the serialized property 'icon' to be concise and clear.
-    - Declare a new `SerializedProperty icon` field alongside the other SerializedProperty fields.
-    - In `OnEnable()` locate the 'icon' property via `specsProp.FindPropertyRelative("icon")`.
-    - In the inspector UI, display the sprite property in the "Projectile" foldout (so it's easy to find).
-      - Use `EditorGUILayout.PropertyField(icon)` guarded by a null check to avoid issues when field is missing.
-    - No other logic changes required because ObjectReference handling in `ApplyObjectField` already supports assets by GUID.
-    - Keep formatting consistent with the existing file and Unity editor code patterns.
-    - Provide a full file replacement so the new field is integrated cleanly.
-    */
 
-    // Foldout state
-    bool projectileFold;
-    bool firingFold;
-    bool damageFold;
-    bool morphFold;
-    bool syncFold;
-    bool meleeFold;
-    bool homingFold;
-    bool miscFold;
+    static bool projectileFold;
+    static bool firingFold;
+    static bool damageFold;
+    static bool morphFold;
+    static bool syncFold;
+    static bool meleeFold;
+    static bool homingFold;
+    static bool miscFold;
+    static bool movementFold;
+    static bool spawnEventsFold;
 
     SerializedProperty specsProp;
 
@@ -103,6 +88,14 @@ public class WeaponBuilderEditor : Editor
     SerializedProperty bounceSpeedLoss;
     SerializedProperty bounceAngleTilt;
     SerializedProperty spawnOffsetPadding;
+    SerializedProperty hover;
+    SerializedProperty hoverStrength;
+    SerializedProperty hoverFloorRadius;
+    SerializedProperty hoverDistance;
+    SerializedProperty hoverDistanceAttenuation;
+    SerializedProperty timeForFullHoverEffect;
+    SerializedProperty projectileSpawnEvents;
+    SerializedProperty weaponName;
 
     void OnEnable()
     {
@@ -169,6 +162,14 @@ public class WeaponBuilderEditor : Editor
         bounceSpeedLoss = specsProp.FindPropertyRelative("bounceSpeedLoss");
         bounceAngleTilt = specsProp.FindPropertyRelative("bounceAngleTilt");
         spawnOffsetPadding = specsProp.FindPropertyRelative("spawnOffsetPadding");
+        hover = specsProp.FindPropertyRelative("hover");
+        hoverDistance = specsProp.FindPropertyRelative("hoverDistance");
+        hoverStrength = specsProp.FindPropertyRelative("hoverStrength");
+        hoverFloorRadius = specsProp.FindPropertyRelative("hoverFloorRadius");
+        hoverDistanceAttenuation = specsProp.FindPropertyRelative("hoverDistanceAttenuation");
+        timeForFullHoverEffect = specsProp.FindPropertyRelative("timeForFullHoverEffect");
+        projectileSpawnEvents = specsProp.FindPropertyRelative("projectileSpawnEvents");
+        weaponName = specsProp.FindPropertyRelative("weaponName");
     }
 
     public override void OnInspectorGUI()
@@ -176,6 +177,7 @@ public class WeaponBuilderEditor : Editor
         serializedObject.Update();
 
         EditorGUILayout.LabelField("Weapon Specs", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(weaponName);
         EditorGUILayout.Space();
 
         projectileFold = EditorGUILayout.Foldout(projectileFold, "Projectile");
@@ -209,8 +211,8 @@ public class WeaponBuilderEditor : Editor
             EditorGUILayout.Space();
         }
 
-        homingFold = EditorGUILayout.Foldout(homingFold, "Movement");
-        if (homingFold)
+        movementFold = EditorGUILayout.Foldout(movementFold, "Movement");
+        if (movementFold)
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(projectileSpeed);
@@ -224,6 +226,7 @@ public class WeaponBuilderEditor : Editor
             EditorGUILayout.PropertyField(spinSpeed);
             EditorGUILayout.PropertyField(rotationFlipOnImpact);
             EditorGUILayout.PropertyField(alignDirection);
+            EditorGUILayout.PropertyField(stickToSender);
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();
         }
@@ -262,13 +265,12 @@ public class WeaponBuilderEditor : Editor
             EditorGUILayout.Space();
         }
 
-        syncFold = EditorGUILayout.Foldout(syncFold, "Sync / Return");
+        syncFold = EditorGUILayout.Foldout(syncFold, "Sync");
         if (syncFold)
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(sync);
             EditorGUILayout.PropertyField(syncSpeed);
-            EditorGUILayout.PropertyField(stickToSender);
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();
         }
@@ -288,13 +290,19 @@ public class WeaponBuilderEditor : Editor
             EditorGUILayout.Space();
         }
 
-        homingFold = EditorGUILayout.Foldout(homingFold, "Homing");
+        homingFold = EditorGUILayout.Foldout(homingFold, "Homing / Hover");
         if (homingFold)
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(homing);
             EditorGUILayout.PropertyField(homingStrength);
             EditorGUILayout.PropertyField(homingDistance);
+            EditorGUILayout.PropertyField(hover);
+            EditorGUILayout.PropertyField(hoverStrength);
+            EditorGUILayout.PropertyField(hoverDistance);
+            EditorGUILayout.PropertyField(hoverFloorRadius);
+            EditorGUILayout.PropertyField(hoverDistanceAttenuation);
+            EditorGUILayout.PropertyField(timeForFullHoverEffect);
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();
         }
@@ -311,6 +319,16 @@ public class WeaponBuilderEditor : Editor
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();
         }
+
+        spawnEventsFold = EditorGUILayout.Foldout(spawnEventsFold, "SpawnEvents");
+        if (spawnEventsFold)
+        {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.PropertyField(projectileSpawnEvents);
+            EditorGUI.indentLevel--;
+            EditorGUILayout.Space();
+        }
+
 
         serializedObject.ApplyModifiedProperties();
     }

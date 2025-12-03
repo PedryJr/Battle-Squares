@@ -1060,6 +1060,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   smallCornerOctagon: {fileID: -7428099741491018297, guid: 8192828f53e5bcf43aeaf229b7d45df5, type: 3}
   powerDot: {fileID: 1462027230021753929, guid: 637e5803263313a4492663443fd8322e, type: 3}
+  spawnEventHandle: {fileID: 7929380567041260378, guid: ee88fddff5ffc6b438347f8bba48c75f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

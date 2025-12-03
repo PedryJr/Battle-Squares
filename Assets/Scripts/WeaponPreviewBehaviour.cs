@@ -38,12 +38,12 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
 
         if (previewType == WeaponPreviewType.Primary)
         {
-            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeId(localPlayer.nozzleBehaviour.primary);
+            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeID(localPlayer.nozzleBehaviour.primary);
             image.sprite = weapon.GetSprite;
         }
         else
         {
-            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeId(localPlayer.nozzleBehaviour.secondary);
+            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeID(localPlayer.nozzleBehaviour.secondary);
             image.sprite = weapon.GetSprite;
         }
 

@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
-using Colourful;
 
 public sealed class PlayerColoringBehaviour : MonoBehaviour
 {

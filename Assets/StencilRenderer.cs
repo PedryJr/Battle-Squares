@@ -27,7 +27,7 @@ public class StencilRenderer : MonoBehaviour
 
     void TryResize()
     {
-        int testW = Screen.width, testH = Screen.height;
+        int testW = BS_Screen.SpixelsX, testH = BS_Screen.SpixelsY;
 
         if (testW != w || testH != h)
         {
@@ -56,11 +56,11 @@ public class StencilRenderer : MonoBehaviour
             dimension = UnityEngine.Rendering.TextureDimension.Tex2D,
             msaaSamples = 1,
             graphicsFormat = GraphicsFormat.R32_SFloat,
-            depthStencilFormat = GraphicsFormat.D32_SFloat,
+            depthStencilFormat = GraphicsFormat.S8_UInt,
             mipCount = 1,
             useMipMap = false,
-            enableRandomWrite = true,
-            useDynamicScale = true,
+            enableRandomWrite = false,
+            useDynamicScale = false,
             sRGB = false
         };
 

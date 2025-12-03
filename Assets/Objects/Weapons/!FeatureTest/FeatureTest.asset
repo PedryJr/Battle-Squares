@@ -19,16 +19,16 @@ MonoBehaviour:
     bounceParticle: {fileID: 4313180367996257349, guid: 8bf3cf56e93dd0747893f356c7b8c4eb, type: 3}
     impactParticle: {fileID: 4313180367996257349, guid: d3c40f3e5137be4448ec2be14d61baac, type: 3}
     projectileAmmo: 6
-    reloadTime: 1.5
+    reloadTime: 0
     shootingInterval: 0
-    projectileSpeed: 35
+    projectileSpeed: 25
     projectileAcceleration: 0
     lifeTime: 20
-    holdable: 0
+    holdable: 1
     burst: 0
     burstSpread: 0
     bounces: 20
-    fluctuation: 0
+    fluctuation: 0.1
     noGravity: 1
     dieOnImpact: 1
     damageOnImpact: 1
@@ -103,8 +103,15 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 1
-    typeID: 0
+    typeID: 1
     clampMorph: 1
-    bounceSpeedLoss: 1
+    bounceSpeedLoss: 0
     bounceAngleTilt: 0
     spawnOffsetPadding: 0
+    hover: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    projectileSpawnEvents: []

@@ -52,7 +52,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     sync: 1
-    syncSpeed: 0.1
+    syncSpeed: 10
     stickToSender: 0
     melee: 0
     oneTimeHit: 0
@@ -85,8 +85,15 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 1
+    typeID: 2
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
     spawnOffsetPadding: 0
+    hover: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    projectileSpawnEvents: []

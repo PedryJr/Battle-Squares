@@ -58,6 +58,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     [MethodImpl(512)]
     private void Awake()
     {
+
         sensorObjects = new List<ProximityPixelSenssor>();
         gridSpaceForceFieldSize = UnsafeUtility.SizeOf<GridSpaceForceField>();
         forceFieldBlockerSize = UnsafeUtility.SizeOf<ForceFieldBlockerData>();
@@ -163,16 +164,18 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     {
         spriteAsMesh = new Mesh();
 
+        Camera possibleInGameCamera = Camera.main;
+
         renderParams = new RenderParams(sharedSpriteMaterial);
         renderParams.instanceID = 0;
         renderParams.layer = 10;
-        renderParams.camera = Camera.main;
+        renderParams.camera = possibleInGameCamera;
         renderParams.lightProbeProxyVolume = null;
         renderParams.lightProbeUsage = LightProbeUsage.Off;
         renderParams.shadowCastingMode = ShadowCastingMode.Off;
         renderParams.motionVectorMode = MotionVectorGenerationMode.Camera;
 
-        mainCamera = Camera.main;
+        mainCamera = possibleInGameCamera;
     }
 
     NativeArray<VertexAttributeDescriptor> layout;

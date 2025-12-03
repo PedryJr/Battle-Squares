@@ -191,7 +191,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.6850586, y: -4.075226}
+  m_AnchoredPosition: {x: 2.6850586, y: -4.0751953}
   m_SizeDelta: {x: 36.48996, y: 31.450014}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &79609501
@@ -719,8 +719,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f64969c128fe69a49a179ee3959c0aa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThermalRenderer
-  mainCam: {fileID: 635070889}
-  cam: {fileID: 227993740}
   thermalScreen: {fileID: 2100000, guid: 7353b5c6cc7e5484da86b1accc1d6277, type: 2}
   renderer2D: {fileID: 11400000, guid: c89e00e61788a3943bc91d718b60647e, type: 2}
 --- !u!1 &231115623
@@ -1139,7 +1137,7 @@ MonoBehaviour:
   m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
@@ -1309,7 +1307,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
@@ -1357,7 +1355,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6eb65c80a3ef4541ba5b74cfe474948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effectRenderScale: 0.5
   stencilRenderer: {fileID: 619371728}
+  thermalRenderer: {fileID: 227993740}
   fps: 6000
   fpsCapture: 0
   oneSecondTimer: 0

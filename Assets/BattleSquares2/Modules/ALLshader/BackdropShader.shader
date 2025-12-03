@@ -29,8 +29,9 @@ Shader "*MyShaders/BackdropShader"
         Tags {"Queue" = "Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
 
         Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
-        Cull Off
+        Cull Back
         ZWrite [_ZWrite]
+        
 
         Pass
         {

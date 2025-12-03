@@ -9,7 +9,9 @@ Shader "Hidden/URP/ThermalBlit"
     SubShader
     {
         Tags { "RenderType"="Opaque" "Queue"="Overlay" }
-        Cull Off ZWrite Off ZTest Always
+        Cull Back 
+        ZWrite Off 
+        ZTest Always
 
         Pass
         {

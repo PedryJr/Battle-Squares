@@ -64,6 +64,7 @@ Material:
     - _ColorSrcBlend: 8
     - _EnableExternalAlpha: 0
     - _FaceCulling: 0
+    - _ForceAboveZeroStencil: 1
     - _ZTestMode: 2
     - _ZWrite: 1
     m_Colors:

@@ -481,6 +481,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9065514830198556854, guid: e0157dd88c6a6f541bdbbd3b45a5ebc3, type: 3}
+      propertyPath: shadowEdge
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9065514830198556854, guid: e0157dd88c6a6f541bdbbd3b45a5ebc3, type: 3}
       propertyPath: levelOutput
       value: 
       objectReference: {fileID: 6590266317702339221}

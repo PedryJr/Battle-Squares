@@ -1,16 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-using static PlayerSynchronizer;
-using static ProjectileManager;
-using static UnityEditor.Rendering.CameraUI;
 using static WeaponBuilder;
 using Random = System.Random;
 
@@ -18,13 +12,9 @@ using Random = System.Random;
 public sealed class ProjectileManager : NetworkBehaviour
 {
 
-
-
-/*    [SerializeField]
-    public Weapon[] weapons;*/
-
     [SerializeField]
     public WeaponBuilder[] newWeapons;
+    public Dictionary<ushort, WeaponBuilder> weapons;
 
     [SerializeField]
     GameObject nozzleParticles;
@@ -40,12 +30,15 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     private void Awake()
     {
-
+        weapons = new Dictionary<ushort, WeaponBuilder>();
         projectiles = new List<ProjectileBehaviour>();
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
         SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
-        for (ushort i = 0; i < newWeapons.Length; i++) newWeapons[i].ASSIGN_ID(i);
-
+        for (ushort i = 0; i < newWeapons.Length; i++)
+        {
+            newWeapons[i].ASSIGN_ID(i);
+            weapons[newWeapons[i].typeID] = newWeapons[i];
+        }
     }
 
     private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
@@ -67,12 +60,50 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
+    public void SpawnProjectileFromProxy(ushort type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
+    {
+        Weapon weapon = GetRawWeaponByTypeID(type);
+
+        Vector2 correctedPositionToGround = position;
+        Vector2 simulatedNozzlePosition = position + (direction * weapon.spawnOffsetPadding);
+
+        RaycastHit2D groundHit = Physics2D.Linecast(position, simulatedNozzlePosition, ProjectileBehaviour.ENVIRONTMENT_MASK);
+        if (groundHit.transform)
+        {
+            float padding = weapon.spawnOffsetPadding;
+            float cutOff = Vector2.Distance(position, simulatedNozzlePosition) - groundHit.distance;
+            cutOff += padding;
+            correctedPositionToGround -= direction.normalized * cutOff;
+        }
+        position = correctedPositionToGround;
+
+        if (weapon.burst > 0)
+        {
+
+            float directionAngle = Mathf.Atan2(direction.normalized.y, direction.normalized.x) * Mathf.Rad2Deg;
+            float burstAngleStep = weapon.burstSpread / weapon.burst;
+            float halfSpreadAngle = weapon.burstSpread / 2f;
+
+            float startAngle = directionAngle - halfSpreadAngle;
+
+            for (int i = 0; i <= weapon.burst; i++)
+            {
+
+                float angleAtI = startAngle + (burstAngleStep * i);
+                if (angleAtI > 180f) angleAtI -= 360f;
+
+                Vector2 newDirection = MyExtentions.AngleToNormalizedCoordinate(angleAtI);
+
+                SpawnProjectileOnAllClients((byte)type, position, newDirection, shootingPlayer, weapon, i == 0);
+            }
+        }
+        else SpawnProjectileOnAllClients((byte)type, position, direction, shootingPlayer, weapon, true);
+    }
+
     public void SpawnProjectile(ushort type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
     {
+        Weapon weapon = GetRawWeaponByTypeID(type);
 
-        Weapon weapon = new Weapon();
-
-        foreach (WeaponBuilder usedWeapon in newWeapons) if (usedWeapon.typeID == type) { weapon = usedWeapon.weapon; break; }
 
         Vector2 correctedPositionToGround = position;
         RaycastHit2D groundHit = Physics2D.Linecast(shootingPlayer.transform.position, position, ProjectileBehaviour.ENVIRONTMENT_MASK);
@@ -145,11 +176,10 @@ public sealed class ProjectileManager : NetworkBehaviour
         ProjectileBehaviour projectileBehaviour = null;
         PlayerBehaviour owningPlayer = null;
 
-        Weapon weapon = new();
+        Weapon weapon = GetRawWeaponByTypeID(typeID);
         Vector2 forceToAdd = new();
 
         float multiplier1, multiplier2;
-        foreach (WeaponBuilder usedWeapon in newWeapons) if (usedWeapon.typeID == typeID) { weapon = usedWeapon.weapon; break; }
 
         owningPlayer = playerSynchronizer.GetPlayerById(sourceId);
 
@@ -232,12 +262,18 @@ public sealed class ProjectileManager : NetworkBehaviour
             clampMorph = weapon.clampMorph,
             bounceSpeedLoss = weapon.bounceSpeedLoss,
             bounceAngleTilt = weapon.bounceAngleTilt,
+            hover = weapon.hover,
+            hoverDistance = weapon.hoverDistance,
+            hoverDistanceAttenuation = weapon.hoverDistanceAttenuation,
+            hoverFloorRadius = weapon.hoverFloorRadius,
+            hoverStrength = weapon.hoverStrength,
+            timeForFullHoverEffect = weapon.timeForFullHoverEffect,
+            projectileSpawnEvents = weapon.projectileSpawnEvents,
+            
         };
 
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public WeaponBuilder GetWeaponBuilderByTypeId(ushort typeId) => newWeapons.First((newWeapon) => newWeapon.typeID == typeId);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     uint GenerateProjectileId() => (uint)new Random().Next(0, 2147483640) + (uint)new System.Random().Next(0, 2147483640);
@@ -255,13 +291,9 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     ParticleBehaviour GetNozzleParticle(ushort projectileType)
     {
-
-        foreach (WeaponBuilder weapon in newWeapons)
-        {
-
-            if (weapon.typeID == projectileType) return weapon.GetLaunchParticle;
-
-        }
+        ParticleBehaviour particleBehaviour = null;
+        particleBehaviour = GetWeaponBuilderByTypeID(projectileType).GetLaunchParticle;
+        if(particleBehaviour) return particleBehaviour;
         return null;
     }
 
@@ -572,6 +604,10 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public WeaponBuilder GetWeaponBuilderByTypeID(ushort typeID) => weapons[typeID];
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Weapon GetRawWeaponByTypeID(ushort typeID) => weapons[typeID].weapon;
 
     #endregion
 

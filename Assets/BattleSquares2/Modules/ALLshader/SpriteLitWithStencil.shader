@@ -3,6 +3,7 @@ Shader "*MyShaders/SpriteLitStencil"
     Properties
     {
 
+        [MaterialToggle] _ForceAboveZeroStencil("Force Above 0 Stencil", Float) = 0
         _SpriteTex("Sprite", 2D) = "white" {}
         _StencilGroup("Stencil", 2D) = "white" {}
         _MainTex("Diffuse", 2D) = "white" {}
@@ -106,6 +107,7 @@ Shader "*MyShaders/SpriteLitStencil"
             #endif
             #define UnityObjectToClipPos(v) mul(UNITY_MATRIX_MVP, v)
 
+            float _ForceAboveZeroStencil;
 
             Varyings CombinedShapeLightVertex(Attributes v)
             {
@@ -150,19 +152,33 @@ Shader "*MyShaders/SpriteLitStencil"
                 float _hitMarkStencil = i.stencilOut.x * 2048.0;
                 float sampleStencil = tex2D(_StencilGroup, i.lightingUV).x * 2048.0;
 
+                if (_ForceAboveZeroStencil == 0) 
+                { 
+                 
+                    float compA, compB;
+                    compA = _hitMarkStencil;
+                    compB = sampleStencil;
 
-                float compA, compB;
-                compA = _hitMarkStencil;
-                compB = sampleStencil;
+                    float diff = abs(compB - compA);
 
-                float diff = abs(compB - compA);
+                    if((uint) compB == (uint) compA)
+                    {
+                        half4 outputcolor = i.color;
+                        outputcolor.w = SAMPLE_TEXTURE2D(_SpriteTex, sampler_SpriteTex, i.uv).w;
+                        return outputcolor;
+                        //return CombinedShapeLightShared(surfaceData, inputData);
+                    }
+                 
+                }
 
-                if((uint) compB == (uint) compA)
-                {
-                    half4 outputcolor = i.color;
-                    outputcolor.w = SAMPLE_TEXTURE2D(_SpriteTex, sampler_SpriteTex, i.uv).w;
-                    return outputcolor;
-                    //return CombinedShapeLightShared(surfaceData, inputData);
+                if (_ForceAboveZeroStencil > 0) 
+                { 
+                    if (sampleStencil > 0)                  
+                    { 
+                        half4 outputcolor = i.color;
+                        outputcolor.w = SAMPLE_TEXTURE2D(_SpriteTex, sampler_SpriteTex, i.uv).w;
+                        return outputcolor;
+                    }
                 }
 
                 return half4(0, 0, 0, 0);

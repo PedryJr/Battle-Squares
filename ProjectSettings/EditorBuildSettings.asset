@@ -27,6 +27,7 @@ EditorBuildSettings:
     path: Assets/BattleSquares2/Modules/LevelEditor/LevelBuilderScene.unity
     guid: ec18a4778b8468543a7a76b103a6b97e
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 14d721dca69026a439c08484e1df2335, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: b7b47f3acca291845b09de5e59848083, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: caeeeb8e8f605dc42866145ecbfdef4a, type: 3}
   m_UseUCBPForAssetBundles: 0

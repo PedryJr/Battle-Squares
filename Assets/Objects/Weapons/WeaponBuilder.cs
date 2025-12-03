@@ -1,15 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Unity.Burst;
-using Unity.Mathematics;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-using static PlayerSynchronizer;
-using static ProjectileManager;
-using Random = System.Random;
 
 [CreateAssetMenu(fileName = "WeaponBuilder", menuName = "WeaponBuilder")]
 public class WeaponBuilder : ScriptableObject
@@ -19,6 +10,7 @@ public class WeaponBuilder : ScriptableObject
     [SerializeField]
     Weapon specs;
 
+    public string WeaponName => specs.weaponName;
     public int GetProjectileAmmo => specs.projectileAmmo;
     public float GetShootingInterval => specs.shootingInterval;
     public float GetReloadTime => specs.reloadTime;
@@ -29,8 +21,13 @@ public class WeaponBuilder : ScriptableObject
     public Sprite GetSprite => specs.icon;
     public Sprite GetIcon => specs.icon;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool MatchID(ushort otherID) => otherID == specs.typeID;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Weapon GetWeapon() => specs;
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ASSIGN_ID(ushort newID) => specs.typeID = newID;
 
     [Serializable]
@@ -98,6 +95,14 @@ public class WeaponBuilder : ScriptableObject
         public float bounceSpeedLoss;
         public float bounceAngleTilt;
         public float spawnOffsetPadding;
+        public bool hover;
+        public float hoverDistance;
+        public float hoverStrength;
+        public float hoverFloorRadius;
+        public float hoverDistanceAttenuation;
+        public float timeForFullHoverEffect;
+        public ProjectileSpawnEvent[] projectileSpawnEvents;
+        public string weaponName;
     }
 
 }

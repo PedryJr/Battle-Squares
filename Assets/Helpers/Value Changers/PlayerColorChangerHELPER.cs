@@ -1,8 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
-using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerColorChangerHELPER : MonoBehaviour
 {

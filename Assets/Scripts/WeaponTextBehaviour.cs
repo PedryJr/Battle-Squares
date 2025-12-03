@@ -1,7 +1,6 @@
 using System;
 using TMPro;
 using UnityEngine;
-using static ProjectileManager;
 using static WeaponBuilder;
 
 public sealed class WeaponTextBehaviour : MonoBehaviour

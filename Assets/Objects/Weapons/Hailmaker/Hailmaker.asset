@@ -42,7 +42,7 @@ MonoBehaviour:
     baseDamage: 1.2
     damageTimeScale: 0
     recoil: 1.5
-    enableMorph: 0
+    enableMorph: 1
     targetMorph: {x: 0, y: 0, z: 1}
     timeToMorph: 0.1
     morphAnimation:
@@ -116,4 +116,4 @@ MonoBehaviour:
     clampMorph: 1
     bounceSpeedLoss: 0.2
     bounceAngleTilt: 0.75
-    spawnOffsetPadding: 0.275
+    spawnOffsetPadding: 0.55

@@ -72,16 +72,11 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     void ConnectionApproval(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {
-        Debug.Log(request.Payload.Length);
         response.Approved = true;
     }
 
     private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
     {
-
-        //Debug.Log("MFFF");
-
-        //networkManager.PendingClients.Clear();
 
         if (arg2.EventType == ConnectionEvent.PeerConnected) CreateNewPlayer(arg2.ClientId);
         if (arg2.EventType == ConnectionEvent.ClientConnected) CreateNewPlayer(arg2.ClientId);
@@ -343,7 +338,6 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     
     public void DisconnectPlayerLocally()
     {
-        Debug.Log("IMAGINE");
         NetworkManager.Shutdown(true);
         FacepunchTransport ft = GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>();
         ft.DisconnectLocalClient();
@@ -532,10 +526,6 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
             skinFrameCount = FetchFrameCount(),
             skinAnimationSpeed = FetchFrameAnimation(),
         };
-
-        Debug.Log(skinDataPacket.skinFrames);
-        Debug.Log(skinDataPacket.skinFrameCount);
-        Debug.Log(skinDataPacket.skinAnimationSpeed);
 
         SendPlayerSkinData(requesterID, skinOwnerID, ref skinDataPacket);
     }
@@ -887,11 +877,8 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     [ClientRpc]
     void UpdatePlayerReadyClientRpc(byte sourceId, bool ready)
-    {
-
-        Debug.Log($"UpdatePlayerReadyClientRpc: {sourceId}, {ready}");
-        UpdatePlayerReadyFinal(sourceId, ready);
-
+    { 
+        UpdatePlayerReadyFinal(sourceId, ready); 
     }
 
     void UpdatePlayerReadyFinal(byte sourceId, bool ready)
@@ -1166,7 +1153,28 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         }
 
     }
-    
+
+    public PlayerBehaviour GetClosestPlayer(Vector2 from)
+    {
+        PlayerBehaviour closest = null;
+        float closestDistSqr = Mathf.Infinity;
+
+        for (int i = 0; i < playerIdentities.Count; i++)
+        {
+            Vector2 playerPos = playerIdentities[i].square.rb.position;
+            float distSqr = (playerPos - from).sqrMagnitude;
+
+            if (distSqr < closestDistSqr)
+            {
+                closestDistSqr = distSqr;
+                closest = playerIdentities[i].square;
+            }
+        }
+
+        return closest;
+    }
+
+
 }
 
 public struct IdMatch : INetworkSerializable, IEquatable<IdMatch>

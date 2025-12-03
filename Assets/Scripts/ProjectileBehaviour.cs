@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
 using static PlayerSynchronizer;
 using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
@@ -17,8 +16,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     public float initDamage;
 
-    [SerializeField]
-    Transform boom;
+    [SerializeField] Transform boom;
 
     public float damageScaleOverTime;
 
@@ -33,6 +31,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     public bool IsLocalProjectile;
 
+    [SerializeField]
+    [HideInInspector]
     public Rigidbody2D rb;
 
     public PlayerBehaviour owningPlayer;
@@ -75,10 +75,16 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     [SerializeField]
     public HitMarkBehaviour hitMark;
 
+    [SerializeField]
+    [HideInInspector]
     ParticleSystemRenderer trailParticles;
+    [SerializeField]
+    [HideInInspector]
     ParticleSystem trailParticleSystem;
     MainModule trailMainModule;
 
+    [SerializeField]
+    [HideInInspector]
     SpriteRenderer spriteRenderer;
 
     CameraAnimator cameraAnimator;
@@ -105,6 +111,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     List<PlayerBehaviour> playersHit;
     List<FlagBehaviour> flagsHit;
 
+    [SerializeField]
+    [HideInInspector]
     Collider2D projectileCollider;
 
     [SerializeField]
@@ -137,18 +145,22 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     float initRot;
     public bool playShootSound;
 
-    private void Awake()
+    private void OnValidate()
     {
         projectileCollider = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         trailParticles = GetComponentInChildren<ParticleSystemRenderer>();
         trailParticleSystem = trailParticles.GetComponent<ParticleSystem>();
+    }
+
+    private void Awake()
+    {
         if (trailParticleSystem) trailMainModule = trailParticleSystem.main;
         cameraAnimator = Camera.main.GetComponent<CameraAnimator>();
-        playersHit = new List<PlayerBehaviour>();
-        flagsHit = new List<FlagBehaviour>();
-        playersCollidingWith = new List<PlayerBehaviour>();
+        playersHit = new List<PlayerBehaviour>(4);
+        flagsHit = new List<FlagBehaviour>(4);
+        playersCollidingWith = new List<PlayerBehaviour>(4);
         spriteRenderer.sprite = AssetResources.GetSmallCornerOctagon;
     }
 
@@ -194,6 +206,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         sync = data.sync;
 
         data.id++;
+
 
         owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(trailParticles, trailParticleSystem);
         owningPlayer.PlayerColor.AssignMaterialToProjectile(spriteRenderer);
@@ -254,19 +267,19 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         if (flipFlop)
         {
-            meleeStartDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation + (data.swingDegrees / 2));
-            meleeEndDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation - (data.swingDegrees / 2));
+            meleeStartDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation + (data.swingDegrees / 2f));
+            meleeEndDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation - (data.swingDegrees / 2f));
 
-            meleeStartRot = data.meleeRotation / 2;
-            meleeEndRot = -data.meleeRotation / 2;
+            meleeStartRot = data.meleeRotation / 2f;
+            meleeEndRot = -data.meleeRotation / 2f;
         }
         else
         {
-            meleeStartDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation - (data.swingDegrees / 2));
-            meleeEndDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation + (data.swingDegrees / 2));
+            meleeStartDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation - (data.swingDegrees / 2f));
+            meleeEndDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation + (data.swingDegrees / 2f));
 
-            meleeStartRot = -data.meleeRotation / 2;
-            meleeEndRot = data.meleeRotation / 2;
+            meleeStartRot = -data.meleeRotation / 2f;
+            meleeEndRot = data.meleeRotation / 2f;
         }
 
         initRot = rb.rotation;
@@ -276,6 +289,61 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         lastPos = rb.position;
         rb.linearVelocity *= Mods.at[3];
         this.data.knockback *= Mods.at[12];
+        for (int i = 0; i < data.projectileSpawnEvents.Length; i++) SetupProxySpawn(data.projectileSpawnEvents[i], ProjectileSpawnEvent.EventType.Birth);
+    }
+
+    void SetupProxySpawn(ProjectileSpawnEvent spawnEvent, ProjectileSpawnEvent.EventType filterEventType)
+    {
+        ProjectileSpawnEvent.EventType eventType = spawnEvent.eventType;
+        ProjectileSpawnEvent.EventDirection eventDirection = spawnEvent.eventDirection;
+
+        if (eventType != filterEventType) return;
+
+        spawnEvent.Ensure(ref spawnEvent);
+        spawnEvent.SetManager(data.projectileManager);
+        spawnEvent.SetShootingPlayer(owningPlayer);
+
+        if (eventType == ProjectileSpawnEvent.EventType.Birth)
+        {
+            ProjectileSpawnEvent.GetSetVec2Stream directionStream = (oldValue) => new Vector2();
+            ProjectileSpawnEvent.GetSetVec2Stream positionStream = (oldValue) => new Vector2();
+
+            if (eventDirection == ProjectileSpawnEvent.EventDirection.ClosestPlayer)
+            {
+                directionStream = (oldValue) =>
+                {
+                    if (this) if (rb) return projectileManager.playerSynchronizer.GetClosestPlayer(rb.position).position - rb.position;
+                    return oldValue;
+                };
+            }
+            if (eventDirection == ProjectileSpawnEvent.EventDirection.ClosestGround)
+            {
+                directionStream = (oldValue) =>
+                {
+                    if (this) if (rb) return GetClosestEnvironmentPoint(rb.position).point - rb.position;
+                    return oldValue;
+                };
+            }
+            if (eventDirection == ProjectileSpawnEvent.EventDirection.Velocity)
+            {
+                directionStream = (oldValue) =>
+                {
+                    if (this) if (rb) return rb.linearVelocity.normalized;
+                    return oldValue;
+                };
+            }
+            positionStream = (oldValue) =>
+            {
+                if (this) if (rb) return rb.position;
+                return oldValue;
+            };
+
+            spawnEvent.SetGetSpawnDirection(directionStream);
+            spawnEvent.SetGetSpawnPosition(positionStream);
+        }
+
+        SpawnEventHandle spawnEventHandle = Instantiate(AssetResources.SpawnEventHandle);
+        spawnEventHandle.Initialize(ref spawnEvent);
     }
 
     private void Update()
@@ -413,6 +481,18 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             rb.AddForce(homingDirection * data.homingStrength * Time.deltaTime * 50);
         }
 
+        if (data.hover)
+        {
+            RaycastHit2D hitPoint = GetClosestEnvironmentPointDown(rb.position, data.hoverDistance, data.hoverFloorRadius);
+            if (hitPoint.transform)
+            {
+                float distance = Vector2.Distance(hitPoint.point, rb.position);
+                float totalStength = data.hoverStrength * (data.hoverDistanceAttenuation > 0 ? (distance / data.hoverDistanceAttenuation) : 1);
+                Vector2 pointToRb = (rb.position - hitPoint.point).normalized;
+                rb.AddForce(pointToRb * totalStength * Time.deltaTime * (Mathf.Clamp01(timeAlive / data.timeForFullHoverEffect)));
+            }
+        }
+
         if (melee)
         {
             float meleePosLerp = data.meleePosAnimation.Evaluate(math.clamp(timeAlive / data.lifeTime, 0, 1));
@@ -483,6 +563,16 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         }
 
         (float posX, float posY) = (pos.x, pos.y);
+
+        bool borderDeath = false;
+        borderDeath |= Mathf.Abs(posX) > 64;
+        borderDeath |= Mathf.Abs(posY) > 64;
+        if (borderDeath && !destroyed)
+        {
+            destroyed = true;
+            return;
+        }
+
         pos = new Vector2(math.clamp(posX, -64, 64), math.clamp(posY, -64, 64));
 
         if (rot > 360) rot -= 360;
@@ -513,7 +603,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     void LocalUpdate()
     {
 
-        syncTimer += Time.deltaTime;
+        syncTimer += Time.deltaTime * data.syncSpeed;
 
         if (!destroyed && timeAlive > data.lifeTime) destroyed = true;
 
@@ -580,14 +670,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             projectileManager.DespawnProjectile(projectileID, hit);
 
         }
-        else if (sync && syncTimer > data.syncSpeed)
+        else if (sync && syncTimer > 1)
         {
-
-
-
             projectileManager.UpdateProjectile(this);
             syncTimer = 0;
-
         }
 
         lingeringTimer += Time.deltaTime;
@@ -917,8 +1003,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         float angle = math.degrees(math.atan2(point.normal.y, point.normal.x));
         
-        HitMarkBehaviour newHitMark = Instantiate(hitMark, hitMarkPos, Quaternion.Euler(0, 0, angle), toParent);
-        
+        HitMarkBehaviour newHitMark = Instantiate(hitMark, toParent, true);
+        newHitMark.transform.position = hitMarkPos;
+        newHitMark.transform.rotation = Quaternion.Euler(0, 0, angle);
+
         newHitMark.ownerId = (byte)ownerId;
         newHitMark.owner = owningPlayer;
         StencilInfectorBehaviour stencilInfectorBehaviour;
@@ -951,6 +1039,12 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     readonly RaycastHit2D[] hitBuffer = new RaycastHit2D[1];
 
 
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    RaycastHit2D GetClosestEnvironmentPointDown(Vector2 origin, float maxDistance = 100f, float floorRadius = 0.5f)
+    {
+        return Physics2D.CircleCast(origin, floorRadius, new Vector2(0f, -1f), maxDistance, ENVIRONTMENT_MASK);
+    }
 
     RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, float maxDistance = 100f)
     {
@@ -1020,12 +1114,20 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     private void OnDestroy()
     {
 
+        if(projectileManager.playerSynchronizer.localSquare.GetID() == owningPlayer.GetID())
+        {
+            for (int i = 0; i < data.projectileSpawnEvents.Length; i++) SetupProxySpawn(data.projectileSpawnEvents[i], ProjectileSpawnEvent.EventType.Death);
+        }
+
         shotInstance.release();
 
         for (int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
 
-        owningPlayer.transform.localScale = Vector3.one;
-        owningPlayer.nozzleBehaviour.transform.localScale = Vector3.one * 0.4f;
+        if (owningPlayer)
+        {
+            owningPlayer.transform.localScale = Vector3.one;
+            owningPlayer.nozzleBehaviour.transform.localScale = Vector3.one * 0.4f;
+        }
 
         if (aliveSound)
         {
@@ -1034,9 +1136,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             aliveInstance.release();
 
         }
-
     }
-
 }
 
 [Serializable]
@@ -1106,4 +1206,12 @@ public struct ProjectileInitData
     public float bounceSpeedLoss;
     public float bounceAngleTilt;
 
+    public bool hover;
+    public float hoverDistance;
+    public float hoverStrength;
+    public float hoverFloorRadius;
+    public float hoverDistanceAttenuation;
+    public float timeForFullHoverEffect;
+
+    public ProjectileSpawnEvent[] projectileSpawnEvents;
 }

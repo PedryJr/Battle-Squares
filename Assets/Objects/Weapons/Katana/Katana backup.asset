@@ -1,0 +1,173 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60741558de6f8f74eb2886d48c299bc8, type: 3}
+  m_Name: Katana backup
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
+  specs:
+    icon: {fileID: 21300000, guid: 64e2b36739c33a8498ec18b6ba2cd730, type: 3}
+    projectile: {fileID: 3230000773134604271, guid: d6c3af4a7b2d3304192974fb3d513631, type: 3}
+    launchParticle: {fileID: 4313180367996257349, guid: 10af522d604c7374a8a7d24e280de81d, type: 3}
+    bounceParticle: {fileID: 0}
+    impactParticle: {fileID: 4313180367996257349, guid: c78d43acd23136a4fa0d89eb96c4c4ec, type: 3}
+    projectileAmmo: 5
+    reloadTime: 1.35
+    shootingInterval: 0.04
+    projectileSpeed: 35
+    projectileAcceleration: 0
+    lifeTime: 0.165
+    holdable: 0
+    burst: 0
+    burstSpread: 0
+    bounces: 0
+    fluctuation: 0
+    noGravity: 1
+    dieOnImpact: 0
+    damageOnImpact: 1
+    sticky: 0
+    aoe: 0
+    skipAoeOnTargetHit: 0
+    knockback: 12
+    speedLimit: 100
+    minSpeed: 0
+    aoeDamage: 0
+    baseDamage: 4
+    damageTimeScale: 0
+    recoil: -5.5
+    enableMorph: 1
+    targetMorph: {x: 1.3, y: 0.2, z: 1}
+    timeToMorph: 0.165
+    morphAnimation:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 5.8377657
+        outSlope: 5.8377657
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0.5
+        inSlope: -0.02354813
+        outSlope: -0.02354813
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sync: 0
+    syncSpeed: 0
+    stickToSender: 0
+    melee: 1
+    oneTimeHit: 1
+    meleeRange: 1.8
+    swingDegrees: 120
+    meleeRotation: 120
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.57318544
+        value: 0.7523059
+        inSlope: 1.8189476
+        outSlope: 1.8189476
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.5186712
+        value: 0.44095153
+        inSlope: 3.3335924
+        outSlope: 3.3335924
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    flipFlop: 1
+    homing: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    alignDirection: 0
+    typeID: 5
+    clampMorph: 1
+    bounceSpeedLoss: 0
+    bounceAngleTilt: 0
+    spawnOffsetPadding: 0

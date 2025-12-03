@@ -9,8 +9,33 @@ using static PlayerSynchronizer;
 
 public sealed class CameraAnimator : MonoBehaviour
 {
+    [SerializeField] float StencilEffectRenderScale;
+    [SerializeField] float ThermalEffectRenderScale;
+
     [SerializeField]
     Camera stencilRenderer;
+    [SerializeField]
+    Camera thermalRenderer;
+
+    private static Camera _stencilRenderer;
+    public static Camera StencilRenderer 
+    { 
+        get 
+        {
+            if(!_stencilRenderer) _stencilRenderer = FindAnyObjectByType<CameraAnimator>(FindObjectsInactive.Exclude).stencilRenderer;
+            return _stencilRenderer;
+        }
+    }
+
+    private static Camera _thermalRenderer;
+    public static Camera ThermalRenderer
+    {
+        get
+        {
+            if (!_thermalRenderer) _thermalRenderer = FindAnyObjectByType<CameraAnimator>(FindObjectsInactive.Exclude).thermalRenderer;
+            return _thermalRenderer;
+        }
+    }
 
     public float fps = 6000;
     public float fpsCapture;
@@ -91,6 +116,8 @@ public sealed class CameraAnimator : MonoBehaviour
     private void Update()
     {
 
+        BS_Screen.ResolutionScaleStencil = StencilEffectRenderScale;
+        BS_Screen.ResolutionScaleThermal = ThermalEffectRenderScale;
 
         CalculateFrames();
 
@@ -162,6 +189,7 @@ public sealed class CameraAnimator : MonoBehaviour
         aCamera.orthographicSize = math.lerp(aCamera.orthographicSize, Mathf.Lerp(fromOrthoSize, toOrthoSize, cameraLerp), Time.deltaTime * 10);
 
         stencilRenderer.orthographicSize = aCamera.orthographicSize;
+        thermalRenderer.orthographicSize = aCamera.orthographicSize;
 
     }
 

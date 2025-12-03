@@ -32,9 +32,7 @@ public unsafe static class BinaryTool
         fixed (byte* ptr = result) CompressFloat(value, min, max, ptr, bytes);
         return result.ToArray();
     }
-
-
-
+    
     //Vector2 compression/decompression
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 DecompressVector2(byte[] buffer, int xBytes, int yBytes, in Vector2 min, in Vector2 max)
@@ -43,6 +41,7 @@ public unsafe static class BinaryTool
         fixed (byte* ptr = buffer) DecompressVector2(ptr, xBytes, yBytes, min, max, ref decom);
         return decom;
     }
+
     [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
     private static void DecompressVector2(byte* ptr, int xBytes, int yBytes, in float2 min, in float2 max, ref float2 decom)
     {
@@ -111,6 +110,7 @@ public unsafe static class BinaryTool
         CompressVector3(ref buffer, value, xBytes, yBytes, zBytes, min, max);
         return buffer;
     }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void CompressVector3(ref byte[] buffer, in float3 value, int xBytes, int yBytes, int zBytes, in float3 min, in float3 max)
     {
@@ -118,6 +118,7 @@ public unsafe static class BinaryTool
         if (!ValidateBuffer(buffer, bufferSize)) buffer = new byte[bufferSize];
         fixed (byte* ptr = buffer) CompressVector3(ptr, value, xBytes, yBytes, zBytes, min, max);
     }
+
     [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
     private static void CompressVector3(byte* ptr, in float3 value, int xBytes, int yBytes, int zBytes, in float3 min, in float3 max)
     {
@@ -206,7 +207,6 @@ public unsafe static class BinaryTool
         for (int z = 0; z < zBytes; z++) ptr[zStart + z] = compressedZ[z];
         for (int w = 0; w < wBytes; w++) ptr[wStart + w] = compressedW[w];
     }
-
 
 
     //Internal float compression

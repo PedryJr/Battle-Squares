@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -11,10 +10,8 @@ public class ThermalRenderer : MonoBehaviour
     static RenderTexture renderTexture;
     public static Action<Texture> OnStencilChange = (e) => { };
 
-    [SerializeField]
-    Camera mainCam;
-    [SerializeField]
     Camera cam;
+
     [SerializeField]
     Material thermalScreen;
 
@@ -23,6 +20,7 @@ public class ThermalRenderer : MonoBehaviour
 
     private void Awake()
     {
+        cam = GetComponent<Camera>();
         OnStencilChange = (e) => { };
         renderTexture = new RenderTexture(2, 2, 24);
         w = 2;
@@ -41,14 +39,13 @@ public class ThermalRenderer : MonoBehaviour
 
     void TryResize()
     {
-        int testW = Screen.width, testH = Screen.height;
+        int testW = BS_Screen.TpixelsX, testH = BS_Screen.TpixelsY;
         if (testW != w || testH != h)
         {
             w = testW;
             h = testH;
             Resize();
         }
-        cam.orthographicSize = mainCam.orthographicSize;
     }
 
     void Resize()
@@ -77,12 +74,12 @@ public class ThermalRenderer : MonoBehaviour
         {
             dimension = UnityEngine.Rendering.TextureDimension.Tex2D,
             msaaSamples = 1,
-            graphicsFormat = GraphicsFormat.R32G32B32A32_SFloat,
-            depthStencilFormat = GraphicsFormat.D32_SFloat,
+            graphicsFormat = GraphicsFormat.R8_UNorm,
+            depthStencilFormat = GraphicsFormat.S8_UInt,
             mipCount = 1,
             useMipMap = false,
-            enableRandomWrite = true,
-            useDynamicScale = true,
+            enableRandomWrite = false,
+            useDynamicScale = false,
             sRGB = false,
         };
 

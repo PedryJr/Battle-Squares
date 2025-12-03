@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
-using static ProjectileManager;
 
 public sealed class WeaponSelector : MonoBehaviour
 {
