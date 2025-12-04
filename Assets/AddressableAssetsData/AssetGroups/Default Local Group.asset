@@ -14,7 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Default Local Group
   m_GUID: d8c1f5c572aa9d84f93aa53bba747c05
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: d3a1e3d5c46b27d4c99818795d9a873f
+    m_Address: Assets/Objects/Weapons/Cruiser/BaseImpactForce.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe9cabf943573c74ca25e1c19ae8f5f2
+    m_Address: Assets/Objects/Weapons/Cruiser/HitMark.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 49c0ee9d05b7ae34fb7a62d5fd9c1b22, type: 2}
   m_SchemaSet:

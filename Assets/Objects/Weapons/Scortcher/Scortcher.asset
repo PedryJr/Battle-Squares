@@ -42,15 +42,15 @@ MonoBehaviour:
     baseDamage: 0
     damageTimeScale: 0
     recoil: 2.3
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 1}
-    timeToMorph: 0
+    enableMorph: 1
+    targetMorph: {x: 0.55, y: 0.55, z: 1}
+    timeToMorph: 0.1
     morphAnimation:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       m_PreInfinity: 2
-      m_PostInfinity: 2
+      m_PostInfinity: 0
       m_RotationOrder: 4
     sync: 1
     syncSpeed: 3.3333333
@@ -93,21 +93,21 @@ MonoBehaviour:
     homing: 0
     homingStrength: 0
     homingDistance: 0
-    spinSpeed: 0
+    spinSpeed: 3000
     rotationFlipOnImpact: 0
     dieFromProjectiles: 0
     dontBlockProjectiles: 1
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
-    lingeringDamage: 3
-    lingeringFrequency: 2.5
+    lingeringDamage: 2.5
+    lingeringFrequency: 2
     alignDirection: 0
-    typeID: 12
+    typeID: 43646
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
-    spawnOffsetPadding: 0
+    spawnOffsetPadding: 0.5
     hover: 0
     hoverDistance: 0
     hoverStrength: 0
@@ -115,3 +115,5 @@ MonoBehaviour:
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
     projectileSpawnEvents: []
+    weaponName: Scortcher
+    delistWeapon: 0

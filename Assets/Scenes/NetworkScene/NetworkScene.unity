@@ -783,20 +783,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   newWeapons:
-  - {fileID: 11400000, guid: 8da943103c78dee4dbf7da5386f409a8, type: 2}
-  - {fileID: 11400000, guid: 14525fc19d6d9af458bd1c0f3ccdcd42, type: 2}
-  - {fileID: 11400000, guid: 4036694bc2d8c494c9fdaf28a0c0cbcc, type: 2}
-  - {fileID: 11400000, guid: e910dac985d2feb4f9c6e3d18fc63691, type: 2}
-  - {fileID: 11400000, guid: 8f4767123c05db743b8ab8ae656757eb, type: 2}
-  - {fileID: 11400000, guid: 4aa84fe78efb74b4091a3522f5e24cef, type: 2}
-  - {fileID: 11400000, guid: 8743f2cea4820a442bd71a5300fb5167, type: 2}
-  - {fileID: 11400000, guid: ecd937b78bf62a348bb18999e7b4f83e, type: 2}
   - {fileID: 11400000, guid: 4b5fa32268eef6a44883c5c794105a97, type: 2}
-  - {fileID: 11400000, guid: 08084139298ccb04491265d45c7c935c, type: 2}
-  - {fileID: 11400000, guid: 1de822b34a39f6f4fa9a783fc07b9b89, type: 2}
-  - {fileID: 11400000, guid: 7919e7cddf516674f85f572c71476ab3, type: 2}
-  - {fileID: 11400000, guid: b753dfc65b5a541448ca5f1bc62cd050, type: 2}
   - {fileID: 11400000, guid: 3800a94b811231645a0b3142764d594d, type: 2}
+  - {fileID: 11400000, guid: b753dfc65b5a541448ca5f1bc62cd050, type: 2}
+  - {fileID: 11400000, guid: 8743f2cea4820a442bd71a5300fb5167, type: 2}
+  - {fileID: 11400000, guid: e910dac985d2feb4f9c6e3d18fc63691, type: 2}
+  - {fileID: 11400000, guid: 1de822b34a39f6f4fa9a783fc07b9b89, type: 2}
+  - {fileID: 11400000, guid: ecd937b78bf62a348bb18999e7b4f83e, type: 2}
+  - {fileID: 11400000, guid: b7a258d2d28c8e44abfb20151a2ad4ef, type: 2}
+  - {fileID: 11400000, guid: 14525fc19d6d9af458bd1c0f3ccdcd42, type: 2}
+  - {fileID: 11400000, guid: 4aa84fe78efb74b4091a3522f5e24cef, type: 2}
+  - {fileID: 11400000, guid: 4036694bc2d8c494c9fdaf28a0c0cbcc, type: 2}
+  - {fileID: 11400000, guid: 8f4767123c05db743b8ab8ae656757eb, type: 2}
+  - {fileID: 11400000, guid: 7919e7cddf516674f85f572c71476ab3, type: 2}
+  - {fileID: 11400000, guid: 08084139298ccb04491265d45c7c935c, type: 2}
   - {fileID: 11400000, guid: 4014ffbcf24e17648ab4d06ab1803df3, type: 2}
   nozzleParticles: {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
   projectiles: []

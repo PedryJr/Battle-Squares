@@ -11,6 +11,8 @@ using UnityEngine.SceneManagement;
 public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 {
 
+    public static PlayerSynchronizer Instance;
+
     public SkinData skinData;
 
     public float ping;
@@ -52,7 +54,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     
     private void Awake()
     {
-
+        Instance = this;
         DontDestroyOnLoad(this);
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;

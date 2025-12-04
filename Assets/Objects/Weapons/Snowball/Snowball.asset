@@ -15,7 +15,7 @@ MonoBehaviour:
   specs:
     icon: {fileID: 21300000, guid: 1171c9acbd4def3498ea0e39bbc56a77, type: 3}
     projectile: {fileID: 3230000773134604271, guid: 27550b43085a7de4882ac02cc56e7667, type: 3}
-    launchParticle: {fileID: 4313180367996257349, guid: e8982626ed1f30b458bb9b3c8542a881, type: 3}
+    launchParticle: {fileID: 4313180367996257349, guid: 3e9891dbda702e74cb3db4f47b80481a, type: 3}
     bounceParticle: {fileID: 0}
     impactParticle: {fileID: 4313180367996257349, guid: aa863c0145dc9f345a86e61f46d4f253, type: 3}
     projectileAmmo: 4
@@ -34,12 +34,12 @@ MonoBehaviour:
     damageOnImpact: 1
     sticky: 0
     aoe: 3
-    skipAoeOnTargetHit: 0
-    knockback: 13
+    skipAoeOnTargetHit: 1
+    knockback: 4.3333335
     speedLimit: 100
     minSpeed: 0
     aoeDamage: 8
-    baseDamage: 15
+    baseDamage: 5
     damageTimeScale: 0
     recoil: 6
     enableMorph: 0
@@ -47,9 +47,27 @@ MonoBehaviour:
     timeToMorph: 0
     morphAnimation:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.13450012
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
-      m_PostInfinity: 2
+      m_PostInfinity: 0
       m_RotationOrder: 4
     sync: 0
     syncSpeed: 0.15
@@ -75,18 +93,18 @@ MonoBehaviour:
     homing: 0
     homingStrength: 0
     homingDistance: 0
-    spinSpeed: 0
+    spinSpeed: 1000
     rotationFlipOnImpact: 0
     dieFromProjectiles: 1
-    dontBlockProjectiles: 0
+    dontBlockProjectiles: 1
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 15
-    clampMorph: 1
+    typeID: 54815
+    clampMorph: 0
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
     spawnOffsetPadding: 0
@@ -97,3 +115,5 @@ MonoBehaviour:
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
     projectileSpawnEvents: []
+    weaponName: Snowball
+    delistWeapon: 0

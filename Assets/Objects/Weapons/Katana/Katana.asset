@@ -18,13 +18,13 @@ MonoBehaviour:
     launchParticle: {fileID: 4313180367996257349, guid: 10af522d604c7374a8a7d24e280de81d, type: 3}
     bounceParticle: {fileID: 0}
     impactParticle: {fileID: 4313180367996257349, guid: c78d43acd23136a4fa0d89eb96c4c4ec, type: 3}
-    projectileAmmo: 1
-    reloadTime: 0
-    shootingInterval: 0
+    projectileAmmo: 5
+    reloadTime: 1.35
+    shootingInterval: 0.04
     projectileSpeed: 35
     projectileAcceleration: 0
     lifeTime: 0.165
-    holdable: 1
+    holdable: 0
     burst: 0
     burstSpread: 0
     bounces: 0
@@ -166,7 +166,7 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 6
+    typeID: 46250
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
@@ -177,3 +177,6 @@ MonoBehaviour:
     hoverFloorRadius: 0
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
+    projectileSpawnEvents: []
+    weaponName: Katana
+    delistWeapon: 0

@@ -96,6 +96,7 @@ public class WeaponBuilderEditor : Editor
     SerializedProperty timeForFullHoverEffect;
     SerializedProperty projectileSpawnEvents;
     SerializedProperty weaponName;
+    SerializedProperty delistWeapon;
 
     void OnEnable()
     {
@@ -170,6 +171,7 @@ public class WeaponBuilderEditor : Editor
         timeForFullHoverEffect = specsProp.FindPropertyRelative("timeForFullHoverEffect");
         projectileSpawnEvents = specsProp.FindPropertyRelative("projectileSpawnEvents");
         weaponName = specsProp.FindPropertyRelative("weaponName");
+        delistWeapon = specsProp.FindPropertyRelative("delistWeapon");
     }
 
     public override void OnInspectorGUI()
@@ -178,6 +180,7 @@ public class WeaponBuilderEditor : Editor
 
         EditorGUILayout.LabelField("Weapon Specs", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(weaponName);
+        EditorGUILayout.PropertyField(delistWeapon);
         EditorGUILayout.Space();
 
         projectileFold = EditorGUILayout.Foldout(projectileFold, "Projectile");
@@ -329,6 +332,7 @@ public class WeaponBuilderEditor : Editor
             EditorGUILayout.Space();
         }
 
+        EditorGUILayout.LabelField(specsProp.FindPropertyRelative("typeID").uintValue.ToString());
 
         serializedObject.ApplyModifiedProperties();
     }

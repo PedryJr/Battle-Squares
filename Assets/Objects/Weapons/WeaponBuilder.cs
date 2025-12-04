@@ -7,6 +7,12 @@ public class WeaponBuilder : ScriptableObject
 {
 
 
+    private void OnValidate()
+    {
+        if (Application.isPlaying) return;
+        specs.typeID = (ushort) UnityEngine.Random.Range(ushort.MinValue, ushort.MaxValue);
+    }
+
     [SerializeField]
     Weapon specs;
 
@@ -103,6 +109,8 @@ public class WeaponBuilder : ScriptableObject
         public float timeForFullHoverEffect;
         public ProjectileSpawnEvent[] projectileSpawnEvents;
         public string weaponName;
+        public bool delistWeapon;
+        public void SetTypeId(ref Weapon self, ushort typeId) => self.typeID = typeId;
     }
 
 }

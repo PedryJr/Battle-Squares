@@ -112,8 +112,16 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 4
+    typeID: 42883
     clampMorph: 1
     bounceSpeedLoss: 0.2
     bounceAngleTilt: 0.75
     spawnOffsetPadding: 0.55
+    hover: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    projectileSpawnEvents: []
+    weaponName: Hailmaker

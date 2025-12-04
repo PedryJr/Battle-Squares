@@ -19,15 +19,15 @@ MonoBehaviour:
     bounceParticle: {fileID: 4313180367996257349, guid: 8bf3cf56e93dd0747893f356c7b8c4eb, type: 3}
     impactParticle: {fileID: 4313180367996257349, guid: d3c40f3e5137be4448ec2be14d61baac, type: 3}
     projectileAmmo: 6
-    reloadTime: 0
-    shootingInterval: 0
-    projectileSpeed: 25
+    reloadTime: 1
+    shootingInterval: 0.2
+    projectileSpeed: 20
     projectileAcceleration: 0
-    lifeTime: 20
+    lifeTime: 0.2
     holdable: 1
     burst: 0
     burstSpread: 0
-    bounces: 20
+    bounces: 1
     fluctuation: 0.1
     noGravity: 1
     dieOnImpact: 1
@@ -37,20 +37,20 @@ MonoBehaviour:
     skipAoeOnTargetHit: 0
     knockback: 7
     speedLimit: 100
-    minSpeed: 0
+    minSpeed: 70
     aoeDamage: 0
     baseDamage: 4
     damageTimeScale: 0
     recoil: 8
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 0}
-    timeToMorph: 0
+    enableMorph: 1
+    targetMorph: {x: 0.1, y: 0.1, z: 1}
+    timeToMorph: 0.2
     morphAnimation:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -58,8 +58,26 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 1
+        time: 0.083333336
         value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.93333334
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -71,7 +89,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     sync: 0
     syncSpeed: 0
-    stickToSender: 0
+    stickToSender: 1
     melee: 0
     oneTimeHit: 0
     meleeRange: 0
@@ -99,19 +117,21 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 0
     slowDownAmount: 0
-    senderSpeedOnDeath: 0
+    senderSpeedOnDeath: 1
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 1
-    typeID: 1
+    typeID: 19462
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
-    spawnOffsetPadding: 0
+    spawnOffsetPadding: 1.1
     hover: 0
     hoverDistance: 0
-    hoverStrength: 0
-    hoverFloorRadius: 0
-    hoverDistanceAttenuation: 0
+    hoverStrength: 25.41
+    hoverFloorRadius: 1
+    hoverDistanceAttenuation: 2
     timeForFullHoverEffect: 0
     projectileSpawnEvents: []
+    weaponName: FeatureTest
+    delistWeapon: 0

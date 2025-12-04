@@ -103,8 +103,16 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 8
+    typeID: 20543
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
-    spawnOffsetPadding: 0
+    spawnOffsetPadding: -1.03
+    hover: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    projectileSpawnEvents: []
+    weaponName: Revolver

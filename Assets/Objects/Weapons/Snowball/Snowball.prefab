@@ -61,7 +61,7 @@ Transform:
   m_GameObject: {fileID: 3066612454653962984}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 3}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
   m_LocalScale: {x: 0.39999998, y: 0.39999998, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -148,7 +148,7 @@ MonoBehaviour:
   speedModifier: 0
   projectileID: 0
   IsLocalProjectile: 0
-  rb: {fileID: 0}
+  rb: {fileID: -3438963122069973725}
   owningPlayer: {fileID: 0}
   timeAlive: 0
   fullTimeAlive: 0
@@ -166,8 +166,10 @@ MonoBehaviour:
   hit: 0
   sync: 0
   flipFlop: 0
-  impactParticle: {fileID: 7289681851009581468, guid: aa863c0145dc9f345a86e61f46d4f253, type: 3}
   hitMark: {fileID: 7378723969388511367, guid: 5ac754ae7ea2c4d4887b194b709ec925, type: 3}
+  trailParticles: {fileID: 227063848627397678}
+  trailParticleSystem: {fileID: 8440552164618030048}
+  spriteRenderer: {fileID: 1625723881570478094}
   shotReference:
     Guid:
       Data1: -374525801
@@ -190,7 +192,10 @@ MonoBehaviour:
       Data3: -2074649164
       Data4: -1205273768
     Path: event:/VFX/Hailmaker/Shot
+  projectileCollider: {fileID: -3148651319717881892}
   data:
+    impactParticle: {fileID: 0}
+    bounceParticle: {fileID: 0}
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}
     position: {x: 0, y: 0}
@@ -216,7 +221,6 @@ MonoBehaviour:
     baseDamage: 0
     damageTimeScale: 0
     burstData: []
-    retornToSender: 0
     stickToSender: 0
     melee: 0
     meleeRange: 0
@@ -259,6 +263,17 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
+    bounces: 0
+    clampMorph: 0
+    bounceSpeedLoss: 0
+    bounceAngleTilt: 0
+    hover: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    projectileSpawnEvents: []
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0
@@ -1274,7 +1289,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 9
+      scalar: 12
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -2040,22 +2055,31 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 1
-          inSlope: -0.07963659
-          outSlope: -0.07963659
+          value: -0.7
+          inSlope: 0
+          outSlope: 0
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.11959087
+          outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.68684465
-          value: 0.35792327
-          inSlope: -2.5443265
-          outSlope: -2.5443265
+          time: 0.3
+          value: -1
+          inSlope: 0.93646425
+          outSlope: 0.93646425
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.23906931
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.35
+          value: -0.35
+          inSlope: 1.8011155
+          outSlope: 1.8011155
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
           value: 0
@@ -2073,13 +2097,31 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 1
-          inSlope: -1.2356951
-          outSlope: -1.2356951
+          value: 0.7
+          inSlope: 0
+          outSlope: 0
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.12588514
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.3
+          value: 1
+          inSlope: -0.8598941
+          outSlope: -0.8598941
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.35
+          value: 0.35
+          inSlope: -1.870632
+          outSlope: -1.870632
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
           value: 0
@@ -2520,7 +2562,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 8
-      minScalar: 5
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:

@@ -85,8 +85,16 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 13
+    typeID: 4428
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
     spawnOffsetPadding: 0
+    hover: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    projectileSpawnEvents: []
+    weaponName: Sniper

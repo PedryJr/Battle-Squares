@@ -288,9 +288,9 @@ public sealed class PlayerBehaviour : MonoBehaviour
             playerSlapSound = RuntimeManager.CreateInstance(playerSlap);
 
         }
-        catch
+        catch (Exception e)
         {
-
+            Debug.LogError(e.Message);
             SteamNetwork.currentLobby?.Leave();
 
             SteamNetwork.CreateNewLobby();

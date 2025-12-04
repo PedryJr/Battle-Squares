@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 60741558de6f8f74eb2886d48c299bc8, type: 3}
-  m_Name: Raygun
+  m_Name: SubFeatureTest
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: 6e9ad52791ef2fa45abddb1364f5ec6f, type: 3}
-    projectile: {fileID: 3230000773134604271, guid: 76131a323adaf2140bfedbbaaf9b4913, type: 3}
-    launchParticle: {fileID: 4313180367996257349, guid: f314d24c6dc858544a9523786afd9469, type: 3}
+    icon: {fileID: 21300000, guid: 1171c9acbd4def3498ea0e39bbc56a77, type: 3}
+    projectile: {fileID: 3230000773134604271, guid: 1484733a76041e247bad07d9e0c99dcc, type: 3}
+    launchParticle: {fileID: 4313180367996257349, guid: 6784c58aca5da3644917ab374eec1c9d, type: 3}
     bounceParticle: {fileID: 0}
-    impactParticle: {fileID: 4313180367996257349, guid: 52b0182cb799a844ea1507d42f4dc90a, type: 3}
-    projectileAmmo: 4
-    reloadTime: 1.5
+    impactParticle: {fileID: 4313180367996257349, guid: 69d34a0ca2a5b48489453ceacfcccbd1, type: 3}
+    projectileAmmo: 6
+    reloadTime: 1.45
     shootingInterval: 0.04
-    projectileSpeed: 45
-    projectileAcceleration: -5
-    lifeTime: 3
+    projectileSpeed: 35
+    projectileAcceleration: 0
+    lifeTime: 2
     holdable: 0
     burst: 0
     burstSpread: 0
@@ -33,24 +33,24 @@ MonoBehaviour:
     dieOnImpact: 1
     damageOnImpact: 1
     sticky: 0
-    aoe: 2.7
-    skipAoeOnTargetHit: 1
-    knockback: 9
+    aoe: 0
+    skipAoeOnTargetHit: 0
+    knockback: 7
     speedLimit: 100
-    minSpeed: 15
-    aoeDamage: 4
-    baseDamage: 6.66
+    minSpeed: 0
+    aoeDamage: 0
+    baseDamage: 4
     damageTimeScale: 0
-    recoil: 7
-    enableMorph: 1
-    targetMorph: {x: 0.18, y: 0.6, z: 1}
-    timeToMorph: 0.33
+    recoil: 8
+    enableMorph: 0
+    targetMorph: {x: 0, y: 0, z: 0}
+    timeToMorph: 0
     morphAnimation:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -95,19 +95,19 @@ MonoBehaviour:
     homingDistance: 0
     spinSpeed: 0
     rotationFlipOnImpact: 0
-    dieFromProjectiles: 0
-    dontBlockProjectiles: 1
+    dieFromProjectiles: 1
+    dontBlockProjectiles: 0
     bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 63346
+    typeID: 23912
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
-    spawnOffsetPadding: 0
+    spawnOffsetPadding: -2.28
     hover: 0
     hoverDistance: 0
     hoverStrength: 0
@@ -115,4 +115,5 @@ MonoBehaviour:
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
     projectileSpawnEvents: []
-    weaponName: Raygun
+    weaponName: 
+    delistWeapon: 1

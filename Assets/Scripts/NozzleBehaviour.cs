@@ -52,6 +52,10 @@ public sealed class NozzleBehaviour : MonoBehaviour
     {
 
         projectileManager = GameObject.FindGameObjectWithTag("Sync").GetComponent<ProjectileManager>();
+
+        primary = projectileManager.GetFirstWeaponTypeId();
+        secondary = projectileManager.GetSecondWeaponTypeId();
+
         this.playerBehaviour = playerBehaviour;
         this.playerController = playerController;
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -36,7 +37,6 @@ public sealed class ProjectileManager : NetworkBehaviour
         SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         for (ushort i = 0; i < newWeapons.Length; i++)
         {
-            newWeapons[i].ASSIGN_ID(i);
             weapons[newWeapons[i].typeID] = newWeapons[i];
         }
     }
@@ -60,9 +60,9 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
-    public void SpawnProjectileFromProxy(ushort type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
+    public void SpawnProjectileFromProxy(ushort typeID, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
     {
-        Weapon weapon = GetRawWeaponByTypeID(type);
+        Weapon weapon = GetRawWeaponByTypeID(typeID);
 
         Vector2 correctedPositionToGround = position;
         Vector2 simulatedNozzlePosition = position + (direction * weapon.spawnOffsetPadding);
@@ -94,15 +94,15 @@ public sealed class ProjectileManager : NetworkBehaviour
 
                 Vector2 newDirection = MyExtentions.AngleToNormalizedCoordinate(angleAtI);
 
-                SpawnProjectileOnAllClients((byte)type, position, newDirection, shootingPlayer, weapon, i == 0);
+                SpawnProjectileOnAllClients(typeID, position, newDirection, shootingPlayer, weapon, i == 0);
             }
         }
-        else SpawnProjectileOnAllClients((byte)type, position, direction, shootingPlayer, weapon, true);
+        else SpawnProjectileOnAllClients(typeID, position, direction, shootingPlayer, weapon, true);
     }
 
-    public void SpawnProjectile(ushort type, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
+    public void SpawnProjectile(ushort typeID, Vector2 position, Vector2 direction, PlayerBehaviour shootingPlayer)
     {
-        Weapon weapon = GetRawWeaponByTypeID(type);
+        Weapon weapon = GetRawWeaponByTypeID(typeID);
 
 
         Vector2 correctedPositionToGround = position;
@@ -133,14 +133,14 @@ public sealed class ProjectileManager : NetworkBehaviour
 
                 Vector2 newDirection = MyExtentions.AngleToNormalizedCoordinate(angleAtI);
 
-                SpawnProjectileOnAllClients((byte)type, position, newDirection, shootingPlayer, weapon, i == 0);
+                SpawnProjectileOnAllClients(typeID, position, newDirection, shootingPlayer, weapon, i == 0);
             }
         }
-        else SpawnProjectileOnAllClients((byte)type, position, direction, shootingPlayer, weapon, true);
+        else SpawnProjectileOnAllClients(typeID, position, direction, shootingPlayer, weapon, true);
 
     }
 
-    void SpawnProjectileOnAllClients(byte type, in Vector2 position, in Vector2 direction, PlayerBehaviour shootingPlayer, in Weapon weapon, bool playSound)
+    void SpawnProjectileOnAllClients(ushort typeID, in Vector2 position, in Vector2 direction, PlayerBehaviour shootingPlayer, in Weapon weapon, bool playSound)
     {
         uint projectileId = GenerateProjectileId();
         float[] fluctuation = new float[2];
@@ -153,16 +153,16 @@ public sealed class ProjectileManager : NetworkBehaviour
         bitBool.SetBool(1, playSound);
         byte bitBoolAsByte = bitBool.GetMask();
 
-        SpawnProjectileRpc((byte)NetworkManager.LocalClientId, projectileId, type, position, direction, fluctuation, bitBoolAsByte);
-        SpawnProjectileEvent((byte)NetworkManager.LocalClientId, projectileId, type, position, direction, fluctuation, bitBoolAsByte);
+        SpawnProjectileRpc((byte)NetworkManager.LocalClientId, projectileId, typeID, position, direction, fluctuation, bitBoolAsByte);
+        SpawnProjectileEvent((byte)NetworkManager.LocalClientId, projectileId, typeID, position, direction, fluctuation, bitBoolAsByte);
     }
 
 
     [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    void SpawnProjectileRpc(byte sourceId, uint projectileID, byte type, Vector2 position, Vector2 direction, float[] fluctuation, byte bitBoolAsByte)
+    void SpawnProjectileRpc(byte sourceId, uint projectileID, ushort typeID, Vector2 position, Vector2 direction, float[] fluctuation, byte bitBoolAsByte)
     {
         if (sourceId == (byte)NetworkManager.LocalClientId) return;
-        SpawnProjectileEvent(sourceId, projectileID, type, position, direction, fluctuation, bitBoolAsByte);
+        SpawnProjectileEvent(sourceId, projectileID, typeID, position, direction, fluctuation, bitBoolAsByte);
     }
 
     void SpawnProjectileEvent(byte sourceId, uint projectileID, ushort typeID, Vector2 position, Vector2 direction, float[] fluctuation, byte bitBoolAsByte)
@@ -608,6 +608,12 @@ public sealed class ProjectileManager : NetworkBehaviour
     public WeaponBuilder GetWeaponBuilderByTypeID(ushort typeID) => weapons[typeID];
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Weapon GetRawWeaponByTypeID(ushort typeID) => weapons[typeID].weapon;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal ushort GetFirstWeaponTypeId() => weapons.ElementAt(0).Key;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal ushort GetSecondWeaponTypeId() => weapons.ElementAt(1).Key;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal string GetWeaponName(ushort typeId1) => GetRawWeaponByTypeID(typeId1).weaponName;
 
     #endregion
 

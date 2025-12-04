@@ -85,7 +85,7 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 2
+    typeID: 14310
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
@@ -97,3 +97,4 @@ MonoBehaviour:
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
     projectileSpawnEvents: []
+    weaponName: Boomerang

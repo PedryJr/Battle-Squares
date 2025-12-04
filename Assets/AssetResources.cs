@@ -1,5 +1,6 @@
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.ResourceLocators;
@@ -26,7 +27,7 @@ public class AssetResources : MonoBehaviour
     {
         Instance = this;
 
-        LoadAllMods();
+        //LoadAllMods();
     }
 
     async void LoadAllMods()
@@ -35,51 +36,34 @@ public class AssetResources : MonoBehaviour
         ProjectileManager projectileManager = FindAnyObjectByType<ProjectileManager>();
 
         string modPath = Path.Combine(Application.dataPath, "../Mods");
-        if (!Directory.Exists(modPath))
-            Directory.CreateDirectory(modPath);
+        if (!Directory.Exists(modPath)) Directory.CreateDirectory(modPath);
 
         string[] mods = Directory.GetFiles(modPath, "*.bsm");
 
         foreach (string modFile in mods)
         {
-            Debug.Log("Loading mod: " + modFile);
-
-            // Extract into temp folder
-            string tempFolder = Path.Combine(Application.temporaryCachePath,
-                                             "Mod_" + Path.GetFileNameWithoutExtension(modFile));
-
-            if (Directory.Exists(tempFolder))
-                Directory.Delete(tempFolder, true);
-
-            Directory.CreateDirectory(tempFolder);
-
-            ZipFile.ExtractToDirectory(modFile, tempFolder);
-
-            // Find catalog
-            string catalogJson = Path.Combine(tempFolder, "catalog.json");
-
-            if (!File.Exists(catalogJson))
-            {
-                Debug.LogError("Mod missing catalog.json: " + modFile);
-                continue;
-            }
-
-            // Load catalog
-            IResourceLocator locator =
-                await Addressables.LoadContentCatalogAsync(catalogJson).Task;
-
-            Debug.Log("Loaded mod catalog: " + locator.LocatorId);
-
-            // Load the weapon using address = ScriptableObject.name
-            string weaponAddress = Path.GetFileNameWithoutExtension(modFile);
-
-            var handle = Addressables.LoadAssetAsync<WeaponBuilder>(weaponAddress);
-            WeaponBuilder weapon = await handle.Task;
-
-            Debug.Log("Loaded mod weapon: " + weapon.WeaponName);
-
-            // Add to global weapon dictionary
-            projectileManager.weapons[weapon.typeID] = weapon;
+            WeaponBuilder builder = LoadWeaponBuilderFromBundle(modFile);
+            projectileManager.weapons[builder.typeID] = builder;
         }
+    }
+
+    private WeaponBuilder LoadWeaponBuilderFromBundle(string bundlePath)
+    {
+        if (!File.Exists(bundlePath))
+        {
+            Debug.LogError($"Bundle not found: {bundlePath}");
+            return null;
+        }
+
+        AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath);
+        if (bundle == null)
+        {
+            Debug.LogError("Failed to load AssetBundle.");
+            return null;
+        }
+
+        WeaponBuilder loadedAsset = bundle.LoadAllAssets<WeaponBuilder>().FirstOrDefault();
+        bundle.Unload(false);
+        return loadedAsset;
     }
 }

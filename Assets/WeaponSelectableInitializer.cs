@@ -10,7 +10,11 @@ public class WeaponSelectableInitializer : MonoBehaviour
     {
         
         ProjectileManager projectileManager = FindAnyObjectByType<ProjectileManager>();
-        foreach (WeaponBuilder item in projectileManager.newWeapons) Instantiate(weaponSelector, transform).Initialize(item);
+        foreach (WeaponBuilder item in projectileManager.weapons.Values)
+        {
+            if (item.weapon.delistWeapon) continue;
+            Instantiate(weaponSelector, transform).Initialize(item);
+        }
 
     }
 

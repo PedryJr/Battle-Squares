@@ -24,7 +24,8 @@ public class SpawnEventHandle : MonoBehaviour
         Vector2 position = spawnEvent.spawnPosition;
         Vector2 direction = spawnEvent.spawnDirection;
         PlayerBehaviour player = spawnEvent.shootingPlayer;
-        spawnEvent.manager.SpawnProjectileFromProxy(type, position, direction, player);
+        spawnEvent.manager.SpawnProjectileFromProxy(type, position, spawnEvent.flipDirection ? -direction : direction, player);
+        spawnEvent.ClearDelegates(ref spawnEvent);
         Destroy(gameObject);
     }
 }
@@ -33,7 +34,7 @@ public class SpawnEventHandle : MonoBehaviour
 public struct ProjectileSpawnEvent
 {
 
-    public delegate Vector2 GetSetVec2Stream(Vector2 oldValue);
+    public delegate Vector2 GetSetVec2Stream(Vector2 oldDirection, Vector2 oldPosition);
     GetSetVec2Stream setPositionStream;
     GetSetVec2Stream setDirectionStream;
 
@@ -47,15 +48,20 @@ public struct ProjectileSpawnEvent
     public void SetGetSpawnPosition(GetSetVec2Stream stream) => this.setPositionStream = stream;
     public void Ensure(ref ProjectileSpawnEvent self)
     {
-        self.setPositionStream = (oldValue) => { return new Vector2(); };
-        self.setDirectionStream = (oldValue) => { return new Vector2(); };
+        self.setPositionStream = (_, __) => { return new Vector2(); };
+        self.setDirectionStream = (_, __) => { return new Vector2(); };
     }
 
     public void Poll(ref ProjectileSpawnEvent self)
     {
-        self.spawnDirection = self.setDirectionStream(self.spawnDirection);
-        self.spawnPosition = self.setPositionStream(self.spawnPosition);
-        if (self.flipDirection) self.spawnDirection = -self.spawnDirection;
+        self.spawnDirection = self.setDirectionStream(self.spawnDirection, self.spawnPosition);
+        self.spawnPosition = self.setPositionStream(self.spawnPosition, self.spawnPosition);
+    }
+
+    public void ClearDelegates(ref ProjectileSpawnEvent self)
+    {
+        self.setPositionStream = null;
+        self.setDirectionStream = null;
     }
 
     public EventDirection eventDirection;

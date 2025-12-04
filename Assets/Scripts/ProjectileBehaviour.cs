@@ -2,6 +2,7 @@ using FMOD.Studio;
 using FMODUnity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
@@ -289,7 +290,12 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         lastPos = rb.position;
         rb.linearVelocity *= Mods.at[3];
         this.data.knockback *= Mods.at[12];
-        for (int i = 0; i < data.projectileSpawnEvents.Length; i++) SetupProxySpawn(data.projectileSpawnEvents[i], ProjectileSpawnEvent.EventType.Birth);
+        SetupAllProxySpawns(ProjectileSpawnEvent.EventType.Birth);
+    }
+
+    void SetupAllProxySpawns(ProjectileSpawnEvent.EventType filterEventType)
+    {
+        for (int i = 0; i < data.projectileSpawnEvents.Length; i++) SetupProxySpawn(data.projectileSpawnEvents[i], filterEventType);
     }
 
     void SetupProxySpawn(ProjectileSpawnEvent spawnEvent, ProjectileSpawnEvent.EventType filterEventType)
@@ -303,47 +309,54 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         spawnEvent.SetManager(data.projectileManager);
         spawnEvent.SetShootingPlayer(owningPlayer);
 
-        if (eventType == ProjectileSpawnEvent.EventType.Birth)
+        ProjectileSpawnEvent.GetSetVec2Stream directionStream = (_, __) => new Vector2();
+        ProjectileSpawnEvent.GetSetVec2Stream positionStream = (_, __) => new Vector2();
+
+        if (eventDirection == ProjectileSpawnEvent.EventDirection.ClosestPlayer)
         {
-            ProjectileSpawnEvent.GetSetVec2Stream directionStream = (oldValue) => new Vector2();
-            ProjectileSpawnEvent.GetSetVec2Stream positionStream = (oldValue) => new Vector2();
-
-            if (eventDirection == ProjectileSpawnEvent.EventDirection.ClosestPlayer)
-            {
-                directionStream = (oldValue) =>
-                {
-                    if (this) if (rb) return projectileManager.playerSynchronizer.GetClosestPlayer(rb.position).position - rb.position;
-                    return oldValue;
-                };
-            }
-            if (eventDirection == ProjectileSpawnEvent.EventDirection.ClosestGround)
-            {
-                directionStream = (oldValue) =>
-                {
-                    if (this) if (rb) return GetClosestEnvironmentPoint(rb.position).point - rb.position;
-                    return oldValue;
-                };
-            }
-            if (eventDirection == ProjectileSpawnEvent.EventDirection.Velocity)
-            {
-                directionStream = (oldValue) =>
-                {
-                    if (this) if (rb) return rb.linearVelocity.normalized;
-                    return oldValue;
-                };
-            }
-            positionStream = (oldValue) =>
-            {
-                if (this) if (rb) return rb.position;
-                return oldValue;
-            };
-
-            spawnEvent.SetGetSpawnDirection(directionStream);
-            spawnEvent.SetGetSpawnPosition(positionStream);
+            directionStream = GetSetStreamClosestPlayer;
         }
+        if (eventDirection == ProjectileSpawnEvent.EventDirection.ClosestGround)
+        {
+            directionStream = GetSetStreamClosestGround;
+        }
+        if (eventDirection == ProjectileSpawnEvent.EventDirection.Velocity)
+        {
+            directionStream = GetSetStreamClosestVelocity;
+        }
+
+        spawnEvent.spawnPosition = rb.position;
+        positionStream = (oldDirection, oldPosition) =>
+        {
+            if (this) if (rb) return rb.position;
+            return oldPosition;
+        };
+
+        spawnEvent.SetGetSpawnDirection(directionStream);
+        spawnEvent.SetGetSpawnPosition(positionStream);
+        spawnEvent.Poll(ref spawnEvent);
 
         SpawnEventHandle spawnEventHandle = Instantiate(AssetResources.SpawnEventHandle);
         spawnEventHandle.Initialize(ref spawnEvent);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    Vector2 GetSetStreamClosestPlayer(Vector2 oldDirection, Vector2 oldPosition)
+    {
+        if (this && rb) return (projectileManager.playerSynchronizer.GetClosestPlayer(rb.position).position - rb.position).normalized;
+        else return (projectileManager.playerSynchronizer.GetClosestPlayer(oldPosition).position - oldPosition).normalized;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    Vector2 GetSetStreamClosestGround(Vector2 oldDirection, Vector2 oldPosition)
+    {
+        if (this && rb) return (GetClosestEnvironmentPoint(rb.position).point - rb.position).normalized;
+        else return (GetClosestEnvironmentPoint(oldPosition).point - oldPosition).normalized;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    Vector2 GetSetStreamClosestVelocity(Vector2 oldDirection, Vector2 oldPosition)
+    {
+        if (this && rb) return rb.linearVelocity.normalized;
+        else return oldDirection;
     }
 
     private void Update()
@@ -463,6 +476,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         float ang, rot, oldRot;
 
         damage += Time.deltaTime * (damageScaleOverTime * Mods.at[11]);
+        damage = Mathf.Abs(damage);
         timeAlive += Time.deltaTime;
         vel = rb.linearVelocity;
         pos = rb.position;
@@ -584,17 +598,18 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         {
             rot = math.degrees(math.atan2(vel.y, vel.x));
             ang = (rot - rb.rotation) * Time.deltaTime;
-            if (projectileTrailBehaviour)
-            {
-                projectileTrailBehaviour.transform.rotation = transform.rotation;
-            }
+            if (projectileTrailBehaviour) projectileTrailBehaviour.transform.rotation = transform.rotation;
         }
 
+
         rb.linearVelocity = vel;
-        rb.position = hasStuckToPoint ? rb.position : pos;
         rb.angularVelocity = ang;
         rb.rotation = hasStuckToPoint ? stickyNormalAngle : rot;
-        if (hasStuckToPoint) transform.localPosition = pointStuckAt;
+        if (hasStuckToPoint)
+        {
+            transform.localPosition = pointStuckAt;
+            rb.rotation = stickyNormalAngle;
+        }
     }
 
     float lingeringTimer;
@@ -666,7 +681,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             }
 
             instaDestroy = true;
-
+            SetupAllProxySpawns(ProjectileSpawnEvent.EventType.Death);
             projectileManager.DespawnProjectile(projectileID, hit);
 
         }
@@ -1113,11 +1128,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     private void OnDestroy()
     {
-
-        if(projectileManager.playerSynchronizer.localSquare.GetID() == owningPlayer.GetID())
-        {
-            for (int i = 0; i < data.projectileSpawnEvents.Length; i++) SetupProxySpawn(data.projectileSpawnEvents[i], ProjectileSpawnEvent.EventType.Death);
-        }
 
         shotInstance.release();
 
