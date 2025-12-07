@@ -702,6 +702,7 @@ GameObject:
   - component: {fileID: 7766882706945389865}
   - component: {fileID: 7766882706945389866}
   - component: {fileID: 7766882706945389867}
+  - component: {fileID: 7766882706945389868}
   m_Layer: 0
   m_Name: Synchronizer
   m_TagString: Sync
@@ -744,6 +745,9 @@ MonoBehaviour:
   localSquare: {fileID: 0}
   deathParticles: {fileID: 7289681851009581468, guid: e8871a85f02e94e40b1af9470829ebcb, type: 3}
   hostShutdown: 0
+  defaultSkin: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  clrUpdate: 0
+  clrUpdate2: 0
 --- !u!114 &7766882706945389853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1061,6 +1065,20 @@ MonoBehaviour:
   smallCornerOctagon: {fileID: -7428099741491018297, guid: 8192828f53e5bcf43aeaf229b7d45df5, type: 3}
   powerDot: {fileID: 1462027230021753929, guid: 637e5803263313a4492663443fd8322e, type: 3}
   spawnEventHandle: {fileID: 7929380567041260378, guid: ee88fddff5ffc6b438347f8bba48c75f, type: 3}
+--- !u!114 &7766882706945389868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6edd244814bd0574b84597c2cdd7cd7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFactorySynchronizer
+  ShowTopMostFoldoutHeaderGroup: 1
+  skinFetchesPerSecond: 20
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

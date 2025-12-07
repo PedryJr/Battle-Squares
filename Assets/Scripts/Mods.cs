@@ -3,7 +3,6 @@ using UnityEngine;
 
 public sealed class Mods : MonoBehaviour
 {
-
     public static float[] at = new float[]
     {
         1,
@@ -24,34 +23,106 @@ public sealed class Mods : MonoBehaviour
         0.7f,
     };
 
-    public static float playerGravity = 1; //0
-    public static float playerSpeed = 1; //1
-    public static float jumpForce = 1; //2
+    public static float PlayerGravity
+    {
+        get => at[0];
+        set => at[0] = value;
+    } // 0
 
-    public static float ballisticSpeed = 1; //3
-    public static float ballisticDagame = 1; //4
-    public static float ballisticGravity = 1; //5   
-    public static float meleeDamage = 1; //6
-    public static float aoeDamage = 1; //7
+    public static float PlayerSpeed
+    {
+        get => at[1];
+        set => at[1] = value;
+    } // 1
 
-    public static float playerAcceleration = 1; //8
-    public static float normalizedMovement = 0; //9
-    public static float playerHealth = 20; //10
+    public static float JumpForce
+    {
+        get => at[2];
+        set => at[2] = value;
+    } // 2
 
-    public static float damageOverTime = 1; //11
+    public static float ProjectileSpeed
+    {
+        get => at[3];
+        set => at[3] = value;
+    } // 3
 
-    public static float knockBack = 1; //12
-    public static float recoil = 1; //13
+    public static float BaseDamage
+    {
+        get => at[4];
+        set => at[4] = value;
+    } // 4
 
-    public static float bounce = 0.22f; //14
-    public static float friction = 0.7f; //15
+    public static float ProjectileGravity
+    {
+        get => at[5];
+        set => at[5] = value;
+    } // 5
+
+    public static float MeleeDamage
+    {
+        get => at[6];
+        set => at[6] = value;
+    } // 6
+
+    public static float AoeDamage
+    {
+        get => at[7];
+        set => at[7] = value;
+    } // 7
+
+    public static float PlayerAcceleration
+    {
+        get => at[8];
+        set => at[8] = value;
+    } // 8
+
+    public static float NormalizeMovement
+    {
+        get => at[9];
+        set => at[9] = value;
+    } // 9
+
+    public static float PlayerHealth
+    {
+        get => at[10];
+        set => at[10] = value;
+    } // 10
+
+    public static float DamageOverTime
+    {
+        get => at[11];
+        set => at[11] = value;
+    } // 11
+
+    public static float Knockback
+    {
+        get => at[12];
+        set => at[12] = value;
+    } // 12
+
+    public static float Recoil
+    {
+        get => at[13];
+        set => at[13] = value;
+    } // 13
+
+    public static float Bounce
+    {
+        get => at[14];
+        set => at[14] = value;
+    } // 14
+
+    public static float Friction
+    {
+        get => at[15];
+        set => at[15] = value;
+    } // 15
 
     static string modsFilePath;
 
-
     public static void SaveMods()
     {
-
         modsFilePath = Path.Combine(SaveManager.saveFolderPath, "mods.json");
 
         ModsData data = new ModsData
@@ -65,22 +136,32 @@ public sealed class Mods : MonoBehaviour
 
     public static void LoadMods()
     {
+        modsFilePath = Path.Combine(SaveManager.saveFolderPath, "mods.json");
+
         if (File.Exists(modsFilePath))
         {
             string json = File.ReadAllText(modsFilePath);
             ModsData data = JsonUtility.FromJson<ModsData>(json);
 
-            at = data.at;
-
+            if (data?.at != null && data.at.Length == at.Length)
+            {
+                at = data.at;
+            }
+            else if (data?.at != null)
+            {
+                // If saved array length differs, copy as many values as possible and keep defaults for the rest.
+                int min = Mathf.Min(at.Length, data.at.Length);
+                for (int i = 0; i < min; i++)
+                {
+                    at[i] = data.at[i];
+                }
+            }
         }
-
     }
-
 }
 
 public class ModsData
 {
-
     public float[] at = new float[]
     {
         1,
@@ -100,6 +181,5 @@ public class ModsData
         0.25f,
         0.7f,
     };
-
 }
 
