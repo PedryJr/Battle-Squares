@@ -1,6 +1,7 @@
 using System.IO;
 using Newtonsoft.Json;
 using Unity.Netcode;
+using UnityEngine;
 
 public sealed class Skin : NetworkBehaviour
 {
@@ -15,35 +16,66 @@ public sealed class Skin : NetworkBehaviour
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
         skinsPath = Path.Combine(SaveManager.saveFolderPath, "skins.json");
 
-        if (File.Exists(skinsPath))
+        if (!File.Exists(skinsPath))
+        {
+            Debug.LogWarning($"Skins file not found at '{skinsPath}'. Reverting to default skin.");
+            InitializeDefaultSkin();
+            return;
+        }
+
+        try
         {
 
             string json = File.ReadAllText(skinsPath);
             SkinData skinData = JsonConvert.DeserializeObject<SkinData>(json);
 
-            if (skinData != null)
+            if (skinData == null)
             {
-
-                if (skinData.skinFrames[0].frame.Length == 116)
-                {
-
-                    playerSynchronizer.skinData = skinData;
-
-                }
-                else
-                {
-                    InitializeDefaultSkin();
-                }
-
-            }
-            else
-            {
+                Debug.LogWarning($"Failed to deserialize '{skinsPath}' — JSON returned null. Reverting to default skin.");
                 InitializeDefaultSkin();
+                return;
             }
+
+            if (skinData.skinFrames == null || skinData.skinFrames.Length == 0)
+            {
+                Debug.LogWarning($"Skin data invalid: 'skinFrames' is null or empty in '{skinsPath}'. Reverting to default skin.");
+                InitializeDefaultSkin();
+                return;
+            }
+
+            var firstFrame = skinData.skinFrames[0];
+
+            if (firstFrame.frame == null)
+            {
+                Debug.LogWarning($"Skin data invalid: first skin frame 'frame' is null in '{skinsPath}'. Reverting to default skin.");
+                InitializeDefaultSkin();
+                return;
+            }
+
+            if (firstFrame.frame.Length != 116)
+            {
+                Debug.LogWarning($"Skin frame size mismatch in '{skinsPath}': expected 116 but got {firstFrame.frame.Length}. Reverting to default skin.");
+                InitializeDefaultSkin();
+                return;
+            }
+
+            playerSynchronizer.skinData = skinData;
+            Debug.Log($"Loaded skin from '{skinsPath}'.");
 
         }
-        else
+        catch (JsonException jex)
         {
+            Debug.LogWarning($"Error parsing skins file '{skinsPath}': {jex.Message}. Reverting to default skin.");
+            InitializeDefaultSkin();
+        }
+        catch (IOException ioex)
+        {
+            Debug.LogWarning($"I/O error reading skins file '{skinsPath}': {ioex.Message}. Reverting to default skin.");
+            InitializeDefaultSkin();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"Unexpected error loading skins file '{skinsPath}': {ex.Message}. Reverting to default skin.");
             InitializeDefaultSkin();
         }
 
@@ -63,6 +95,7 @@ public sealed class Skin : NetworkBehaviour
         playerSynchronizer.skinData.frames = 1;
         playerSynchronizer.skinData.skinFrames[0].valid = true;
 
+        Debug.Log("Initialized default skin.");
         SaveSkinData(playerSynchronizer.skinData);
 
     }

@@ -202,7 +202,11 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
         {
             playerSynchronizer.skinData.skinFrames[i].frame = skinFrames[i].frameData;
 
-            if (i == newIndex) playerSynchronizer.skinData.skinFrames[i].frame = newSkinData;
+            if (i == newIndex)
+            {
+                playerSynchronizer.skinData.skinFrames[i].frame = newSkinData;
+                playerSynchronizer.skinData.skinFrames[i].valid = true;
+            }
             else playerSynchronizer.skinData.skinFrames[i].valid = rememberValid[i];
         }
 

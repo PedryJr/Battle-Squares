@@ -399,7 +399,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         return angleInDegrees;
     }
 
-    public void CreateTextureFromBoolArray10BY10(bool[] boolArray, byte frameIndex)
+    public void CreateTextureFromBoolArray10BY10(bool[] boolArray, int frameIndex)
     {
 
         Span<bool> rotatedArray = stackalloc bool[100];
@@ -428,7 +428,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
     }
 
-    public void CreateTextureFromBoolArray4BY4(bool[] boolArray, byte frameIndex)
+    public void CreateTextureFromBoolArray4BY4(bool[] boolArray, int frameIndex)
     {
 
         Span<bool> rotatedArray = stackalloc bool[16];

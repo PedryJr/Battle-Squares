@@ -1078,7 +1078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFactorySynchronizer
   ShowTopMostFoldoutHeaderGroup: 1
-  skinFetchesPerSecond: 20
+  skinFetchesPerSecond: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
