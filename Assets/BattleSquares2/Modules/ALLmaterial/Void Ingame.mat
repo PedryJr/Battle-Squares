@@ -15,7 +15,7 @@ Material:
   m_InvalidKeywords:
   - _ZWRITE_ON
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
   m_CustomRenderQueue: 3000
   stringTagMap: {}
@@ -64,8 +64,8 @@ Material:
     - _ExponentialNoise: -0.19
     - _Tiling: 16.7
     - _ZWrite: 1
-    - _fallofExponential: 0.74
-    - _maxIntensity: 0.3
+    - _fallofExponential: 3
+    - _maxIntensity: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

@@ -15,9 +15,14 @@ public sealed class SaveManager : MonoBehaviour
 
         skin = GetComponent<Skin>();
         CreateVersionedSaveFolder();
-        MySettings.Init();
         skin.Init();
 
+    }
+
+    private void Start()
+    {
+        MySettings.Init();
+        UserStatsManager.Init();
     }
 
     private void CreateVersionedSaveFolder()

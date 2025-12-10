@@ -60,7 +60,6 @@ public sealed class PixelManager : MonoBehaviour
 
     private void Awake()
     {
-
         animators = GetComponentsInChildren<PixelStateAnimator>();
         pixels = GetComponentsInChildren<EditorPixelBehaviour>();
         painterExec = GetComponent<PainterExec>();

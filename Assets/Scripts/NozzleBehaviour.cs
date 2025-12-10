@@ -7,6 +7,7 @@ using static WeaponBuilder;
 public sealed class NozzleBehaviour : MonoBehaviour
 {
 
+
     PlayerController playerController;
     PlayerBehaviour playerBehaviour;
     ProjectileManager projectileManager;
@@ -23,10 +24,35 @@ public sealed class NozzleBehaviour : MonoBehaviour
 
     public float intensity;
 
-    public int primaryAmmo;
-    public int secondaryAmmo;
-    public int primaryShots;
-    public int secondaryShots;
+    int a = 82375459;
+    int b = 89346787;
+    int c = 89457937;
+
+    int _primaryAmmo;
+    int _secondaryAmmo;
+    int _primaryShots;
+    int _secondaryShots;
+
+    public int primaryAmmo
+    {
+        get => _primaryAmmo ^ b ^ a ^ c;
+        set => _primaryAmmo = value ^ a ^ c ^ b;
+    }
+    public int secondaryAmmo
+    {
+        get => _secondaryAmmo ^ b ^ c ^ a;
+        set => _secondaryAmmo = value ^ b ^ c ^ a;
+    }
+    public int primaryShots
+    {
+        get => _primaryShots ^ b ^ c ^ a;
+        set => _primaryShots = value ^ a ^ c ^ b;
+    }
+    public int secondaryShots
+    {
+        get => _secondaryShots ^ a ^ b ^ c;
+        set => _secondaryShots = value ^ a ^ c ^ b;
+    }
 
     public float primaryTimeSinceShot;
     public float primaryFireTime;
@@ -213,7 +239,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
                 globalNozzleDirection,
                 relativePositionToPlayer.normalized,
                 playerBehaviour);
-            playerBehaviour.ApplyRecoil();
+            playerBehaviour.PlayNozzleRecoilAnimation();
         }
         return fire;
 

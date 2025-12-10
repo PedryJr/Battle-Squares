@@ -44,7 +44,6 @@ public sealed class PixelStateAnimator : MonoBehaviour
     [BurstCompile]
     private void Awake()
     {
-
         rectTransform = GetComponent<RectTransform>();
         pixelManager = GetComponentInParent<PixelManager>();
 

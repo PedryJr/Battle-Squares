@@ -154,6 +154,7 @@ Shader "*MyShaders/StencilDraw"
                 FragOutput o;
 
                 o.myOut = i.stencilID;
+                //o.myOut = i.stencilID * 2048 / 2;
                 //o.myOut = 0.5f;
 
                 return o;

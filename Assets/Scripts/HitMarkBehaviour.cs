@@ -59,7 +59,6 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
     private void Awake()
     {
         if (SharedBlock == null) SharedBlock = new MaterialPropertyBlock();
-        impactForce = Instantiate(impactForce, transform.position, transform.rotation, null);
 
         if (randomRotation && spawnStages != null)
         {
@@ -73,6 +72,11 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
         if (mainRenderer != null) mainRenderer.sortingOrder = 2;
 
         transform.position += new Vector3(0, 0, LevelBuilderStuff.STENCIL_OFFSET);
+    }
+
+    private void Start()
+    {
+        impactForce = Instantiate(impactForce, transform.position, transform.rotation, null);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

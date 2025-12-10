@@ -173,7 +173,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         shotInstance = RuntimeManager.CreateInstance(shotReference);
         shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
         shotInstance.setParameterByName("Power", data.speed / 65f);
-        shotInstance.setVolume(MySettings.volume);
+        shotInstance.setVolume(MySettings.Volume);
         shotInstance.setPitch(pitch);
         shotInstance.start();
 
@@ -182,7 +182,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
             aliveInstance = RuntimeManager.CreateInstance(aliveReference);
             aliveInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
             aliveInstance.setParameterByName("Power", data.speed / 65f);
-            aliveInstance.setVolume(MySettings.volume);
+            aliveInstance.setVolume(MySettings.Volume);
             aliveInstance.setPitch(pitch);
             aliveInstance.start();
         }
@@ -979,7 +979,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
             EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
             eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
-            eventInstance.setVolume(MySettings.volume);
+            eventInstance.setVolume(MySettings.Volume);
             eventInstance.start();
 
             RaycastHit2D point = GetClosestEnvironmentPoint(boom.position);
@@ -1114,7 +1114,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
         eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
-        eventInstance.setVolume(MySettings.volume);
+        eventInstance.setVolume(MySettings.Volume);
         eventInstance.start();
 
         ParticleBehaviour impactParticles = ParticlePool.Spawn(data.impactParticle, boom.transform.position, transform.rotation, null);

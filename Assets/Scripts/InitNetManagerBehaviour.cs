@@ -9,7 +9,7 @@ public sealed class InitNetManagerBehaviour : MonoBehaviour
     private void Awake()
     {
         
-        networkManager = GetComponent<NetworkManager>();
+        networkManager = GetComponent<NetworkManager>(); 
 
         networkManager.SetSingleton();
 

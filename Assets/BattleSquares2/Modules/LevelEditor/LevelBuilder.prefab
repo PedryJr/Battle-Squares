@@ -344,9 +344,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e627c165ee67e874babb4b09b5eaaa04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackdropBehaviour
-  _fallofExponential: 0.74
-  _othersInfluenceOverMe: 0.06
-  _maxIntensity: 0.3
+  _fallofExponential: 3
+  _othersInfluenceOverMe: 1
+  _maxIntensity: 1
   backdropMaterial: {fileID: 2100000, guid: 63fb528208bc3f34d872981ac46d1253, type: 2}
 --- !u!1 &6801532356897613291
 GameObject:

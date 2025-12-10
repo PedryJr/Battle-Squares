@@ -44,10 +44,10 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     VirtualChannelCount:
-      Value: 2048
+      Value: 50
       HasValue: 1
     RealChannelCount:
-      Value: 256
+      Value: 50
       HasValue: 1
     DSPBufferLength:
       Value: 0
@@ -628,10 +628,10 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     VirtualChannelCount:
-      Value: 2048
+      Value: 50
       HasValue: 1
     RealChannelCount:
-      Value: 256
+      Value: 50
       HasValue: 1
     DSPBufferLength:
       Value: 16
@@ -774,7 +774,7 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     SampleRate:
-      Value: 48000
+      Value: 0
       HasValue: 1
     BuildDirectory:
       Value: 
@@ -783,11 +783,11 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     VirtualChannelCount:
-      Value: 2048
+      Value: 50
       HasValue: 1
     RealChannelCount:
-      Value: 0
-      HasValue: 0
+      Value: 50
+      HasValue: 1
     DSPBufferLength:
       Value: 0
       HasValue: 1

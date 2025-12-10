@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PowerAuraSmoke
+  m_Name: ThermalReadAndApply
   m_Shader: {fileID: 4800000, guid: ff3454a1b5f7c8c4c91c33c74aeb43e8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

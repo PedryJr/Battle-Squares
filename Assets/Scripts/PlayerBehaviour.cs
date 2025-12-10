@@ -11,7 +11,6 @@ using UnityEngine.SceneManagement;
  
 public sealed class PlayerBehaviour : MonoBehaviour
 {
-
     [SerializeField]
     Light2D playerLight;
 
@@ -373,7 +372,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
                 }
 
                 playerSlapSound.setParameterByName("Player Speed", slapIntensity);
-                playerSlapSound.setVolume(MySettings.volume);
+                playerSlapSound.setVolume(MySettings.Volume);
                 playerSlapSound.start();
                 slapTimer = 0.27f;
 
@@ -878,7 +877,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
             math.smoothstep(0, 1, newNozzleLerp));
     }
 
-    public void ApplyRecoil()
+    public void PlayNozzleRecoilAnimation()
     {
 
         fromPos = Vector2.zero;

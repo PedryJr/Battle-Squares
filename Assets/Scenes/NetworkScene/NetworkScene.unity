@@ -613,7 +613,7 @@ MonoBehaviour:
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 81dbe62fc17c5b1479dd8111172dff06, type: 2}
-    TickRate: 100
+    TickRate: 200
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 1
     ConnectionData: 
@@ -703,6 +703,7 @@ GameObject:
   - component: {fileID: 7766882706945389866}
   - component: {fileID: 7766882706945389867}
   - component: {fileID: 7766882706945389868}
+  - component: {fileID: 7766882706945389870}
   m_Layer: 0
   m_Name: Synchronizer
   m_TagString: Sync
@@ -748,6 +749,7 @@ MonoBehaviour:
   defaultSkin: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   clrUpdate: 0
   clrUpdate2: 0
+  rb: {fileID: 1183418982090731583, guid: 3563c16069bcf3a40a85e1ff26d8cb81, type: 3}
 --- !u!114 &7766882706945389853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1062,6 +1064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243baf199fd19084b8d9539bbb6d4fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  hitmarkMaterial: {fileID: 2100000, guid: cd2908cfd919909478bd90c43dea0d9b, type: 2}
   smallCornerOctagon: {fileID: -7428099741491018297, guid: 8192828f53e5bcf43aeaf229b7d45df5, type: 3}
   powerDot: {fileID: 1462027230021753929, guid: 637e5803263313a4492663443fd8322e, type: 3}
   spawnEventHandle: {fileID: 7929380567041260378, guid: ee88fddff5ffc6b438347f8bba48c75f, type: 3}
@@ -1078,7 +1081,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFactorySynchronizer
   ShowTopMostFoldoutHeaderGroup: 1
-  skinFetchesPerSecond: 2
+  skinFetchesPerSecond: 25
+--- !u!114 &7766882706945389870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56fc13cba4499aa45870b410f98329d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WindowManager
+  fullscreenUseExclusive: 0
+  borderlessTopMost: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

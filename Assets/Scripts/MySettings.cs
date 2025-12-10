@@ -1,121 +1,83 @@
 using System.IO;
 using UnityEngine;
 
-public sealed class MySettings : MonoBehaviour
-{
-
-    public static float volume = 0.7f;
-    public static int vsync = 0;
-    public static int fps = 0;
-    public static int fullscreen = 0;
-    public static bool postProcessing = true;
-
-    public static int wins = 0;
-    public static int maxWinStreak = 0;
-    public static int maxLobbyKills = 0;
-    public static int kills = 0;
-    public static int deaths = 0;
-    public static bool muted = true;
-
+public sealed class MySettings
+{ 
+    public static float Volume { get; private set; } = 0.7f;
+    public static int Vsync { get; private set; } = 0;
+    public static int Fps { get; private set; } = 0;
+    public static int FullscreenMode { get; private set; } = 0;
+    public static bool PostProcessing { get; private set; } = true;
+    public static bool Muted { get; private set; } = true;
+     
     private static string settingsFilePath;
-    private static string statsFilePath;
+    private static bool initialized = false;
 
     public static void Init()
     {
+        if (initialized) return;
+        initialized = true;
+
         settingsFilePath = Path.Combine(SaveManager.saveFolderPath, "settings.json");
-        statsFilePath = Path.Combine(SaveManager.saveFolderPath, "stats.json");
         LoadSettings();
-        LoadStats();
+        ApplySettings(true);
+    }
+     
+
+    public static void SetVolume(float v)
+    {
+        Volume = Mathf.Clamp01(v);
+        OnChanged();
     }
 
-    public static void SaveSettings()
+    public static void SetVsync(int v)
     {
-        SettingsData data = new SettingsData
-        {
-            volume = volume,
-            vsync = vsync,
-            fps = fps,
-            fullscreen = fullscreen,
-            postProcessing = postProcessing,
-            muted = muted,
-        };
-
-        string json = JsonUtility.ToJson(data, true);
-        File.WriteAllText(settingsFilePath, json);
+        Vsync = Mathf.Clamp(v, 0, 4);
+        OnChanged();
     }
 
-    public static void SaveStats()
+    public static void SetFps(int v)
     {
-
-        UserStatsData data = new UserStatsData
-        {
-            wins = wins,
-            maxWinStreak = maxWinStreak,
-            maxLobbyKills = maxLobbyKills,
-            kills = kills,
-            deaths = deaths,
-        };
-
-        string json = JsonUtility.ToJson(data, true);
-        File.WriteAllText(statsFilePath, json);
-
+        Fps = Mathf.Clamp(v, 0, 4);
+        OnChanged();
     }
 
-    public static void LoadSettings()
+    public static void SetFullscreen(int mode)
     {
-        if (File.Exists(settingsFilePath))
-        {
-            string json = File.ReadAllText(settingsFilePath);
-            SettingsData data = JsonUtility.FromJson<SettingsData>(json);
+        FullscreenMode = Mathf.Clamp(mode, 0, 2);
+        OnChanged();
+    }
 
-            volume = data.volume;
-            vsync = data.vsync;
-            fps = data.fps;
-            fullscreen = data.fullscreen;
-            postProcessing = data.postProcessing;
-            muted = data.muted;
-        }
+    public static void SetPostProcessing(bool enabled)
+    {
+        PostProcessing = enabled;
+        OnChanged();
+    }
 
+    public static void SetMuted(bool enabled)
+    {
+        Muted = enabled;
+        OnChanged();
+    }
+     
+    private static void OnChanged()
+    {
         ApplySettings();
-
+        SaveSettings();
     }
-
-    public static void LoadStats()
-    {
-
-        if (File.Exists(statsFilePath))
+     
+    private static void ApplySettings(bool forceApply = false)
+    { 
+        switch (FullscreenMode)
         {
-
-            string json = File.ReadAllText(statsFilePath);
-            UserStatsData data = JsonUtility.FromJson<UserStatsData>(json);
-
-            wins = data.wins;
-            maxWinStreak = data.maxWinStreak;
-            maxLobbyKills = data.maxLobbyKills;
-            kills = data.kills;
-            deaths = data.deaths;
-
+            case 0: WindowManager.Instance.SetState(WindowManager.WindowState.Fullscreen); break;
+            case 1: WindowManager.Instance.SetState(WindowManager.WindowState.Borderless); break;
+            case 2: WindowManager.Instance.SetState(WindowManager.WindowState.Windowed); break;
         }
-
-    }
-
-    public static void ApplySettings()
-    {
-
-        RefreshRate refreshRate = Screen.mainWindowDisplayInfo.refreshRate;
-
-        int x = Screen.mainWindowDisplayInfo.width;
-        int y = Screen.mainWindowDisplayInfo.height;
-
-        switch (fullscreen)
-        {
-            case 0: Screen.SetResolution(x, y, FullScreenMode.ExclusiveFullScreen, refreshRate); break;
-            case 1: Screen.SetResolution(x, y, FullScreenMode.FullScreenWindow, refreshRate); break;
-            case 2: Screen.SetResolution(x, y, FullScreenMode.Windowed, refreshRate); break;
-        }
-
-        QualitySettings.vSyncCount = vsync;
-        switch (fps)
+         
+        QualitySettings.vSyncCount = Vsync;
+         
+        switch (Fps)
         {
             case 0: Application.targetFrameRate = -1; break;
             case 1: Application.targetFrameRate = 30; break;
@@ -123,12 +85,46 @@ public sealed class MySettings : MonoBehaviour
             case 3: Application.targetFrameRate = 144; break;
             case 4: Application.targetFrameRate = 240; break;
         }
+    }
+     
+    private static void SaveSettings()
+    {
+        SettingsData data = new SettingsData
+        {
+            volume = Volume,
+            vsync = Vsync,
+            fps = Fps,
+            fullscreen = FullscreenMode,
+            postProcessing = PostProcessing,
+            muted = Muted
+        };
 
-        SaveSettings();
+        string json = JsonUtility.ToJson(data, true);
+        File.WriteAllText(settingsFilePath, json);
+    }
 
+    private static void LoadSettings()
+    {
+        if (!File.Exists(settingsFilePath))
+        {
+            ApplySettings();
+            SaveSettings();
+            return;
+        }
+
+        string json = File.ReadAllText(settingsFilePath);
+        SettingsData data = JsonUtility.FromJson<SettingsData>(json);
+
+        Volume = data.volume;
+        Vsync = data.vsync;
+        Fps = data.fps;
+        FullscreenMode = data.fullscreen;
+        PostProcessing = data.postProcessing;
+        Muted = data.muted;
+
+        ApplySettings();
     }
 }
-
 
 public class SettingsData
 {
@@ -137,16 +133,5 @@ public class SettingsData
     public int fps = 0;
     public int fullscreen = 0;
     public bool postProcessing = true;
-    public bool muted;
-}
-
-public class UserStatsData
-{
-
-    public int wins = 0;
-    public int maxWinStreak = 0;
-    public int maxLobbyKills = 0;
-    public int kills;
-    public int deaths;
-
+    public bool muted = false;
 }

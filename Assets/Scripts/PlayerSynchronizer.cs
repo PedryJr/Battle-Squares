@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using System.Runtime.CompilerServices;
 using Netcode.Transports.Facepunch;
 using Steamworks;
@@ -684,67 +684,42 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
             clrUpdate -= Time.deltaTime;
         }
     }
-    
-    void StorePlayerRigidBodyData(PlayerBehaviour player, byte[] data)
-    {
 
-        if (player.isDead) return;
+    [SerializeField]
+    Rigidbody2D rb;
+    Rigidbody2D RB;
+    bool b = false;
 
-        byte[] compPos = new byte[4] { data[0], data[1], data[2], data[3] };
-        byte[] compVel = new byte[4] { data[4], data[5], data[6], data[7] };
-        byte[] compRot = new byte[2] { data[8], data[9] };
-        byte[] compRotVel = new byte[3] { data[10], data[11], data[12] };
-
-
-        (float xPos, float yPos) = MyExtentions.DecodePosition(compPos);
-        xPos -= 64;
-        yPos -= 64;
-        (float xVel, float yVel) = MyExtentions.DecodePosition(compVel);
-        xVel -= 64;
-        yVel -= 64;
-        float rot = MyExtentions.DecodeRotation(compRot);
-        float rotVel = MyExtentions.DecodeFloat(compRotVel);
-
-        player.rb.position = new Vector2(xPos, yPos);
-        player.rb.rotation = rot;
-        player.rb.linearVelocity = new Vector2(xVel, yVel);
-        player.rb.angularVelocity = rotVel;
-
-    }
-    
     public void UpdateRigidBody()
     {
-        ulong sourceId = networkManager.LocalClientId;
-
-        byte[] compPos = MyExtentions.EncodePosition(localSquare.position.x + 64, localSquare.position.y + 64);
-        byte[] compVel = MyExtentions.EncodePosition(localSquare.velocity.x + 64, localSquare.velocity.y + 64);
-        byte[] compRot = MyExtentions.EncodeRotation(localSquare.rotation);
-        byte[] compRotVel = MyExtentions.EncodeFloat(localSquare.angularVelocity);
-
-        byte[] data = new byte[14]
+/*
+        if (!b || !RB)
         {
-                compPos[0], compPos[1], compPos[2], compPos[3],
-                compVel[0], compVel[1], compVel[2], compVel[3],
-                compRot[0], compRot[1],
-                compRotVel[0], compRotVel[1], compRotVel[2],
-                (byte) sourceId
-        };
+            RB = Instantiate(rb);
+            b = true;
+        }*/
 
-        UpdateRigidBodyRpc(data);
+        byte[] data = MyExtentions.CompressRigidbody(localSquare.rb);
+
+        UpdateRigidBodyRpc(data, localSquare.GetID());
 
     }
-    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
-    void UpdateRigidBodyRpc(byte[] data)
-    {
 
-        if ((byte)networkManager.LocalClientId == data[13]) return;
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
+    void UpdateRigidBodyRpc(byte[] data, byte id)
+    {
+        if (localSquare.GetID() == id) return;
         if (playerIdentities == null) return;
         PlayerBehaviour player = null;
-        player = GetPlayerById(data[13]);
+        player = GetPlayerById(id);
         if(player) StorePlayerRigidBodyData(player, data);
-
     }
-    
+
+    void StorePlayerRigidBodyData(PlayerBehaviour player, byte[] data)
+    { 
+        if (!player.isDead) MyExtentions.DecompressRigidbody(data, player.rb); 
+    }
+
     public void UpdateNozzle()
     {
         ulong sourceId = networkManager.LocalClientId;
@@ -788,8 +763,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
             (byte) math.round(localSquare.PlayerColor.ReadColorHue * 256)
         };
 
-        UpdateColortRpc(data);
-
+        UpdateColortRpc(data); 
     }
 
     [Rpc(SendTo.NotMe, Delivery = RpcDelivery.Unreliable)]
@@ -1020,7 +994,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     public void PlayerDeathEffect(PlayerBehaviour deadPlayer)
     {
 
-        localSquare.deathSoundInstance.setVolume(MySettings.volume);
+        localSquare.deathSoundInstance.setVolume(MySettings.Volume);
         localSquare.deathSoundInstance.start();
 
         GameObject newParticle = Instantiate(deathParticles, deadPlayer.rb.position, Quaternion.Euler(0, 0, 0), null);

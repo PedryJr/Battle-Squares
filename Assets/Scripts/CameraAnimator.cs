@@ -96,7 +96,7 @@ public sealed class CameraAnimator : MonoBehaviour
     {
         if(battleThemeInstance.isValid()) battleThemeInstance.release();
         battleThemeInstance = RuntimeManager.CreateInstance(battleThemeReference);
-        battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
+        battleThemeInstance.setVolume(initCameraTimer * MySettings.Volume);
         battleThemeInstance.start();
     }
 
@@ -222,7 +222,7 @@ public sealed class CameraAnimator : MonoBehaviour
 
     private void SoundUpdates()
     {
-        battleThemeInstance.setVolume(initCameraTimer * MySettings.volume);
+        battleThemeInstance.setVolume(initCameraTimer * MySettings.Volume);
 
         soundUpdateTimer = 0;
         if (!playerSynchronizer.localSquare) return;

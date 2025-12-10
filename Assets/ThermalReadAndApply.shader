@@ -1,4 +1,4 @@
-Shader "Hidden/URP/ThermalBlit"
+Shader "RenderFeatures/ThermalReadAndApply"
 {
     Properties
     {

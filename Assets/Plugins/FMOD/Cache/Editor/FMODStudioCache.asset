@@ -906,7 +906,7 @@ MonoBehaviour:
   - {fileID: 7905597030366597611}
   StringsBanks:
   - {fileID: 5974331575488483072}
-  cacheTime: 638996087683432136
+  cacheTime: 639009063806244788
   cacheVersion: 131843
 --- !u!114 &197478428860747775
 MonoBehaviour:
@@ -923,10 +923,10 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Themes.bank
   Name: Themes
   StudioPath: bank:/Themes
-  lastModified: 638996087683422127
+  lastModified: 639009063805734352
   FileSizes:
   - Name: Desktop
-    Value: 15394176
+    Value: 15393984
   Exists: 1
 --- !u!114 &609275364110211903
 MonoBehaviour:
@@ -1067,10 +1067,10 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/VFX.bank
   Name: VFX
   StudioPath: bank:/VFX
-  lastModified: 638996087683432136
+  lastModified: 639009063806244788
   FileSizes:
   - Name: Desktop
-    Value: 116128
+    Value: 116160
   Exists: 1
 --- !u!114 &2429569352991552797
 MonoBehaviour:
@@ -1345,7 +1345,7 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638996087683086839
+  lastModified: 639009063161644070
   FileSizes:
   - Name: Desktop
     Value: 2412
@@ -1365,7 +1365,7 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Player.bank
   Name: Player
   StudioPath: bank:/Player
-  lastModified: 638996087683091844
+  lastModified: 639009063804948669
   FileSizes:
   - Name: Desktop
     Value: 13280
@@ -1461,7 +1461,7 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638996087683081835
+  lastModified: 639009063161634051
   FileSizes:
   - Name: Desktop
     Value: 3878

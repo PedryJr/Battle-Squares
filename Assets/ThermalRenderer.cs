@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class ThermalRenderer : MonoBehaviour
@@ -17,6 +18,10 @@ public class ThermalRenderer : MonoBehaviour
 
     [SerializeField]
     Renderer2DData renderer2D;
+
+    [SerializeField]
+    GraphicsFormat format = GraphicsFormat.R8G8B8A8_SRGB;
+    GraphicsFormat oldFormat = GraphicsFormat.None;
 
     private void Awake()
     {
@@ -39,17 +44,16 @@ public class ThermalRenderer : MonoBehaviour
 
     void TryResize()
     {
-        int testW = BS_Screen.TpixelsX, testH = BS_Screen.TpixelsY;
-        if (testW != w || testH != h)
-        {
-            w = testW;
-            h = testH;
-            Resize();
-        }
+        if(format != oldFormat) Resize();
+        if (BS_Screen.TpixelsX != w || BS_Screen.TpixelsY != h) Resize();
     }
 
     void Resize()
     {
+        w = BS_Screen.TpixelsX;
+        h = BS_Screen.TpixelsY;
+        oldFormat = format;
+
         RenderTexture oldRt = cam.targetTexture;
         renderTexture = CreateNewStencil(w, h);
         cam.targetTexture = renderTexture;
@@ -69,12 +73,13 @@ public class ThermalRenderer : MonoBehaviour
 
     RenderTexture CreateNewStencil(int w, int h)
     {
+
         RenderTexture customRT;
         RenderTextureDescriptor desc = new RenderTextureDescriptor(w, h)
         {
-            dimension = UnityEngine.Rendering.TextureDimension.Tex2D,
+            dimension = TextureDimension.Tex2D,
             msaaSamples = 1,
-            graphicsFormat = GraphicsFormat.R8_UNorm,
+            graphicsFormat = format,
             depthStencilFormat = GraphicsFormat.S8_UInt,
             mipCount = 1,
             useMipMap = false,

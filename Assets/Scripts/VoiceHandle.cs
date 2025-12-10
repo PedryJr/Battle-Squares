@@ -46,7 +46,7 @@ public sealed class VoiceHandle : NetworkBehaviour
         if (IsOwner)
         {
 
-            selfMute = MySettings.muted;
+            selfMute = MySettings.Muted;
 
             ApplySelfMute();
 
@@ -108,7 +108,7 @@ public sealed class VoiceHandle : NetworkBehaviour
         if (attatchedPlayer)
         {
 
-            settingsVolume = MySettings.volume;
+            settingsVolume = MySettings.Volume;
             volume = attatchedPlayer.voiceVolume;
             muted = attatchedPlayer.voiceMute;
 
@@ -128,7 +128,7 @@ public sealed class VoiceHandle : NetworkBehaviour
 
             if (IsOwner)
             {
-                selfMute = MySettings.muted;
+                selfMute = MySettings.Muted;
 
                 if(selfMute != lastSelfMute) ApplySelfMute();
 

@@ -157,7 +157,7 @@ public sealed class PlayerSettingsBehaviour : MonoBehaviour
 
         if (this.selectedPlayer == selectedPlayer) { this.selectedPlayer = null; return; }
 
-        if (selectedPlayer == playerSynchronizer.localSquare) selectedPlayer.voiceMute = MySettings.muted;
+        if (selectedPlayer == playerSynchronizer.localSquare) selectedPlayer.voiceMute = MySettings.Muted;
 
         this.selectedPlayer = selectedPlayer;
         visibilityTimer = 0;
@@ -173,10 +173,8 @@ public sealed class PlayerSettingsBehaviour : MonoBehaviour
 
         if (selectedPlayer == playerSynchronizer.localSquare)
         {
-            MySettings.muted = selectedPlayer.voiceMute;
-            MySettings.SaveSettings();
+            MySettings.SetMuted(selectedPlayer.voiceMute);
         }
-
     }
 
     public void VOLUME(float volume)
