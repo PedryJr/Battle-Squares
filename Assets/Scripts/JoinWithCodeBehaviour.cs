@@ -1,3 +1,4 @@
+using g3;
 using Steamworks;
 using Steamworks.Data;
 using Unity.Netcode;
@@ -62,9 +63,6 @@ public sealed class JoinWithCodeBehaviour : MonoBehaviour
         Friend friend = new Friend(ulong.Parse(newLobby.GetData("OwnerId").ToString()));
         await friend.RequestInfoAsync();
 
-        lobbyBehaviour.lobbyId = friend.Id;
-        lobbyBehaviour.ownerId = friend.Id;
-
         lobbyBehaviour.lobbyCapacity = 4;
         lobbyBehaviour.lobbyPopulation = newLobby.MemberCount;
 
@@ -72,7 +70,7 @@ public sealed class JoinWithCodeBehaviour : MonoBehaviour
 
         GetImageData(friend.Id);
 
-        lobbyBehaviour.lobby = newLobby;
+        lobbyBehaviour.lobby = new ManagedLobby(newLobby);
 
         lobbyBehaviour.activated = true;
 

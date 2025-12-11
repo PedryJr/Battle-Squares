@@ -173,7 +173,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         renderParams.lightProbeProxyVolume = null;
         renderParams.lightProbeUsage = LightProbeUsage.Off;
         renderParams.shadowCastingMode = ShadowCastingMode.Off;
-        renderParams.motionVectorMode = MotionVectorGenerationMode.Camera;
+        renderParams.motionVectorMode = MotionVectorGenerationMode.ForceNoMotion;
 
         mainCamera = possibleInGameCamera;
     }
@@ -189,7 +189,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
 
         CalculateProximityPixels();
         spriteAsMesh.indexFormat = IndexFormat.UInt32;
-        spriteAsMesh.SetIndices(triangles.ToArray(), MeshTopology.Triangles, 0);
+        spriteAsMesh.SetIndices(triangles.ToArray(), MeshTopology.Triangles, 0, calculateBounds: false);
         spriteAsMesh.bounds = new Bounds(Vector3.zero, Vector3.one * 2048);
         spriteAsMesh.MarkDynamic();
     }
@@ -223,14 +223,9 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
             foreach (var item in sensorObjects) if (item) item.CustomUpdate();
             CalculateProximityPixels();
             frameTimer = 0f;
-        }/*
-        TryGetColor();*/
+        }
     }
 
-/*    void TryGetColor()
-    {
-        if(WorldColors.Instance) renderParams.material.SetColor("_Color", WorldColors.GetPixelEffectColor());
-    }*/
 
     private void OnDestroy()
     {

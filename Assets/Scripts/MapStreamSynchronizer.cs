@@ -75,7 +75,7 @@ public class MapStreamSynchronizer : NetworkBehaviour
 
 
     //ON CLIENT
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
+    [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void NotifyMapChangeClientRpc(LevelExpectation levelExpectation, string levelName)
     {
         if (levelReciever != null) if (levelReciever.levelExpectation.levelHashCode == levelExpectation.levelHashCode) return;
@@ -87,17 +87,14 @@ public class MapStreamSynchronizer : NetworkBehaviour
 
     public void RestreamMapByForce() => RestreamMapByForceServerRpc(NetworkManager.LocalClientId);
 
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void RestreamMapByForceServerRpc(ulong requester)
     {
-        ClientRpcParams clientRpcParams = default;
-        clientRpcParams.Send.TargetClientIdsNativeArray = new NativeArray<ulong>(new ulong[] { requester }, Allocator.TempJob);
-        clientRpcParams.Receive = default;
-        RestreamMapByForceClientRpc(levelPrep.levelExpectation, levelPrep.levelName, clientRpcParams);
+        RestreamMapByForceClientRpc(levelPrep.levelExpectation, levelPrep.levelName, RpcTarget.Single(requester, RpcTargetUse.Temp));
     }
 
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
-    public void RestreamMapByForceClientRpc(LevelExpectation levelExpectation, string levelName, ClientRpcParams clientRpcParams)
+    [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
+    public void RestreamMapByForceClientRpc(LevelExpectation levelExpectation, string levelName, RpcParams clientRpcParams)
     {
         if (IsHost) return;
         levelReciever = new LevelReciever(levelExpectation);
@@ -112,8 +109,8 @@ public class MapStreamSynchronizer : NetworkBehaviour
     }
 
     //ON CLIENT
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
-    public void GiveDataClientRpc(LevelDataRange dataRange, USimplifiedShapeData[] simplifiedShapeDatas, ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
+    public void GiveDataClientRpc(LevelDataRange dataRange, USimplifiedShapeData[] simplifiedShapeDatas, RpcParams clientRpcParams = default)
     {
         if (!levelReciever.IsHashcodeValid(dataRange))
         {
@@ -129,8 +126,8 @@ public class MapStreamSynchronizer : NetworkBehaviour
     }
 
     //ON CLIENT
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
-    public void GiveDataClientRpc(LevelDataRange dataRange, SimplifiedAnimationData[] simplifiedAnimationDatas, ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
+    public void GiveDataClientRpc(LevelDataRange dataRange, SimplifiedAnimationData[] simplifiedAnimationDatas, RpcParams clientRpcParams = default)
     {
         if (!levelReciever.IsHashcodeValid(dataRange))
         {
@@ -146,8 +143,8 @@ public class MapStreamSynchronizer : NetworkBehaviour
     }
 
     //ON CLIENT
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
-    public void GiveDataClientRpc(LevelDataRange dataRange, ByteCoord[] byteCoords, ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
+    public void GiveDataClientRpc(LevelDataRange dataRange, ByteCoord[] byteCoords, RpcParams clientRpcParams = default)
     {
         if (!levelReciever.IsHashcodeValid(dataRange))
         {
@@ -168,8 +165,8 @@ public class MapStreamSynchronizer : NetworkBehaviour
     }
 
     //ON CLIENT
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    public void AknowledgeClientRpc(LevelDataRange dataRange, ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
+    public void AknowledgeClientRpc(LevelDataRange dataRange, RpcParams clientRpcParams = default)
     {
         if (!levelReciever.IsHashcodeValid(dataRange))
         {
@@ -197,9 +194,7 @@ public class MapStreamSynchronizer : NetworkBehaviour
     public void FetchChunkServerRpc(LevelExpectation recievedChunks, byte requester)
     {
 
-        ClientRpcParams clientRpcParams = default;
-        clientRpcParams.Send.TargetClientIdsNativeArray = new NativeArray<ulong>(new ulong[] { requester }, Allocator.TempJob);
-        clientRpcParams.Receive = default;
+        BaseRpcTarget target = RpcTarget.Single(requester, RpcTargetUse.Temp);
 
         Debug.Log("Fetching chunk");
         LevelDataRange dataRange = new LevelDataRange(levelPrep.levelExpectation);
@@ -210,7 +205,7 @@ public class MapStreamSynchronizer : NetworkBehaviour
             dataRange.start = recievedChunks.shapeCount;
             dataRange.end = (ushort)(Math.Min((ushort)(levelPrep.levelExpectation.shapeCount - recievedChunks.shapeCount), (ushort)50) + recievedChunks.shapeCount);
             dataRange.levelDataType = LevelDataType.Shape;
-            GiveDataClientRpc(dataRange, levelPrep.simplifiedShapeDataArray.AsSpan().Slice(dataRange.start, dataRange.Length).ToArray(), clientRpcParams);
+            GiveDataClientRpc(dataRange, levelPrep.simplifiedShapeDataArray.AsSpan().Slice(dataRange.start, dataRange.Length).ToArray(), target);
         }
         else if (recievedChunks.animationCount < levelPrep.levelExpectation.animationCount)
         {
@@ -219,7 +214,7 @@ public class MapStreamSynchronizer : NetworkBehaviour
             dataRange.start = recievedChunks.animationCount;
             dataRange.end = (ushort)(Math.Min((ushort)(levelPrep.levelExpectation.animationCount - recievedChunks.animationCount), (ushort)50) + recievedChunks.animationCount);
             dataRange.levelDataType = LevelDataType.Animation;
-            GiveDataClientRpc(dataRange, levelPrep.simplifiedAnimationDataArray.AsSpan().Slice(dataRange.start, dataRange.Length).ToArray(), clientRpcParams);
+            GiveDataClientRpc(dataRange, levelPrep.simplifiedAnimationDataArray.AsSpan().Slice(dataRange.start, dataRange.Length).ToArray(), target);
         }
         else if (recievedChunks.lightCount < levelPrep.levelExpectation.lightCount)
         {
@@ -228,7 +223,7 @@ public class MapStreamSynchronizer : NetworkBehaviour
             dataRange.start = recievedChunks.lightCount;
             dataRange.end = (ushort)(Math.Min((ushort)(levelPrep.levelExpectation.lightCount - recievedChunks.lightCount), (ushort)50) + recievedChunks.lightCount);
             dataRange.levelDataType = LevelDataType.Light;
-            GiveDataClientRpc(dataRange, levelPrep.lightPositions.AsSpan().Slice(dataRange.start, dataRange.Length).ToArray(), clientRpcParams);
+            GiveDataClientRpc(dataRange, levelPrep.lightPositions.AsSpan().Slice(dataRange.start, dataRange.Length).ToArray(), target);
         }
         else if (recievedChunks.spawnCount < levelPrep.levelExpectation.spawnCount)
         {
@@ -237,9 +232,9 @@ public class MapStreamSynchronizer : NetworkBehaviour
             dataRange.start = recievedChunks.spawnCount;
             dataRange.end = (ushort)(Math.Min((ushort)(levelPrep.levelExpectation.spawnCount - recievedChunks.spawnCount), (ushort)50) + recievedChunks.spawnCount);
             dataRange.levelDataType = LevelDataType.Spawn;
-            GiveDataClientRpc(dataRange, levelPrep.spawnPositions.AsSpan().Slice(dataRange.start, dataRange.Length).ToArray(), clientRpcParams);
+            GiveDataClientRpc(dataRange, levelPrep.spawnPositions.AsSpan().Slice(dataRange.start, dataRange.Length).ToArray(), target);
         }
-        else AknowledgeClientRpc(dataRange, clientRpcParams);
+        else AknowledgeClientRpc(dataRange, target);
 
     }
 

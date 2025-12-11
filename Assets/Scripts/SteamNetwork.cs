@@ -88,7 +88,7 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
     private void SteamMatchmaking_OnLobbyMemberDisconnected(Lobby arg1, Friend arg2)
     {
 
-        if( ulong.Parse(currentLobby.Value.GetData("OwnerId")) == arg2.Id)
+        if(currentLobby.Value.Owner.Id == arg2.Id)
         {
 
             currentLobby?.Leave();
@@ -112,6 +112,8 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 
         }
 
+        Debug.Log("BRUUUUUUUUUH");
+        
     }
 
     void SetupSteamClient()
@@ -140,6 +142,7 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 
         currentLobby = await SteamMatchmaking.CreateLobbyAsync(4);
 
+        //currentLobby?.Join();
         currentLobby?.SetPublic();
         currentLobby?.SetJoinable(true);
         currentLobby?.SetData("Avalible", "false");

@@ -19,10 +19,6 @@ public class ThermalRenderer : MonoBehaviour
     [SerializeField]
     Renderer2DData renderer2D;
 
-    [SerializeField]
-    GraphicsFormat format = GraphicsFormat.R8G8B8A8_SRGB;
-    GraphicsFormat oldFormat = GraphicsFormat.None;
-
     private void Awake()
     {
         cam = GetComponent<Camera>();
@@ -44,7 +40,6 @@ public class ThermalRenderer : MonoBehaviour
 
     void TryResize()
     {
-        if(format != oldFormat) Resize();
         if (BS_Screen.TpixelsX != w || BS_Screen.TpixelsY != h) Resize();
     }
 
@@ -52,7 +47,6 @@ public class ThermalRenderer : MonoBehaviour
     {
         w = BS_Screen.TpixelsX;
         h = BS_Screen.TpixelsY;
-        oldFormat = format;
 
         RenderTexture oldRt = cam.targetTexture;
         renderTexture = CreateNewStencil(w, h);
@@ -79,7 +73,7 @@ public class ThermalRenderer : MonoBehaviour
         {
             dimension = TextureDimension.Tex2D,
             msaaSamples = 1,
-            graphicsFormat = format,
+            graphicsFormat = GraphicsFormat.R8_UNorm,
             depthStencilFormat = GraphicsFormat.S8_UInt,
             mipCount = 1,
             useMipMap = false,

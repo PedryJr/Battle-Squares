@@ -13,7 +13,12 @@ public sealed class TransformLockBehaviour : MonoBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Awake() => cachedTransform = transform;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void LateUpdate() => transformLock.ApplyLock(cachedTransform);
+
+    private void FixedUpdate() => Lock();
+    private void Update() => Lock();
+    private void LateUpdate() => Lock();
+
+    void Lock() => transformLock.ApplyLock(cachedTransform);
 
     [Serializable]
     struct TransformLock

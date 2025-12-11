@@ -158,7 +158,7 @@ public sealed class ProjectileManager : NetworkBehaviour
     }
 
 
-    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     void SpawnProjectileRpc(byte sourceId, uint projectileID, ushort typeID, Vector2 position, Vector2 direction, float[] fluctuation, byte bitBoolAsByte)
     {
         if (sourceId == (byte)NetworkManager.LocalClientId) return;
@@ -300,138 +300,62 @@ public sealed class ProjectileManager : NetworkBehaviour
     public void SpawnParticles(Vector3 particlePosition, Quaternion particleRotation, ushort projectileType)
     {
 
-        ulong ignoreId = NetworkManager.LocalClientId;
-
         byte[] rotation = MyExtentions.EncodeRotation(particleRotation.eulerAngles.z);
 
-        byte[] particleData = new byte[4];
-        particleData[0] = (byte)ignoreId;
-        particleData[1] = rotation[0];
-        particleData[2] = rotation[1];
+        byte[] newParticleData = new byte[3];
+        newParticleData[0] = playerSynchronizer.localSquare.GetID();
+        newParticleData[1] = rotation[0];
+        newParticleData[2] = rotation[1];
 
-        ParticleBehaviour newParticle = ParticlePool.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
-        PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
-
-        for(int i = 0; i < newParticle.ParticleSystems.Length; i++)
-        {
-            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
-        }
-
-        if (IsHost) SpawnParticlesClientRpc(particlePosition, particleData, projectileType);
-        if (!IsHost) SpawnParticlesServerRpc(particlePosition, particleData, projectileType);
-
+        SpawnParticlesRpc(particlePosition, newParticleData, projectileType);
+        SpawnNozzleParticleEvent(particlePosition, newParticleData, projectileType);
     }
 
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    public void SpawnParticlesServerRpc(Vector3 particlePosition, byte[] newParticleData, ushort projectileType)
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone)]
+    public void SpawnParticlesRpc(Vector3 particlePosition, byte[] newParticleData, ushort projectileType)
     {
-
-        ulong ignoreId = newParticleData[0];
-        if (NetworkManager.LocalClientId == ignoreId) return;
-
-        Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[1], newParticleData[1] }));
-
-
-        SpawnParticlesClientRpc(particlePosition, newParticleData, projectileType);
-
-        ParticleBehaviour newParticle = ParticlePool.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
-        PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
-
-        for (int i = 0; i < newParticle.ParticleSystems.Length; i++)
-        {
-            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
-        }
-
+        SpawnNozzleParticleEvent(particlePosition, newParticleData, projectileType);
     }
-
-    [ClientRpc]
-    public void SpawnParticlesClientRpc(Vector3 particlePosition, byte[] newParticleData, ushort projectileType)
+    void SpawnNozzleParticleEvent(Vector3 particlePosition, byte[] newParticleData, ushort projectileType)
     {
-
-        ulong ignoreId = newParticleData[0];
-        if (IsHost) return;
-        if (NetworkManager.LocalClientId == ignoreId) return;
-
         Quaternion particleRotation = Quaternion.Euler(0, 0, MyExtentions.DecodeRotation(new byte[] { newParticleData[1], newParticleData[2] }));
 
         ParticleBehaviour newParticle = ParticlePool.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
-        PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ignoreId);
+        PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(newParticleData[0]);
 
         for (int i = 0; i < newParticle.ParticleSystems.Length; i++)
         {
             shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
         }
-
     }
 
     public void DespawnProjectile(uint projectileID, bool hit)
     {
-
-        if (IsHost)
-        {
-
-            DespawnProjectileClientRpc(projectileID, hit);
-
-        }
-
-        if (!IsHost)
-        {
-
-            DespawnProjectileServerRpc(projectileID, hit);
-
-        }
-
-        ProjectileBehaviour deletedProjectile = null;
-
-        foreach (ProjectileBehaviour instance in projectiles)
-        {
-
-            if (instance.projectileID == projectileID)
-            {
-
-                if (instance != null) instance.OnDespawn(hit);
-
-                deletedProjectile = instance;
-
-                break;
-
-            }
-
-        }
-
-        if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
-
+        DespawnProjectileServerRpc(projectileID, hit);
+        DespawnProjectileEvent(projectileID, hit);
     }
 
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void DespawnProjectileServerRpc(uint projectileID, bool hit)
     {
-
-        DespawnProjectileClientRpc(projectileID, hit);
-
-        ProjectileBehaviour deletedProjectile = null;
-
+        DespawnProjectileEvent(projectileID, hit);
+    }
+    void DespawnProjectileEvent(uint projectileID, bool hit)
+    {
+        ProjectileBehaviour deletedProjectile = null; 
         foreach (ProjectileBehaviour instance in projectiles)
-        {
-
+        { 
             if (instance.projectileID == projectileID)
-            {
-
-                if (instance != null) instance.OnDespawn(hit);
-
-                deletedProjectile = instance;
-
-                break;
-
-            }
-
-        }
-
+            { 
+                if (instance != null) instance.OnDespawn(hit); 
+                deletedProjectile = instance; 
+                break; 
+            } 
+        } 
         if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
-
     }
 
-    [ClientRpc(Delivery = RpcDelivery.Reliable)]
+/*    [ClientRpc(Delivery = RpcDelivery.Reliable)]
     public void DespawnProjectileClientRpc(uint projectileID, bool hit)
     {
 
@@ -457,83 +381,33 @@ public sealed class ProjectileManager : NetworkBehaviour
 
         if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
 
-    }
+    }*/
 
     public void HitRegProjectile(uint projectileID)
     {
 
-        if (IsHost)
-        {
-
-            HitRegProjectileClientRpc(projectileID);
-
-        }
-
-        if (!IsHost)
-        {
-
-            HitRegProjectileServerRpc(projectileID);
-
-        }
-
-        foreach (ProjectileBehaviour instance in projectiles)
-        {
-
-            if (instance.projectileID == projectileID)
-            {
-
-                if (instance != null) instance.HitReg();
-
-                break;
-
-            }
-
-        }
+        HitRegProjectileServerRpc(projectileID);
+        HitRegProjectileEvent(projectileID);
 
     }
 
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void HitRegProjectileServerRpc(uint projectileID)
     {
-
-        HitRegProjectileClientRpc(projectileID);
-
-        foreach (ProjectileBehaviour instance in projectiles)
-        {
-
-            if (instance.projectileID == projectileID)
-            {
-
-                if (instance != null) instance.HitReg();
-
-                break;
-
-            }
-
-        }
+        HitRegProjectileEvent(projectileID);
 
     }
 
-    [ClientRpc(Delivery = RpcDelivery.Reliable)]
-    public void HitRegProjectileClientRpc(uint projectileID)
+    void HitRegProjectileEvent(uint projectileID)
     {
-
-        if (IsHost) return;
-
         foreach (ProjectileBehaviour instance in projectiles)
         {
-
             if (instance.projectileID == projectileID)
             {
-
                 if (instance != null) instance.HitReg();
-
                 break;
-
             }
-
         }
-
     }
 
 
@@ -566,7 +440,7 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
     public void NewUpdateProjectileRpc(byte[] data, uint projectileId)
     {
 

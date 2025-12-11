@@ -33,7 +33,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         octagonalMesh.SetVertexBufferData(BuiltShapeBehaviour.GetOctagonalVerticesVec2, 0, 0, 8);
 
         octagonalMesh.indexFormat = IndexFormat.UInt16;
-        octagonalMesh.SetIndices(BuiltShapeBehaviour.GetOctagonalIndices, MeshTopology.Triangles, 0);
+        octagonalMesh.SetIndices(BuiltShapeBehaviour.GetOctagonalIndices, MeshTopology.Triangles, 0, calculateBounds: false);
 
         octagonalMesh.bounds = new Bounds(Vector3.zero, new Vector3(512, 512, 1));
 

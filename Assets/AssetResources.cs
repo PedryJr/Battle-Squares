@@ -3,6 +3,9 @@ using UnityEngine;
 public class AssetResources : MonoBehaviour
 {
 
+    [SerializeField] ButtonHoverAnimationColorSettings defaultButtonHoverColorSettings;
+    public static ButtonHoverAnimationColorSettings GetDefaultButtonHoverColorSettings() => Instance.defaultButtonHoverColorSettings;
+
     [SerializeField] Material hitmarkMaterial;
     public static Material GetHitmarkMaterial => Instance.hitmarkMaterial;
 

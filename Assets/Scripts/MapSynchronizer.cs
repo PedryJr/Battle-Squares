@@ -152,7 +152,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     void FlagStateChangeRpc(FlagActivityState newActivityState, int oId, ulong pId, bool condition, ulong IgnoreId)
     {
 
@@ -191,7 +191,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     void SpawnDogTagRpc(byte playerId, Vector2 position, float rotation, Vector2 velocity, int id)
     {
         DogTagBehaviour dogTag =
@@ -222,7 +222,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
         SyncDogTagsRpc(id, data);
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
     public void SyncDogTagsRpc(int id, byte[] data)
     {
 
@@ -265,7 +265,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void CollectDogTagRpc(int id, byte collectorId)
     {
 
@@ -342,7 +342,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
     public void FlagPositionUpdateSlowRpc(byte[] bData, short[] sData, byte oId)
     {
 
@@ -365,7 +365,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
     public void FlagPositionUpdateFastRpc(byte[] bData, short[] sData, byte oId)
     {
 

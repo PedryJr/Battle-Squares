@@ -45,7 +45,7 @@ public sealed class HostBehaviour : MonoBehaviour
 
         FindAnyObjectByType<PlayerSynchronizer>().ForceReset();
 
-        if (selectedLobby.lobbyId.Value == SteamNetwork.currentLobby.Value.Id)
+        if (selectedLobby.lobby.Id == SteamNetwork.currentLobby.Value.Id)
         {
 
             await SceneManager.LoadSceneAsync("LobbyScene", LoadSceneMode.Single);
@@ -61,23 +61,23 @@ public sealed class HostBehaviour : MonoBehaviour
 /*
             if (selectedLobby.lobby.GetData("Avalible").Equals("false")) return;*/
 
-            RoomEnter status = await selectedLobby.lobby.Join();
+            RoomEnter status = await selectedLobby.GetLobby.Join();
 
             if (status != RoomEnter.Success)
             {
-                selectedLobby?.lobby.Leave();
+                selectedLobby.GetLobby.Leave();
                 ApplyDefaultLobby();
                 return;
             }
 
             SteamNetwork.currentLobby?.Leave();
 
-            GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>().targetSteamId = selectedLobby.lobby.Owner.Id;
+            GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>().targetSteamId = selectedLobby.lobby.OwnerId;
 
             NetworkManager.Singleton.StartClient();
             
 
-            SteamNetwork.currentLobby = selectedLobby.lobby;
+            SteamNetwork.currentLobby = selectedLobby.GetLobby;
 
         }
 
@@ -85,8 +85,6 @@ public sealed class HostBehaviour : MonoBehaviour
 
     public void ApplyDefaultLobby()
     {
-        selectedLobby.lobbyId = defaultLobby.lobbyId;
-        selectedLobby.ownerId = defaultLobby.ownerId;
 
         selectedLobby.lobbyCapacity = defaultLobby.lobbyCapacity;
         selectedLobby.lobbyPopulation = defaultLobby.lobbyPopulation;
@@ -95,7 +93,7 @@ public sealed class HostBehaviour : MonoBehaviour
 
         selectedLobby.lobbyIcon.sprite = defaultLobby.lobbyIcon.sprite;
 
-        selectedLobby.lobby = defaultLobby.lobby;
+        selectedLobby.lobby = new ManagedLobby();
 
         selectedLobby.activated = defaultLobby.activated;
     }

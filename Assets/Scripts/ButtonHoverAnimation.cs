@@ -10,21 +10,6 @@ using UnityEngine.UI;
 public sealed class ButtonHoverAnimation : MonoBehaviour
 {
 
-    private int funcTracker = -1;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CallFromUpdateManager(in ButtonHoverAnimation obj) => obj.MyUpdate();
-
-
-
-
-
-
-
-
-
-
-
     [SerializeField]
     private RectTransform rectTransform;
 
@@ -38,7 +23,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     private ScrollRect scrollRect;
     private SpriteRenderer spriteRenderer;
 
-    [NonSerialized]
     public Image image;
 
     private UIAudio uIAudio;
@@ -61,6 +45,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     public Color currentColor;
     public Color fromColor;
     public Color toColor;
+    public ButtonHoverAnimationColorSettings hoverColorOptions;
     public Color onHoveredColor;
 
     public bool isHovering;
@@ -93,21 +78,93 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     [SerializeField]
     private SoundInteractionClickType soundInteractionClickType;
 
-    private void Awake()
-    {
-        uIAudio = Resources.Load<UIAudio>("UIAudio");
+    MaterialPropertyBlock materialPropertyBlock;
 
+    public Material unique = null;
+
+    Color GetImageColor => unique ? unique.GetColor("_Color") : Color.white;
+    void SetRenderColor(Color color)
+    {
+        if(unique) unique.SetColor("_Color", color);
+    }
+
+/*#if UNITY_EDITOR
+
+    void SetImageColorRaw(Color color)
+    {
+
+        if (unique == null)
+        {
+            unique = Instantiate(image.materialForRendering);
+            image.material = unique;
+        }
+
+        if (image.material.GetInstanceID() != unique.GetInstanceID())
+        {
+            Debug.Log("Ouuups");
+            image.material = unique;
+        }
+        unique.SetColor("_Color", color);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!hoverColorOptions) hoverColorOptions = Resources.Load<ButtonHoverAnimationColorSettings>("DefaultHoverColor");
         if (animateColor)
         {
             image = GetComponent<Image>();
             spriteRenderer = GetComponent<SpriteRenderer>();
 
-            if (spriteRenderer) offHoveredColor = spriteRenderer.color;
-            else if (image) offHoveredColor = image.color;
+            onHoveredColor = hoverColorOptions.onHoveredColor;
+            offHoveredColor = hoverColorOptions.offHoveredColor;
+            SetRenderColor(offHoveredColor);
+        }
+    }
+
+    private void OnValidate()
+    {
+        if (!hoverColorOptions) hoverColorOptions = Resources.Load<ButtonHoverAnimationColorSettings>("DefaultHoverColor");
+        if (animateColor)
+        {
+            image = GetComponent<Image>();
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
+            onHoveredColor = hoverColorOptions.onHoveredColor;
+            offHoveredColor = hoverColorOptions.offHoveredColor;
+            SetRenderColor(offHoveredColor);
+        }
+    }
+#endif*/
+
+    private void Awake()
+    {
+        if (!hoverColorOptions) hoverColorOptions = Resources.Load<ButtonHoverAnimationColorSettings>("DefaultHoverColor");
+        image = GetComponent<Image>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        uIAudio = Resources.Load<UIAudio>("UIAudio");
+
+        if (image)
+        {
+            unique = Instantiate(image.materialForRendering);
+            image.material = unique;
+        }
+        else if(spriteRenderer)
+        {
+            unique = Instantiate(spriteRenderer.sharedMaterial);
+            spriteRenderer.material = unique;
+        }
+
+        if (animateColor)
+        {
 
             currentColor = offHoveredColor;
             fromColor = offHoveredColor;
             toColor = offHoveredColor;
+
+            onHoveredColor = hoverColorOptions.onHoveredColor;
+            offHoveredColor = hoverColorOptions.offHoveredColor;
+            SetRenderColor(offHoveredColor);
         }
 
         tmp = GetComponentInChildren<TextMeshProUGUI>();
@@ -161,11 +218,8 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         onClickedSize -= animationType == AnimationType.Expand ? offsetSizeClickedExpand : offsetSizeClickedStretch;
     }
 
-    private unsafe void OnEnable()
+    private void OnEnable()
     {
-
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<ButtonHoverAnimation>.Instance.Register(&CallFromUpdateManager, this, trackerPtr);
-
         SetupEventTriggers();
 
         rectTransform.sizeDelta = offHoveredSize;
@@ -176,12 +230,14 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         }
 
         ExitHover();
-        MyUpdate();
+        Update();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void MyUpdate()
+    private void Update()
     {
+        onHoveredColor = hoverColorOptions.onHoveredColor;
+        offHoveredColor = hoverColorOptions.offHoveredColor;
         Animate();
         ApplyAnimation();
     }
@@ -209,15 +265,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         if (animateColor)
         {
             toColor = onHoveredColor;
-
-            if (spriteRenderer)
-            {
-                fromColor = spriteRenderer.color;
-            }
-            else
-            {
-                fromColor = image.color;
-            }
+            fromColor = GetImageColor;
         }
     }
 
@@ -237,15 +285,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         if (animateColor)
         {
             toColor = offHoveredColor;
-
-            if (spriteRenderer)
-            {
-                fromColor = spriteRenderer.color;
-            }
-            else
-            {
-                fromColor = image.color;
-            }
+            fromColor = GetImageColor;
         }
 
         if (animatingClick) RunClickEvent();
@@ -306,6 +346,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
     private void OnDestroy()
     {
+        if(unique) Destroy(unique);
         if (isHovering)
         {
             PlayerController.uiRegs -= 1;
@@ -323,9 +364,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
     private unsafe void OnDisable()
     {
-
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<ButtonHoverAnimation>.Instance.Unregister(trackerPtr);
-
         clickEvent.RemoveAllListeners();
 
         EventTrigger eventTrigger = GetComponent<EventTrigger>();
@@ -350,13 +388,10 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         {
             float lerp;
             lerp = isHovering ? MyExtentions.EaseOnHover(animationTimer) : MyExtentions.EaseOutQuad(animationTimer);
+            Color targetColor = isHovering ? onHoveredColor : offHoveredColor;
             currentSize = Vector2.LerpUnclamped(fromSize, toSize, lerp);
 
-            if (animateColor)
-            {
-                if (spriteRenderer) spriteRenderer.color = Color.Lerp(fromColor, toColor, lerp);
-                else image.color = Color.Lerp(fromColor, toColor, lerp);
-            }
+            if (animateColor) SetRenderColor(Color.Lerp(fromColor, targetColor, lerp));
         }
 
         rectTransform.sizeDelta = currentSize;

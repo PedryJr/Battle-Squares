@@ -14,11 +14,8 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
     ImpactForceBehaviour impactForce;
     public float zPos;
     public float timer;
-    float timeAlive = 40;
     public byte ownerId;
     public PlayerBehaviour owner;
-    int skipPhysicsSteps;
-    bool spawned;
     float fadeOut = 0;
 
     [SerializeField]

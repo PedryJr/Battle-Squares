@@ -44,7 +44,7 @@ public sealed class JoinOrCreateBehaviour : MonoBehaviour
         if (SteamNetwork.currentLobby != null)
         {
 
-            if (preview.ownerId == SteamNetwork.currentLobby.Value.Owner.Id)
+            if (preview.lobby.OwnerId == SteamNetwork.currentLobby.Value.Owner.Id)
             {
                 textField.text = "Create Lobby";
             }

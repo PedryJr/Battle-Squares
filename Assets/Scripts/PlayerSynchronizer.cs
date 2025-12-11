@@ -195,22 +195,21 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         if (spawn && localSquare) localSquare.transform.position = spawn.transform.position;
         int sceneIndex = arg0.buildIndex;
 
-        LoadSceneOnPlayersClientRpc(sceneIndex);
+        if(arg0.name != "MenuScene")
+        {
+            LoadSceneOnPlayersClientRpc(sceneIndex);
+        }
 
         lastScene = arg0;
-
     }
 
     
-    [ClientRpc]
+    [Rpc(SendTo.NotMe)]
     void LoadSceneOnPlayersClientRpc(int sceneIndex)
     {
-        if (IsHost) return;
-
         SceneManager.LoadScene(sceneIndex);
         GameObject spawn = GameObject.FindGameObjectWithTag("Spawn");
         if (spawn) localSquare.transform.position = spawn.transform.position;
-
     }
 
     
@@ -328,11 +327,11 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void KickPlayerClientRpc(byte id)
     {
 
-        if ((byte)localSquare.id != id) return;
+        if (localSquare.GetID() != id) return;
 
         DisconnectPlayerLocally();
 
@@ -442,7 +441,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         PlayerFactoryRpc(playerFactoryData);
     }
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
     public void PlayerFactoryRpc(PlayerFactoryDataPacket playerData)
     {
         Debug.Log("Player Factory RPC\n" +
@@ -519,7 +518,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     }
 
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
     public void RequestPlayerSkinRpc(ulong requesterID, ulong skinOwnerID)
     {
         if (localSquare.id != skinOwnerID) return;
@@ -544,7 +543,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         else SendPlayerSkinDataSRpc(requesterID, skinOwnerID, skinDataPacket);
     }
 
-    [Rpc(SendTo.Server, RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void SendPlayerSkinDataSRpc(ulong requesterID, ulong skinOwnerID, SkinDataPacket skinDataPacket)
     {
         ClientRpcParams clientRpcParams = default;
@@ -685,19 +684,8 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         }
     }
 
-    [SerializeField]
-    Rigidbody2D rb;
-    Rigidbody2D RB;
-    bool b = false;
-
     public void UpdateRigidBody()
     {
-/*
-        if (!b || !RB)
-        {
-            RB = Instantiate(rb);
-            b = true;
-        }*/
 
         byte[] data = MyExtentions.CompressRigidbody(localSquare.rb);
 
@@ -788,7 +776,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         UpdateHealthRpc(sourceId, localSquare.healthPoints);
     }
 
-    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     void UpdateHealthRpc(byte sourceId, float data)
     {
         if ((byte)networkManager.LocalClientId == sourceId) return;
@@ -813,7 +801,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.NotMe, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     void UpdateScoreRpc(byte sourceId, byte data)
     {
         if ((byte)networkManager.LocalClientId == sourceId) return;
@@ -1075,7 +1063,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     }
 
 
-    [Rpc(SendTo.Everyone, RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void SpreadInGameMessageRpc(string message, byte playerId)
     {
 
