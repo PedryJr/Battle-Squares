@@ -7,10 +7,10 @@ public class ButtonHoverAnimationColorSettings : ScriptableObject
 {
 
     [SerializeField]
-    [ColorUsage(showAlpha: false, hdr: true)]
+    [ColorUsage(showAlpha: true, hdr: true)]
     Color OnHoveredColor = new Color(0, 0, 0, 1);
     [SerializeField]
-    [ColorUsage(showAlpha: false, hdr: true)]
+    [ColorUsage(showAlpha: true, hdr: true)]
     Color OffHoveredColor = new Color(0, 0, 0, 1);
 
     public Color onHoveredColor => OnHoveredColor;

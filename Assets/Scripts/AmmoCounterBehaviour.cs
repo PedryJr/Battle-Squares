@@ -12,6 +12,9 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
     [SerializeField]
     private Image ammoVisualizer;
 
+    [SerializeField]
+    private Image ammoContainer;
+
     private int primaryRemaining;
     private int recordPrimaryRemaining;
 
@@ -55,8 +58,14 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
     [BurstCompile]
     private void Update()
     {
+        UpdateContainer();
         if (primary) UpdatePrimary();
         else UpdateSecondary();
+    }
+
+    void UpdateContainer()
+    {
+        ammoContainer.color = playerColoringBehaviour.AmmoContainerColor;
     }
 
     [BurstCompile]

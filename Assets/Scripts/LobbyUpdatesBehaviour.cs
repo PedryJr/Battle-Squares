@@ -36,6 +36,11 @@ public sealed class LobbyUpdatesBehaviour : MonoBehaviour
     {
         modSyncIndex = (modSyncIndex + 1) % Mods.at.Length;
         SyncMods();
+        SyncMMR();
+    }
+    void SyncMMR()
+    {
+        playerSynchronizer.SyncMMR();
     }
 
     void SyncMods()
@@ -43,6 +48,7 @@ public sealed class LobbyUpdatesBehaviour : MonoBehaviour
         playerSynchronizer.SyncMods(modSyncIndex, Mods.at[modSyncIndex]);
         playerSynchronizer.localSquare.ready = true;
     }
+
 
     void ApplyRBSpecificModsToAllClients()
     {

@@ -185,8 +185,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -397,8 +397,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -423,7 +425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 268368089}
-  m_Color: {r: 0.14465404, g: 0.14465404, b: 0.14465404, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5807,7 +5809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5853,8 +5855,10 @@ MonoBehaviour:
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -5933,7 +5937,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6068,8 +6072,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6724,8 +6728,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -6750,7 +6756,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1036260832}
-  m_Color: {r: 0.14465404, g: 0.14465404, b: 0.14465404, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6998,7 +7004,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 1711276031
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7134,7 +7140,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 1711276031
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7269,8 +7275,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7549,7 +7555,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7670,7 +7676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1299495230}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7728,8 +7734,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -7808,7 +7816,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 1711276031
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -8057,8 +8065,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -8083,7 +8093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1439251406}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8173,7 +8183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8219,8 +8229,10 @@ MonoBehaviour:
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -8304,8 +8316,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -8330,7 +8344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 781832329}
-  m_Color: {r: 0.14465404, g: 0.14465404, b: 0.14465404, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8427,8 +8441,10 @@ MonoBehaviour:
   currentColor: {r: 0.64779866, g: 0.64779866, b: 0.64779866, a: 1}
   fromColor: {r: 0.64779866, g: 0.64779866, b: 0.64779866, a: 1}
   toColor: {r: 0.64779866, g: 0.64779866, b: 0.64779866, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 220b7fd8a6c389942814143874f91058, type: 2}
   onHoveredColor: {r: 0.85030836, g: 1.0230267, b: 1.4775852, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 220b7fd8a6c389942814143874f91058, type: 2}
+  overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -8452,7 +8468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 468380690}
+  m_Material: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -8714,7 +8730,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 1711276031
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -9005,8 +9021,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -9127,7 +9143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9185,8 +9201,10 @@ MonoBehaviour:
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -9250,7 +9268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9296,8 +9314,10 @@ MonoBehaviour:
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -9407,7 +9427,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -10159,7 +10179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1837483293}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10232,8 +10252,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -10328,7 +10350,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -10719,7 +10741,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.183942, g: 0.1855821, b: 0.198, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10810,8 +10832,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -11102,8 +11124,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -11224,7 +11246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11270,8 +11292,10 @@ MonoBehaviour:
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -11335,7 +11359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.071, g: 0.071, b: 0.071, a: 0.0627451}
+  m_Color: {r: 0.071, g: 0.071, b: 0.071, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11425,7 +11449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11471,8 +11495,10 @@ MonoBehaviour:
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -11713,8 +11739,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -11739,7 +11767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 763963806}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11862,8 +11890,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -11888,7 +11918,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 53767337}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -12102,8 +12132,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -12907,7 +12939,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 1711276031
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -13027,7 +13059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -13119,7 +13151,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 1711276031
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -13590,8 +13622,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -13726,8 +13758,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -13903,8 +13935,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -14097,8 +14129,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -14123,7 +14157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1590585802}
-  m_Color: {r: 0.14465404, g: 0.14465404, b: 0.14465404, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -14492,7 +14526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.07058824, g: 0.07058824, b: 0.07058824, a: 0.0627451}
+  m_Color: {r: 0.07058824, g: 0.07058824, b: 0.07058824, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -14583,8 +14617,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -14705,7 +14739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -14751,8 +14785,10 @@ MonoBehaviour:
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -14831,7 +14867,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 1711276031
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -14972,8 +15008,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -14998,7 +15036,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1111261008}
-  m_Color: {r: 0.14465404, g: 0.14465404, b: 0.14465404, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -15092,7 +15130,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 1711276031
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -15233,8 +15271,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -15259,7 +15299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 310940797}
-  m_Color: {r: 0.14465404, g: 0.14465404, b: 0.14465404, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -15663,7 +15703,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -15799,7 +15839,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -15935,7 +15975,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 1711276031
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -16225,7 +16265,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -200
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.06289297, g: 0.06289297, b: 0.06289297, a: 1}
+  m_Color: {r: 0.0627451, g: 0.0627451, b: 0.0627451, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -16392,7 +16432,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -16513,7 +16553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
+  m_Color: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -16559,8 +16599,10 @@ MonoBehaviour:
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -16684,8 +16726,10 @@ MonoBehaviour:
   currentColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   fromColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
   toColor: {r: 0.02745098, g: 0.02745098, b: 0.02745098, a: 1}
-  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 11400000, guid: 1762185a81471434f8d4b8e00867cac4, type: 2}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -16835,8 +16879,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -17127,8 +17171,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -17532,8 +17576,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -17665,13 +17709,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118140332005833484}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.07058824, g: 0.07058824, b: 0.07058824, a: 0.0627451}
+  m_Color: {r: 0.07058824, g: 0.07058824, b: 0.07058824, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -17786,7 +17830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.7921569, g: 0.7921569, b: 0.7921569, a: 1}
+  m_Color: {r: 0.73, g: 0.73, b: 0.73, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -17878,7 +17922,7 @@ MonoBehaviour:
   lobbyTemplate: {fileID: 93373591412482300, guid: f01d68b729641f54d9173a2d6767271f, type: 3}
   lobbyPreview: {fileID: 2176104651514585194}
   layoutGroup: {fileID: 659266210894127224}
-  failedLobbies: []
+  failedLobbies: 
 --- !u!222 &4410826159031960300
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -17958,7 +18002,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
-  m_Color: {r: 0.07058824, g: 0.07058824, b: 0.07058824, a: 0.0627451}
+  m_Color: {r: 0.07058824, g: 0.07058824, b: 0.07058824, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -18036,6 +18080,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bc67acdb420e88448b7d481b31afdb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lobbyIdSHOW: 0
+  ownerIdSHOW: 0
   lobbyName: {fileID: 1088194074000866452}
   lobbyIcon: {fileID: 2967289794757295815}
   lobbyLoader: {fileID: 0}
@@ -18043,7 +18089,6 @@ MonoBehaviour:
   lobbyPopulation: 0
   isPreview: 1
   activated: 0
-  borderImage: {fileID: 0}
 --- !u!1 &7540271787550911150
 GameObject:
   m_ObjectHideFlags: 0

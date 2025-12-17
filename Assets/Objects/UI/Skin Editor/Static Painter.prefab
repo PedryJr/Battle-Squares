@@ -103,7 +103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -213,7 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -323,7 +321,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -433,7 +430,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -543,7 +539,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -653,7 +648,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -763,7 +757,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -873,7 +866,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -983,7 +975,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -1093,7 +1084,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -1203,7 +1193,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -1313,7 +1302,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -1423,7 +1411,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -1533,7 +1520,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -1643,7 +1629,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -1753,7 +1738,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -1863,7 +1847,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -1973,7 +1956,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0.16
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -2083,7 +2065,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -2193,7 +2174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -2303,7 +2283,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -2413,7 +2392,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -2523,7 +2501,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -2633,7 +2610,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -2743,7 +2719,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -2853,7 +2828,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -2963,7 +2937,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -3073,7 +3046,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -3183,7 +3155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -3293,7 +3264,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -3403,7 +3373,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -3513,7 +3482,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -3623,7 +3591,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -3733,7 +3700,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -3843,7 +3809,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -3953,7 +3918,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -4063,7 +4027,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -4218,7 +4181,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -4328,7 +4290,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -4438,7 +4399,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -4548,7 +4508,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -4658,7 +4617,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -4827,7 +4785,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -4937,7 +4894,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -5047,7 +5003,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -5157,7 +5112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -5267,7 +5221,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -5377,7 +5330,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -5487,7 +5439,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -5597,7 +5548,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -5707,7 +5657,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -5893,7 +5842,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6003,7 +5951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6113,7 +6060,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6223,7 +6169,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6333,7 +6278,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6443,7 +6387,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6553,7 +6496,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6663,7 +6605,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6773,7 +6714,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6883,7 +6823,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -6993,7 +6932,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -7103,7 +7041,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -7213,7 +7150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -7323,7 +7259,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -7433,7 +7368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -7543,7 +7477,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -7653,7 +7586,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -7763,7 +7695,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -7873,7 +7804,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -7983,7 +7913,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -8093,7 +8022,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -8203,7 +8131,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -8313,7 +8240,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -8423,7 +8349,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -8533,7 +8458,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -8643,7 +8567,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -8753,7 +8676,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -8863,7 +8785,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -8973,7 +8894,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -9083,7 +9003,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -9193,7 +9112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -9303,7 +9221,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -9413,7 +9330,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -9523,7 +9439,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -9633,7 +9548,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -9743,7 +9657,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -9853,7 +9766,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -9963,7 +9875,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -10150,7 +10061,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -10260,7 +10170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -10370,7 +10279,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -10480,7 +10388,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -10590,7 +10497,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -10700,7 +10606,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -10810,7 +10715,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -11056,7 +10960,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -11166,7 +11069,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -11276,7 +11178,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -11386,7 +11287,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -11496,7 +11396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -11606,7 +11505,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -11716,7 +11614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -11826,7 +11723,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -11936,7 +11832,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -12046,7 +11941,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -12156,7 +12050,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -12354,7 +12247,7 @@ MonoBehaviour:
   frameIndex: 0
   pixelCount: 116
   filledColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
-  emptyColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 0.5019608}
+  emptyColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.5019608}
   hoverFilledColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 0.5019608}
   hoverEmptyColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
 --- !u!1 &8560505042178757408
@@ -12460,7 +12353,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -12570,7 +12462,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -12680,7 +12571,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -12790,7 +12680,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -12900,7 +12789,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -13010,7 +12898,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -13120,7 +13007,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -13230,7 +13116,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -13340,7 +13225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef7acb1ccacd9646b4a888ded71b38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
   rectTransform: {fileID: 0}
   isHovering: 0
   enterHoverTransitionTime: 0.1
@@ -13412,7 +13296,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: EDIT SECTOR
+  m_text: EDIT
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
   m_sharedMaterial: {fileID: -607137550700216403, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}

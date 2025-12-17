@@ -133,6 +133,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
         playerFactoryData.selectedMap = currentGameState.selectedMap;
         playerFactoryData.steamId = SteamClient.SteamId.Value;
+        playerFactoryData.MMR = new EncryptedDouble(PlayerBehaviour.MMRlocation, 1000.0).Value;
         playerFactoryData.networkId = NetworkManager.LocalClientId;
 
         PlayerFactoryRpc(playerFactoryData);
@@ -207,6 +208,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
             steamId = playerData.steamId
         });
         newPlayer.AssertSteamDataAvalible(playerData.steamId);
+        newPlayer.MMR = playerData.MMR;
     }
 
     private void SetPlayerInitialData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
@@ -407,14 +409,14 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
         public ulong steamId;
         public ulong networkId;
-
+        public double MMR;
         public int selectedMap;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref steamId);
             serializer.SerializeValue(ref networkId);
-
+            serializer.SerializeValue(ref MMR);
             serializer.SerializeValue(ref selectedMap);
         }
     }

@@ -1640,6 +1640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e8715782671e842b02add1aaa05c1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideMMR: 1199.9
   playerLight: {fileID: 3159344491717468697}
   sensor: {fileID: 4821608779394464332}
   coloringComponent: {fileID: 2995831169349222189}
@@ -1731,7 +1732,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e4e1d37174382b41a08597c29fd31b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hue: 0
+  hue: 0.5264285
   playerMaterial: {fileID: -876546973899608171, guid: a1488dad8c03ba443a818f6b8ce37a0f, type: 3}
   projectileMaterial: {fileID: -876546973899608171, guid: fbed87eedacfac4429ace8489234b829, type: 3}
   particleMaterial: {fileID: -876546973899608171, guid: dad808b10b3ac2044a76c5ed232a1e80, type: 3}
@@ -1742,8 +1743,8 @@ MonoBehaviour:
     alpha: 1
   secondaryColor:
     colorCorrectionType: 0
-    saturation: 0.835
-    value: 0
+    saturation: 1
+    value: 1
     alpha: 1
   exposedHealthColor:
     colorCorrectionType: 0
@@ -1751,13 +1752,13 @@ MonoBehaviour:
     value: 0.628
     alpha: 0.314
   nozzleColor:
-    colorCorrectionType: 0
-    saturation: 0.614
+    colorCorrectionType: 1
+    saturation: 0.299
     value: 1
     alpha: 1
   projectileColor:
-    colorCorrectionType: 0
-    saturation: 0.329
+    colorCorrectionType: 2
+    saturation: 0.392
     value: 1
     alpha: 1
   particleColor:
@@ -1787,13 +1788,13 @@ MonoBehaviour:
     alpha: 1
   pfpBorderNotReadyColor:
     colorCorrectionType: 0
-    saturation: 0.835
-    value: 0.188
+    saturation: 0.588
+    value: 0.216
     alpha: 1
   pfpBorderIsReadyColor:
     colorCorrectionType: 0
-    saturation: 0.835
-    value: 0.473
+    saturation: 0.588
+    value: 0.753
     alpha: 1
   cursorColorOnHover:
     colorCorrectionType: 0
@@ -1825,6 +1826,11 @@ MonoBehaviour:
     saturation: 0.571
     value: 0.75
     alpha: 1
+  ammoContainerColor:
+    colorCorrectionType: 1
+    saturation: 0.11
+    value: 0.316
+    alpha: 0.502
   lightColor:
     colorCorrectionType: 0
     saturation: 0.835

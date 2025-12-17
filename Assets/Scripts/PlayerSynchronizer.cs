@@ -78,6 +78,8 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         response.Approved = true;
     }
 
+   
+
     private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
     {
 
@@ -857,12 +859,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     }
 
     
-    void StorePlayerReady(PlayerBehaviour player, byte sourceId, bool ready)
-    {
-
-        player.ready = ready;
-
-    }
+    void StorePlayerReady(PlayerBehaviour player, byte sourceId, bool ready) => player.ready = ready;
 
     public void FetchMapOnJoin()
     {
@@ -1139,6 +1136,57 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         return closest;
     }
 
+    public void SyncMMR()
+    {
+        if(IsHost) FetchMMRRpc();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    void FetchMMRRpc()
+    {
+        localSquare.StorePreviousMMR();
+        StoreMMRRpc(localSquare.GetID(), localSquare.MMR);
+    }
+
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone)]
+    void StoreMMRRpc(byte playerId, double mmr)
+    {
+        PlayerBehaviour player = GetPlayerById(playerId);
+        player.MMR = mmr;
+        player.StorePreviousMMR();
+    }
+
+
+    public void CalculateMMR()
+    {
+        MMRData[] mMRs = GetPlayerMMRArr();
+        SetPlayerMMrArr(MMRSystem.ComputeMMR(mMRs));
+    }
+
+    public MMRData[] GetPlayerMMRArr()
+    {
+        MMRData[] data = new MMRData[playerIdentities.Count];
+        for(int i = 0; i < data.Length; i++)
+        {
+            PlayerBehaviour player = playerIdentities[i].square;
+            data[i] = new MMRData()
+            {
+                UserUniqueId = player.id,
+                MMR = player.MMR,
+                previousMatchUserScore = player.score,
+            };
+        }
+        return data;
+    }
+
+    public void SetPlayerMMrArr(MMRData[] arr)
+    {
+        for (int i = 0; i < arr.Length; i++)
+        {
+            PlayerBehaviour player = GetPlayerById(arr[i].UserUniqueId);
+            player.MMR = arr[i].MMR;
+        }
+    }
 
 }
 

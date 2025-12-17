@@ -31,9 +31,6 @@ public sealed class LobbyBehaviour : MonoBehaviour
 
     bool doDestroy = false;
 
-    [SerializeField]
-    UnityEngine.UI.Image borderImage;
-
     bool firstLoad;
     private void Awake()
     {

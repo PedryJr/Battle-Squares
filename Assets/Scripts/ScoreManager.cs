@@ -68,9 +68,7 @@ public sealed class ScoreManager : NetworkBehaviour
         }
         else
         {
-
             timer = 0;
-
         }
     }
 
@@ -88,44 +86,42 @@ public sealed class ScoreManager : NetworkBehaviour
 
         timer = 0.9f;
 
-        if (arg0.name.Equals("GameScene"))
+        if (!arg0.name.Equals("GameScene")) return;
+
+
+        try
         {
 
-            try
+            inGame = true;
+            UpdateScoreBoardFunc();
+
+            CursorBehaviour.SetEnabled(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            foreach (PlayerData player in playerSynchronizer.playerIdentities) player.square.score = 0;
+            UpdateScoreBoardFunc();
+
+        }
+        catch (NullReferenceException)
+        {
+
+            SteamNetwork.currentLobby?.Leave();
+
+            SteamNetwork.CreateNewLobby();
+
+            PlayerSynchronizer playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
+
+            if (playerSynchronizer.IsHost)
             {
 
-                inGame = true;
-                UpdateScoreBoardFunc();
-
-                CursorBehaviour.SetEnabled(false);
-                Cursor.lockState = CursorLockMode.Locked;
-                foreach (PlayerData player in playerSynchronizer.playerIdentities) player.square.score = 0;
-                UpdateScoreBoardFunc();
-
-            }
-            catch (NullReferenceException)
-            {
-
-                SteamNetwork.currentLobby?.Leave();
-
-                SteamNetwork.CreateNewLobby();
-
-                PlayerSynchronizer playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
-
-                if (playerSynchronizer.IsHost)
-                {
-
-                    playerSynchronizer.hostShutdown = true;
-                    playerSynchronizer.DisconnectPlayerLocally();
-
-                }
-
-                NetworkManager.Singleton.Shutdown(true);
+                playerSynchronizer.hostShutdown = true;
                 playerSynchronizer.DisconnectPlayerLocally();
 
-                playerSynchronizer.hostShutdown = false;
             }
 
+            NetworkManager.Singleton.Shutdown(true);
+            playerSynchronizer.DisconnectPlayerLocally();
+
+            playerSynchronizer.hostShutdown = false;
         }
 
     }
@@ -199,11 +195,6 @@ public sealed class ScoreManager : NetworkBehaviour
 
             }
         }
-
-    }
-
-    public void ConnectClient()
-    {
 
     }
 

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce7eb9ccbf8c29d46ba5c1ed22ae013b, type: 3}
   m_Name: DefaultHoverColor
   m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverAnimationColorSettings
-  OnHoveredColor: {r: 1, g: 1, b: 1, a: 1}
-  OffHoveredColor: {r: 0.76729554, g: 0.76729554, b: 0.76729554, a: 1}
+  OnHoveredColor: {r: 0.59119487, g: 0.59119487, b: 0.59119487, a: 1}
+  OffHoveredColor: {r: 0.22600001, g: 0.22600001, b: 0.22600001, a: 1}

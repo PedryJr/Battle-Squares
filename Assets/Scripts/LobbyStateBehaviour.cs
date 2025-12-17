@@ -10,6 +10,8 @@ public sealed class LobbyStateBehaviour : MonoBehaviour
     TMP_Text accessField;
 
     public static bool access = true;
+    public static bool pauseAccessUpdate = false;
+    bool oldPauseAcessUpdate = false;
 
     float timer = 0;
 
@@ -19,8 +21,14 @@ public sealed class LobbyStateBehaviour : MonoBehaviour
 
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        if (pauseAccessUpdate) return;
+        if ((oldPauseAcessUpdate != pauseAccessUpdate))
+        {
+            oldPauseAcessUpdate = pauseAccessUpdate;
+            return;
+        }
         timer += Time.deltaTime;
         if(timer > 2)
         {

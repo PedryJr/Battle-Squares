@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 1cfe9117bff4bac43a588eedf190e752, type: 2}
+  m_Material: {fileID: 2100000, guid: 24b0db5d759e4124bb770426f25bd8d6, type: 2}
   m_Color: {r: 0.6603774, g: 0.6603774, b: 0.6603774, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -105,11 +105,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
+  image: {fileID: 0}
+  offHoveredColor: {r: 1, g: 1, b: 1, a: 0.32941177}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColor: {r: 1, g: 1, b: 1, a: 0.627451}
+  ignoreHoverColorOptions: 1
+  hoverColorOptions: {fileID: 11400000, guid: 652b0dc0f48660c4188dc834dd8520ba, type: 2}
+  overrideMaterial: {fileID: 2100000, guid: 24b0db5d759e4124bb770426f25bd8d6, type: 2}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.15
@@ -120,6 +124,7 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 0
   soundInteractionClickType: 0
+  unique: {fileID: 0}
 --- !u!114 &-7129086307586825064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,3 +137,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da3ebf2a130467418d12303a8773c42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelPrep:
+    levelName: 
+    byteSize: 0
+    levelExpectation:
+      levelHashCode: 0
+      shapeCount: 0
+      animationCount: 0
+      lightCount: 0
+      spawnCount: 0
+    simplifiedShapeDataArray: []
+    simplifiedAnimationDataArray: []
+    lightPositions: []
+    spawnPositions: []
+  legacy: 1

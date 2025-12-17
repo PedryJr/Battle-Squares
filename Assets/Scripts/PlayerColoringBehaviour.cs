@@ -104,6 +104,8 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
 
     [SerializeField] ColorComponent ammoColor;
     public Color AmmoColor => ammoColor.ActiveColor;
+    [SerializeField] ColorComponent ammoContainerColor;
+    public Color AmmoContainerColor => ammoContainerColor.ActiveColor;
 
     [SerializeField] ColorComponent lightColor;
     public Color LightColor => lightColor.ActiveColor;
@@ -131,6 +133,7 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         lightColor.SetHue(hue);
         hitMarkFadeColor.SetHue(hue);
         highlightedWeaponColor.SetHue(hue);
+        ammoContainerColor.SetHue(hue);
     }
 
     [Serializable]

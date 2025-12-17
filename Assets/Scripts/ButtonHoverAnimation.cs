@@ -45,8 +45,10 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     public Color currentColor;
     public Color fromColor;
     public Color toColor;
-    public ButtonHoverAnimationColorSettings hoverColorOptions;
     public Color onHoveredColor;
+    public bool ignoreHoverColorOptions = false;
+    public ButtonHoverAnimationColorSettings hoverColorOptions;
+    public Material overrideMaterial;
 
     public bool isHovering;
     public bool animateColor;
@@ -85,85 +87,62 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     Color GetImageColor => unique ? unique.GetColor("_Color") : Color.white;
     void SetRenderColor(Color color)
     {
-        if(unique) unique.SetColor("_Color", color);
-    }
-
-/*#if UNITY_EDITOR
-
-    void SetImageColorRaw(Color color)
-    {
-
-        if (unique == null)
+        if (!ignoreHoverColorOptions)
         {
-            unique = Instantiate(image.materialForRendering);
-            image.material = unique;
+            if (unique)
+            {
+                unique.SetColor("_Color", color);
+                //unique.SetTexture("_AlphaTex", image.mainTexture);
+            }
         }
-
-        if (image.material.GetInstanceID() != unique.GetInstanceID())
+        else
         {
-            Debug.Log("Ouuups");
-            image.material = unique;
-        }
-        unique.SetColor("_Color", color);
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (!hoverColorOptions) hoverColorOptions = Resources.Load<ButtonHoverAnimationColorSettings>("DefaultHoverColor");
-        if (animateColor)
-        {
-            image = GetComponent<Image>();
-            spriteRenderer = GetComponent<SpriteRenderer>();
-
-            onHoveredColor = hoverColorOptions.onHoveredColor;
-            offHoveredColor = hoverColorOptions.offHoveredColor;
-            SetRenderColor(offHoveredColor);
+            if (image)
+            {
+                image.color = color;
+            }
+            else
+            {
+                spriteRenderer.color = color;
+            }
         }
     }
-
-    private void OnValidate()
-    {
-        if (!hoverColorOptions) hoverColorOptions = Resources.Load<ButtonHoverAnimationColorSettings>("DefaultHoverColor");
-        if (animateColor)
-        {
-            image = GetComponent<Image>();
-            spriteRenderer = GetComponent<SpriteRenderer>();
-
-            onHoveredColor = hoverColorOptions.onHoveredColor;
-            offHoveredColor = hoverColorOptions.offHoveredColor;
-            SetRenderColor(offHoveredColor);
-        }
-    }
-#endif*/
 
     private void Awake()
     {
-        if (!hoverColorOptions) hoverColorOptions = Resources.Load<ButtonHoverAnimationColorSettings>("DefaultHoverColor");
+        if (!hoverColorOptions) hoverColorOptions = AssetResources.GetDefaultButtonHoverColorSettings;
         image = GetComponent<Image>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         uIAudio = Resources.Load<UIAudio>("UIAudio");
-
-        if (image)
+        if (!ignoreHoverColorOptions)
         {
-            unique = Instantiate(image.materialForRendering);
-            image.material = unique;
-        }
-        else if(spriteRenderer)
-        {
-            unique = Instantiate(spriteRenderer.sharedMaterial);
-            spriteRenderer.material = unique;
+            if (image)
+            {
+                image.color = Color.white;
+                unique = Instantiate(overrideMaterial ? overrideMaterial : AssetResources.GetDefaultButtonMaterial);
+                image.material = unique;
+            }
+            else if (spriteRenderer)
+            {
+                spriteRenderer.color = Color.white;
+                unique = Instantiate(overrideMaterial ? overrideMaterial : AssetResources.GetDefaultButtonMaterial);
+                spriteRenderer.material = unique;
+            }
         }
 
         if (animateColor)
         {
+            if (!ignoreHoverColorOptions)
+            {
+                onHoveredColor = hoverColorOptions.onHoveredColor;
+                offHoveredColor = hoverColorOptions.offHoveredColor;
+            }
 
             currentColor = offHoveredColor;
             fromColor = offHoveredColor;
             toColor = offHoveredColor;
 
-            onHoveredColor = hoverColorOptions.onHoveredColor;
-            offHoveredColor = hoverColorOptions.offHoveredColor;
             SetRenderColor(offHoveredColor);
         }
 
@@ -236,8 +215,11 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Update()
     {
-        onHoveredColor = hoverColorOptions.onHoveredColor;
-        offHoveredColor = hoverColorOptions.offHoveredColor;
+        if (!ignoreHoverColorOptions)
+        {
+            onHoveredColor = hoverColorOptions.onHoveredColor;
+            offHoveredColor = hoverColorOptions.offHoveredColor;
+        }
         Animate();
         ApplyAnimation();
     }

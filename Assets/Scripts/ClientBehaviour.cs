@@ -1,3 +1,5 @@
+using Steamworks;
+using Steamworks.Data;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,39 +8,46 @@ using static PlayerSynchronizer;
 public sealed class ClientBehaviour : MonoBehaviour
 {
 
-    float timeToEnd = 0.25f;
-    float timer = 0;
-
-    bool beginSessionDestruction = false;
-
     PlayerSynchronizer playerSynchronizer;
 
     private void Awake()
     {
+        SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
         playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
     }
 
-    private void FixedUpdate()
+    private void OnDestroy()
     {
-        if (beginSessionDestruction) timer += Time.deltaTime / timeToEnd;
-        if (beginSessionDestruction && timer > 1) EndOnlineSession();
+        SteamMatchmaking.OnLobbyDataChanged -= SteamMatchmaking_OnLobbyDataChanged;
+    }
+
+    private void SteamMatchmaking_OnLobbyDataChanged(Lobby obj)
+    {
+        if (SteamNetwork.currentLobby.Value.Id != obj.Id) return;
+        if (!NetworkManager.Singleton.IsHost) return;
+        bool SessionNoMore = false;
+        bool sucess = bool.TryParse(SteamNetwork.currentLobby?.GetData("SessionNoMore"), out SessionNoMore);
+        if (sucess && SessionNoMore) EndOnlineSession();
     }
 
     public void DisconnectClientEvent()
     {
-        if (beginSessionDestruction) return;
-        beginSessionDestruction = true;
-        KickAllRemotePlayers();
+        if (NetworkManager.Singleton.IsHost)
+        {
+            SteamNetwork.currentLobby?.SetData("SessionNoMore", "true");
+            KickAllRemotePlayers();
+        }
+        else
+        {
+            
+            playerSynchronizer.DisconnectPlayerLocally();
+        }
     }
 
     void KickAllRemotePlayers()
     {
-
         if (NetworkManager.Singleton.IsHost)
         {
-            SteamNetwork.currentLobby?.SetJoinable(false);
-            SteamNetwork.currentLobby?.SetData("Avalible", "false");
-
             foreach (PlayerData item in playerSynchronizer.playerIdentities)
             {
                 if (item.square.GetID() == playerSynchronizer.localSquare.GetID()) continue;
@@ -49,8 +58,6 @@ public sealed class ClientBehaviour : MonoBehaviour
 
     void EndOnlineSession()
     {
-        beginSessionDestruction = false;
-        timer = 0;
         SteamNetwork.currentLobby?.Leave();
 
         SteamNetwork.CreateNewLobby();
@@ -73,6 +80,7 @@ public sealed class ClientBehaviour : MonoBehaviour
         NetworkManager.Singleton.Shutdown(true);
 
         playerSynchronizer.hostShutdown = false;
+        LobbyStateBehaviour.pauseAccessUpdate = false;
     }
 
     public void ReturnPlayersToLobby()

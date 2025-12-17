@@ -31,7 +31,6 @@ public sealed class LobbyLoader : MonoBehaviour
         LobbiesV2 = new Dictionary<ulong, LobbyBehaviour>();
         failedLobbies = new List<ulong>();
         await LoadLobbiesV2();
-        //LoadFirstLobbyV2();
 
     }
 
@@ -39,7 +38,6 @@ public sealed class LobbyLoader : MonoBehaviour
     void Update()
     {
         UpdateLobbies();
-        RefreshLobbies();
     }
 
     public async void UpdateLobbies()
@@ -52,6 +50,7 @@ public sealed class LobbyLoader : MonoBehaviour
 
             lobbyUpdateTime = 0;
             await LoadLobbiesV2();
+            RefreshLobbies();
 
         }
 
@@ -62,6 +61,7 @@ public sealed class LobbyLoader : MonoBehaviour
         foreach (var item in LobbiesV2)
         {
             LobbyBehaviour lobby = item.Value;
+
             lobby.lobby.TryRefresh();
         }
     }
@@ -85,7 +85,6 @@ public sealed class LobbyLoader : MonoBehaviour
 
 
 
-
         List<Lobby> manuallyFiltered = new List<Lobby>();
         List<ulong> keysToRemove = new List<ulong>();
         if (fetchedLobbies == null) return;
@@ -93,6 +92,22 @@ public sealed class LobbyLoader : MonoBehaviour
         //manuallyFiltered.AddRange(fetchedLobbies);
 
         //RemoveOfflineLobbies(ref fetchedLobbies, ref keysToRemove);
+
+        for (int i = LobbiesV2.Count - 1; i >= 0; i--)
+        {
+            LobbyBehaviour listedLobby = LobbiesV2.ElementAt(i).Value;
+            bool exists = false;
+            foreach (Lobby lobby in fetchedLobbies)
+            {
+                if(lobby.Id == listedLobby.GetLobby.Id) exists = true;
+                if (exists) break;
+            }
+            if(!exists)
+            {
+                LobbiesV2.Remove(listedLobby.GetLobby.Id);
+                Destroy(listedLobby.gameObject);
+            }
+        }
 
         foreach (Lobby lobby in fetchedLobbies)
         {

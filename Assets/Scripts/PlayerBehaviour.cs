@@ -1,8 +1,8 @@
-using System;
-using System.Runtime.CompilerServices;
 using FMOD.Studio;
 using FMODUnity;
 using Steamworks;
+using System;
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,8 +11,68 @@ using UnityEngine.SceneManagement;
  
 public sealed class PlayerBehaviour : MonoBehaviour
 {
+
+    /*    [SerializeField] double TestMMR;
+        [SerializeField] double oldmmr;
+        [SerializeField] double newmmr;
+
+        [ContextMenu("Test MMR Change")]
+        void RunMMRTEST()
+        {
+            StorePreviousMMR();
+            MMR = TestMMR;
+
+
+            oldmmr = previousMMR;
+            newmmr = MMR;
+        }*/
+
+    [SerializeField] double overrideMMR = 0;
+    [ContextMenu("Override my mmr")]
+    void OverrideMyMMR()
+    {
+        new EncryptedDouble(MMRlocation, 1000.0).Value = overrideMMR;
+        LogCurrentMMRP();
+    }
+
+    [ContextMenu("Log my mmr")]
+    void LogCurrentMMRP()
+    {
+        Debug.Log(new EncryptedDouble(MMRlocation, 1000.0).Value);
+    }
+
     [SerializeField]
     Light2D playerLight;
+    public const string MMRlocation = "SkillIssue";
+    EncryptedDouble localMMR;
+    double remoteMMR;
+    public double previousMMR { get; private set; }
+    public double MMR
+    {
+        get
+        {
+            if (GetID() == playerSynchronizer.localSquare.GetID())
+            {
+                if (localMMR == null) localMMR = new EncryptedDouble(MMRlocation, 1000.0);
+                return localMMR.Value;
+            }
+            else return remoteMMR;
+        }
+        set
+        {
+            
+            if (GetID() == playerSynchronizer.localSquare.GetID())
+            {
+                if (localMMR == null) localMMR = new EncryptedDouble(MMRlocation, value);
+                else localMMR.Value = value;
+            }
+            else
+            {
+                remoteMMR = value;
+            }
+        }
+    }
+    public void StorePreviousMMR() => previousMMR = MMR;
 
     [SerializeField]
     ProximityPixelSenssor sensor;

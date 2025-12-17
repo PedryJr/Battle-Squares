@@ -2,12 +2,14 @@ using Netcode.Transports.Facepunch;
 using Steamworks;
 using Steamworks.Data;
 using System;
+using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 {
+
 
     ScoreManager scoreManager;
 
@@ -136,7 +138,7 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
 
     public static async void CreateNewLobby()
     {
-        currentLobby?.Leave();
+        if (currentLobby != null) currentLobby?.Leave();
         //currentLobby?.Refresh();
         currentLobby = null;
 
@@ -145,13 +147,19 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
         //currentLobby?.Join();
         currentLobby?.SetPublic();
         currentLobby?.SetJoinable(true);
-        currentLobby?.SetData("Avalible", "false");
-        currentLobby?.SetData("Name", SteamClient.Name);
-        currentLobby?.SetData("OwnerId", SteamClient.SteamId.Value.ToString());
-        currentLobby?.SetData("Variant", "BattleSquares");
-        currentLobby?.SetData("Code", "INVALID");
-
+        currentLobby?.SetData(AvalibleKey, "false");
+        currentLobby?.SetData(NameKey, SteamClient.Name);
+        currentLobby?.SetData(OwnerIdKey, SteamClient.SteamId.Value.ToString());
+        currentLobby?.SetData(VariantKey, "BattleSquares");
+        currentLobby?.SetData(CodeKey, "INVALID");
+        currentLobby?.SetData(SessionNoMoreKey, "false");
     }
+    public const string AvalibleKey = "Avalible";
+    public const string NameKey = "Name";
+    public const string OwnerIdKey = "OwnerId";
+    public const string VariantKey = "Variant";
+    public const string CodeKey = "Code";
+    public const string SessionNoMoreKey = "SessionNoMore";
 
     private void OnApplicationQuit()
     {

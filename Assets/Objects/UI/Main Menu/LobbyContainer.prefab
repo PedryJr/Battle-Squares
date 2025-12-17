@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: e15e3aff27289654298a6086f6e3e541, type: 2}
-  m_Color: {r: 0.7921569, g: 0.7921569, b: 0.7921569, a: 1}
+  m_Color: {r: 0.73, g: 0.73, b: 0.73, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -86,9 +86,7 @@ GameObject:
   - component: {fileID: 2189210258944490219}
   - component: {fileID: 3303215295237564954}
   - component: {fileID: 4768876293207296180}
-  - component: {fileID: 5521653041520553179}
   - component: {fileID: 93373591412482300}
-  - component: {fileID: 2968152531317961097}
   - component: {fileID: 586405004749113606}
   m_Layer: 5
   m_Name: LobbyContainer
@@ -139,7 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: e15e3aff27289654298a6086f6e3e541, type: 2}
-  m_Color: {r: 0.21960784, g: 0.22352941, b: 0.23137255, a: 1}
+  m_Color: {r: 0.21960784, g: 0.22352941, b: 0.23137255, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: -13, z: 0, w: 0}
   m_Maskable: 1
@@ -156,67 +154,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
---- !u!114 &5521653041520553179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4483224134987301342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4768876293207296180}
-          m_TargetAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
-          m_MethodName: set_fillCenter
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  - eventID: 1
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4768876293207296180}
-          m_TargetAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
-          m_MethodName: set_fillCenter
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 93373591412482300}
-          m_TargetAssemblyTypeName: LobbyBehaviour, Assembly-CSharp
-          m_MethodName: OnClicked
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &93373591412482300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bc67acdb420e88448b7d481b31afdb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lobbyIdSHOW: 0
+  ownerIdSHOW: 0
   lobbyName: {fileID: 5343886090895157071}
   lobbyIcon: {fileID: 5175475760044372460}
   lobbyLoader: {fileID: 0}
@@ -236,51 +175,6 @@ MonoBehaviour:
   lobbyPopulation: 0
   isPreview: 0
   activated: 1
-  borderImage: {fileID: 4768876293207296180}
---- !u!114 &2968152531317961097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4483224134987301342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 0
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 4768876293207296180}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &586405004749113606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,14 +190,28 @@ MonoBehaviour:
   rectTransform: {fileID: 5460774476948929586}
   clickEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 93373591412482300}
+        m_TargetAssemblyTypeName: LobbyBehaviour, Assembly-CSharp
+        m_MethodName: OnClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   image: {fileID: 0}
   offHoveredColor: {r: 0.13333334, g: 0.13333334, b: 0.13333334, a: 1}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  hoverColorOptions: {fileID: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 0}
+  overrideMaterial: {fileID: 0}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13

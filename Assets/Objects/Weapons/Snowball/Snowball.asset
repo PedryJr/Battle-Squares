@@ -38,7 +38,7 @@ MonoBehaviour:
     knockback: 4.3333335
     speedLimit: 100
     minSpeed: 0
-    aoeDamage: 8
+    aoeDamage: 3
     baseDamage: 5
     damageTimeScale: 0
     recoil: 6
@@ -103,7 +103,7 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 54815
+    typeID: 34086
     clampMorph: 0
     bounceSpeedLoss: 0
     bounceAngleTilt: 0

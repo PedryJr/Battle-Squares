@@ -9,6 +9,9 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
     [SerializeField]
     private SkinFrameBehaviour skinFrameBehaviour;
 
+    [SerializeField]
+    private TMP_Text frameCountIndicator;
+
     /*
         [SerializeField]
         PixelManager pixelManager;*/
@@ -68,6 +71,8 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
             newframe.frameData = playerSynchronizer.skinData.skinFrames[i].frame;
             skinFrames[i].UPDATEPREVIEW();
         }
+
+        UpdateFrameCounter();
     }
 
     private void Update()
@@ -167,6 +172,7 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
             skinFrames[i].frameIndex = i;
         }
         skinFrames[editingIndex].SELECT();
+        UpdateFrameCounter();
     }
 
     public void CREATEFRAME()
@@ -212,6 +218,7 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
         skinFrames[newIndex].frameIndex = newIndex;
         skinFrameToAdd.UPDATEPREVIEW();
+        UpdateFrameCounter();
     }
 
     public void MOVEFRAME(int posChange, int sourceIndex)
@@ -239,6 +246,7 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
         skinFrames[sourceIndex].UPDATEPREVIEW();
         skinFrames[targetIndex].UPDATEPREVIEW();
+        UpdateFrameCounter();
     }
 
     private void OnDestroy()
@@ -246,4 +254,10 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
         input.Disable();
         input.Dispose();
     }
+
+    private void UpdateFrameCounter()
+    {
+        frameCountIndicator.text = $"Total Frames - {skinFrames.Count}";
+    }
+
 }
