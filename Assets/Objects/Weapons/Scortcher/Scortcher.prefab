@@ -42,8 +42,8 @@ GameObject:
   - component: {fileID: 5893324798774376400}
   - component: {fileID: 1625723881570478094}
   - component: {fileID: 3230000773134604271}
-  - component: {fileID: 1066894796322893754}
   - component: {fileID: -3438963122069973725}
+  - component: {fileID: 1066894796322893754}
   - component: {fileID: 3786788688331823776}
   - component: {fileID: 2274154555645370788}
   m_Layer: 7
@@ -63,7 +63,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 0, z: 3}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2345000804440483264}
@@ -152,6 +152,7 @@ MonoBehaviour:
   rb: {fileID: -3438963122069973725}
   owningPlayer: {fileID: 0}
   timeAlive: 0
+  morhpTime: 0
   fullTimeAlive: 0
   projectileManager: {fileID: 0}
   holdable: 0
@@ -195,92 +196,122 @@ MonoBehaviour:
     Path: event:/VFX/Base/Gun Hit
   projectileCollider: {fileID: 1066894796322893754}
   data:
-    impactParticle: {fileID: 0}
-    bounceParticle: {fileID: 0}
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}
-    position: {x: 0, y: 0}
-    direction: {x: 0, y: 0}
-    projectileColor: {r: 0, g: 0, b: 0, a: 0}
-    projectileDarkerColor: {r: 0, g: 0, b: 0, a: 0}
-    id: 0
-    IsLocalProjectile: 0
-    acceleration: 0
-    speed: 0
-    lifeTime: 0
-    fluctuation: []
-    noGravity: 0
-    dieOnImpact: 0
-    damageOnImpact: 0
-    sticky: 0
-    skipAoeOnTargetHit: 0
-    aoe: 0
-    knockback: 0
-    speedLimit: 0
-    minSpeed: 0
-    aoeDamage: 0
-    baseDamage: 0
-    damageTimeScale: 0
-    burstData: []
-    stickToSender: 0
-    melee: 0
-    meleeRange: 0
-    swingDegrees: 0
+    impactParticle: {fileID: 0}
+    bounceParticle: {fileID: 0}
     meleePosAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    oneTimeHit: 0
-    meleeRotation: 0
     meleeRotAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 0}
-    timeToMorph: 0
     morhpAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    homing: 0
+    fluctuation: []
+    burstData: []
+    projectileSpawnEvents: []
+    projectileColor: {r: 0, g: 0, b: 0, a: 0}
+    projectileDarkerColor: {r: 0, g: 0, b: 0, a: 0}
+    targetMorph: {x: 0, y: 0, z: 0}
+    position: {x: 0, y: 0}
+    direction: {x: 0, y: 0}
+    acceleration: 0
+    speed: 0
+    speedLimit: 0
+    minSpeed: 0
+    lifeTime: 0
+    damageTimeScale: 0
+    baseDamage: 0
+    aoeDamage: 0
+    aoe: 0
+    knockback: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
     homingStrength: 0
     homingDistance: 0
     spinSpeed: 0
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 0
-    dontBlockProjectiles: 0
-    bounceOfPlayers: 0
-    sync: 0
     syncSpeed: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
-    alignDirection: 0
-    bounces: 0
-    clampMorph: 0
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
-    hover: 0
     hoverDistance: 0
     hoverStrength: 0
     hoverFloorRadius: 0
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
-    projectileSpawnEvents: []
+    timeToMorph: 0
+    morphTimeOnBounce: 0
+    id: 0
+    typeID: 0
+    bounces: 0
+    IsLocalProjectile: 0
+    noGravity: 0
+    dieOnImpact: 0
+    damageOnImpact: 0
+    sticky: 0
+    skipAoeOnTargetHit: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    enableMorph: 0
+    setMorphOnBounce: 0
+    homing: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    sync: 0
+    alignDirection: 0
+    clampMorph: 0
+    hover: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 8693188006018225575, guid: 147091b030c1eb643b5f27bf276d093a, type: 3}
   multiplySpawnrateByLifetime: 1
   lifeTimeMultiplier: 2.5
   externalTrailSpawnRate: 0.2
   playShootSound: 0
+--- !u!50 &-3438963122069973725
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066612454653962984}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.0001
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0.8
+  m_Material: {fileID: 6200000, guid: 176a05e135a7fe543a3e06fb07d512d0, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 1
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
+  m_Constraints: 0
 --- !u!61 &1066894796322893754
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -294,10 +325,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1536
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 30199
+    m_Bits: 64
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -327,33 +358,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &-3438963122069973725
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3066612454653962984}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 0.0001
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 2
-  m_Material: {fileID: 6200000, guid: 176a05e135a7fe543a3e06fb07d512d0, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 1
-  m_SleepingMode: 0
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!61 &3786788688331823776
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -361,16 +365,16 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3066612454653962984}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 1536
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -388,7 +392,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 2.0325377, y: 0}
+  m_Offset: {x: 2, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -398,7 +402,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 4.0650754, y: 2.5}
+  m_Size: {x: 4, y: 2.5}
   m_EdgeRadius: 0
 --- !u!114 &2274154555645370788
 MonoBehaviour:

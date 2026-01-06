@@ -21,7 +21,7 @@ MonoBehaviour:
     projectileAmmo: 19
     reloadTime: 1.65
     shootingInterval: 0.08
-    projectileSpeed: 33
+    projectileSpeed: 35
     projectileAcceleration: -0.402
     lifeTime: 2
     holdable: 1
@@ -85,7 +85,7 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 62811
+    typeID: 56013
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
@@ -98,3 +98,4 @@ MonoBehaviour:
     timeForFullHoverEffect: 0
     projectileSpawnEvents: []
     weaponName: Minigun
+    delistWeapon: 0

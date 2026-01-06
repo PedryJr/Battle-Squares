@@ -41,6 +41,10 @@ public class MenuEffectBehaviour : MonoBehaviour
 
     private void Awake()
     {
+    }
+
+    private void Start()
+    {
         if (runOnce)
         {
             timer = 1F;

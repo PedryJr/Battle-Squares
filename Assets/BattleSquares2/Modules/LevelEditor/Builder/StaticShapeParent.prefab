@@ -155,7 +155,7 @@ CompositeCollider2D:
   m_ColliderPaths: []
   m_CompositePaths:
     m_Paths: []
-  m_VertexDistance: 0.1
-  m_OffsetDistance: 0.075
+  m_VertexDistance: 0.05
+  m_OffsetDistance: 0
   m_UseDelaunayMesh: 1
   m_CompositeGameObject: {fileID: 4862403891009513865}

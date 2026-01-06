@@ -18,47 +18,12 @@ MonoBehaviour:
     launchParticle: {fileID: 4313180367996257349, guid: 843a75b13e37fa34f876d5748dacfefd, type: 3}
     bounceParticle: {fileID: 0}
     impactParticle: {fileID: 4313180367996257349, guid: 72f1be016aee4eb469e98f6df7d9f0e4, type: 3}
-    projectileAmmo: 4
-    reloadTime: 3
-    shootingInterval: 0.15
-    projectileSpeed: 5
-    projectileAcceleration: 2
-    lifeTime: 4
-    holdable: 1
-    burst: 0
-    burstSpread: 0
-    bounces: 0
-    fluctuation: 0
-    noGravity: 0
-    dieOnImpact: 1
-    damageOnImpact: 1
-    sticky: 0
-    aoe: 3
-    skipAoeOnTargetHit: 1
-    knockback: 15
-    speedLimit: 17
-    minSpeed: 0
-    aoeDamage: 5
-    baseDamage: 7
-    damageTimeScale: 0
-    recoil: 7.6
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 0}
-    timeToMorph: 0
     morphAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    sync: 1
-    syncSpeed: 10
-    stickToSender: 0
-    melee: 0
-    oneTimeHit: 0
-    meleeRange: 0
-    swingDegrees: 0
-    meleeRotation: 0
     meleePosAnimation:
       serializedVersion: 2
       m_Curve: []
@@ -71,30 +36,68 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    flipFlop: 0
-    homing: 0
-    homingStrength: 0
-    homingDistance: 0
+    projectileSpawnEvents: []
+    weaponName: Cruiser
+    targetMorph: {x: 0, y: 0, z: 0}
+    reloadTime: 3
+    shootingInterval: 0.1
+    projectileSpeed: 15
+    projectileAcceleration: 7.78
+    lifeTime: 4
+    burstSpread: 0
+    fluctuation: 0.1
+    aoe: 3
+    knockback: 15
+    speedLimit: 15
+    minSpeed: 0
+    aoeDamage: 4
+    baseDamage: 6
+    damageTimeScale: 0
+    recoil: 7.6
+    timeToMorph: 0
+    syncSpeed: 10
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
+    homingStrength: 0.1
+    homingDistance: 5
     spinSpeed: 0
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 0
-    dontBlockProjectiles: 0
-    bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
-    alignDirection: 1
-    typeID: 0
-    clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
-    spawnOffsetPadding: 0
+    spawnOffsetPadding: 0.44
+    hoverDistance: 0.2
+    hoverStrength: 400
+    hoverFloorRadius: 0.2
+    hoverDistanceAttenuation: 0.3
+    timeForFullHoverEffect: 0
+    morphTimeOnBounce: 0
+    projectileAmmo: 4
+    burst: 0
+    typeID: 36609
+    bounces: 0
+    holdable: 1
+    noGravity: 0
+    dieOnImpact: 1
+    damageOnImpact: 1
+    sticky: 0
+    skipAoeOnTargetHit: 1
+    enableMorph: 0
+    setMorphOnBounce: 0
+    sync: 1
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    flipFlop: 0
+    homing: 1
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 1
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    alignDirection: 1
+    clampMorph: 1
     hover: 1
-    hoverDistance: 0
-    hoverStrength: 20
-    hoverFloorRadius: 3
-    hoverDistanceAttenuation: 30
-    timeForFullHoverEffect: 0.2
-    projectileSpawnEvents: []
-    weaponName: Cruiser
+    delistWeapon: 0

@@ -58,6 +58,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _ArtificialLight: 0.3
     - _ColorStrength: 5.53
     - _ColorToEffect: 0.1
     - _EnableExternalAlpha: 0

@@ -1,10 +1,13 @@
 using System;
+using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Unity.Mathematics;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
 using static BinaryVectors;
 public static class MyExtentions
 {
@@ -244,21 +247,21 @@ public static class MyExtentions
     }
 
 
-    const float PosABS = 64f;
-    const float VelABS = 30f;
-    const float AngABS = 1000f;
-    const byte PlayerPositionXBytes = 2;
-    const byte PlayerPositionYBytes = 2;
-    const byte PlayerVelocityXBytes = 2;
-    const byte PlayerVelocityYBytes = 2;
-    const byte PlayerRotBytes = 2;
+    public const float PosABS = 64f;
+    public const float VelABS = 30f;
+    public const float AngVelABS = 1000f;
+    const byte PlayerPositionXBytes = 3;
+    const byte PlayerPositionYBytes = 3;
+    const byte PlayerVelocityXBytes = 3;
+    const byte PlayerVelocityYBytes = 3;
+    const byte PlayerRotBytes = 3;
     const byte PlayerAngVelBytes = 3;
 
-    const float MaxDeg = 360f;
+    public const float MaxDeg = 360f;
     const float MaxRot = MaxDeg * Mathf.Deg2Rad;
     const float MinRot = 0f;
-    const float MaxAngVel = AngABS * Mathf.Deg2Rad;
-    const float MinAngVel = -AngABS * Mathf.Deg2Rad;
+    const float MaxAngVel = AngVelABS * Mathf.Deg2Rad;
+    const float MinAngVel = -AngVelABS * Mathf.Deg2Rad;
     const float MinPos = -PosABS;
     const float MaxPos = PosABS;
     const float MinVel = -VelABS;
@@ -328,7 +331,7 @@ public static class MyExtentions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static byte[] CompressPlayerRotation(float zAngles)
     {
-        return BinaryTool.CompressFloat(Mathf.Repeat(zAngles, MaxDeg) * Mathf.Deg2Rad, PlayerRotBytes, MinRot, MaxRot);
+        return BinaryTool.CompressFloatAlloc(Mathf.Repeat(zAngles, MaxDeg) * Mathf.Deg2Rad, PlayerRotBytes, MinRot, MaxRot);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -340,7 +343,7 @@ public static class MyExtentions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static byte[] CompressPlayerAngularVelocity(float zAngles)
     {
-        return BinaryTool.CompressFloat(zAngles * Mathf.Deg2Rad, PlayerAngVelBytes, MinAngVel, MaxAngVel);
+        return BinaryTool.CompressFloatAlloc(zAngles * Mathf.Deg2Rad, PlayerAngVelBytes, MinAngVel, MaxAngVel);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -362,28 +365,75 @@ public static class MyExtentions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void DecompressRigidbody(byte[] data, Rigidbody2D rb)
+    public static void DecompressRigidbody(
+        byte[] data,
+        Rigidbody2D rb,
+        float usedFrequency
+    )
     {
-        /* float velocitySharpness = 1.1f;
-        float rotationSharpness = 1.1f;
-        float angularSharpness = 1.1f;
+        // --- Decode authoritative state ---
+        Vector2 serverPos =
+            DecompressPlayerPosition(
+                Slice(data, PositionBufferOffset, PlayerPositionBytes)
+            );
 
-        Vector2 velocity = Vector2.LerpUnclamped(rb.linearVelocity, DecompressPlayerVelocity(Slice(data, VelocityBufferOffset, PlayerVelocityBytes)), velocitySharpness);
-        float rotation = Mathf.LerpUnclamped(rb.rotation, DecompressPlayerRotation(Slice(data, RotationBufferOffset, PlayerRotBytes)), rotationSharpness);
-        float angularVelocity = Mathf.LerpUnclamped(rb.angularVelocity, DecompressPlayerAngularVelocity(Slice(data, AngularVBufferOffset, PlayerAngVelBytes)), angularSharpness);
+        Vector2 serverVel =
+            DecompressPlayerVelocity(
+                Slice(data, VelocityBufferOffset, PlayerVelocityBytes)
+            );
 
-        rb.linearVelocity = velocity;
-        rb.rotation = rotation;
-        rb.angularVelocity = angularVelocity;*/
+        float serverRot =
+            DecompressPlayerRotation(
+                Slice(data, RotationBufferOffset, PlayerRotBytes)
+            );
 
-        float positionSharpness = 0.2f;
-        Vector2 position = Vector2.Lerp(rb.position, DecompressPlayerPosition(Slice(data, PositionBufferOffset, PlayerPositionBytes)), positionSharpness);
-        rb.position = position;
-        //rb.position = DecompressPlayerPosition(Slice(data, PositionBufferOffset, PlayerPositionBytes));
-        rb.linearVelocity = DecompressPlayerVelocity(Slice(data, VelocityBufferOffset, PlayerVelocityBytes));
-        rb.rotation = DecompressPlayerRotation(Slice(data, RotationBufferOffset, PlayerRotBytes));
-        rb.angularVelocity = DecompressPlayerAngularVelocity(Slice(data, AngularVBufferOffset, PlayerAngVelBytes));
+        float serverAngVel =
+            DecompressPlayerAngularVelocity(
+                Slice(data, AngularVBufferOffset, PlayerAngVelBytes)
+            );
+
+        NetworkTimeSystem timeSystem = NetworkTimeSystem.ServerTimeSystem();
+        double now = timeSystem.LocalTime;
+        double remote = NetworkTimeSystem.ServerTimeSystem().ServerTime;
+
+
+        double highPrecisionLatency = now - remote;
+        float lateness = (float) highPrecisionLatency;
+        lateness = Mathf.Clamp(lateness, 0f, 0.25f); // safety clamp
+
+        // --- Predict ---
+        Vector2 predictedPos = serverPos + serverVel * lateness;
+        float predictedRot = serverRot + serverAngVel * lateness;
+
+        // --- Error-based smoothing ---
+        float error = Vector2.Distance(rb.position, predictedPos);
+
+        float positionSharpness = Mathf.Lerp(
+            0.5f,
+            0.2f,
+            Mathf.InverseLerp(1f, 200f, usedFrequency)
+        );
+
+        if (error > 1f)
+            positionSharpness = 1f;
+
+        // --- Apply ---
+        rb.position = Vector2.Lerp(
+            rb.position,
+            predictedPos,
+            positionSharpness
+        );
+
+        rb.rotation = Mathf.LerpAngle(
+            rb.rotation,
+            predictedRot,
+            positionSharpness
+        );
+
+        rb.linearVelocity = serverVel;
+        rb.angularVelocity = serverAngVel;
     }
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static byte[] Slice(byte[] src, int offset, int length)
@@ -393,4 +443,42 @@ public static class MyExtentions
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void SetDirSpanContents(in Span<Vector2> span)
+    {
+        span[0] = new Vector2(1f, 0f);
+        span[1] = new Vector2(0.7071f, 0.7071f);
+        span[2] = new Vector2(0f, 1f);
+        span[3] = new Vector2(-0.7071f, 0.7071f);
+        span[4] = new Vector2(-1f, 0f);
+        span[5] = new Vector2(-0.7071f, -0.7071f);
+        span[6] = new Vector2(0f, -1f);
+        span[7] = new Vector2(0.7071f, -0.7071f);
+    }
+    private const int DIRS_COUNT = 8;
+    private const Int32 ENVIRONTMENT_MASK = 0b00000000000000000000001000000000;
+    private static readonly RaycastHit2D[] hitBuffer = new RaycastHit2D[1];
+
+    public static RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, float maxDistance = 100f)
+    {
+        Span<Vector2> DIRS_8 = stackalloc Vector2[DIRS_COUNT];
+        SetDirSpanContents(DIRS_8);
+        ref RaycastHit2D hitRef = ref hitBuffer[0];
+
+
+        float shortestDistance = float.PositiveInfinity;
+        RaycastHit2D closestHit = default;
+
+        for (int i = 0; i < DIRS_COUNT; i++)
+        {
+            int hitCount = Physics2D.RaycastNonAlloc(origin, DIRS_8[i], hitBuffer, maxDistance, ENVIRONTMENT_MASK);
+            if (hitCount <= 0) continue;
+            float dist = hitRef.distance;
+            if (dist >= shortestDistance) continue;
+            shortestDistance = dist;
+            closestHit = hitRef;
+        }
+
+        return closestHit;
+    }
 }

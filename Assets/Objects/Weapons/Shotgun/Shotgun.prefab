@@ -58,6 +58,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -79,6 +81,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
@@ -114,7 +117,7 @@ MonoBehaviour:
   speedModifier: 0
   projectileID: 0
   IsLocalProjectile: 0
-  rb: {fileID: 0}
+  rb: {fileID: -3438963122069973725}
   owningPlayer: {fileID: 0}
   timeAlive: 0
   fullTimeAlive: 0
@@ -132,8 +135,10 @@ MonoBehaviour:
   hit: 0
   sync: 0
   flipFlop: 0
-  impactParticle: {fileID: 7289681851009581468, guid: a3af95ee5023af2448bbeea49633f47d, type: 3}
   hitMark: {fileID: 7378723969388511367, guid: 869fbb138c650cb48a0b354f79013de4, type: 3}
+  trailParticles: {fileID: 227063848627397678}
+  trailParticleSystem: {fileID: 8440552164618030048}
+  spriteRenderer: {fileID: 1625723881570478094}
   shotReference:
     Guid:
       Data1: 185777487
@@ -156,7 +161,10 @@ MonoBehaviour:
       Data3: -1733238086
       Data4: 1170857750
     Path: event:/VFX/Base/Gun Hit
+  projectileCollider: {fileID: -3148651319717881892}
   data:
+    impactParticle: {fileID: 0}
+    bounceParticle: {fileID: 0}
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}
     position: {x: 0, y: 0}
@@ -167,7 +175,6 @@ MonoBehaviour:
     IsLocalProjectile: 0
     acceleration: 0
     speed: 0
-    burst: 0
     lifeTime: 0
     fluctuation: []
     noGravity: 0
@@ -183,7 +190,6 @@ MonoBehaviour:
     baseDamage: 0
     damageTimeScale: 0
     burstData: []
-    retornToSender: 0
     stickToSender: 0
     melee: 0
     meleeRange: 0
@@ -226,11 +232,23 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
+    bounces: 0
+    clampMorph: 0
+    bounceSpeedLoss: 0
+    bounceAngleTilt: 0
+    hover: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    projectileSpawnEvents: []
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0
   lifeTimeMultiplier: 0
   externalTrailSpawnRate: 0
+  playShootSound: 0
 --- !u!50 &-3438963122069973725
 Rigidbody2D:
   serializedVersion: 5
@@ -334,27 +352,27 @@ MonoBehaviour:
     chroma: 0
     enableBlockerInfluence: 0
     blockerFalloff: 0
-    enablePositionWarp: 0
-    positionWarpStrength: 0
-    positionWarpFallof: 0
-    positionWarpRadius: 0
+    enablePositionWarp: 1
+    positionWarpStrength: -2
+    positionWarpFallof: 15
+    positionWarpRadius: 5
     enableScaleWarp: 1
     scaleWarpStrength: -1
-    scaleWarpFalloff: 1
-    scaleWarpRadius: 1
+    scaleWarpFalloff: 15
+    scaleWarpRadius: 5
     enableRotationWarp: 0
-    rotationWarpStrength: 0
-    rotationWarpFalloff: 0
-    rotationWarpRadius: 0
+    rotationWarpStrength: 1
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 1
     enableSwirl: 1
     swirlStrength: 1
-    swirlFalloff: 1
-    swirlRadius: 1
+    swirlFalloff: 20
+    swirlRadius: 10
     enablePulsation: 0
-    pulsationFrequency: 1
-    pulsationAmplitude: 1
+    pulsationFrequency: 56.11
+    pulsationAmplitude: 22
     pulsationFallof: 1
-    pulsationRadius: 1
+    pulsationRadius: 2.9
 --- !u!1 &7209791492649673601
 GameObject:
   m_ObjectHideFlags: 0
@@ -5205,6 +5223,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5226,6 +5246,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 0

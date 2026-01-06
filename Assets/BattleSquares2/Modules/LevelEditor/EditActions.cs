@@ -244,6 +244,15 @@ public partial class @EditActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""G"",
+                    ""type"": ""Button"",
+                    ""id"": ""422622c7-e8d0-4395-be7a-c4e5c7233769"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -433,6 +442,17 @@ public partial class @EditActions: IInputActionCollection2, IDisposable
                     ""action"": ""Timer Reset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf4e7ee6-1fa5-4f35-9b10-ce754e8b48e5"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""G"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -458,6 +478,7 @@ public partial class @EditActions: IInputActionCollection2, IDisposable
         m_Mouse_Preview = m_Mouse.FindAction("Preview", throwIfNotFound: true);
         m_Mouse_TempSwapEdit = m_Mouse.FindAction("TempSwapEdit", throwIfNotFound: true);
         m_Mouse_TimerReset = m_Mouse.FindAction("Timer Reset", throwIfNotFound: true);
+        m_Mouse_G = m_Mouse.FindAction("G", throwIfNotFound: true);
     }
 
     ~@EditActions()
@@ -555,6 +576,7 @@ public partial class @EditActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Mouse_Preview;
     private readonly InputAction m_Mouse_TempSwapEdit;
     private readonly InputAction m_Mouse_TimerReset;
+    private readonly InputAction m_Mouse_G;
     /// <summary>
     /// Provides access to input actions defined in input action map "Mouse".
     /// </summary>
@@ -635,6 +657,10 @@ public partial class @EditActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @TimerReset => m_Wrapper.m_Mouse_TimerReset;
         /// <summary>
+        /// Provides access to the underlying input action "Mouse/G".
+        /// </summary>
+        public InputAction @G => m_Wrapper.m_Mouse_G;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_Mouse; }
@@ -711,6 +737,9 @@ public partial class @EditActions: IInputActionCollection2, IDisposable
             @TimerReset.started += instance.OnTimerReset;
             @TimerReset.performed += instance.OnTimerReset;
             @TimerReset.canceled += instance.OnTimerReset;
+            @G.started += instance.OnG;
+            @G.performed += instance.OnG;
+            @G.canceled += instance.OnG;
         }
 
         /// <summary>
@@ -773,6 +802,9 @@ public partial class @EditActions: IInputActionCollection2, IDisposable
             @TimerReset.started -= instance.OnTimerReset;
             @TimerReset.performed -= instance.OnTimerReset;
             @TimerReset.canceled -= instance.OnTimerReset;
+            @G.started -= instance.OnG;
+            @G.performed -= instance.OnG;
+            @G.canceled -= instance.OnG;
         }
 
         /// <summary>
@@ -932,5 +964,12 @@ public partial class @EditActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTimerReset(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "G" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnG(InputAction.CallbackContext context);
     }
 }

@@ -163,7 +163,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
             if (ShootWeapon(primary))
             {
                 playerBehaviour.AnimateNozzle(Vector3.zero, Vector3.zero);
-                projectileManager.SpawnParticles(
+                projectileManager.SpawnNozzleParticles(
                     globalNozzleDirection - (relativePositionToPlayer / 3.5f),
                     Quaternion.Euler(0, 0, 
                     math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
@@ -175,7 +175,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
             if (ShootWeapon(secondary))
             {
                 playerBehaviour.AnimateNozzle(Vector3.zero, Vector3.zero);
-                projectileManager.SpawnParticles(
+                projectileManager.SpawnNozzleParticles(
                     globalNozzleDirection - (relativePositionToPlayer / 3.5f),
                     Quaternion.Euler(0, 0, math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
                     secondary);

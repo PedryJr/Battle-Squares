@@ -52,8 +52,8 @@ public sealed class DragAndScrollMod : MonoBehaviour
     public void DisableEditInputs() => input.Disable();
 
     [SerializeField]
-    float snapping;
-    public float Snapping => snapping;
+    float snappingValue;
+    public float Snapping => snappingValue != 0 ? snappingValue : 1f;
 
     [SerializeField]
     public bool Render = false;
@@ -141,6 +141,12 @@ public sealed class DragAndScrollMod : MonoBehaviour
         {
             tabFlag = false;
             foreach (TabModeObject tabMode in tabModeObjects) tabMode.DisableDabMode();
+        };
+
+        input.Mouse.G.performed += obj =>
+        {
+            if (snappingValue < 1f) snappingValue = 1f;
+            else snappingValue = 0.5f;
         };
 
         input.Mouse.TimerReset.performed += obj =>
@@ -825,17 +831,18 @@ public sealed class DragAndScrollMod : MonoBehaviour
         pivotResult.AssignSnappingPoints(startPoint, endPoint);
         pivotResult.AssignDragMod(this);
         pivotResult.mousePosOnGenerate = this.mousePos;
+        pivotResult.snappingOnGenerate = Snapping;
 
-        startPoint.AssignShapeContainer(pivotResult);
+        startPoint.AssignShapeContainer(pivotResult, Snapping);
         startPoint.AssignLookatTarget(endPoint.transform);
         startPoint.AssignrawWorldPositionPosition(startPoint.transform.position);
-        startPoint.AssignSnapping(snapping);
+        //startPoint.AssignSnapping(snapping);
         startPoint.AssignStart(true);
 
-        endPoint.AssignShapeContainer(pivotResult);
+        endPoint.AssignShapeContainer(pivotResult, Snapping);
         endPoint.AssignLookatTarget(startPoint.transform);
         endPoint.AssignrawWorldPositionPosition(endPoint.transform.position);
-        endPoint.AssignSnapping(snapping);
+        //endPoint.AssignSnapping(snapping);
         endPoint.AssignStart(false);
 
         isGenerating = true;
@@ -952,7 +959,7 @@ public sealed class DragAndScrollMod : MonoBehaviour
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    Vector2 GetSnappedPosition(Vector2 rawPosition) => new Vector2(Mathf.Round(rawPosition.x / snapping) * snapping, Mathf.Round(rawPosition.y / snapping) * snapping);
+    Vector2 GetSnappedPosition(Vector2 rawPosition) => new Vector2(Mathf.Round(rawPosition.x / Snapping) * Snapping, Mathf.Round(rawPosition.y / Snapping) * Snapping);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnEnable() => EnableInputs();
@@ -1025,15 +1032,18 @@ public sealed class DragAndScrollMod : MonoBehaviour
             {
                 ShapeContainer shape = undoStack[i];
                 LocalSnappingPoint a, b;
+                float snapping;
                 int oID, xID, yID, xyID;
                 CustomVec3 oOffsetPos, xOffsetPos, yOffsetPos, xyOffsetPos;
 
+                snapping = shape.snappingOnGenerate;
                 (a, b) = shape.GetSnappingPoints();
                 (oID, xID, yID, xyID) = shape.GetAllMimicsID();
                 (oOffsetPos, xOffsetPos, yOffsetPos, xyOffsetPos) = shape.GetAllMimicsOffsets();
 
                 ShapeMemory shapeMemory = new ShapeMemory()
                 {
+                    snapping = snapping,
                     scale = shape.scale,
                     oID = oID,
                     xID = xID,
@@ -1156,6 +1166,8 @@ public sealed class DragAndScrollMod : MonoBehaviour
                 mod.generators.Add(() => 
                 {
                     
+                    if(memory.snapping == 0f) mod.snappingValue = 1f;
+                    else mod.snappingValue = memory.snapping;
                     mod.mousePos = memory.StartPos;
                     mod.shapeContainerPrefab.mirrorX = memory.mirrorX;
                     mod.shapeContainerPrefab.mirrorY = memory.mirrorY;
@@ -1165,6 +1177,8 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
                 for (int i = 0; i < framesGeneratingAShape; i++) mod.generators.Add(() =>
                 {
+                    if (memory.snapping == 0f) mod.snappingValue = 1f;
+                    else mod.snappingValue = memory.snapping;
                     mod.isGenerating = true;
                     mod.shapeContainerPrefab.mirrorX = memory.mirrorX;
                     mod.shapeContainerPrefab.mirrorY = memory.mirrorY;
@@ -1294,6 +1308,7 @@ public sealed class DragAndScrollMod : MonoBehaviour
     [Serializable]
     public struct ShapeMemory
     {
+        public float snapping;
         public int oID, xID, yID, xyID;
         public bool mirrorX, mirrorY;
         public CustomVec3 oOffsetPos, xOffsetPos, yOffsetPos, xyOffsetPos;

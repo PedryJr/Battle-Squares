@@ -11,8 +11,10 @@ public class PlayerDebugStats : MonoBehaviour
     public const string HealthPrefix = "Health: ";
     public const string VelocityPrefix = "Velocity: ";
     public const string PlayerFacingPrefix = "Facing: ";
+    public const string LifeState = "LifeState: ";
     public const string PrimaryWeaponPrefix = "PrimaryWeapon: ";
     public const string SecondaryWeaponPrefix = "SecondaryWeapon: ";
+    public const char NewLine = '\n';
 
     StringBuilder builder = new StringBuilder(256);
 
@@ -43,17 +45,45 @@ public class PlayerDebugStats : MonoBehaviour
         }
     }
 
+    string GetPlayerAliveState()
+    {
+        if (playerBehaviour.isDead) return "Dead";
+        else return "Alive";
+    }
+
     private void Update()
     {
         builder.Clear();
 
-        builder.AppendLine("-= Player Stats =-");
-        builder.AppendLine(NamePrefix + playerBehaviour.playerName);
-        builder.AppendLine(HealthPrefix + playerBehaviour.healthPoints);
-        builder.AppendLine(VelocityPrefix + playerBehaviour.velocity.magnitude);
-        builder.AppendLine(PlayerFacingPrefix + GetFacingFromVectorDirection());
-        builder.AppendLine(PrimaryWeaponPrefix + playerBehaviour.nozzleBehaviour.primary);
-        builder.AppendLine(SecondaryWeaponPrefix + playerBehaviour.nozzleBehaviour.secondary);
+        builder.Append("-= Player Stats =-");
+        builder.Append(NewLine);
+
+        builder.Append(NamePrefix);
+        builder.Append(playerBehaviour.playerName);
+        builder.Append(NewLine);
+
+        builder.Append(HealthPrefix);
+        builder.Append(playerBehaviour.healthPoints);
+        builder.Append(NewLine);
+
+        builder.Append(VelocityPrefix);
+        builder.Append(playerBehaviour.velocity.magnitude);
+        builder.Append(NewLine);
+
+        builder.Append(LifeState);
+        builder.Append(GetPlayerAliveState());
+        builder.Append(NewLine);
+
+        builder.Append(PlayerFacingPrefix);
+        builder.Append(GetFacingFromVectorDirection());
+        builder.Append(NewLine);
+
+        builder.Append(PrimaryWeaponPrefix);
+        builder.Append(playerBehaviour.nozzleBehaviour.primary);
+        builder.Append(NewLine);
+
+        builder.Append(SecondaryWeaponPrefix);
+        builder.Append(playerBehaviour.nozzleBehaviour.secondary);
 
         textField.text = builder.ToString();
     }

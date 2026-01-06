@@ -21,8 +21,8 @@ MonoBehaviour:
     projectileAmmo: 2
     reloadTime: 2.5
     shootingInterval: 0.04
-    projectileSpeed: 60
-    projectileAcceleration: 0
+    projectileSpeed: 67
+    projectileAcceleration: -0.2
     lifeTime: 2
     holdable: 0
     burst: 0
@@ -37,11 +37,11 @@ MonoBehaviour:
     skipAoeOnTargetHit: 0
     knockback: 16
     speedLimit: 100
-    minSpeed: 0
+    minSpeed: 40
     aoeDamage: 0
-    baseDamage: 5.8
-    damageTimeScale: 35
-    recoil: 14
+    baseDamage: 4
+    damageTimeScale: 38
+    recoil: 16.5
     enableMorph: 0
     targetMorph: {x: 0, y: 0, z: 0}
     timeToMorph: 0
@@ -85,7 +85,7 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 4428
+    typeID: 64558
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
@@ -98,3 +98,4 @@ MonoBehaviour:
     timeForFullHoverEffect: 0
     projectileSpawnEvents: []
     weaponName: Sniper
+    delistWeapon: 0

@@ -1,4 +1,4 @@
-// WindowManager.cs
+/*// WindowManager.cs
 // Drop into an "Editor" or "Runtime" folder in Unity project (so it compiles for players).
 // Designed for Windows (Win32). Works with Vulkan backend by using borderless fullscreen
 // to avoid swapchain destruction/recreation flicker that exclusive fullscreen sometimes causes.
@@ -43,7 +43,7 @@ public class WindowManager : MonoBehaviour
 #endif
 
     // ---------------------------------------------------------------------
-    private void Awake()
+*//*    private void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -55,7 +55,7 @@ public class WindowManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
         Initialize();
-    }
+    }*//*
 
     private void OnDestroy()
     {
@@ -443,3 +443,4 @@ public class WindowManager : MonoBehaviour
         SetState(WindowState.Windowed);
     }
 }
+*/

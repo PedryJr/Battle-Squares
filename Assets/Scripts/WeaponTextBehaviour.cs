@@ -22,9 +22,11 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
     WeaponDescription[] weaponDescriptions;
 
     [SerializeField]
-    ButtonHoverAnimation[] weaponPreviews;
-
+    GameObject previewParent;
     [SerializeField]
+    GameObject selectorParent;
+
+    ButtonHoverAnimation[] weaponPreviews;
     ButtonHoverAnimation[] weaponSelectors;
 
     private void Start()
@@ -32,6 +34,8 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
         projectileManager = FindAnyObjectByType<ProjectileManager>();
         equippedClassesField = GetComponent<TMP_Text>();
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
+        weaponSelectors = selectorParent.GetComponentsInChildren<ButtonHoverAnimation>();
+        weaponPreviews = previewParent.GetComponentsInChildren<ButtonHoverAnimation>();
     }
 
     private void Update()
@@ -58,49 +62,26 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
 
         output = weapon1 + " - " + weapon2;
 
-        /*        foreach (ButtonHoverAnimation weapon in weaponPreviews)
-                {
+        for (int i = 0; i < weaponPreviews.Length; i++)
+        {
+            ButtonHoverAnimation button = weaponPreviews[i];
+            if (button.isHovering)
+            {
+                output = projectileManager.GetWeaponName(button.GetComponent<WeaponPreviewBehaviour>().previewing);
+                break;
+            }
+        }
 
-                    if (weapon.isHovering)
-                    {
+        for (int i = 0; i < weaponSelectors.Length; i++)
+        {
+            ButtonHoverAnimation button = weaponSelectors[i];
+            if (button.isHovering)
+            {
+                output = projectileManager.GetWeaponName(button.GetComponent<WeaponSelector>().weaponType);
+                break;
+            }
+        }
 
-                        foreach (WeaponDescription description in weaponDescriptions)
-                        {
-
-        *//*                    if (weapon.GetComponent<WeaponPreviewBehaviour>().weaponType == description.weaponType)
-                            {
-                                output = string.Empty;
-                                if (!description.row1.Equals("")) output += description.row1;
-                                if (!description.row2.Equals("")) output += "\n" + description.row2;
-                                if (!description.row3.Equals("")) output += "\n" + description.row3;
-                                if (!description.row4.Equals("")) output += "\n" + description.row4;
-                            }*//*
-
-                        }
-
-                    }
-
-                }
-
-                foreach (ButtonHoverAnimation selector in weaponSelectors)
-                {
-
-        *//*            if (selector.isHovering)
-                    {
-
-                        //output = selector.GetComponent<WeaponSelector>().weaponType.ToString();
-
-                    }*//*
-
-                }
-
-                if (!this.output.Equals(output))
-                {
-
-                    this.output = output;
-                    fadeTimer = 0;
-
-                }*/
         if (!this.output.Equals(output))
         {
             this.output = output;

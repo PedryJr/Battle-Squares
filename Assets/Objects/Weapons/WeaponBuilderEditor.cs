@@ -97,6 +97,8 @@ public class WeaponBuilderEditor : Editor
     SerializedProperty projectileSpawnEvents;
     SerializedProperty weaponName;
     SerializedProperty delistWeapon;
+    SerializedProperty setMorphTimeOnBounce;
+    SerializedProperty morphTimeOnBounce;
 
     void OnEnable()
     {
@@ -172,6 +174,8 @@ public class WeaponBuilderEditor : Editor
         projectileSpawnEvents = specsProp.FindPropertyRelative("projectileSpawnEvents");
         weaponName = specsProp.FindPropertyRelative("weaponName");
         delistWeapon = specsProp.FindPropertyRelative("delistWeapon");
+        setMorphTimeOnBounce = specsProp.FindPropertyRelative("setMorphOnBounce");
+        morphTimeOnBounce = specsProp.FindPropertyRelative("morphTimeOnBounce");
     }
 
     public override void OnInspectorGUI()
@@ -260,6 +264,8 @@ public class WeaponBuilderEditor : Editor
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(enableMorph);
+            EditorGUILayout.PropertyField(setMorphTimeOnBounce);
+            EditorGUILayout.PropertyField(morphTimeOnBounce);
             EditorGUILayout.PropertyField(targetMorph);
             EditorGUILayout.PropertyField(timeToMorph);
             EditorGUILayout.PropertyField(clampMorph);

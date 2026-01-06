@@ -536,7 +536,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5854793105914161478}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
   m_Name: 
@@ -844,7 +844,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3506166878856948221
 Transform:
   m_ObjectHideFlags: 0
@@ -1720,6 +1720,7 @@ MonoBehaviour:
   h: 0
   spawnBuffer: 0
   newMods: 0
+  jumpParticleRef: {fileID: 8567238288229006168, guid: 414f2ce96a088454aafac90bbb09133b, type: 3}
 --- !u!114 &2995831169349222189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1767,9 +1768,9 @@ MonoBehaviour:
     value: 0.75
     alpha: 1
   chatBubbleColor:
-    colorCorrectionType: 0
-    saturation: 0.835
-    value: 0.75
+    colorCorrectionType: 2
+    saturation: 0.781
+    value: 1
     alpha: 1
   dogTagColor:
     colorCorrectionType: 0

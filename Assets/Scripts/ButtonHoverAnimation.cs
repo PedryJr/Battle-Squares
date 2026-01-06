@@ -89,27 +89,19 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     {
         if (!ignoreHoverColorOptions)
         {
-            if (unique)
-            {
-                unique.SetColor("_Color", color);
-                //unique.SetTexture("_AlphaTex", image.mainTexture);
-            }
+            if (unique) unique.SetColor("_Color", color);
         }
         else
         {
-            if (image)
-            {
-                image.color = color;
-            }
-            else
-            {
-                spriteRenderer.color = color;
-            }
+            if (image) image.color = color;
+            else spriteRenderer.color = color;
         }
     }
 
     private void Awake()
     {
+
+
         if (!hoverColorOptions) hoverColorOptions = AssetResources.GetDefaultButtonHoverColorSettings;
         image = GetComponent<Image>();
         spriteRenderer = GetComponent<SpriteRenderer>();

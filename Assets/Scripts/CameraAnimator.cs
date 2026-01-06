@@ -43,6 +43,7 @@ public sealed class CameraAnimator : MonoBehaviour
     public float initCameraTimer = 0;
     public float introTimer = 0;
     public float z = -20;
+    public float cameraYOffset = 3.5f;
 
     public float soundUpdateTimer;
 
@@ -141,8 +142,8 @@ public sealed class CameraAnimator : MonoBehaviour
             {
                 xDif = Mathf.Abs(playerData.square.rb.position.x - playerSynchronizer.localSquare.rb.position.x);
                 yDif = Mathf.Abs(playerData.square.rb.position.y - playerSynchronizer.localSquare.rb.position.y);
-                if (xDif > 31) continue;
-                if (yDif > 19) continue;
+                if (xDif > 32) continue;
+                if (yDif > 32 / 1.777778f) continue;
                 if (playerData.square.isDead) continue;
 
                 targetPosition += playerData.square.rb.position;
@@ -180,7 +181,7 @@ public sealed class CameraAnimator : MonoBehaviour
 
         if (i == 1)
         {
-            targetPosition = Vector2.Lerp(targetPosition + new Vector2(0, 3.5f), targetPosition, Mathf.Abs(multiplier2));
+            targetPosition = Vector2.Lerp(targetPosition + new Vector2(0, cameraYOffset), targetPosition, Mathf.Abs(multiplier2));
         }
 
         if (i != 0) (toPos.x, toPos.y, toPos.z) = (targetPosition.x / i, targetPosition.y / i, z);

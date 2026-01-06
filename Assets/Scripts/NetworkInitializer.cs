@@ -14,7 +14,7 @@ public sealed class NetworkInitializer : MonoBehaviour
     void InvokedSceneInitialization()
     {
 
-        SceneManager.LoadScene("MenuScene");
+        SceneManager.LoadSceneAsync("MenuScene");
 
     }
 

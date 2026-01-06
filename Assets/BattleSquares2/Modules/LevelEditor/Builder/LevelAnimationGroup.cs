@@ -15,10 +15,18 @@ public sealed class LevelAnimationGroup : MonoBehaviour
     public float animationOffset;
 
     Transform cachedTransform;
+    Rigidbody2D rb;
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody2D>();
         cachedTransform = transform;
+    }
+
+    void Start()
+    {
+        Rigidbody2D[] childBodies = GetComponentsInChildren<Rigidbody2D>();
+        for (int i = 0; i < childBodies.Length; i++) if (childBodies[i] != rb) Destroy(childBodies[i]);
     }
 
     public void ConstructComplex(ComplexAnimationData data)
@@ -33,19 +41,35 @@ public sealed class LevelAnimationGroup : MonoBehaviour
         constructed = true;
     }
 
-    [MethodImpl(512)]
+    void FixedUpdate()
+    {
+        if (!constructed) return;
+
+        animationTimer = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
+
+        Vector2 targetPosition = animationPath.Evaluate(Mathf.Repeat(animationTimer + animationOffset, 1f));
+
+        MoveToward(targetPosition);
+    }
+
     private void Update()
     {
         if (!constructed) return;
 
         animationTimer = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
-        float eval = Mathf.Repeat(animationTimer + animationOffset, 1f);
-        Vector2 evalPosition = animationPath.Evaluate(eval);
-        float keepZ = cachedTransform.position.z;
-        Vector3 animatedPosition = evalPosition;
-        animatedPosition.z = keepZ;
-        cachedTransform.position = animatedPosition;
+
+        Vector2 targetPosition = animationPath.Evaluate(Mathf.Repeat(animationTimer + animationOffset, 1f));
+
+        transform.position = targetPosition;
     }
+
+    void MoveToward(Vector2 targetPosition)
+    {
+        Vector2 delta = targetPosition - rb.position;
+        rb.linearVelocity = delta / Time.fixedDeltaTime / 2f;
+        rb.position = targetPosition;
+    }
+
 
 }
 

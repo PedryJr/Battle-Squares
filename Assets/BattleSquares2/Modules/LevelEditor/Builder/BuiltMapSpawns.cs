@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using static PlayerSynchronizer;
 
 public sealed class BuiltMapSpawns : MonoBehaviour
 {
@@ -26,19 +27,17 @@ public sealed class BuiltMapSpawns : MonoBehaviour
         
         spawns = GetComponentsInChildren<Transform>().Where(t => t != transform).ToArray();
         foreach (var item in spawns) item.SetParent(transform.parent, true);
-        /*
-                foreach (var item in playerSynchronizer.playerIdentities)
+        /*        foreach (PlayerData player in playerSynchronizer.playerIdentities)
                 {
-                    Vector3 spawnPos = GetSpawn(item.square.GetID());
-                    spawnPos.z = item.square.spawnPosition.z;
-                    item.square.spawnPosition = spawnPos;
-
-                    spawnPos.z = item.square.transform.position.z;
-                    item.square.transform.position = spawnPos;
+                    Debug.Log($"Player ID: {player.square.GetID()} assigned to spawn at position {GetSpawn(player.square.GetID())}");
                 }*/
+
+/*        Debug.Log($"Player ID: {0} assigned to spawn at position {GetSpawn(0)}");
+        Debug.Log($"Player ID: {1} assigned to spawn at position {GetSpawn(1)}");*/
+
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Vector2 GetSpawn(byte playerId) => spawns[(int)(spawnCycle * 2 + playerId) % spawns.Length].position;
+    public Vector2 GetSpawn(byte playerId) => spawns[(int)((spawnCycle * 2) + PlayerIdToListIndex(playerId)) % spawns.Length].position;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Update()
     {
@@ -47,6 +46,12 @@ public sealed class BuiltMapSpawns : MonoBehaviour
         {
             transform.position = GetSpawn(playerSynchronizer.localSquare.GetID());
         }
+    }
+
+    int PlayerIdToListIndex(byte playerId)
+    {
+        for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++) if (playerSynchronizer.playerIdentities[i].square.GetID() == playerId) return i;
+        return playerId;
     }
 
 }

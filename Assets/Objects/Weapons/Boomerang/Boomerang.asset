@@ -21,7 +21,7 @@ MonoBehaviour:
     projectileAmmo: 2
     reloadTime: 2.5
     shootingInterval: 0.04
-    projectileSpeed: 15
+    projectileSpeed: 20
     projectileAcceleration: 0
     lifeTime: 2
     holdable: 0
@@ -73,7 +73,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     flipFlop: 0
     homing: 1
-    homingStrength: 20
+    homingStrength: 25
     homingDistance: 10
     spinSpeed: 720
     rotationFlipOnImpact: 1
@@ -98,3 +98,4 @@ MonoBehaviour:
     timeForFullHoverEffect: 0
     projectileSpawnEvents: []
     weaponName: Boomerang
+    delistWeapon: 0

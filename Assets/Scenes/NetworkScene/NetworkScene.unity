@@ -468,11 +468,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Player 4:  1500.0
+  m_text: 'Player 4:  900.0
 
-    Player 5:  500.0
-
-    Player 5:  500.0
+    Player 5:  1250.0
 
 '
   m_isRightToLeft: 0
@@ -610,11 +608,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '1504.5
+  m_text: '893.6
 
-    497.8
-
-    497.8
+    1256.4
 
 '
   m_isRightToLeft: 0
@@ -1005,7 +1001,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1179425753
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1066,14 +1062,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   mmrToTest:
-  - previousMatchUserScore: 10
-    MMR: 1500
+  - previousMatchUserScore: 0
+    MMR: 900
     UserUniqueId: 4
-  - previousMatchUserScore: 7
-    MMR: 500
-    UserUniqueId: 5
-  - previousMatchUserScore: 7
-    MMR: 500
+  - previousMatchUserScore: 10
+    MMR: 1250
     UserUniqueId: 5
   oldMMRColumn: {fileID: 793090461}
   newMMRColumn: {fileID: 1079407785}

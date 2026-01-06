@@ -148,9 +148,10 @@ MonoBehaviour:
   speedModifier: 0
   projectileID: 0
   IsLocalProjectile: 0
-  rb: {fileID: 0}
+  rb: {fileID: -3438963122069973725}
   owningPlayer: {fileID: 0}
   timeAlive: 0
+  morhpTime: 0
   fullTimeAlive: 0
   projectileManager: {fileID: 0}
   holdable: 0
@@ -167,6 +168,9 @@ MonoBehaviour:
   sync: 0
   flipFlop: 0
   hitMark: {fileID: 7378723969388511367, guid: 4881170d60918d54e9aff5bb4332aff9, type: 3}
+  trailParticles: {fileID: 227063848627397678}
+  trailParticleSystem: {fileID: 8440552164618030048}
+  spriteRenderer: {fileID: 1625723881570478094}
   shotReference:
     Guid:
       Data1: -1092076263
@@ -189,85 +193,96 @@ MonoBehaviour:
       Data3: -1733238086
       Data4: 1170857750
     Path: event:/VFX/Base/Gun Hit
+  projectileCollider: {fileID: 1066894796322893754}
   data:
-    impactParticle: {fileID: 0}
-    bounceParticle: {fileID: 0}
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}
-    position: {x: 0, y: 0}
-    direction: {x: 0, y: 0}
-    projectileColor: {r: 0, g: 0, b: 0, a: 0}
-    projectileDarkerColor: {r: 0, g: 0, b: 0, a: 0}
-    id: 0
-    IsLocalProjectile: 0
-    acceleration: 0
-    speed: 0
-    lifeTime: 0
-    fluctuation: []
-    noGravity: 0
-    dieOnImpact: 0
-    damageOnImpact: 0
-    sticky: 0
-    skipAoeOnTargetHit: 0
-    aoe: 0
-    knockback: 0
-    speedLimit: 0
-    minSpeed: 0
-    aoeDamage: 0
-    baseDamage: 0
-    damageTimeScale: 0
-    burstData: []
-    stickToSender: 0
-    melee: 0
-    meleeRange: 0
-    swingDegrees: 0
+    impactParticle: {fileID: 0}
+    bounceParticle: {fileID: 0}
     meleePosAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    oneTimeHit: 0
-    meleeRotation: 0
     meleeRotAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 0}
-    timeToMorph: 0
     morhpAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    homing: 0
+    fluctuation: []
+    burstData: []
+    projectileSpawnEvents: []
+    projectileColor: {r: 0, g: 0, b: 0, a: 0}
+    projectileDarkerColor: {r: 0, g: 0, b: 0, a: 0}
+    targetMorph: {x: 0, y: 0, z: 0}
+    position: {x: 0, y: 0}
+    direction: {x: 0, y: 0}
+    acceleration: 0
+    speed: 0
+    speedLimit: 0
+    minSpeed: 0
+    lifeTime: 0
+    damageTimeScale: 0
+    baseDamage: 0
+    aoeDamage: 0
+    aoe: 0
+    knockback: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
     homingStrength: 0
     homingDistance: 0
     spinSpeed: 0
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 0
-    dontBlockProjectiles: 0
-    bounceOfPlayers: 0
-    sync: 0
     syncSpeed: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
-    alignDirection: 0
-    bounces: 0
-    clampMorph: 0
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    timeToMorph: 0
+    morphTimeOnBounce: 0
+    id: 0
+    typeID: 0
+    bounces: 0
+    IsLocalProjectile: 0
+    noGravity: 0
+    dieOnImpact: 0
+    damageOnImpact: 0
+    sticky: 0
+    skipAoeOnTargetHit: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    enableMorph: 0
+    setMorphOnBounce: 0
+    homing: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    sync: 0
+    alignDirection: 0
+    clampMorph: 0
+    hover: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 8693188006018225575, guid: b7309d4061fd2d24595d018c9d96d408, type: 3}
   multiplySpawnrateByLifetime: 1
   lifeTimeMultiplier: 2.5
-  externalTrailSpawnRate: 0.15
+  externalTrailSpawnRate: 0.3
   playShootSound: 0
 --- !u!61 &1066894796322893754
 BoxCollider2D:

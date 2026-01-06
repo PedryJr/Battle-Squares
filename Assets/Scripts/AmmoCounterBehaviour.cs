@@ -65,6 +65,7 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
 
     void UpdateContainer()
     {
+        if (!playerColoringBehaviour) return;
         ammoContainer.color = playerColoringBehaviour.AmmoContainerColor;
     }
 

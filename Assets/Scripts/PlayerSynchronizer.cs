@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static BinaryVectors;
 
 public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 {
@@ -261,17 +262,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
             }
         }
 
-        List<ProjectileBehaviour> newProjectiles = new List<ProjectileBehaviour>();
-
-        foreach (ProjectileBehaviour projectile in projectileManager.projectiles)
-        {
-
-            if (projectile.IsLocalProjectile) newProjectiles.Add(projectile);
-            else if (projectile != null) Destroy(projectile.gameObject);
-
-        }
-
-        projectileManager.projectiles = newProjectiles;
+        projectileManager.ClearAllProjectilesFromOwner(id);
 
         if (playerToRemove.square)
         {
@@ -312,17 +303,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
         }
 
-        List<ProjectileBehaviour> newProjectiles = new List<ProjectileBehaviour>();
-
-        foreach (ProjectileBehaviour projectile in projectileManager.projectiles)
-        {
-
-            if (projectile.IsLocalProjectile) newProjectiles.Add(projectile);
-            else if (projectile != null) Destroy(projectile.gameObject);
-
-        }
-
-        projectileManager.projectiles = newProjectiles;
+        projectileManager.ClearAllProjectilesFromOwner(id);
 
         Destroy(playerToRemove.square.gameObject);
         playerIdentities = refreshedIdentities;
@@ -707,7 +688,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     void StorePlayerRigidBodyData(PlayerBehaviour player, byte[] data)
     { 
-        if (!player.isDead) MyExtentions.DecompressRigidbody(data, player.rb); 
+        if (!player.isDead) MyExtentions.DecompressRigidbody(data, player.rb, 200f); 
     }
 
     public void UpdateNozzle()
@@ -1188,6 +1169,46 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         }
     }
 
+    public void SpawnJumpParticles(Vector2 pos, float rot, byte playerId)
+    {
+
+        SByte3 particleCompressor = ProjectileManager.GetParticleCompressor;
+        particleCompressor.SetFromVec3(new Vector3(pos.x, pos.y, rot));
+
+        byte[] data = particleCompressor.GetByte3().data;
+
+        SpawnJumpParticlesRpc(data, playerId);
+        SpawnJumpParticlesEvent(data, playerId);
+
+    }
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
+    void SpawnJumpParticlesRpc(byte[] data, byte playerId)
+    {
+        SpawnJumpParticlesEvent(data, playerId);
+    }
+
+    void SpawnJumpParticlesEvent(byte[] data, byte playerId)
+    {
+        PlayerBehaviour player = GetPlayerById((byte)playerId);
+        if (!player) return;
+        
+        SByte3 particleCompressor = ProjectileManager.GetParticleCompressor;
+        particleCompressor.SetFromByteArr(data);
+        Vector3 decom = particleCompressor.GetVec3();
+
+
+        ParticleBehaviour particleBehaviour = player.jumpParticleRef;
+        Vector3 position = new Vector2(decom.x, decom.y);
+        Quaternion rotation = Quaternion.Euler(0, 0, decom.z);
+        particleBehaviour = ParticlePool.Spawn(particleBehaviour, position, rotation);
+        int l = particleBehaviour.ParticleSystemRenderers.Length;
+        for (int i = 0; i < l; i++)
+        {
+            ParticleSystem particleSystem = particleBehaviour.ParticleSystems[i];
+            ParticleSystemRenderer particleSystemRenderer = particleBehaviour.ParticleSystemRenderers[i];
+            player.PlayerColor.AssignMaterialToParticleRenderer(particleSystemRenderer, particleSystem);
+        }
+    }
 }
 
 public struct IdMatch : INetworkSerializable, IEquatable<IdMatch>

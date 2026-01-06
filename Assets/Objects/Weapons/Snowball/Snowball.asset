@@ -98,12 +98,12 @@ MonoBehaviour:
     dieFromProjectiles: 1
     dontBlockProjectiles: 1
     bounceOfPlayers: 0
-    slowDownAmount: 0
+    slowDownAmount: 20
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 34086
+    typeID: 23842
     clampMorph: 0
     bounceSpeedLoss: 0
     bounceAngleTilt: 0

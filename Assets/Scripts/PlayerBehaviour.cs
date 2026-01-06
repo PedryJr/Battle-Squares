@@ -11,22 +11,6 @@ using UnityEngine.SceneManagement;
  
 public sealed class PlayerBehaviour : MonoBehaviour
 {
-
-    /*    [SerializeField] double TestMMR;
-        [SerializeField] double oldmmr;
-        [SerializeField] double newmmr;
-
-        [ContextMenu("Test MMR Change")]
-        void RunMMRTEST()
-        {
-            StorePreviousMMR();
-            MMR = TestMMR;
-
-
-            oldmmr = previousMMR;
-            newmmr = MMR;
-        }*/
-
     [SerializeField] double overrideMMR = 0;
     [ContextMenu("Override my mmr")]
     void OverrideMyMMR()
@@ -36,10 +20,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     }
 
     [ContextMenu("Log my mmr")]
-    void LogCurrentMMRP()
-    {
-        Debug.Log(new EncryptedDouble(MMRlocation, 1000.0).Value);
-    }
+    void LogCurrentMMRP() => Debug.Log(new EncryptedDouble(MMRlocation, 1000.0).Value);
 
     [SerializeField]
     Light2D playerLight;
@@ -211,10 +192,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
     Transform playerTransform;
     Hunter hunter;
 
-    [MethodImpl(512)]
     private void Awake()
     {
-
         playerTransform = transform;
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         scoreManager = FindAnyObjectByType<ScoreManager>();
@@ -239,46 +218,31 @@ public sealed class PlayerBehaviour : MonoBehaviour
         Saturation = 0.6f;
         Value = 0.81f;
 
-
         ApplyColors();
-
-
     }
 
     private void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
     {
-
-        
-
         if (this)
         {
-
             if (isLocalPlayer)
             {
-
                 if (!NetworkManager.Singleton.IsHost) ready = false;
 
                 if (arg0.name == "GameScene")
                 {
                     score = scoreManager.startScore;
-                    
                 }
 
                 spawnPosition = new Vector3(UnityEngine.Random.Range(0.0001f, 0.2001f), UnityEngine.Random.Range(0.0001f, 0.2001f), UnityEngine.Random.Range(0.0001f, 0.2001f));
                 playerSynchronizer.UpdateHealth();
                 CancelInvoke("RevivePlayer");
-
             }
             else
             {
-
                 if (!NetworkManager.Singleton.IsHost) ready = false;
 
-                if (arg0.name == "GameScene")
-                {
-                    score = scoreManager.startScore;
-                }
-
+                if (arg0.name == "GameScene") score = scoreManager.startScore;
             }
 
             GameObject deathObj = GameObject.FindGameObjectWithTag("Death");
@@ -291,34 +255,19 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
             RevivePlayer();
 
-            if (isLocalPlayer)
-            {
-
-                if (arg0.name == "GameScene")
-                {
-
-                    spawnBuffer = true;
-
-                }
-
-            }
-
+            if (isLocalPlayer) if (arg0.name == "GameScene") spawnBuffer = true;
         }
-
     }
 
     public void AssertSteamDataAvalible(ulong steamId)
     {
-
         steamDataAvalible = true;
         this.steamId = steamId;
-
     }
 
 
     private void Start()
     {
-        
         PlayerColor.SetColorHue(UnityEngine.Random.Range(0f, 1f));
         PlayerColor.AssignMaterialToPlayer(spriteRenderer);
         PlayerColor.AssignMaterialToPlayer(healthbar);
@@ -447,14 +396,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
     public float ConvertVector2ToAngle(Vector2 direction)
     {
         float angleInRadians = Mathf.Atan2(direction.x, -direction.y);
-
         float angleInDegrees = -(angleInRadians * Mathf.Rad2Deg);
-
-        if (angleInDegrees > 180)
-        {
-            angleInDegrees -= 360;
-        }
-
+        if (angleInDegrees > 180) angleInDegrees -= 360;
         return angleInDegrees;
     }
 
@@ -462,12 +405,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
     {
 
         Span<bool> rotatedArray = stackalloc bool[100];
-
-        for (int i = 0; i < 100; i++)
-        {
-            rotatedArray[i] = boolArray[99 - i];
-        }
-
+        for (int i = 0; i < 100; i++) rotatedArray[i] = boolArray[99 - i];
         Texture2D texture = new Texture2D(10, 10, TextureFormat.RGBA32, false);
         texture.filterMode = FilterMode.Point;
         for (int i = 0; i < 10; i++)
@@ -475,7 +413,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
             for (int j = 0; j < 10; j++)
             {
                 int index = i * 10 + j;
-
                 Color color = rotatedArray[index] ? Color.white : Color.clear;
                 texture.SetPixel(j, i, color);
             }
@@ -484,7 +421,6 @@ public sealed class PlayerBehaviour : MonoBehaviour
         texture.Apply();
         bodyFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 0.5f), 10);
         if (frameIndex == 0) spriteRenderer.sprite = bodyFrames[frameIndex];
-
     }
 
     public void CreateTextureFromBoolArray4BY4(bool[] boolArray, int frameIndex)
@@ -585,9 +521,7 @@ public sealed class PlayerBehaviour : MonoBehaviour
         newColor = false;
     }
 
-
     public Friend friend;
-
 
     void ApplySteamData()
     {
@@ -735,37 +669,23 @@ public sealed class PlayerBehaviour : MonoBehaviour
             return;
         }
 
-/*        Color playerFrozenBright = Color.Lerp(playerColor, frozenColor, 0.35f);
-        Color playerFrozenDark = Color.Lerp(playerDarkerColor, frozenColor, 0.3f);
-
-        healthbar.color = Color.Lerp(playerColor, playerFrozenBright, Mathf.Clamp01((rb.linearDamping / 70f) - 0.00142f));
-        spriteRenderer.color = Color.Lerp(playerDarkerColor, playerFrozenDark, Mathf.Clamp01((rb.linearDamping / 70f) - 0.00142f));
-        nozzleBehaviour.spriteRenderer.color = Color.Lerp(playerDarkerColor, playerFrozenDark, Mathf.Clamp01((rb.linearDamping / 70f) - 0.00142f));*/
-
         if (isDead != lastDeathState)
         {
-
             lastDeathState = isDead;
 
             if (isDead)
             {
-
                 spriteRenderer.enabled = false;
                 healthbar.enabled = false;
                 col.enabled = false;
                 nozzleBehaviour.spriteRenderer.enabled = false;
                 rb.simulated = false;
-
+                sensor.enabled = false;
+                playerLight.enabled = false;
             }
-
         }
 
-        if (controlled)
-        {
-
-            SetMovementParameters(newMods);
-
-        }
+        if (controlled) SetMovementParameters(newMods);
 
     }
 
@@ -810,6 +730,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
         if (!spawn)
         {
 
+            playerLight.enabled = true;
+            sensor.enabled = true;
             isSpawning = false;
             spriteRenderer.enabled = true;
             healthbar.enabled = true;
@@ -832,6 +754,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
 
             CancelInvoke("RevivePlayer");
 
+            playerLight.enabled = true;
+            sensor.enabled = true;
             isSpawning = false;
             spriteRenderer.enabled = true;
             healthbar.enabled = true;
@@ -1000,6 +924,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
     Vector2 jumpDirection;
     float jumpLimiter;
 
+    [SerializeField]
+    public ParticleBehaviour jumpParticleRef;
 
     void SetMovementParameters(bool newMod)
     {
@@ -1021,14 +947,16 @@ public sealed class PlayerBehaviour : MonoBehaviour
         jumpDirection = (Vector2.up + (playerController.finalDirection * 0.2f)).normalized;
         jumpVelocity = (jumpDirection * jumpLimiter) * Mods.at[2];
 
+        MyExtentions.GetClosestEnvironmentPoint(rb.position);
         if (playerController.inputJump)
         {
-
-            rb.linearVelocity = rb.linearVelocity + jumpVelocity;
+            Vector2 calculatedVelocity = rb.linearVelocity + jumpVelocity;
+            if(calculatedVelocity.y < 10f) calculatedVelocity.y = 10f;
+            rb.linearVelocity = calculatedVelocity;
+            Vector2 normalizedDirection = rb.linearVelocity.normalized;
+            playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetID());
             playerController.inputJump = false;
-
         }
-
     }
 
 

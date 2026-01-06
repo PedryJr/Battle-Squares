@@ -8,7 +8,7 @@ public static class ParticlePool
 {
     private static readonly Dictionary<ulong, Stack<ParticleBehaviour>> pools = new();
 
-    public static ParticleBehaviour Spawn(ParticleBehaviour prefab, Vector3 position, Quaternion rotation, Transform parent = null)
+    public static ParticleBehaviour Spawn(in ParticleBehaviour prefab, in Vector3 position, in Quaternion rotation, in Transform parent = null)
     {
         if (prefab == null) throw new ArgumentNullException(nameof(prefab));
 
@@ -85,6 +85,8 @@ public sealed class ParticleBehaviour : MonoBehaviour
     [SerializeField] public ulong variantID = 0;
 
     [SerializeField] float lifeTime = 1.4f;
+    [SerializeField] float attatchmentLifeTime = 1.4f;
+    [SerializeField] GameObject attatchment;
     private float timer = 0;
 
     private bool initialized = false;
@@ -140,6 +142,7 @@ public sealed class ParticleBehaviour : MonoBehaviour
     private void Update()
     {
         timer += Time.deltaTime;
+        if (attatchment && attatchment.activeSelf && timer > attatchmentLifeTime) attatchment.SetActive(false);
         if (timer > lifeTime)
         {
             if (supportObjectPooling)
@@ -167,5 +170,6 @@ public sealed class ParticleBehaviour : MonoBehaviour
     {
         timer = 0;
         foreach (var ps in particleSystems) ps.Play();
+        if (attatchment) attatchment.SetActive(true);
     }
 }

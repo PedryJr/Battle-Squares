@@ -1,9 +1,9 @@
 {
   "levelName": "New Level",
-  "byteSize": 196,
+  "byteSize": 133,
   "levelExpectation": {
-    "levelHashCode": 232146689,
-    "shapeCount": 20,
+    "levelHashCode": -223821855,
+    "shapeCount": 9,
     "animationCount": 1,
     "lightCount": 1,
     "spawnCount": 4
@@ -11,224 +11,125 @@
   "simplifiedShapeDataArray": [
     {
       "coord": {
-        "data": "hXY="
+        "data": "AoN7ew=="
       },
       "param": {
-        "data": "IAABARah"
+        "data": "AIBagP9/fw=="
       }
     },
     {
       "coord": {
-        "data": "e3Y="
+        "data": "goP8ew=="
       },
       "param": {
-        "data": "YAABARah"
+        "data": "AEBagP9/fw=="
       }
     },
     {
       "coord": {
-        "data": "kYw="
+        "data": "AIF7ew=="
       },
       "param": {
-        "data": "YAACAhah"
+        "data": "AIAtgP9/fw=="
       }
     },
     {
       "coord": {
-        "data": "l4I="
+        "data": "AIH8ew=="
       },
       "param": {
-        "data": "n/8BARah"
+        "data": "AEBagP9/fw=="
       }
     },
     {
       "coord": {
-        "data": "aYI="
+        "data": "f397ew=="
       },
       "param": {
-        "data": "3/8BARah"
+        "data": "//8tgP9/fw=="
       }
     },
     {
       "coord": {
-        "data": "lIU="
+        "data": "/378ew=="
       },
       "param": {
-        "data": "IAABARah"
+        "data": "AEAtgP9/fw=="
       }
     },
     {
       "coord": {
-        "data": "bIU="
+        "data": "/n38ew=="
       },
       "param": {
-        "data": "YAABARah"
+        "data": "ACBAgP9/fw=="
       }
     },
     {
       "coord": {
-        "data": "lIE="
+        "data": "fX38ew=="
       },
       "param": {
-        "data": "YAACAhah"
+        "data": "AGBAgP9/fw=="
       }
     },
     {
       "coord": {
-        "data": "bIE="
+        "data": "fX19fQ=="
       },
       "param": {
-        "data": "IAACAhah"
-      }
-    },
-    {
-      "coord": {
-        "data": "kIM="
-      },
-      "param": {
-        "data": "YAACAhah"
-      }
-    },
-    {
-      "coord": {
-        "data": "cIM="
-      },
-      "param": {
-        "data": "IAACAhah"
-      }
-    },
-    {
-      "coord": {
-        "data": "jYA="
-      },
-      "param": {
-        "data": "YAACAhah"
-      }
-    },
-    {
-      "coord": {
-        "data": "c4A="
-      },
-      "param": {
-        "data": "IAACAhah"
-      }
-    },
-    {
-      "coord": {
-        "data": "in0="
-      },
-      "param": {
-        "data": "YAACAhah"
-      }
-    },
-    {
-      "coord": {
-        "data": "dn0="
-      },
-      "param": {
-        "data": "IAACAhah"
-      }
-    },
-    {
-      "coord": {
-        "data": "jHk="
-      },
-      "param": {
-        "data": "YAACAofD"
-      }
-    },
-    {
-      "coord": {
-        "data": "dHk="
-      },
-      "param": {
-        "data": "IAACAofD"
-      }
-    },
-    {
-      "coord": {
-        "data": "fHY="
-      },
-      "param": {
-        "data": "gAAFrhAA"
-      }
-    },
-    {
-      "coord": {
-        "data": "iXo="
-      },
-      "param": {
-        "data": "IAADAxah"
-      }
-    },
-    {
-      "coord": {
-        "data": "d3o="
-      },
-      "param": {
-        "data": "YAADAxah"
+        "data": "AIAhgv9//w=="
       }
     }
   ],
   "simplifiedAnimationDataArray": [
     {
       "animationParams": {
-        "data": "bmQ="
+        "data": "4eTk5A=="
       },
       "segmentCoords": [
         {
-          "data": "koc="
+          "data": "hYZ6eg=="
         },
         {
-          "data": "k4g="
+          "data": "hYZ6eg=="
         },
         {
-          "data": "bYg="
+          "data": "hYZ6eg=="
         },
         {
-          "data": "boc="
-        },
-        {
-          "data": "b4Y="
-        },
-        {
-          "data": "f3o="
-        },
-        {
-          "data": "gHo="
-        },
-        {
-          "data": "gXo="
-        },
-        {
-          "data": "kYY="
-        },
-        {
-          "data": "koc="
+          "data": "hYZ6eg=="
         }
       ],
       "linkedShapes": [
-        2
+        4,
+        2,
+        5,
+        6,
+        7,
+        3,
+        1,
+        0
       ]
     }
   ],
   "lightPositions": [
     {
-      "data": "gIo="
+      "data": "gIF1dQ=="
     }
   ],
   "spawnPositions": [
     {
-      "data": "gYE="
+      "data": "gIGBgQ=="
     },
     {
-      "data": "gX8="
+      "data": "gIF/fw=="
     },
     {
-      "data": "f4E="
+      "data": "f3+BgQ=="
     },
     {
-      "data": "f38="
+      "data": "f39/fw=="
     }
   ]
 }

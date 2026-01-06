@@ -55,6 +55,7 @@ public class MapStreamSynchronizer : NetworkBehaviour
     public void LevelChangedCallback(LevelPrep levelPrep)
     {
         if (!playerSynchronizer.IsHost) return;
+
         if (levelPrep == null) return;
         this.levelPrep = levelPrep;
         NotifyMapChangeClientRpc(levelPrep.levelExpectation, levelPrep.levelName);
@@ -173,6 +174,7 @@ public class MapStreamSynchronizer : NetworkBehaviour
             Debug.Log("Hashcode is not valid!");
             return;
         }
+
         Debug.Log("Loading finished");
         Debug.Log($"{levelReciever.recievedChunks.shapeCount}");
         Debug.Log($"{levelReciever.recievedChunks.animationCount}");

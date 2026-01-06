@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -17,29 +18,45 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     {
         shapeRenderer = GetComponent<MeshRenderer>();
         TEMPFUNC();
-        GetComponent<MeshFilter>().sharedMesh = octagonalMesh;
-        stencilRenderer.GetComponent<MeshFilter>().sharedMesh = octagonalMesh;
+        GetComponent<MeshFilter>().sharedMesh = octagonalMinimal;
+        stencilRenderer.GetComponent<MeshFilter>().sharedMesh = octagonalMinimal;
     }
     [MethodImpl(512)]
     void TEMPFUNC()
     {
-        if (BuiltShapeBehaviour.octagonalMesh) return;
+        if (!BuiltShapeBehaviour.octagonalMesh)
+        {
+            octagonalMesh = new Mesh();
+            octagonalMesh.name = "Octagon";
+            octagonalMesh.SetVertexBufferParams(8, BuiltShapeBehaviour.GetOctagonalAttributelLight);
+            octagonalMesh.SetVertexBufferData(BuiltShapeBehaviour.GetOctagonalVerticesVec2Light, 0, 0, 8);
+            octagonalMesh.indexFormat = IndexFormat.UInt16;
+            octagonalMesh.SetIndices(BuiltShapeBehaviour.GetOctagonalIndices, MeshTopology.Triangles, 0, calculateBounds: false);
+            octagonalMesh.bounds = new Bounds(Vector3.zero, new Vector3(512, 512, 1));
+            octagonalMesh.UploadMeshData(true);
+        }
 
-        Mesh octagonalMesh = new Mesh();
+        if (!octagonalMinimal)
+        {
+            octagonalMinimal = new Mesh();
 
-        octagonalMesh.name = "Octagon";
+            half2[] octagonalVerts = BuiltShapeBehaviour.GetOctagonalVerticesVec2Light;
+            half2[] minimalVerts = new half2[8];
+            for (int i = 0; i < minimalVerts.Length; i++)
+            {
 
-        octagonalMesh.SetVertexBufferParams(8, BuiltShapeBehaviour.GetOctagonalAttribute);
-        octagonalMesh.SetVertexBufferData(BuiltShapeBehaviour.GetOctagonalVerticesVec2, 0, 0, 8);
+                minimalVerts[i] = new half2(new half(octagonalVerts[i].x * new half(0.1f)), new half(octagonalVerts[i].y * new half(0.1f)));
+            }
+            octagonalMinimal.name = "Minimal";
+            octagonalMinimal.SetVertexBufferParams(8, BuiltShapeBehaviour.GetOctagonalAttributelLight);
+            octagonalMinimal.SetVertexBufferData(minimalVerts, 0, 0, 8);
+            octagonalMinimal.indexFormat = IndexFormat.UInt16;
+            octagonalMinimal.SetIndices(BuiltShapeBehaviour.GetOctagonalIndices, MeshTopology.Triangles, 0, calculateBounds: false);
+            octagonalMinimal.bounds = new Bounds(Vector3.zero, new Vector3(512, 512, 1));
+            octagonalMinimal.UploadMeshData(true);
+        }
 
-        octagonalMesh.indexFormat = IndexFormat.UInt16;
-        octagonalMesh.SetIndices(BuiltShapeBehaviour.GetOctagonalIndices, MeshTopology.Triangles, 0, calculateBounds: false);
 
-        octagonalMesh.bounds = new Bounds(Vector3.zero, new Vector3(512, 512, 1));
-
-        octagonalMesh.UploadMeshData(true);
-
-        BuiltShapeBehaviour.octagonalMesh = octagonalMesh;
         /*
                 spriteAsMesh.indexFormat = IndexFormat.UInt32;
 
@@ -48,6 +65,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     }
 
     public static Mesh octagonalMesh;
+    public static Mesh octagonalMinimal;
 
     const float OctaOffset = 0.001f;
     const float OctaCorn = 0.2071068f + OctaOffset;
@@ -57,6 +75,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
     public static Vector3[] GetOctagonalVerticesVec3 => InternalOctagonalVerticesVec3;
     public static Vector2[] GetOctagonalVerticesVec2 => InternalOctagonalVerticesVec2;
+    public static half2[] GetOctagonalVerticesVec2Light => InternalOctagonalVerticesVec2Light;
     static Vector3[] InternalOctagonalVerticesVec3 = new Vector3[]
     {
         new Vector3(-OctaCorn, OctaStra),
@@ -80,6 +99,20 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         new Vector2(0.2071067f, 0.5f),
     };
 
+    static half2 Vec2ToHalf2(Vector2 vec) => new half2((half)vec.x, (half)vec.y);
+
+    static half2[] InternalOctagonalVerticesVec2Light = new half2[]
+{
+        Vec2ToHalf2(new Vector2(-0.2071068f, 0.5f)),
+        Vec2ToHalf2(new Vector2(-0.5f, 0.2071068f)),
+        Vec2ToHalf2(new Vector2(-0.5f, -0.2071068f)),
+        Vec2ToHalf2(new Vector2(-0.2071068f, -0.5f)),
+        Vec2ToHalf2(new Vector2(0.2071068f, -0.5f)),
+        Vec2ToHalf2(new Vector2(0.5f, -0.2071067f)),
+        Vec2ToHalf2(new Vector2(0.5f, 0.2071068f)),
+        Vec2ToHalf2(new Vector2(0.2071067f, 0.5f)),
+};
+
     public static int[] GetOctagonalIndices => InternalOctagonalIndices;
     static int[] InternalOctagonalIndices = new int[]
     {
@@ -92,6 +125,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     };
 
     public static VertexAttributeDescriptor GetOctagonalAttribute => new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 2);
+    public static VertexAttributeDescriptor GetOctagonalAttributelLight => new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float16, 2);
 
     public Vector2[] correctedPoints;
     [MethodImpl(512)]
@@ -100,11 +134,12 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         this.isStatic = isStatic;
         MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
 
-        Vector3 param = simplifiedShapeData.param.GetVec3();
-        float rot, len, wid;
+        Vector4 param = simplifiedShapeData.param.GetVec4();
+        float rot, len, wid, sna;
         rot = param.x;
         len = param.y;
         wid = param.z;
+        sna = param.w;
 
         correctedPoints = new Vector2[8];
         for (int i = 0; i < correctedPoints.Length; i++)
@@ -116,7 +151,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
             if (i == 2 || i == 3 || i == 4 || i == 5) yToAdd = -wid / 2f;
             if (i == 4 || i == 5 || i == 6 || i == 7) xToAdd = len;
 
-            Vector2 pointNoRotation = (Vector2)GetOctagonalVerticesVec3[i] + new Vector2(xToAdd, yToAdd);
+            Vector2 pointNoRotation = ((Vector2)GetOctagonalVerticesVec3[i] * sna) + new Vector2(xToAdd, yToAdd);
             float pointBaseRotation = Mathf.Atan2(pointNoRotation.y, pointNoRotation.x) * Mathf.Rad2Deg;
 
             float rotationAccum = pointBaseRotation + rot;

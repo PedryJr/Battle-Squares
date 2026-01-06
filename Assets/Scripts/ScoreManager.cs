@@ -72,6 +72,12 @@ public sealed class ScoreManager : NetworkBehaviour
         }
     }
 
+    public void ForceEndGame()
+    {
+        if (!IsHost) return;
+        SceneManager.LoadSceneAsync("GameOver");
+    }
+
     void CheckScore(ScoreBoard scoreboard)
     {
         if (!IsHost) return;

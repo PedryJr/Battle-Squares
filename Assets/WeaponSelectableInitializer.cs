@@ -6,7 +6,7 @@ public class WeaponSelectableInitializer : MonoBehaviour
     [SerializeField]
     WeaponSelector weaponSelector;
 
-    private void Start()
+    private void Awake()
     {
         
         ProjectileManager projectileManager = FindAnyObjectByType<ProjectileManager>();

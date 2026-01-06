@@ -44,7 +44,7 @@ public sealed class MySettings
 
     public static void SetFullscreen(int mode)
     {
-        FullscreenMode = Mathf.Clamp(mode, 0, 2);
+        FullscreenMode = Mathf.Clamp(mode, 0, 1);
         OnChanged();
     }
 
@@ -70,9 +70,17 @@ public sealed class MySettings
     { 
         switch (FullscreenMode)
         {
-            case 0: WindowManager.Instance.SetState(WindowManager.WindowState.Fullscreen); break;
-            case 1: WindowManager.Instance.SetState(WindowManager.WindowState.Borderless); break;
-            case 2: WindowManager.Instance.SetState(WindowManager.WindowState.Windowed); break;
+/*            case 0: WindowManager.Instance.SetState(WindowManager.WindowState.Fullscreen); break;
+            case 1: WindowManager.Instance.SetState(WindowManager.WindowState.Windowed); break;*/
+            case 0:
+                {
+                    if(Screen.fullScreenMode != FullScreenMode.ExclusiveFullScreen) Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen; 
+                    break;
+                }
+                case 1:
+                {
+                    if (Screen.fullScreenMode != FullScreenMode.Windowed) Screen.fullScreenMode = FullScreenMode.Windowed; break;
+                }
         }
          
         QualitySettings.vSyncCount = Vsync;

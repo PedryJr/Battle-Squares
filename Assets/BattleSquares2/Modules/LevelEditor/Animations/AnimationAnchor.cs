@@ -1,7 +1,7 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,6 +10,8 @@ using static ShapeMimicBehaviour;
 
 public sealed class AnimationAnchor : MonoBehaviour
 {
+
+    DragAndScrollMod dragMod;
 
     [SerializeField]
     TMP_Text speedIndicator;
@@ -74,7 +76,7 @@ public sealed class AnimationAnchor : MonoBehaviour
     [MethodImpl(512)]
     void Awake()
     {
-
+        dragMod = FindAnyObjectByType<DragAndScrollMod>();
         splineVisual = Instantiate(splineVisual);
         clonedMat = Instantiate(GetComponent<SpriteRenderer>().material);
 
@@ -221,8 +223,8 @@ public sealed class AnimationAnchor : MonoBehaviour
     {
 
         float x, y;
-        x = Mathf.Round(rawPosition.x / 1f) * 1f;
-        y = Mathf.Round(rawPosition.y / 1f) * 1f;
+        x = Mathf.Round(rawPosition.x / dragMod.Snapping) * dragMod.Snapping;
+        y = Mathf.Round(rawPosition.y / dragMod.Snapping) * dragMod.Snapping;
 
         return new Vector2(x, y);
     }
@@ -547,16 +549,16 @@ public sealed class AnimationAnchor : MonoBehaviour
         public int[] linkedShapes;
 
         [JsonIgnore]
-        public byte animationSpeed
+        public float animationSpeed
         {
-            get { return animationParams.x; }
-            set { animationParams.x = value; }
+            get { return animationParams.GetPosition().x; }
+            set { animationParams.SetPosition(new Vector3(value, animationParams.GetPosition().y, 0)); }
         }
         [JsonIgnore]
-        public byte animationOffset
+        public float animationOffset
         {
-            get { return animationParams.y; }
-            set { animationParams.y = value; }
+            get { return animationParams.GetPosition().y; }
+            set { animationParams.SetPosition(new Vector3(animationParams.GetPosition().x, value, 0)); }
         }
 
         public int GetSize() => 1 + 1 + (sizeof(int) * (linkedShapes != null ? linkedShapes.Length : 0)) + (ByteCoord.GetSize() * (segmentCoords != null ? segmentCoords.Length : 0));

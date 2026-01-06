@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WeaponBuilder", menuName = "WeaponBuilder")]
@@ -7,11 +8,11 @@ public class WeaponBuilder : ScriptableObject
 {
 
 
-    private void OnValidate()
+/*    private void OnValidate()
     {
         if (Application.isPlaying) return;
         specs.typeID = (ushort) UnityEngine.Random.Range(ushort.MinValue, ushort.MaxValue);
-    }
+    }*/
 
     [SerializeField]
     Weapon specs;
@@ -24,6 +25,7 @@ public class WeaponBuilder : ScriptableObject
     public ushort typeID => specs.typeID;
     public Weapon weapon => GetWeapon();
     public ParticleBehaviour GetLaunchParticle => specs.launchParticle;
+    public ParticleBehaviour GetBounceParticle => specs.bounceParticle;
     public Sprite GetSprite => specs.icon;
     public Sprite GetIcon => specs.icon;
 
@@ -37,80 +39,137 @@ public class WeaponBuilder : ScriptableObject
     public void ASSIGN_ID(ushort newID) => specs.typeID = newID;
 
     [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct Weapon
     {
+        // ?????????????????????????????
+        // References (8 bytes each)
+        // ?????????????????????????????
         public Sprite icon;
         public ProjectileBehaviour projectile;
+
         public ParticleBehaviour launchParticle;
         public ParticleBehaviour bounceParticle;
         public ParticleBehaviour impactParticle;
-        public int projectileAmmo;
+
+        public AnimationCurve morphAnimation;
+        public AnimationCurve meleePosAnimation;
+        public AnimationCurve meleeRotAnimation;
+
+        public ProjectileSpawnEvent[] projectileSpawnEvents;
+        public string weaponName;
+
+        // ?????????????????????????????
+        // Vector data
+        // ?????????????????????????????
+        public Vector3 targetMorph;
+
+        // ?????????????????????????????
+        // Floats
+        // ?????????????????????????????
         public float reloadTime;
         public float shootingInterval;
+
         public float projectileSpeed;
         public float projectileAcceleration;
         public float lifeTime;
-        public bool holdable;
-        public int burst;
+
         public float burstSpread;
-        public byte bounces;
         public float fluctuation;
-        public bool noGravity;
-        public bool dieOnImpact;
-        public bool damageOnImpact;
-        public bool sticky;
+
         public float aoe;
-        public bool skipAoeOnTargetHit;
         public float knockback;
+
         public float speedLimit;
         public float minSpeed;
+
         public float aoeDamage;
         public float baseDamage;
         public float damageTimeScale;
+
         public float recoil;
-        public bool enableMorph;
-        public Vector3 targetMorph;
+
         public float timeToMorph;
-        public AnimationCurve morphAnimation;
-        public bool sync;
+
         public float syncSpeed;
-        public bool stickToSender;
-        public bool melee;
-        public bool oneTimeHit;
+
         public float meleeRange;
         public float swingDegrees;
         public float meleeRotation;
-        public AnimationCurve meleePosAnimation;
-        public AnimationCurve meleeRotAnimation;
-        public bool flipFlop;
-        public bool homing;
+
         public float homingStrength;
         public float homingDistance;
         public float spinSpeed;
-        public bool rotationFlipOnImpact;
-        public bool dieFromProjectiles;
-        public bool dontBlockProjectiles;
-        public bool bounceOfPlayers;
+
         public float slowDownAmount;
         public float senderSpeedOnDeath;
+
         public float lingeringDamage;
         public float lingeringFrequency;
-        public bool alignDirection;
-        public ushort typeID;
-        public bool clampMorph;
+
         public float bounceSpeedLoss;
         public float bounceAngleTilt;
+
         public float spawnOffsetPadding;
-        public bool hover;
+
         public float hoverDistance;
         public float hoverStrength;
         public float hoverFloorRadius;
         public float hoverDistanceAttenuation;
         public float timeForFullHoverEffect;
-        public ProjectileSpawnEvent[] projectileSpawnEvents;
-        public string weaponName;
+
+        public float morphTimeOnBounce;
+
+        // ?????????????????????????????
+        // Integers
+        // ?????????????????????????????
+        public int projectileAmmo;
+        public int burst;
+
+        public ushort typeID;
+        public byte bounces;
+
+        // ?????????????????????????????
+        // Booleans (packed)
+        // ?????????????????????????????
+        public bool holdable;
+
+        public bool noGravity;
+        public bool dieOnImpact;
+        public bool damageOnImpact;
+        public bool sticky;
+        public bool skipAoeOnTargetHit;
+
+        public bool enableMorph;
+        public bool setMorphOnBounce;
+
+        public bool sync;
+        public bool stickToSender;
+
+        public bool melee;
+        public bool oneTimeHit;
+
+        public bool flipFlop;
+
+        public bool homing;
+
+        public bool rotationFlipOnImpact;
+        public bool dieFromProjectiles;
+        public bool dontBlockProjectiles;
+        public bool bounceOfPlayers;
+
+        public bool alignDirection;
+        public bool clampMorph;
+
+        public bool hover;
+
         public bool delistWeapon;
+
+        // ?????????????????????????????
+        // Methods
+        // ?????????????????????????????
         public void SetTypeId(ref Weapon self, ushort typeId) => self.typeID = typeId;
     }
+
 
 }

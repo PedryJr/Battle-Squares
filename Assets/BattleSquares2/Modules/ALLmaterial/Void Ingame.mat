@@ -12,11 +12,10 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _ZWRITE_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 1
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
@@ -64,7 +63,7 @@ Material:
     - _EnableExternalAlpha: 0
     - _ExponentialNoise: -0.19
     - _Tiling: 16.7
-    - _ZWrite: 1
+    - _ZWrite: 0
     - _fallofExponential: 5
     - _maxIntensity: 1
     m_Colors:

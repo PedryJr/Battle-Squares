@@ -21,9 +21,9 @@ MonoBehaviour:
     projectileAmmo: 2
     reloadTime: 1.5
     shootingInterval: 0.04
-    projectileSpeed: 55
-    projectileAcceleration: -4.5
-    lifeTime: 0.33
+    projectileSpeed: 60
+    projectileAcceleration: -3.5
+    lifeTime: 0.4
     holdable: 0
     burst: 4
     burstSpread: 25
@@ -35,16 +35,16 @@ MonoBehaviour:
     sticky: 0
     aoe: 0
     skipAoeOnTargetHit: 0
-    knockback: 7
+    knockback: 8
     speedLimit: 100
     minSpeed: 0
     aoeDamage: 0
     baseDamage: 3
     damageTimeScale: 0
-    recoil: 1.8
+    recoil: 2.8
     enableMorph: 1
     targetMorph: {x: 0, y: 0, z: 0}
-    timeToMorph: 0.33
+    timeToMorph: 0.4
     morphAnimation:
       serializedVersion: 2
       m_Curve:
@@ -112,7 +112,7 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
-    typeID: 28383
+    typeID: 14146
     clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0

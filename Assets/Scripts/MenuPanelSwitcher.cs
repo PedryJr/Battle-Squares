@@ -32,11 +32,11 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
         value = "Off";
         initButtons[2].text = $"FPS Cap: {value}";
 
-        switch (WindowManager.Instance.CurrentState)
+        switch (MySettings.FullscreenMode)
         {
-            case WindowManager.WindowState.Fullscreen: value = "Fullscreen"; break;
-            case WindowManager.WindowState.Borderless: value = "Borderless"; break;
-            case WindowManager.WindowState.Windowed: value = "Windowed"; break;
+            case 0: value = "Fullscreen"; break;
+            case 1: value = "Windowed"; break;
+            default: value = "Windowed"; break;
         }
         initButtons[3].text = $"{value}";
 
@@ -105,7 +105,7 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
     public void FULLSCREEN(TextMeshProUGUI Tmp)
     {
 
-        if (MySettings.FullscreenMode == 2) MySettings.SetFullscreen(0);
+        if (MySettings.FullscreenMode == 1) MySettings.SetFullscreen(0);
         else MySettings.SetFullscreen(MySettings.FullscreenMode + 1);
 
         string value = "Fullscreen";
@@ -113,8 +113,7 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
         switch (MySettings.FullscreenMode)
         {
             case 0: value = "Fullscreen"; break;
-            case 1: value = "Borderless"; break;
-            case 2: value = "Windowed"; break;
+            case 1: value = "Windowed"; break;
         }
 
         Tmp.text = $"{value}";

@@ -139,7 +139,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834e424b774252c409e40ae9d752e5b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loopreferencedTail: {fileID: 0}
   initDamage: 8
   boom: {fileID: 5503486941279643142}
   damageScaleOverTime: 0
@@ -167,7 +166,6 @@ MonoBehaviour:
   hit: 0
   sync: 0
   flipFlop: 0
-  impactParticle: {fileID: 7289681851009581468, guid: 270cdce96f1445d4b896d3355042f4e8, type: 3}
   hitMark: {fileID: 0}
   trailParticles: {fileID: 227063848627397678}
   trailParticleSystem: {fileID: 8440552164618030048}
@@ -196,8 +194,8 @@ MonoBehaviour:
     Path: event:/VFX/Base/Gun Hit
   projectileCollider: {fileID: -3148651319717881892}
   data:
-    original: {fileID: 0}
-    projectileType: 0
+    impactParticle: {fileID: 0}
+    bounceParticle: {fileID: 0}
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}
     position: {x: 0, y: 0}
@@ -208,7 +206,6 @@ MonoBehaviour:
     IsLocalProjectile: 0
     acceleration: 0
     speed: 0
-    burst: 0
     lifeTime: 0
     fluctuation: []
     noGravity: 0
@@ -224,7 +221,6 @@ MonoBehaviour:
     baseDamage: 0
     damageTimeScale: 0
     burstData: []
-    retornToSender: 0
     stickToSender: 0
     melee: 0
     meleeRange: 0
@@ -267,13 +263,23 @@ MonoBehaviour:
     lingeringDamage: 0
     lingeringFrequency: 0
     alignDirection: 0
+    bounces: 0
+    clampMorph: 0
+    bounceSpeedLoss: 0
+    bounceAngleTilt: 0
+    hover: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    projectileSpawnEvents: []
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0
   lifeTimeMultiplier: 0
   externalTrailSpawnRate: 0
-  spawnId: 0
-  projectileType: 0
+  playShootSound: 0
 --- !u!50 &-3438963122069973725
 Rigidbody2D:
   serializedVersion: 5
@@ -345,7 +351,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
 --- !u!114 &6323191303417382328
 MonoBehaviour:
@@ -444,11 +450,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce85ea8a00e1774c886e8a79cdd39f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localRotation: {x: 0, y: 0, z: 0, w: 0}
-  localPosition: {x: 0, y: 0, z: 0}
-  localScale: {x: 0, y: 0, z: 0}
-  enableCheckOnParent: 0
-  allowDisableEnableFromRemote: 0
   target: {fileID: 5893324798774376400}
   attatchedParticles: {fileID: 8440552164618030048}
 --- !u!198 &8440552164618030048

@@ -156,6 +156,8 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
         if (IsHost) scoreManager.UpdateModeAsHost(scoreManager.gameMode);
 
+        playerSynchronizer.playerIdentities.Sort((a, b) => a.id.CompareTo(b.id));
+
     }
 
     public void InstantiateNewPlayer(ref PlayerFactoryDataPacket playerData)

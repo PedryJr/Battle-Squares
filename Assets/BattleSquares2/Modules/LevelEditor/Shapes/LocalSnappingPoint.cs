@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityEngine;
 
 public sealed class LocalSnappingPoint : MonoBehaviour
@@ -6,7 +7,7 @@ public sealed class LocalSnappingPoint : MonoBehaviour
 
     float zRot;
 
-    float snapping;
+    //float snapping;
     Vector2 rawWorldPosition;
     LocalSnappingPoint otherLocal;
     bool start = false;
@@ -15,12 +16,14 @@ public sealed class LocalSnappingPoint : MonoBehaviour
     public bool HasChanged => notifyChange;
 
     ShapeContainer parentContainer;
+    public float snappingOnGenerate = 1f;
 
     [SerializeField]
     Transform[] localHalfOctagonPoints;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AssignShapeContainer(ShapeContainer shapeContainer)
+    public void AssignShapeContainer(ShapeContainer shapeContainer, float snappingOnGenerate)
     {
+        this.snappingOnGenerate = snappingOnGenerate;
         parentContainer = shapeContainer;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -38,12 +41,12 @@ public sealed class LocalSnappingPoint : MonoBehaviour
         this.otherLocal = otherLocal.GetComponent<LocalSnappingPoint>();
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+/*    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AssignSnapping(float snapping)
     {
         notifyChange = true;
         this.snapping = snapping;
-    }
+    }*/
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AssignStart(bool start)
@@ -68,8 +71,8 @@ public sealed class LocalSnappingPoint : MonoBehaviour
     {
 
         float x, y;
-        x = Mathf.Round(rawPosition.x / snapping) * snapping;
-        y = Mathf.Round(rawPosition.y / snapping) * snapping;
+        x = Mathf.Round(rawPosition.x / snappingOnGenerate) * snappingOnGenerate;
+        y = Mathf.Round(rawPosition.y / snappingOnGenerate) * snappingOnGenerate;
 
         return new Vector2(x, y);
     }
@@ -84,8 +87,8 @@ public sealed class LocalSnappingPoint : MonoBehaviour
 
         Vector2 worldOffset = dir * scalar;
 
-        worldOffset.x = Mathf.Round(worldOffset.x / snapping) * snapping;
-        worldOffset.y = Mathf.Round(worldOffset.y / snapping) * snapping;
+        worldOffset.x = Mathf.Round(worldOffset.x / snappingOnGenerate) * snappingOnGenerate;
+        worldOffset.y = Mathf.Round(worldOffset.y / snappingOnGenerate) * snappingOnGenerate;
 
         float snappedScalar = Vector2.Dot(worldOffset, dir.normalized);
 
@@ -130,10 +133,15 @@ public sealed class LocalSnappingPoint : MonoBehaviour
 
         for (int i = 0; i < points.Length; i++)
         {
-            if(i < 2) scaleOffsets[i] = transform.up * snappedScale;
+            if (i < 2) scaleOffsets[i] = transform.up * snappedScale;
             else scaleOffsets[i] = -transform.up * snappedScale;
+            scaleOffsets[i] = scaleOffsets[i] * snappingOnGenerate;
 
-            points[i] = inverse.InverseTransformPoint(localHalfOctagonPoints[i].position + scaleOffsets[i]);
+            float4 localSpaceOffset = new float4((float3)(localHalfOctagonPoints[i].localPosition * snappingOnGenerate), 1);
+            float4x4 model = localHalfOctagonPoints[i].parent.localToWorldMatrix;
+            Vector3 worldSpaceOffset = math.mul(model, localSpaceOffset).xyz;
+
+            points[i] = inverse.InverseTransformPoint((worldSpaceOffset + scaleOffsets[i]));
         }
         notifyChange = false;
         return points;

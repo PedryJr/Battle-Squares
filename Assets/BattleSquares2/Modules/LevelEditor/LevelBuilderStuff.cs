@@ -39,6 +39,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
     public static ByteCoord[] simplifiedSpawnData;
 
     public List<BuiltShapeBehaviour> builtShapes;
+    public List<BuiltShapeBehaviour> builtShapesNoApplication;
 
     [SerializeField]
     Transform levelOutput;
@@ -49,9 +50,17 @@ public sealed class LevelBuilderStuff : MonoBehaviour
     [MethodImpl(512)]
     public void Awake()
     {
+
+        foreach (var item in loadedSimplifiedShapeData)
+        {
+            Debug.Log(item.coord.GetPosition());
+            Debug.Log(item.param.GetVec4());
+        }
+
         STENCIL_OFFSET = 0.1f;
         animatedAnimationsAwaitingShapes = new Dictionary<int, List<Transform>>();
         builtShapes = new List<BuiltShapeBehaviour>();
+        builtShapesNoApplication = new List<BuiltShapeBehaviour>();
 
         staticParent = Instantiate(staticParent, levelOutput);
         staticParent.position = Vector3.zero;
@@ -106,9 +115,14 @@ public sealed class LevelBuilderStuff : MonoBehaviour
                 Destroy(item);
             }
             Destroy(item.GetComponent<PolygonCollider2D>());
-            Destroy(item.GetComponent<BuiltShapeBehaviour>());
+            Destroy(item);
         }
+
+        foreach (var item in builtShapesNoApplication) if (item) Destroy(item);
+
+        builtShapesNoApplication.Clear();
         builtShapes.Clear();
+        builtShapesNoApplication = null;
         builtShapes = null;
         Resources.UnloadUnusedAssets();
         GC.Collect();
@@ -228,11 +242,13 @@ public sealed class LevelBuilderStuff : MonoBehaviour
                 BuiltShapeBehaviour newShape = Instantiate(builtShapeStaticTemplate, Vector3.zero, Quaternion.identity, mapParent);
                 newShape.ApplyShape(loadedSimplifiedShapeData[i], i, this, staticEvaluation);
                 newShape.transform.SetParent(staticParent);
+                builtShapesNoApplication.Add(newShape);
             }
             else
             {
                 BuiltShapeBehaviour newShape = Instantiate(builtShapeDynamicTemplate, Vector3.zero, Quaternion.identity, mapParent);
                 newShape.ApplyShape(loadedSimplifiedShapeData[i], i, this, staticEvaluation);
+                builtShapesNoApplication.Add(newShape);
             }
         }
 

@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static PlayerSynchronizer;
 using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
@@ -39,6 +41,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     public PlayerBehaviour owningPlayer;
 
     public float timeAlive;
+    public float morhpTime;
     public float fullTimeAlive;
 
     public ProjectileManager projectileManager;
@@ -478,6 +481,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         damage += Time.deltaTime * (damageScaleOverTime * Mods.at[11]);
         damage = Mathf.Abs(damage);
         timeAlive += Time.deltaTime;
+        morhpTime += Time.deltaTime;
         vel = rb.linearVelocity;
         pos = rb.position;
         ang = rb.angularVelocity;
@@ -534,7 +538,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
             if (data.enableMorph)
             {
-                morphLerp = data.morhpAnimation.Evaluate(timeAlive / data.timeToMorph);
+                morphLerp = data.morhpAnimation.Evaluate(morhpTime / data.timeToMorph);
                 if (data.clampMorph) transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
                 else transform.localScale = Vector3.LerpUnclamped(startMorph, endMorph, morphLerp);
             }
@@ -561,7 +565,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         if (data.enableMorph)
         {
-            morphLerp = data.morhpAnimation.Evaluate(timeAlive / data.timeToMorph);
+            morphLerp = data.morhpAnimation.Evaluate(morhpTime / data.timeToMorph);
             if (data.clampMorph) transform.localScale = Vector3.Lerp(startMorph, endMorph, morphLerp);
             else transform.localScale = Vector3.LerpUnclamped(startMorph, endMorph, morphLerp);
         }
@@ -932,14 +936,20 @@ public sealed class ProjectileBehaviour : MonoBehaviour
                 rb.linearVelocity = bounceDir.normalized * rb.linearVelocity.magnitude * (1 - Mathf.Clamp01(data.bounceSpeedLoss));
                 data.bounces--;
                 if (IsLocalProjectile) projectileManager.UpdateProjectile(this);
+                if (data.setMorphOnBounce) projectileManager.DoMorphResetOnBounce(projectileID);
                 if (data.bounceParticle)
                 {
                     float angle = Vector2.SignedAngle(Vector2.right, hitpoint.normal);
-                    ParticleBehaviour bounceParticles = ParticlePool.Spawn(data.bounceParticle, hitpoint.point, Quaternion.Euler(0, 0, angle));
+                    if (IsLocalProjectile)
+                    {
+                        projectileManager.UpdateProjectile(this);
+                        projectileManager.SpawnBounceParticles(hitpoint.point, Quaternion.Euler(0, 0, angle), data.typeID);
+                    }
+/*                    ParticleBehaviour bounceParticles = ParticlePool.Spawn(data.bounceParticle, hitpoint.point, Quaternion.Euler(0, 0, angle));
                     for (int i = 0; i < bounceParticles.ParticleSystems.Length; i++)
                     {
                         owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(bounceParticles.ParticleSystemRenderers[i], bounceParticles.ParticleSystems[i]);
-                    }
+                    }*/
                 }
             }
             else
@@ -1150,78 +1160,87 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 }
 
 [Serializable]
+[StructLayout(LayoutKind.Sequential, Pack = 8)]
 public struct ProjectileInitData
 {
+    public ProjectileManager projectileManager;
+    public PlayerBehaviour owningPlayer;
 
     public ParticleBehaviour impactParticle;
     public ParticleBehaviour bounceParticle;
-    public ProjectileManager projectileManager;
-    public PlayerBehaviour owningPlayer;
-    public Vector2 position;
-    public Vector2 direction;
+
+    public AnimationCurve meleePosAnimation;
+    public AnimationCurve meleeRotAnimation;
+    public AnimationCurve morhpAnimation;
+
+    public float[] fluctuation;
+    public float[] burstData;
+
+    public ProjectileSpawnEvent[] projectileSpawnEvents;
+
     public Color projectileColor;
     public Color projectileDarkerColor;
-    public uint id;
-    public bool IsLocalProjectile;
+
+    public Vector3 targetMorph;
+
+    public Vector2 position;
+    public Vector2 direction;
+
     public float acceleration;
     public float speed;
-    public float lifeTime;
-    public float[] fluctuation;
-    public bool noGravity;
-    public bool dieOnImpact;
-    public bool damageOnImpact;
-    public bool sticky;
-    public bool skipAoeOnTargetHit;
-    public float aoe;
-    public float knockback;
     public float speedLimit;
     public float minSpeed;
-    public float aoeDamage;
-    public float baseDamage;
+    public float lifeTime;
     public float damageTimeScale;
-    public float[] burstData;
-    public bool stickToSender;
-    public bool melee;
+    public float baseDamage;
+    public float aoeDamage;
+    public float aoe;
+    public float knockback;
     public float meleeRange;
     public float swingDegrees;
-    public AnimationCurve meleePosAnimation;
-    public bool oneTimeHit;
     public float meleeRotation;
-    public AnimationCurve meleeRotAnimation;
-
-    public bool enableMorph;
-    public Vector3 targetMorph;
-    public float timeToMorph;
-    public AnimationCurve morhpAnimation;
-    public bool homing;
     public float homingStrength;
     public float homingDistance;
     public float spinSpeed;
-    public bool rotationFlipOnImpact;
-    public bool dieFromProjectiles;
-    public bool dontBlockProjectiles;
-    public bool bounceOfPlayers;
-
-    public bool sync;
     public float syncSpeed;
-
     public float slowDownAmount;
     public float senderSpeedOnDeath;
-
     public float lingeringDamage;
     public float lingeringFrequency;
-    public bool alignDirection;
-    public byte bounces;
-    public bool clampMorph;
     public float bounceSpeedLoss;
     public float bounceAngleTilt;
-
-    public bool hover;
     public float hoverDistance;
     public float hoverStrength;
     public float hoverFloorRadius;
     public float hoverDistanceAttenuation;
     public float timeForFullHoverEffect;
+    public float timeToMorph;
+    public float morphTimeOnBounce;
 
-    public ProjectileSpawnEvent[] projectileSpawnEvents;
+    public uint id;
+
+    public ushort typeID;
+
+    public byte bounces;
+
+    public bool IsLocalProjectile;
+    public bool noGravity;
+    public bool dieOnImpact;
+    public bool damageOnImpact;
+    public bool sticky;
+    public bool skipAoeOnTargetHit;
+    public bool stickToSender;
+    public bool melee;
+    public bool oneTimeHit;
+    public bool enableMorph;
+    public bool setMorphOnBounce;
+    public bool homing;
+    public bool rotationFlipOnImpact;
+    public bool dieFromProjectiles;
+    public bool dontBlockProjectiles;
+    public bool bounceOfPlayers;
+    public bool sync;
+    public bool alignDirection;
+    public bool clampMorph;
+    public bool hover;
 }

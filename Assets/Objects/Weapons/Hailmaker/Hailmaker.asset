@@ -18,33 +18,6 @@ MonoBehaviour:
     launchParticle: {fileID: 4313180367996257349, guid: f6535d4c1c04976418fdf3b57c915dfb, type: 3}
     bounceParticle: {fileID: 0}
     impactParticle: {fileID: 4313180367996257349, guid: 83e84455d9b7f5d42a66ef25458f72ca, type: 3}
-    projectileAmmo: 10
-    reloadTime: 2.1
-    shootingInterval: 0.055
-    projectileSpeed: 50
-    projectileAcceleration: -4
-    lifeTime: 0.7
-    holdable: 1
-    burst: 0
-    burstSpread: 0
-    bounces: 10
-    fluctuation: 0.4
-    noGravity: 1
-    dieOnImpact: 1
-    damageOnImpact: 1
-    sticky: 0
-    aoe: 0
-    skipAoeOnTargetHit: 0
-    knockback: 0
-    speedLimit: 100
-    minSpeed: 0
-    aoeDamage: 0
-    baseDamage: 1.2
-    damageTimeScale: 0
-    recoil: 1.5
-    enableMorph: 1
-    targetMorph: {x: 0, y: 0, z: 1}
-    timeToMorph: 0.1
     morphAnimation:
       serializedVersion: 2
       m_Curve:
@@ -78,14 +51,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 1
       m_RotationOrder: 4
-    sync: 0
-    syncSpeed: 0.4
-    stickToSender: 0
-    melee: 0
-    oneTimeHit: 1
-    meleeRange: 0
-    swingDegrees: 0
-    meleeRotation: 0
     meleePosAnimation:
       serializedVersion: 2
       m_Curve: []
@@ -98,30 +63,68 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    flipFlop: 0
-    homing: 0
+    projectileSpawnEvents: []
+    weaponName: Hailmaker
+    targetMorph: {x: 0, y: 0, z: 1}
+    reloadTime: 2.1
+    shootingInterval: 0.055
+    projectileSpeed: 50
+    projectileAcceleration: -3.7
+    lifeTime: 1.2
+    burstSpread: 0
+    fluctuation: 0.4
+    aoe: 0
+    knockback: 0
+    speedLimit: 100
+    minSpeed: 0
+    aoeDamage: 0
+    baseDamage: 2
+    damageTimeScale: 0
+    recoil: 1.5
+    timeToMorph: 0.1
+    syncSpeed: 0.4
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
     homingStrength: 0
     homingDistance: 0
-    spinSpeed: 3600
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 0
-    dontBlockProjectiles: 1
-    bounceOfPlayers: 0
+    spinSpeed: 1800
     slowDownAmount: 20
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
-    alignDirection: 0
-    typeID: 42883
-    clampMorph: 1
     bounceSpeedLoss: 0.2
     bounceAngleTilt: 0.75
     spawnOffsetPadding: 0.55
-    hover: 0
     hoverDistance: 0
     hoverStrength: 0
     hoverFloorRadius: 0
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
-    projectileSpawnEvents: []
-    weaponName: Hailmaker
+    morphTimeOnBounce: 0
+    projectileAmmo: 10
+    burst: 0
+    typeID: 60772
+    bounces: 10
+    holdable: 1
+    noGravity: 1
+    dieOnImpact: 1
+    damageOnImpact: 1
+    sticky: 0
+    skipAoeOnTargetHit: 0
+    enableMorph: 1
+    setMorphOnBounce: 0
+    sync: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 1
+    flipFlop: 0
+    homing: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 1
+    bounceOfPlayers: 0
+    alignDirection: 0
+    clampMorph: 1
+    hover: 0
+    delistWeapon: 0

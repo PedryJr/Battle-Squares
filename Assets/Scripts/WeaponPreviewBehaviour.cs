@@ -18,6 +18,7 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
     PlayerSynchronizer playerSynchronizer;
     ProjectileManager projectileManager;
 
+    public ushort previewing = 0;
 
     private void Awake()
     {
@@ -38,12 +39,14 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
 
         if (previewType == WeaponPreviewType.Primary)
         {
-            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeID(localPlayer.nozzleBehaviour.primary);
+            previewing = localPlayer.nozzleBehaviour.primary;
+            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeID(previewing);
             image.sprite = weapon.GetSprite;
         }
         else
         {
-            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeID(localPlayer.nozzleBehaviour.secondary);
+            previewing = localPlayer.nozzleBehaviour.secondary;
+            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeID(previewing);
             image.sprite = weapon.GetSprite;
         }
 
