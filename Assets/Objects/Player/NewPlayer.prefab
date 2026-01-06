@@ -1764,7 +1764,7 @@ MonoBehaviour:
     alpha: 1
   particleColor:
     colorCorrectionType: 0
-    saturation: 0.835
+    saturation: 0.75
     value: 0.75
     alpha: 1
   chatBubbleColor:
@@ -1774,7 +1774,7 @@ MonoBehaviour:
     alpha: 1
   dogTagColor:
     colorCorrectionType: 0
-    saturation: 0.835
+    saturation: 0.75
     value: 0.75
     alpha: 1
   hitMarkColor:
@@ -1784,13 +1784,13 @@ MonoBehaviour:
     alpha: 0
   hitMarkFadeColor:
     colorCorrectionType: 0
-    saturation: 0.835
-    value: 0.376
+    saturation: 0.495
+    value: 0.725
     alpha: 1
   pfpBorderNotReadyColor:
     colorCorrectionType: 0
     saturation: 0.588
-    value: 0.216
+    value: 0.342
     alpha: 1
   pfpBorderIsReadyColor:
     colorCorrectionType: 0
@@ -1819,8 +1819,18 @@ MonoBehaviour:
     alpha: 1
   uiKnobColor:
     colorCorrectionType: 0
-    saturation: 0.835
+    saturation: 0.462
     value: 0.75
+    alpha: 1
+  uiButtonColorNormal:
+    colorCorrectionType: 0
+    saturation: 0.835
+    value: 0.602
+    alpha: 1
+  uiButtonColorHighlighted:
+    colorCorrectionType: 0
+    saturation: 0.544
+    value: 0.684
     alpha: 1
   ammoColor:
     colorCorrectionType: 0

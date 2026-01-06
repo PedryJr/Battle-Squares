@@ -102,6 +102,12 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
     [SerializeField] ColorComponent uiKnobColor;
     public Color UIKnobColor => uiKnobColor.ActiveColor;
 
+    [SerializeField] ColorComponent uiButtonColorNormal;
+    public Color UiButtonColorNormal => uiButtonColorNormal.ActiveColor;
+
+    [SerializeField] ColorComponent uiButtonColorHighlighted;
+    public Color UiButtonColorHighlighted => uiButtonColorHighlighted.ActiveColor;
+
     [SerializeField] ColorComponent ammoColor;
     public Color AmmoColor => ammoColor.ActiveColor;
     [SerializeField] ColorComponent ammoContainerColor;
@@ -129,6 +135,8 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         cursorColorOffHover.SetHue(hue);
         selectedWeaponColor.SetHue(hue);
         uiKnobColor.SetHue(hue);
+        uiButtonColorNormal.SetHue(hue);
+        uiButtonColorHighlighted.SetHue(hue);
         ammoColor.SetHue(hue);
         lightColor.SetHue(hue);
         hitMarkFadeColor.SetHue(hue);
