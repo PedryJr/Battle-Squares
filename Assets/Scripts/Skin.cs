@@ -14,7 +14,7 @@ public sealed class Skin : NetworkBehaviour
     {
 
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
-        skinsPath = Path.Combine(SaveManager.saveFolderPath, "skins.json");
+        skinsPath = Path.Combine(SaveManager.skinsPath, "skins.json");
 
         if (!File.Exists(skinsPath))
         {

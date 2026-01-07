@@ -9,7 +9,6 @@ public sealed class EncryptedDouble
     private readonly string key;
     private static readonly string FolderPath = Path.Combine(Application.persistentDataPath, "enc_data");
 
-    // Must be 32 bytes (key) and 16 bytes (IV)
     private static readonly byte[] AES_KEY = Encoding.UTF8.GetBytes("0123456789ABCDEF0123456789ABCDEF");
     private static readonly byte[] AES_IV = Encoding.UTF8.GetBytes("ABCDEF0123456789");
 
@@ -23,9 +22,6 @@ public sealed class EncryptedDouble
             Value = defaultValue;
     }
 
-    // ---------------------------
-    // File path for this key
-    // ---------------------------
     private static string GetPath(string key)
         => Path.Combine(FolderPath, key + ".dat");
 
@@ -37,10 +33,6 @@ public sealed class EncryptedDouble
 
     private static void FileWrite(string key, string value)
         => File.WriteAllText(GetPath(key), value);
-
-    // ------------------------------------
-    //            PUBLIC API
-    // ------------------------------------
 
     public double Value
     {
@@ -67,10 +59,6 @@ public sealed class EncryptedDouble
             FileWrite(key, encrypted);
         }
     }
-
-    // ------------------------------------
-    //            ENCRYPTION
-    // ------------------------------------
 
     private static string Encrypt(string plain)
     {

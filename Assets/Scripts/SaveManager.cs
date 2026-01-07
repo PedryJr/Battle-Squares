@@ -3,20 +3,31 @@ using System.IO;
 
 public sealed class SaveManager : MonoBehaviour
 {
+    [SerializeField] private string gameVersion = "1.6.0";
 
-    [SerializeField]
-    GameVersion gameVersion;
-    Skin skin;
+    public static SaveManager Instance { get; private set; }
 
-    public static string saveFolderPath;
+    public static string saveFolderPath { get; private set; }
+    public static string smallValuesPath { get; private set; }
+    public static string skinsPath { get; private set; }
+    public static string levelsPath { get; private set; }
+
+    private Skin skin;
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
+        InitializePaths();
 
         skin = GetComponent<Skin>();
-        CreateVersionedSaveFolder();
         skin.Init();
-
     }
 
     private void Start()
@@ -25,15 +36,25 @@ public sealed class SaveManager : MonoBehaviour
         UserStatsManager.Init();
     }
 
-    private void CreateVersionedSaveFolder()
+    private void InitializePaths()
     {
-        string saveRoot = Path.Combine(Application.persistentDataPath, "Saves");
+        saveFolderPath = Path.Combine(
+            Application.persistentDataPath,
+            "Saves",
+            gameVersion
+        );
 
-        saveFolderPath = Path.Combine(saveRoot, gameVersion.version);
+        Directory.CreateDirectory(saveFolderPath);
 
-        if (!Directory.Exists(saveFolderPath))
-        {
-            Directory.CreateDirectory(saveFolderPath);
-        }
+        smallValuesPath = CreateSubFolder("SmallValues");
+        skinsPath = CreateSubFolder("Skins");
+        levelsPath = CreateSubFolder("Levels");
+    }
+
+    private static string CreateSubFolder(string name)
+    {
+        string path = Path.Combine(saveFolderPath, name);
+        Directory.CreateDirectory(path);
+        return path;
     }
 }

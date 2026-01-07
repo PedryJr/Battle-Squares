@@ -167,9 +167,9 @@ public static class LevelFilePaths
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetLevelsFolderPath() => Application.dataPath + "/Levels";
+    public static string GetLevelsFolderPath() => SaveManager.levelsPath;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetLevelNamedFolderPath(string levelName) => Application.dataPath + "/Levels/" + levelName;
+    public static string GetLevelNamedFolderPath(string levelName) => SaveManager.levelsPath + "/" + levelName;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string GetLevelsPointerFilePath() => GetLevelsFolderPath() + "/Index.bsl";
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

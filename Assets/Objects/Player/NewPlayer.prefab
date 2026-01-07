@@ -844,7 +844,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3506166878856948221
 Transform:
   m_ObjectHideFlags: 0
@@ -1640,7 +1640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e8715782671e842b02add1aaa05c1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overrideMMR: 1199.9
+  overrideMMR: 1432.36886156104
   playerLight: {fileID: 3159344491717468697}
   sensor: {fileID: 4821608779394464332}
   coloringComponent: {fileID: 2995831169349222189}

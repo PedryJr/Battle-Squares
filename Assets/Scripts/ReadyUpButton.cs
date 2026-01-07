@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -28,18 +29,14 @@ public sealed class ReadyUpButton : MonoBehaviour
 
         if (!NetworkManager.Singleton.IsHost)
         {
-
             GetComponent<Image>().enabled = true;
             GetComponent<ButtonHoverAnimation>().enabled = true;
             GetComponentInChildren<TextMeshProUGUI>().enabled = true;
-            /*playerSynchronizer.localSquare.ready = false;*/
             playerSynchronizer.UpdatePlayerReady(false);
 
         }
         else
         {
-/*
-            playerSynchronizer.localSquare.ready = true;*/
             playerSynchronizer.UpdatePlayerReady(true);
             Destroy(gameObject);
 
@@ -76,15 +73,15 @@ public sealed class ReadyUpButton : MonoBehaviour
 
     }
 
-    public void READY()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void READY(bool forceful)
     {
-
-        playerSynchronizer.UpdatePlayerReady(!ready);
-        //playerSynchronizer.localSquare.ready = !playerSynchronizer.localSquare.ready;
-        /*
-                ready = !ready;*//*
-                playerSynchronizer.UpdatePlayerReady(!ready);*/
-
+        if (!playerSynchronizer) return;
+        if (!playerSynchronizer.localSquare) return;
+        if (playerSynchronizer.localSquare.ready != forceful) playerSynchronizer.UpdatePlayerReady(forceful);
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void READY() => playerSynchronizer.UpdatePlayerReady(!ready);
 
 }

@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62700d18a96ed11428276b681c52f1cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 7220298386214730367}
+  rectTransform: {fileID: 2029716720419808943}
   clickEvent:
     m_PersistentCalls:
       m_Calls:
@@ -127,13 +127,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+  offHoveredColor: {r: 0.1882353, g: 0.19215687, b: 0.19215687, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
-  onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColor: {r: 0.74509805, g: 0.7607843, b: 0.7607843, a: 1}
   isHovering: 0
-  animateColor: 0
+  animateColor: 1
   enterHoverTransitionTime: 0.15
   exitHoverTransitionTime: 0.15
   clickTransitionTime: 0.15
@@ -211,15 +211,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 24b0db5d759e4124bb770426f25bd8d6, type: 2}
-  m_Color: {r: 0.8867924, g: 0.8867924, b: 0.8867924, a: 1}
+  m_Material: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
+  m_Color: {r: 0.1882353, g: 0.19215687, b: 0.19215687, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b8eb1700e30366943aaee00710803f0f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 480f09a25db1e354fa2b9b3df76cad44, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

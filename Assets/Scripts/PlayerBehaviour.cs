@@ -8,7 +8,8 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
- 
+
+[Serializable]
 public sealed class PlayerBehaviour : MonoBehaviour
 {
     [SerializeField] double overrideMMR = 0;

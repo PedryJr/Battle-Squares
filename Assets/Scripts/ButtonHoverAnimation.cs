@@ -222,7 +222,6 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
             tmp.rectTransform.localPosition = tmpPos;
             tmp.rectTransform.sizeDelta = tmpSize;
         }
-
         SetRenderColor(offHoveredColor);
     }
 
@@ -330,6 +329,11 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
         toSize = isHovering ? onHoveredSize : offHoveredSize;
 
         clickEvent?.Invoke();
+        if (this && !gameObject.activeInHierarchy)
+        {
+            ResetState();
+            SetupSizes();
+        }
     }
 
     #endregion

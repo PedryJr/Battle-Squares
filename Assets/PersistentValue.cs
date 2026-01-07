@@ -1,130 +1,123 @@
 using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
-using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
-internal static class PersistentValueManager
+public unsafe sealed class PersistentValue<T> where T : unmanaged
 {
-    private static readonly ConcurrentDictionary<IPersistentValue, byte> values = new();
-    public static void Register(IPersistentValue pv) => values[pv] = 0;
+    private readonly string _path;
+    private T _value;
 
-    public static void SaveAll()
-    {
-        foreach (var pv in values.Keys) pv.SaveImmediateInternal();
-    }
+    private int _writeScheduled;
+    private long _lastWriteRequestTicks;
 
-    static PersistentValueManager()
-    {
-        AppDomain.CurrentDomain.ProcessExit += (_, __) => SaveAll();
-        AppDomain.CurrentDomain.DomainUnload += (_, __) => SaveAll();
-    }
-}
-
-internal interface IPersistentValue
-{
-    void SaveImmediateInternal();
-}
-
-public sealed class PersistentValue<T> : IPersistentValue
-{
-    private readonly string filePath;
-    private T value;
-    private readonly object lockObj = new();
-    private Timer? debounceTimer;
-    private readonly TimeSpan debounceDelay = TimeSpan.FromSeconds(0.5); // adjustable
-
-    public T Value
-    {
-        get
-        {
-            lock (lockObj) return value;
-        }
-        set
-        {
-            lock (lockObj)
-            {
-                this.value = value;
-                // Reset debounce timer
-                debounceTimer?.Change(Timeout.Infinite, Timeout.Infinite);
-                debounceTimer ??= new Timer(_ => SaveDebounced(), null, Timeout.Infinite, Timeout.Infinite);
-                debounceTimer.Change(debounceDelay, Timeout.InfiniteTimeSpan);
-            }
-        }
-    }
+    private const int DebounceMs = 350;
 
     public PersistentValue(string key, T defaultValue)
     {
-        string directory = SaveManager.saveFolderPath;
+        _path = GetPathForKey(key);
 
-        if (!Directory.Exists(directory))
-            Directory.CreateDirectory(directory);
-
-        foreach (var c in Path.GetInvalidFileNameChars())
-            key = key.Replace(c, '_');
-
-        filePath = Path.Combine(directory, key + ".json");
-
-        if (File.Exists(filePath))
-            Load(defaultValue);
+        if (File.Exists(_path))
+            Load(out _value);
         else
-        {
-            value = defaultValue;
-            SaveImmediateInternal();
-        }
-
-        PersistentValueManager.Register(this);
+            _value = defaultValue;
     }
 
-    private void Load(T defaultValue)
+    public T Value
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        set
+        {
+            _value = value;
+            QueueWriteDebounced();
+        }
+    }
+
+    private void Load(out T value)
     {
         try
         {
-            string json = File.ReadAllText(filePath);
-            value = JsonConvert.DeserializeObject<T>(json) ?? defaultValue;
+            using var fs = new FileStream(
+                _path,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read,
+                sizeof(T),
+                false);
+
+            if (fs.Length != sizeof(T))
+            {
+                value = default;
+                return;
+            }
+
+            T temp;
+            fs.Read(new Span<byte>(&temp, sizeof(T)));
+            value = temp;
         }
         catch
         {
-            value = defaultValue;
-            SaveImmediateInternal();
+            value = default;
         }
     }
 
-    void IPersistentValue.SaveImmediateInternal() => SaveImmediateInternal();
-
-    internal void SaveImmediateInternal()
+    private void QueueWriteDebounced()
     {
-        lock (lockObj)
+        Volatile.Write(ref _lastWriteRequestTicks, DateTime.UtcNow.Ticks);
+
+        if (Interlocked.Exchange(ref _writeScheduled, 1) == 1)
+            return;
+
+        ThreadPool.QueueUserWorkItem(static state =>
         {
+            ((PersistentValue<T>)state).WriteWorker();
+        }, this);
+    }
+
+    private void WriteWorker()
+    {
+        while (true)
+        {
+            long lastTicks = Volatile.Read(ref _lastWriteRequestTicks);
+            long targetTicks = lastTicks + TimeSpan.TicksPerMillisecond * DebounceMs;
+
+            long now;
+            while ((now = DateTime.UtcNow.Ticks) < targetTicks)
+            {
+                int sleep = (int)((targetTicks - now) / TimeSpan.TicksPerMillisecond);
+                if (sleep > 0)
+                    Thread.Sleep(sleep);
+            }
+
+            if (Volatile.Read(ref _lastWriteRequestTicks) != lastTicks) continue;
+
             try
             {
-                string json = JsonConvert.SerializeObject(value, Formatting.Indented);
-                File.WriteAllText(filePath, json);
+                using var fs = new FileStream(
+                    _path,
+                    FileMode.Create,
+                    FileAccess.Write,
+                    FileShare.None,
+                    sizeof(T),
+                    false);
+
+                T temp = _value;
+                fs.Write(new ReadOnlySpan<byte>(&temp, sizeof(T)));
             }
-            catch (Exception ex)
+            catch
             {
-                Console.Error.WriteLine($"Failed to save PersistentValue at {filePath}: {ex.Message}");
             }
+            finally
+            {
+                Interlocked.Exchange(ref _writeScheduled, 0);
+            }
+
+            return;
         }
     }
 
-    private void SaveDebounced()
-    {
-        lock (lockObj)
-        {
-            SaveImmediateInternal();
-            debounceTimer?.Dispose();
-            debounceTimer = null;
-        }
-    }
-
-    public void Reset(T newValue)
-    {
-        lock (lockObj)
-        {
-            value = newValue;
-            SaveImmediateInternal();
-        }
-    }
+    private static string GetPathForKey(string key) => Path.Combine(SaveManager.smallValuesPath, key + ".bsl");
 }
-

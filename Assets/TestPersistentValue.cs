@@ -14,6 +14,9 @@ public class TestPersistentValue : MonoBehaviour
         slider.value = sliderValue.Value;
     }
 
-    public void ChangeSliderValue(float newValue) => sliderValue.Value = newValue;
+    public void ChangeSliderValue(float newValue)
+    {
+        sliderValue.Value = newValue;
+    }
 
 }
