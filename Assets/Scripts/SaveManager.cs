@@ -11,6 +11,7 @@ public sealed class SaveManager : MonoBehaviour
     public static string smallValuesPath { get; private set; }
     public static string skinsPath { get; private set; }
     public static string levelsPath { get; private set; }
+    public static string modsPath { get; private set; }
 
     private Skin skin;
 
@@ -36,6 +37,22 @@ public sealed class SaveManager : MonoBehaviour
         UserStatsManager.Init();
     }
 
+    public static void PrematureInit()
+    {
+        saveFolderPath = Path.Combine(
+            Application.persistentDataPath,
+            "Saves",
+            "0.0.0"
+        );
+
+        Directory.CreateDirectory(saveFolderPath);
+
+        smallValuesPath = CreateSubFolder("SmallValues");
+        skinsPath = CreateSubFolder("Skins");
+        levelsPath = CreateSubFolder("Levels");
+        modsPath = CreateSubFolder("Mods");
+    }
+
     private void InitializePaths()
     {
         saveFolderPath = Path.Combine(
@@ -49,6 +66,7 @@ public sealed class SaveManager : MonoBehaviour
         smallValuesPath = CreateSubFolder("SmallValues");
         skinsPath = CreateSubFolder("Skins");
         levelsPath = CreateSubFolder("Levels");
+        modsPath = CreateSubFolder("Mods");
     }
 
     private static string CreateSubFolder(string name)

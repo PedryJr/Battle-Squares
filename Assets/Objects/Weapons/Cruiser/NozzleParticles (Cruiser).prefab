@@ -25042,8 +25042,10 @@ MonoBehaviour:
   - {fileID: 550421128034543577}
   - {fileID: 828583162475420725}
   supportObjectPooling: 1
-  variantID: 17210544692524529131
-  lifeTime: 1.4
+  variantID: 2909644037371041902
+  lifeTime: 0.75
+  attatchmentLifeTime: 0.75
+  attatchment: {fileID: 0}
 --- !u!1 &8333765852021078253
 GameObject:
   m_ObjectHideFlags: 0

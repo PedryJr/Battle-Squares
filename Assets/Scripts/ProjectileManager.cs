@@ -1,3 +1,4 @@
+using BattleSquaresSDK;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ using Random = System.Random;
 public sealed class ProjectileManager : NetworkBehaviour
 {
 
+
+
     [SerializeField]
     public WeaponBuilder[] newWeapons;
     public Dictionary<ushort, WeaponBuilder> weapons;
@@ -29,11 +32,13 @@ public sealed class ProjectileManager : NetworkBehaviour
     public NozzleBehaviour localNozzle;
 
     public PlayerSynchronizer playerSynchronizer;
+    RuntimePrefabTemplates runtimePrefabTemplates;
 
     float timer;
 
     private void Awake()
     {
+        runtimePrefabTemplates = GetComponent<RuntimePrefabTemplates>();
         weapons = new Dictionary<ushort, WeaponBuilder>();
         projectiles = new List<ProjectileBehaviour>();
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
@@ -576,6 +581,18 @@ public sealed class ProjectileManager : NetworkBehaviour
     internal ushort GetSecondWeaponTypeId() => weapons.ElementAt(1).Key;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal string GetWeaponName(ushort typeId1) => GetRawWeaponByTypeID(typeId1).weaponName;
+
+    internal ushort GetNextAvailibleID()
+    {
+        for(ushort i = 1; i < ushort.MaxValue; i++) if (!weapons.ContainsKey(i)) return i;
+        return 0;
+    }
+
+    internal void CreateWeaponFromMod(ref ProjectileCreator creator)
+    {
+        FullFeatureWeapon weapon = runtimePrefabTemplates.CreateNewWeaponPrefab();
+
+    }
 
     #endregion
 

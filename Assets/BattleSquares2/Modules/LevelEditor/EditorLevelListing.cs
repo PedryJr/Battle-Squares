@@ -6,15 +6,18 @@ public sealed class EditorLevelListing : MonoBehaviour
 {
 
     [SerializeField]
-    Image icon;
+    public Image icon;
 
     DragAndScrollMod _dragMod;
+
+    ListPersistendLevels lister;
 
     private void Awake() => _dragMod = FindAnyObjectByType<DragAndScrollMod>();
 
     public string levelName;
-    public void LoadListing(string listing)
+    public void LoadListing(string listing, ListPersistendLevels lister)
     {
+        this.lister = lister;
         levelName = listing;
         Debug.Log($"Listing level: {levelName}");
         icon.sprite = LevelFilePaths.LoadLevelIcon(levelName);
@@ -28,6 +31,12 @@ public sealed class EditorLevelListing : MonoBehaviour
         shapeStorage.UseShapeStorage(_dragMod);
         _dragMod.activeLevelName = levelName;
 
+    }
+
+    public void DELETE_LEVEL()
+    {
+        this.lister.Delist(this);
+        LevelFilePaths.DeleteLevel(levelName);
     }
 
 }

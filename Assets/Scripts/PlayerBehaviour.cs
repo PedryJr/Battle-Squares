@@ -1,3 +1,4 @@
+using BattleSquaresSDK;
 using FMOD.Studio;
 using FMODUnity;
 using Steamworks;
@@ -8,9 +9,10 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting;
 
-[Serializable]
-public sealed class PlayerBehaviour : MonoBehaviour
+[Preserve]
+public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 {
     [SerializeField] double overrideMMR = 0;
     [ContextMenu("Override my mmr")]
@@ -928,6 +930,8 @@ public sealed class PlayerBehaviour : MonoBehaviour
     [SerializeField]
     public ParticleBehaviour jumpParticleRef;
 
+    public event Action<IPlayerHandle> OnDestroyed;
+
     void SetMovementParameters(bool newMod)
     {
 
@@ -987,4 +991,95 @@ public sealed class PlayerBehaviour : MonoBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public byte GetID() => (byte) id;
 
+    private void OnDestroy()
+    {
+        OnDestroyed?.Invoke(this);
+    }
+
+    public string Name => playerName;
+
+    public ulong NetworkID => id;
+
+    public ulong SteamID => steamId;
+
+    public bool IsLocal => isLocalPlayer;
+
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void SetPosition(System.Numerics.Vector2 position)
+    {
+        rb.position = new Vector2(position.X, position.Y);
+        transform.position = new Vector3(position.X, position.Y, transform.position.z);
+        playerSynchronizer.UpdateRigidBody();
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public System.Numerics.Vector2 GetPosition()
+    {
+        Vector2 pos = rb.position;
+        return new System.Numerics.Vector2(pos.x, pos.y);
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void SetVelocity(System.Numerics.Vector2 position)
+    {
+        rb.linearVelocity = new Vector2(position.X, position.Y);
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public System.Numerics.Vector2 GetVelocity()
+    {
+        Vector2 vel = rb.linearVelocity;
+        return new System.Numerics.Vector2(vel.x, vel.y);
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void SetRotation(float rotation)
+    {
+        rb.rotation = rotation;
+        transform.rotation = Quaternion.Euler(0, 0, rotation);
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public float GetRotation()
+    {
+        return rb.rotation;
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void SetAngularVelocity(float rotation)
+    {
+        rb.angularVelocity = rotation;
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public float GetAngularVelocity()
+    {
+        return rb.angularVelocity;
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public float GetHealth()
+    {
+        return healthPoints;
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void SetHealth(float health)
+    {
+        healthPoints = health;
+        playerSynchronizer.UpdateHealth();
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public float GetHealthCap()
+    {
+        return maxHealthPoints;
+    }
+    [Preserve]
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void SetHealthCap(float cap)
+    {
+        maxHealthPoints = cap;
+    }
 }

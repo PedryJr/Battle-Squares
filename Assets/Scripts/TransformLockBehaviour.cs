@@ -4,20 +4,16 @@ using UnityEngine;
 
 public sealed class TransformLockBehaviour : MonoBehaviour
 {
-
     Transform cachedTransform;
-
-    [SerializeField]
-    TransformLock transformLock;
+    [SerializeField] TransformLock transformLock;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Awake() => cachedTransform = transform;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-
     private void FixedUpdate() => Lock();
-    private void Update() => Lock();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void LateUpdate() => Lock();
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void Lock() => transformLock.ApplyLock(cachedTransform);
 
     [Serializable]
@@ -81,27 +77,7 @@ public sealed class TransformLockBehaviour : MonoBehaviour
             }
         }
 
-        [Flags]
-        enum LockFlagsTR : byte
-        {
-            None = 0,
-
-            X = 1 << 0,
-            Y = 1 << 1,
-            Z = 1 << 2,
-
-            World = 1 << 3,
-        }
-
-        [Flags]
-        enum LockFlagsS : byte
-        {
-            None = 0,
-
-            X = 1 << 0,
-            Y = 1 << 1,
-            Z = 1 << 2,
-        }
-
+        [Flags] enum LockFlagsTR : byte { None = 0, X = 1 << 0, Y = 1 << 1, Z = 1 << 2, World = 1 << 3, }
+        [Flags] enum LockFlagsS : byte { None = 0, X = 1 << 0, Y = 1 << 1, Z = 1 << 2, }
     }
 }

@@ -64,20 +64,17 @@ public sealed class TransmodManager : MonoBehaviour
         Vector2 worldPos = editorMouseTool.GetMouseWorldPosition;
         LevelTransMod closestTransmod = GetClosestTransmod(worldPos);
 
-        // Handle transmod switching and release callback
         if (closestTransmod != null && lastUsedTransmod != null &&
             closestTransmod != lastUsedTransmod)
         {
             lastUsedTransmod.RunReleaseCallback();
         }
 
-        // Update last used transmod if we have a valid interaction
         if (closestTransmod != null)
         {
             lastUsedTransmod = closestTransmod;
         }
 
-        // Execute appropriate callback based on tool usage
         if (closestTransmod != null)
         {
             switch (usage)
@@ -152,7 +149,6 @@ public sealed class TransmodManager : MonoBehaviour
                 leftClickTimer = 0;
             }
 
-            // Process right mouse button (only if left didn't set usage)
             if (toolUsage == ToolUsage.Idle && rightClick)
             {
                 float prevTimer = rightClickTimer;

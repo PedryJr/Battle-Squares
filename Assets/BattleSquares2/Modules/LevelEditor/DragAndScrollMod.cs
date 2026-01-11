@@ -1,12 +1,13 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Scripting;
+using static ListPersistendLevels;
 using static UnityEngine.InputSystem.InputAction;
 [Preserve]
 public sealed class DragAndScrollMod : MonoBehaviour
@@ -105,43 +106,45 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
         input.Mouse.TempSwapEdit.performed += obj =>
         {
-
-            bool tempShapeGen = pivotResult && isGenerating;
-            bool tempSplineGen = liveAnchor != null;
-            liveSquareSpawn = null;
-
-            if (tempSplineGen)
+            if (!tabFlag)
             {
-                isGenerating = true;
-                EndSplineGeneration();
-                isGenerating = false;
+                bool tempShapeGen = pivotResult && isGenerating;
+                bool tempSplineGen = liveAnchor != null;
+                liveSquareSpawn = null;
+
+                if (tempSplineGen)
+                {
+                    isGenerating = true;
+                    EndSplineGeneration();
+                    isGenerating = false;
+                }
+
+                if (pivotResult)
+                {
+                    isGenerating = true;
+                    EndShapeGeneration();
+                    isGenerating = false;
+                }
+
+                shapeSelector.EndItemsDragging(mousePos);
+                shapeSelector.EndItemSelecting(mousePos);
+                shapeSelector.HardReset();
+
+                if (selectedAnimationAnchor)
+                {
+                    selectedAnimationAnchor.selected = false;
+                    selectedAnimationAnchor = null;
+                }
             }
 
-            if (pivotResult)
-            {
-                isGenerating = true;
-                EndShapeGeneration();
-                isGenerating = false;
-            }
-
-            shapeSelector.EndItemsDragging(mousePos);
-            shapeSelector.EndItemSelecting(mousePos);
-            shapeSelector.HardReset();
-
-            if (selectedAnimationAnchor)
-            {
-                selectedAnimationAnchor.selected = false;
-                selectedAnimationAnchor = null;
-            }
-
-            tabFlag = true;
+            tabFlag = !tabFlag;
             foreach (TabModeObject tabMode in tabModeObjects) tabMode.EnableTabMode();
         };
-        input.Mouse.TempSwapEdit.canceled += obj =>
+/*        input.Mouse.TempSwapEdit.canceled += obj =>
         {
             tabFlag = false;
             foreach (TabModeObject tabMode in tabModeObjects) tabMode.DisableDabMode();
-        };
+        };*/
 
         input.Mouse.G.performed += obj =>
         {
@@ -222,10 +225,7 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
         input.Mouse.S.performed += obj =>
         {
-            if (tabFlag) return;
-            initializer.CompileMap();
-            ListPersistendLevels.levelPathPointer.EnsurePath(activeLevelName);
-            MapStorage shapeStorage = new MapStorage(activeLevelName, this);
+            SaveCommand();
         };
 
         input.Mouse.Undo.performed += obj =>
@@ -971,6 +971,20 @@ public sealed class DragAndScrollMod : MonoBehaviour
     void DisableInputs() => input.Disable();
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void AddGenerator(GenerationFunc value) => generators.Add(value);
+
+    internal void SaveCommand()
+    {
+        initializer.CompileMap();
+        ListPersistendLevels.levelPathPointer.EnsurePath(activeLevelName);
+        MapStorage shapeStorage = new MapStorage(activeLevelName, this);
+        if(tabFlag) ListPersistendLevels.levelLister.ReRaster(activeLevelName);
+    }
+
+    internal void ExitCommand()
+    {
+        throw new NotImplementedException();
+    }
+
     [Preserve]
     public class MapStorage
     {

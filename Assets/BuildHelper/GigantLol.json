@@ -1,0 +1,2658 @@
+{
+  "renderer": {
+    "renderMode": "None",
+    "sortMode": "None",
+    "sortingFudge": 0.0,
+    "normalDirection": 1.0,
+    "shadowCastingMode": "Off",
+    "receiveShadows": false,
+    "shadowBias": 0.0,
+    "motionVectorGenerationMode": "Object",
+    "sortingLayerID": 0,
+    "sortingOrder": 0,
+    "renderingLayerMask": 1,
+    "rendererPriority": 0,
+    "lightProbeUsage": "Off",
+    "reflectionProbeUsage": "Off",
+    "allowOcclusionWhenDynamic": true,
+    "alignment": "View",
+    "flip": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "pivot": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "meshDistribution": "UniformRandom",
+    "allowRoll": true,
+    "freeformStretching": false,
+    "rotateWithStretchDirection": true,
+    "cameraVelocityScale": 0.0,
+    "velocityScale": 0.0,
+    "lengthScale": 2.0,
+    "uvChannelMask": 4,
+    "activeVertexStreams": [
+      "Position",
+      "Normal",
+      "Color",
+      "UV"
+    ]
+  },
+  "main": {
+    "duration": 0.05,
+    "loop": true,
+    "prewarm": false,
+    "startDelay": {
+      "mode": "Constant",
+      "constant": 0.14,
+      "constantMin": 0.0,
+      "constantMax": 0.14,
+      "curveMultiplier": 1.0
+    },
+    "startDelayMultiplier": 0.14,
+    "startLifetime": {
+      "mode": "Constant",
+      "constant": 0.23,
+      "constantMin": 0.0,
+      "constantMax": 0.23,
+      "curveMultiplier": 1.0
+    },
+    "startLifetimeMultiplier": 0.23,
+    "startSpeed": {
+      "mode": "Constant",
+      "constant": 100.2,
+      "constantMin": 0.0,
+      "constantMax": 100.2,
+      "curveMultiplier": 1.0
+    },
+    "startSpeedMultiplier": 100.2,
+    "startSize3D": true,
+    "startSize": {
+      "mode": "Constant",
+      "constant": 1.04,
+      "constantMin": 0.0,
+      "constantMax": 1.04,
+      "curveMultiplier": 1.0
+    },
+    "startSizeMultiplier": 1.04,
+    "startSizeX": {
+      "mode": "Constant",
+      "constant": 1.04,
+      "constantMin": 0.0,
+      "constantMax": 1.04,
+      "curveMultiplier": 1.0
+    },
+    "startSizeXMultiplier": 1.04,
+    "startSizeY": {
+      "mode": "Constant",
+      "constant": 1.07,
+      "constantMin": 0.0,
+      "constantMax": 1.07,
+      "curveMultiplier": 1.0
+    },
+    "startSizeYMultiplier": 1.07,
+    "startSizeZ": {
+      "mode": "Constant",
+      "constant": 0.66,
+      "constantMin": 0.0,
+      "constantMax": 0.66,
+      "curveMultiplier": 1.0
+    },
+    "startSizeZMultiplier": 0.66,
+    "startRotation3D": true,
+    "startRotation": {
+      "mode": "Constant",
+      "constant": 0.00349065848,
+      "constantMin": 0.0,
+      "constantMax": 0.00349065848,
+      "curveMultiplier": 1.0
+    },
+    "startRotationMultiplier": 0.00349065848,
+    "startRotationX": {
+      "mode": "Constant",
+      "constant": 0.00733038271,
+      "constantMin": 0.0,
+      "constantMax": 0.00733038271,
+      "curveMultiplier": 1.0
+    },
+    "startRotationXMultiplier": 0.00733038271,
+    "startRotationY": {
+      "mode": "Constant",
+      "constant": 0.0010471975,
+      "constantMin": 0.0,
+      "constantMax": 0.0010471975,
+      "curveMultiplier": 1.0
+    },
+    "startRotationYMultiplier": 0.0010471975,
+    "startRotationZ": {
+      "mode": "Constant",
+      "constant": 0.00349065848,
+      "constantMin": 0.0,
+      "constantMax": 0.00349065848,
+      "curveMultiplier": 1.0
+    },
+    "startRotationZMultiplier": 0.00349065848,
+    "flipRotation": 0.14,
+    "startColor": {
+      "mode": "Color",
+      "color": {
+        "r": 0.7735849,
+        "g": 0.7735849,
+        "b": 0.7735849,
+        "a": 1.0
+      },
+      "colorMin": {
+        "r": 3.1082508E+32,
+        "g": 3.89561E-43,
+        "b": -4.055289E+11,
+        "a": 2.522337E-44
+      },
+      "colorMax": {
+        "r": 0.7735849,
+        "g": 0.7735849,
+        "b": 0.7735849,
+        "a": 1.0
+      }
+    },
+    "gravityModifier": {
+      "mode": "Constant",
+      "constant": 0.12,
+      "constantMin": 0.0,
+      "constantMax": 0.12,
+      "curveMultiplier": 1.0
+    },
+    "gravityModifierMultiplier": 0.12,
+    "simulationSpace": "Local",
+    "customSimulationSpace": null,
+    "simulationSpeed": 1.18,
+    "useUnscaledTime": true,
+    "scalingMode": "Local",
+    "playOnAwake": false,
+    "emitterVelocityMode": "Rigidbody",
+    "maxParticles": 20,
+    "stopAction": "Disable",
+    "cullingMode": "PauseAndCatchup",
+    "ringBufferMode": "LoopUntilReplaced",
+    "ringBufferLoopRange": {
+      "x": 0.13,
+      "y": 1.0
+    }
+  },
+  "emission": {
+    "enabled": true,
+    "rateOverTime": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 100.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.113241851,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.14965117,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.75226295,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.765423834,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.113241851,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.14965117,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.75226295,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.765423834,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "rateOverTimeMultiplier": 100.0,
+    "rateOverDistance": {
+      "mode": "Constant",
+      "constant": 6.94,
+      "constantMin": 0.0,
+      "constantMax": 6.94,
+      "curveMultiplier": 1.0
+    },
+    "rateOverDistanceMultiplier": 6.94,
+    "burstCount": 1,
+    "bursts": [
+      {
+        "time": 0.0,
+        "count": {
+          "mode": "Constant",
+          "constant": 30.0,
+          "constantMin": 0.0,
+          "constantMax": 30.0,
+          "curveMultiplier": 1.0
+        },
+        "cycleCount": 1,
+        "repeatInterval": 0.01,
+        "probability": 1.0
+      }
+    ]
+  },
+  "shape": {
+    "enabled": true,
+    "shapeType": "Sphere",
+    "angle": 25.0,
+    "radius": 0.16,
+    "radiusMode": "Random",
+    "radiusSpread": 0.0,
+    "radiusSpeed": {
+      "mode": "Constant",
+      "constant": 1.0,
+      "constantMin": 0.0,
+      "constantMax": 1.0,
+      "curveMultiplier": 1.0
+    },
+    "radiusSpeedMultiplier": 1.0,
+    "radiusThickness": 0.0,
+    "arc": 212.62,
+    "arcMode": "Loop",
+    "arcSpread": 0.0,
+    "arcSpeed": {
+      "mode": "Constant",
+      "constant": 1.78,
+      "constantMin": 0.0,
+      "constantMax": 1.78,
+      "curveMultiplier": 1.0
+    },
+    "arcSpeedMultiplier": 1.78,
+    "donutRadius": 0.2,
+    "length": 5.0,
+    "boxThickness": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "meshShapeType": "Vertex",
+    "meshSpawnMode": "Random",
+    "meshSpawnSpread": 0.0,
+    "meshSpawnSpeed": {
+      "mode": "Constant",
+      "constant": 1.0,
+      "constantMin": 0.0,
+      "constantMax": 1.0,
+      "curveMultiplier": 1.0
+    },
+    "meshSpawnSpeedMultiplier": 1.0,
+    "useMeshMaterialIndex": false,
+    "meshMaterialIndex": 0,
+    "useMeshColors": true,
+    "normalOffset": 0.0,
+    "position": {
+      "x": 0.16,
+      "y": 0.3,
+      "z": 0.32
+    },
+    "rotation": {
+      "x": -0.49,
+      "y": -0.74,
+      "z": -0.18
+    },
+    "scale": {
+      "x": 0.26,
+      "y": 0.66,
+      "z": 1.12
+    },
+    "textureClipChannel": "Alpha",
+    "textureClipThreshold": 0.0,
+    "textureColorAffectsParticles": true,
+    "textureAlphaAffectsParticles": true,
+    "textureBilinearFiltering": false,
+    "textureUVChannel": 0,
+    "alignToDirection": true,
+    "randomDirectionAmount": 0.14,
+    "sphericalDirectionAmount": 0.12,
+    "randomPositionAmount": 0.24
+  },
+  "velocityOverLifetime": {
+    "enabled": true,
+    "x": {
+      "mode": "TwoConstants",
+      "constant": 0.14,
+      "constantMin": 0.2,
+      "constantMax": 0.14,
+      "curveMultiplier": 1.0
+    },
+    "y": {
+      "mode": "TwoConstants",
+      "constant": 0.19,
+      "constantMin": -0.42,
+      "constantMax": 0.19,
+      "curveMultiplier": 1.0
+    },
+    "z": {
+      "mode": "TwoConstants",
+      "constant": 0.31,
+      "constantMin": -0.22,
+      "constantMax": 0.31,
+      "curveMultiplier": 1.0
+    },
+    "xMultiplier": 0.14,
+    "yMultiplier": 0.19,
+    "zMultiplier": 0.31,
+    "orbitalX": {
+      "mode": "Constant",
+      "constant": 0.48,
+      "constantMin": 0.0,
+      "constantMax": 0.48,
+      "curveMultiplier": 1.0
+    },
+    "orbitalY": {
+      "mode": "Constant",
+      "constant": 0.2,
+      "constantMin": 0.0,
+      "constantMax": 0.2,
+      "curveMultiplier": 1.0
+    },
+    "orbitalZ": {
+      "mode": "Constant",
+      "constant": -0.44,
+      "constantMin": 0.0,
+      "constantMax": -0.44,
+      "curveMultiplier": 1.0
+    },
+    "orbitalXMultiplier": 0.48,
+    "orbitalYMultiplier": 0.2,
+    "orbitalZMultiplier": -0.44,
+    "orbitalOffsetX": {
+      "mode": "Constant",
+      "constant": -0.6,
+      "constantMin": 0.0,
+      "constantMax": -0.6,
+      "curveMultiplier": 1.0
+    },
+    "orbitalOffsetY": {
+      "mode": "Constant",
+      "constant": 0.59,
+      "constantMin": 0.0,
+      "constantMax": 0.59,
+      "curveMultiplier": 1.0
+    },
+    "orbitalOffsetZ": {
+      "mode": "Constant",
+      "constant": -1.16,
+      "constantMin": 0.0,
+      "constantMax": -1.16,
+      "curveMultiplier": 1.0
+    },
+    "orbitalOffsetXMultiplier": -0.6,
+    "orbitalOffsetYMultiplier": 0.59,
+    "orbitalOffsetZMultiplier": -1.16,
+    "radial": {
+      "mode": "Constant",
+      "constant": 0.48,
+      "constantMin": 0.0,
+      "constantMax": 0.48,
+      "curveMultiplier": 1.0
+    },
+    "radialMultiplier": 0.48,
+    "speedModifier": {
+      "mode": "Constant",
+      "constant": 0.4,
+      "constantMin": 0.0,
+      "constantMax": 0.4,
+      "curveMultiplier": 1.0
+    },
+    "speedModifierMultiplier": 0.4,
+    "space": "World"
+  },
+  "limitVelocityOverLifetime": {
+    "enabled": false,
+    "limitX": {
+      "mode": "Constant",
+      "constant": 1.66,
+      "constantMin": 0.0,
+      "constantMax": 1.66,
+      "curveMultiplier": 1.0
+    },
+    "limitXMultiplier": 1.66,
+    "limitY": {
+      "mode": "Constant",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0
+    },
+    "limitYMultiplier": 0.0,
+    "limitZ": {
+      "mode": "Constant",
+      "constant": 0.44,
+      "constantMin": 0.0,
+      "constantMax": 0.44,
+      "curveMultiplier": 1.0
+    },
+    "limitZMultiplier": 0.44,
+    "limit": {
+      "mode": "Constant",
+      "constant": 2.67,
+      "constantMin": 0.0,
+      "constantMax": 2.67,
+      "curveMultiplier": 1.0
+    },
+    "limitMultiplier": 2.67,
+    "dampen": 0.26,
+    "separateAxes": true,
+    "space": "World",
+    "drag": {
+      "mode": "Constant",
+      "constant": 0.56,
+      "constantMin": 0.0,
+      "constantMax": 0.56,
+      "curveMultiplier": 1.0
+    },
+    "dragMultiplier": 0.56,
+    "multiplyDragByParticleSize": false,
+    "multiplyDragByParticleVelocity": false
+  },
+  "lifetimeByEmitterSpeed": {
+    "enabled": true,
+    "curve": {
+      "mode": "TwoCurves",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMin": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "curveMultiplier": 1.0,
+    "range": {
+      "x": 0.37,
+      "y": 0.72
+    }
+  },
+  "inheritVelocity": {
+    "enabled": true,
+    "mode": "Current",
+    "curve": {
+      "mode": "Constant",
+      "constant": 1.5,
+      "constantMin": 0.0,
+      "constantMax": 1.5,
+      "curveMultiplier": 1.0
+    },
+    "curveMultiplier": 1.5
+  },
+  "forceOverLifetime": {
+    "enabled": true,
+    "x": {
+      "mode": "TwoConstants",
+      "constant": 4.55,
+      "constantMin": 0.0,
+      "constantMax": 4.55,
+      "curveMultiplier": 1.0
+    },
+    "y": {
+      "mode": "TwoConstants",
+      "constant": 7.29,
+      "constantMin": 0.0,
+      "constantMax": 7.29,
+      "curveMultiplier": 1.0
+    },
+    "z": {
+      "mode": "TwoConstants",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0
+    },
+    "xMultiplier": 4.55,
+    "yMultiplier": 7.29,
+    "zMultiplier": 0.0,
+    "space": "World",
+    "randomized": true
+  },
+  "colorOverLifetime": {
+    "enabled": true,
+    "color": {
+      "mode": "Gradient",
+      "color": {
+        "r": -6.802529E+23,
+        "g": 3.881597E-43,
+        "b": -4.05571371E+11,
+        "a": 2.522337E-44
+      },
+      "colorMin": {
+        "r": 1.33674158E+32,
+        "g": 3.89561E-43,
+        "b": -4.05571371E+11,
+        "a": 2.522337E-44
+      },
+      "colorMax": {
+        "r": -6.802529E+23,
+        "g": 3.881597E-43,
+        "b": -4.05571371E+11,
+        "a": 2.522337E-44
+      },
+      "gradient": {
+        "colorKeys": [
+          {
+            "color": {
+              "r": 1.0,
+              "g": 0.0,
+              "b": 0.967556953,
+              "a": 1.0
+            },
+            "time": 0.2627451
+          },
+          {
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0,
+              "a": 1.0
+            },
+            "time": 1.0
+          }
+        ],
+        "alphaKeys": [
+          {
+            "alpha": 1.0,
+            "time": 0.0
+          },
+          {
+            "alpha": 1.0,
+            "time": 1.0
+          }
+        ],
+        "mode": "Fixed"
+      },
+      "gradientMax": {
+        "colorKeys": [
+          {
+            "color": {
+              "r": 1.0,
+              "g": 0.0,
+              "b": 0.967556953,
+              "a": 1.0
+            },
+            "time": 0.2627451
+          },
+          {
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0,
+              "a": 1.0
+            },
+            "time": 1.0
+          }
+        ],
+        "alphaKeys": [
+          {
+            "alpha": 1.0,
+            "time": 0.0
+          },
+          {
+            "alpha": 1.0,
+            "time": 1.0
+          }
+        ],
+        "mode": "Fixed"
+      }
+    }
+  },
+  "colorBySpeed": {
+    "enabled": true,
+    "color": {
+      "mode": "Gradient",
+      "color": {
+        "r": -6.802529E+23,
+        "g": 3.881597E-43,
+        "b": -4.05570322E+11,
+        "a": 2.522337E-44
+      },
+      "colorMin": {
+        "r": 1.46290934E+32,
+        "g": 3.89561E-43,
+        "b": -4.05570322E+11,
+        "a": 2.522337E-44
+      },
+      "colorMax": {
+        "r": -6.802529E+23,
+        "g": 3.881597E-43,
+        "b": -4.05570322E+11,
+        "a": 2.522337E-44
+      },
+      "gradient": {
+        "colorKeys": [
+          {
+            "color": {
+              "r": 1.0,
+              "g": 0.0,
+              "b": 0.0,
+              "a": 1.0
+            },
+            "time": 0.0
+          },
+          {
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0,
+              "a": 1.0
+            },
+            "time": 1.0
+          }
+        ],
+        "alphaKeys": [
+          {
+            "alpha": 1.0,
+            "time": 0.0
+          },
+          {
+            "alpha": 1.0,
+            "time": 1.0
+          }
+        ],
+        "mode": "Blend"
+      },
+      "gradientMax": {
+        "colorKeys": [
+          {
+            "color": {
+              "r": 1.0,
+              "g": 0.0,
+              "b": 0.0,
+              "a": 1.0
+            },
+            "time": 0.0
+          },
+          {
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0,
+              "a": 1.0
+            },
+            "time": 1.0
+          }
+        ],
+        "alphaKeys": [
+          {
+            "alpha": 1.0,
+            "time": 0.0
+          },
+          {
+            "alpha": 1.0,
+            "time": 1.0
+          }
+        ],
+        "mode": "Blend"
+      }
+    },
+    "range": {
+      "x": 0.87,
+      "y": 2.57
+    }
+  },
+  "sizeOverLifetime": {
+    "enabled": true,
+    "size": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4519927,
+            "value": 0.7957027,
+            "inTangent": 15.8273087,
+            "outTangent": 15.8273087,
+            "inWeight": 0.117052034,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": -2.0,
+            "outTangent": -2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4519927,
+            "value": 0.7957027,
+            "inTangent": 15.8273087,
+            "outTangent": 15.8273087,
+            "inWeight": 0.117052034,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": -2.0,
+            "outTangent": -2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "sizeMultiplier": 1.0,
+    "x": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4519927,
+            "value": 0.7957027,
+            "inTangent": 15.8273087,
+            "outTangent": 15.8273087,
+            "inWeight": 0.117052034,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": -2.0,
+            "outTangent": -2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4519927,
+            "value": 0.7957027,
+            "inTangent": 15.8273087,
+            "outTangent": 15.8273087,
+            "inWeight": 0.117052034,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": -2.0,
+            "outTangent": -2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "xMultiplier": 1.0,
+    "y": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "yMultiplier": 1.0,
+    "z": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 1.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 1.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 1.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 1.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "zMultiplier": 1.0,
+    "separateAxes": true
+  },
+  "sizeBySpeed": {
+    "enabled": true,
+    "size": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": -2.0,
+            "outTangent": -2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": -2.0,
+            "outTangent": -2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "sizeMultiplier": 1.0,
+    "x": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": -2.0,
+            "outTangent": -2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": -2.0,
+            "outTangent": -2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "xMultiplier": 1.0,
+    "y": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 1.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 1.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 1.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 1.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "yMultiplier": 1.0,
+    "z": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 1.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 1.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 1.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 1.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "zMultiplier": 1.0,
+    "separateAxes": true,
+    "range": {
+      "x": 1.78,
+      "y": 1.0
+    }
+  },
+  "rotationOverLifetime": {
+    "enabled": true,
+    "x": {
+      "mode": "TwoConstants",
+      "constant": 0.7225663,
+      "constantMin": 0.0,
+      "constantMax": 0.7225663,
+      "curveMultiplier": 1.0
+    },
+    "xMultiplier": 0.7225663,
+    "y": {
+      "mode": "TwoConstants",
+      "constant": 0.04485496,
+      "constantMin": 0.0,
+      "constantMax": 0.04485496,
+      "curveMultiplier": 1.0
+    },
+    "yMultiplier": 0.04485496,
+    "z": {
+      "mode": "TwoConstants",
+      "constant": 0.6803293,
+      "constantMin": 0.7853982,
+      "constantMax": 0.6803293,
+      "curveMultiplier": 1.0
+    },
+    "zMultiplier": 0.6803293,
+    "separateAxes": true
+  },
+  "rotationBySpeed": {
+    "enabled": true,
+    "x": {
+      "mode": "TwoCurves",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 0.002094395,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMin": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.330540717,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "xMultiplier": 0.002094395,
+    "y": {
+      "mode": "TwoCurves",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 0.0143116992,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMin": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4204112,
+            "value": -1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "yMultiplier": 0.0143116992,
+    "z": {
+      "mode": "TwoCurves",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 0.763057947,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMin": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.913937449,
+            "value": -0.714285731,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "zMultiplier": 0.763057947,
+    "separateAxes": true,
+    "range": {
+      "x": 0.72,
+      "y": 2.85
+    }
+  },
+  "externalForces": {
+    "enabled": true,
+    "multiplier": 1.34
+  },
+  "noise": {
+    "enabled": true,
+    "strength": {
+      "mode": "TwoCurves",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 0.82,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.04679202,
+            "outTangent": 0.04679202,
+            "inWeight": 0.333333343,
+            "outWeight": 0.109589018,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.1398702,
+            "value": -0.3123851,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.134115681,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMin": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.248228014,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.1,
+            "value": 0.5,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.7163116,
+            "outWeight": 0.15090628,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.04679202,
+            "outTangent": 0.04679202,
+            "inWeight": 0.333333343,
+            "outWeight": 0.109589018,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.1398702,
+            "value": -0.3123851,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.134115681,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "strengthMultiplier": 0.82,
+    "strengthX": {
+      "mode": "TwoCurves",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 0.82,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.04679202,
+            "outTangent": 0.04679202,
+            "inWeight": 0.333333343,
+            "outWeight": 0.109589018,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.1398702,
+            "value": -0.3123851,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.134115681,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMin": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.248228014,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.1,
+            "value": 0.5,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.7163116,
+            "outWeight": 0.15090628,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.04679202,
+            "outTangent": 0.04679202,
+            "inWeight": 0.333333343,
+            "outWeight": 0.109589018,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.1398702,
+            "value": -0.3123851,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.134115681,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "strengthXMultiplier": 0.82,
+    "strengthY": {
+      "mode": "TwoCurves",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.1,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.02564156,
+            "inTangent": 4.06445551,
+            "outTangent": 4.06445551,
+            "inWeight": 0.333333343,
+            "outWeight": 0.228083014,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4868008,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.151973292,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMin": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0153860822,
+            "inTangent": 5.216058,
+            "outTangent": 5.216058,
+            "inWeight": 0.333333343,
+            "outWeight": 0.687726259,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.1713293,
+            "value": 0.391862571,
+            "inTangent": -11.253644,
+            "outTangent": -11.253644,
+            "inWeight": 0.333333343,
+            "outWeight": 0.08460354,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.5490264,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.305409223,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.02564156,
+            "inTangent": 4.06445551,
+            "outTangent": 4.06445551,
+            "inWeight": 0.333333343,
+            "outWeight": 0.228083014,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.4868008,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.151973292,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "strengthYMultiplier": 1.1,
+    "strengthZ": {
+      "mode": "TwoCurves",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.12,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": -0.7,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.3,
+            "value": -1.0,
+            "inTangent": 0.93646425,
+            "outTangent": 0.93646425,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.35,
+            "value": -0.35,
+            "inTangent": 1.80111551,
+            "outTangent": 1.80111551,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMin": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.7,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.3,
+            "value": 1.0,
+            "inTangent": -0.8598941,
+            "outTangent": -0.8598941,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.35,
+            "value": 0.35,
+            "inTangent": -1.870632,
+            "outTangent": -1.870632,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": -0.7,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.3,
+            "value": -1.0,
+            "inTangent": 0.93646425,
+            "outTangent": 0.93646425,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.35,
+            "value": -0.35,
+            "inTangent": 1.80111551,
+            "outTangent": 1.80111551,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "strengthZMultiplier": 1.12,
+    "separateAxes": true,
+    "frequency": 0.12,
+    "damping": false,
+    "octaveCount": 4,
+    "octaveMultiplier": 0.38,
+    "octaveScale": 2.18,
+    "quality": "Low",
+    "scrollSpeed": {
+      "mode": "Constant",
+      "constant": 0.14,
+      "constantMin": 0.0,
+      "constantMax": 0.14,
+      "curveMultiplier": 1.0
+    },
+    "scrollSpeedMultiplier": 0.14,
+    "remapEnabled": true,
+    "remap": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.495746344,
+            "value": 0.49361968,
+            "inTangent": 16.730093,
+            "outTangent": 16.730093,
+            "inWeight": 0.12123704,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.495746344,
+            "value": 0.49361968,
+            "inTangent": 16.730093,
+            "outTangent": 16.730093,
+            "inWeight": 0.12123704,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "remapMultiplier": 1.0,
+    "remapX": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.495746344,
+            "value": 0.49361968,
+            "inTangent": 16.730093,
+            "outTangent": 16.730093,
+            "inWeight": 0.12123704,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.495746344,
+            "value": 0.49361968,
+            "inTangent": 16.730093,
+            "outTangent": 16.730093,
+            "inWeight": 0.12123704,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "remapXMultiplier": 1.0,
+    "remapY": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 2.0,
+            "outTangent": 2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 2.0,
+            "outTangent": 2.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.0,
+            "outWeight": 0.0,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "remapYMultiplier": 1.0,
+    "remapZ": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": -1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.5321525,
+            "value": 0.06430495,
+            "inTangent": -13.8345213,
+            "outTangent": -13.8345213,
+            "inWeight": 0.333333343,
+            "outWeight": 0.125811,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 2.0,
+            "outTangent": 2.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": -1.0,
+            "inTangent": 0.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 0.5321525,
+            "value": 0.06430495,
+            "inTangent": -13.8345213,
+            "outTangent": -13.8345213,
+            "inWeight": 0.333333343,
+            "outWeight": 0.125811,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 2.0,
+            "outTangent": 2.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "remapZMultiplier": 1.0,
+    "positionAmount": {
+      "mode": "Constant",
+      "constant": 1.03,
+      "constantMin": 0.0,
+      "constantMax": 1.03,
+      "curveMultiplier": 1.0
+    },
+    "rotationAmount": {
+      "mode": "Constant",
+      "constant": -0.18,
+      "constantMin": 0.0,
+      "constantMax": -0.18,
+      "curveMultiplier": 1.0
+    },
+    "sizeAmount": {
+      "mode": "Constant",
+      "constant": 0.34,
+      "constantMin": 0.0,
+      "constantMax": 0.34,
+      "curveMultiplier": 1.0
+    }
+  },
+  "collision": {
+    "enabled": true,
+    "type": "World",
+    "mode": "Collision2D",
+    "dampen": {
+      "mode": "Constant",
+      "constant": 0.08,
+      "constantMin": 0.0,
+      "constantMax": 0.08,
+      "curveMultiplier": 1.0
+    },
+    "dampenMultiplier": 0.08,
+    "bounce": {
+      "mode": "Constant",
+      "constant": 1.2,
+      "constantMin": 0.0,
+      "constantMax": 1.2,
+      "curveMultiplier": 1.0
+    },
+    "bounceMultiplier": 1.2,
+    "lifetimeLoss": {
+      "mode": "Constant",
+      "constant": 0.16,
+      "constantMin": 0.0,
+      "constantMax": 0.16,
+      "curveMultiplier": 1.0
+    },
+    "lifetimeLossMultiplier": 0.16,
+    "minKillSpeed": 0.34,
+    "maxKillSpeed": 9992.21,
+    "collidesWith": 262129,
+    "enableDynamicColliders": true,
+    "maxCollisionShapes": 230,
+    "quality": "Medium",
+    "voxelSize": 0.74,
+    "radiusScale": 4.0,
+    "sendCollisionMessages": true,
+    "colliderForce": 0.06,
+    "multiplyColliderForceByCollisionAngle": false,
+    "multiplyColliderForceByParticleSpeed": true,
+    "multiplyColliderForceByParticleSize": true
+  },
+  "trigger": {
+    "enabled": false,
+    "inside": "Kill",
+    "outside": "Ignore",
+    "enter": "Ignore",
+    "exit": "Ignore",
+    "radiusScale": 1.0
+  },
+  "subEmitters": {
+    "enabled": false,
+    "subEmittersCount": 0
+  },
+  "textureSheetAnimation": {
+    "enabled": false,
+    "numTilesX": 1,
+    "numTilesY": 1,
+    "animation": "WholeSheet",
+    "rowMode": "Random",
+    "frameOverTime": {
+      "mode": "Curve",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 0.9999,
+      "curve": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 1.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 1.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      },
+      "curveMax": {
+        "keys": [
+          {
+            "time": 0.0,
+            "value": 0.0,
+            "inTangent": 0.0,
+            "outTangent": 1.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          },
+          {
+            "time": 1.0,
+            "value": 1.0,
+            "inTangent": 1.0,
+            "outTangent": 0.0,
+            "inWeight": 0.333333343,
+            "outWeight": 0.333333343,
+            "weightedMode": "None"
+          }
+        ],
+        "preWrapMode": "ClampForever",
+        "postWrapMode": "ClampForever"
+      }
+    },
+    "frameOverTimeMultiplier": 0.9999,
+    "startFrame": {
+      "mode": "Constant",
+      "constant": 0.0,
+      "constantMin": 0.0,
+      "constantMax": 0.0,
+      "curveMultiplier": 1.0
+    },
+    "startFrameMultiplier": 0.0,
+    "cycleCount": 1,
+    "rowIndex": 0
+  },
+  "trails": {
+    "mode": "Ribbon",
+    "attachRibbonsToTransform": true,
+    "ribbonCount": 2,
+    "splitSubEmitterRibbons": true,
+    "textureScale": {
+      "x": 0.94,
+      "y": 1.4
+    },
+    "enabled": true,
+    "ratio": 1.0,
+    "lifetime": {
+      "mode": "Constant",
+      "constant": 0.74,
+      "constantMin": 0.0,
+      "constantMax": 0.74,
+      "curveMultiplier": 1.0
+    },
+    "lifetimeMultiplier": 0.74,
+    "minVertexDistance": 0.0,
+    "textureMode": "Tile",
+    "worldSpace": true,
+    "dieWithParticles": true,
+    "sizeAffectsWidth": false,
+    "sizeAffectsLifetime": false,
+    "inheritParticleColor": true,
+    "colorOverLifetime": {
+      "mode": "Color",
+      "color": {
+        "r": 0.591194868,
+        "g": 0.5670265,
+        "b": 0.5670265,
+        "a": 1.0
+      },
+      "colorMin": {
+        "r": 5.1234547E+31,
+        "g": 3.89561E-43,
+        "b": -4.05555118E+11,
+        "a": 2.522337E-44
+      },
+      "colorMax": {
+        "r": 0.591194868,
+        "g": 0.5670265,
+        "b": 0.5670265,
+        "a": 1.0
+      }
+    },
+    "widthOverTrail": {
+      "mode": "Constant",
+      "constant": 1.43,
+      "constantMin": 0.0,
+      "constantMax": 1.43,
+      "curveMultiplier": 1.0
+    },
+    "widthOverTrailMultiplier": 1.43,
+    "colorOverTrail": {
+      "mode": "Color",
+      "color": {
+        "r": 0.4716981,
+        "g": 0.2506823,
+        "b": 0.2506823,
+        "a": 1.0
+      },
+      "colorMin": {
+        "r": 5.27789546E+31,
+        "g": 3.89561E-43,
+        "b": -4.05555118E+11,
+        "a": 2.522337E-44
+      },
+      "colorMax": {
+        "r": 0.4716981,
+        "g": 0.2506823,
+        "b": 0.2506823,
+        "a": 1.0
+      }
+    }
+  },
+  "customData": {
+    "enabled": false
+  }
+}

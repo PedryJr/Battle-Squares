@@ -5047,7 +5047,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3242123781766267464}
-  - component: {fileID: 8693188006018225575}
+  - component: {fileID: -1974340216489431661}
   m_Layer: 0
   m_Name: ExternalTrail (Hailmaker)
   m_TagString: Untagged
@@ -5071,7 +5071,7 @@ Transform:
   - {fileID: 397679673706684596}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8693188006018225575
+--- !u!114 &-1974340216489431661
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5080,10 +5080,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5353389494767546828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 545bb4470dcdcdf40aa25bb7a47db098, type: 3}
+  m_Script: {fileID: 11500000, guid: e715116cddfc282488fa6dc4d84ac7dd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  particles:
+  m_EditorClassIdentifier: Assembly-CSharp::ParticleBehaviour
+  particleSystems:
   - {fileID: 4814498462373444217}
-  renderers:
+  particleSystemsRenderers:
   - {fileID: 9148357844948113943}
+  supportObjectPooling: 1
+  variantID: 10588240328341693126
+  lifeTime: 0.5
+  attatchmentLifeTime: 0.5
+  attatchment: {fileID: 0}

@@ -1,3 +1,4 @@
+using BattleSquaresSDK;
 using FMOD.Studio;
 using FMODUnity;
 using System;
@@ -7,12 +8,13 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using static PlayerSynchronizer;
 using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
 
-public sealed class ProjectileBehaviour : MonoBehaviour
+public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 {
 
     public const Int32 ENVIRONTMENT_MASK = 0b00000000000000000000001000000000;
@@ -70,6 +72,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     public bool hit;
     public bool sync;
     public bool flipFlop;
+    public bool builtIndAudio = true;
 
     const string paramNameCameraPositionX = "CameraPositionX";
 
@@ -93,7 +96,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     CameraAnimator cameraAnimator;
 
-    UnityEngine.Color generalParticleColor;
+    Color generalParticleColor;
 
     [SerializeField]
     EventReference shotReference;
@@ -126,7 +129,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     ProjectileTrailBehaviour projectileTrailBehaviour;
 
     [SerializeField]
-    ExternalTrailBehaviour externalTrailRef;
+    ParticleBehaviour externalTrailRef;
 
     [SerializeField]
     bool multiplySpawnrateByLifetime;
@@ -171,23 +174,28 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     private void Start()
     {
         if (!playShootSound) return;
-        float pitch = 1f + UnityEngine.Random.Range(-0.08f, 0.08f);
 
-        shotInstance = RuntimeManager.CreateInstance(shotReference);
-        shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
-        shotInstance.setParameterByName("Power", data.speed / 65f);
-        shotInstance.setVolume(MySettings.Volume);
-        shotInstance.setPitch(pitch);
-        shotInstance.start();
-
-        if (aliveSound)
+        if (builtIndAudio)
         {
-            aliveInstance = RuntimeManager.CreateInstance(aliveReference);
-            aliveInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
-            aliveInstance.setParameterByName("Power", data.speed / 65f);
-            aliveInstance.setVolume(MySettings.Volume);
-            aliveInstance.setPitch(pitch);
-            aliveInstance.start();
+            float pitch = 1f + UnityEngine.Random.Range(-0.08f, 0.08f);
+
+            shotInstance = RuntimeManager.CreateInstance(shotReference);
+            shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+            shotInstance.setParameterByName("Power", data.speed / 65f);
+            shotInstance.setVolume(MySettings.Volume);
+            shotInstance.setPitch(pitch);
+            shotInstance.start();
+            shotInstance.release();
+
+            if (aliveSound)
+            {
+                aliveInstance = RuntimeManager.CreateInstance(aliveReference);
+                aliveInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+                aliveInstance.setParameterByName("Power", data.speed / 65f);
+                aliveInstance.setVolume(MySettings.Volume);
+                aliveInstance.setPitch(pitch);
+                aliveInstance.start();
+            }
         }
 
         if (cameraAnimator && IsLocalProjectile) cameraAnimator.Shake();
@@ -197,6 +205,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     public void InitializeBullet(ref ProjectileInitData data)
     {
 
+        owningPlayer = data.owningPlayer;
+        this.data.typeID = data.typeID;
+        IsLocalProjectile = data.IsLocalProjectile;
+        UserMods.mc.RaiseOnProjectileSpawnEvent(this, ref data);
+
         initDamage = data.baseDamage;
         aoeDamage = data.aoeDamage * Mods.at[7];
         damageScaleOverTime = data.damageTimeScale;
@@ -205,7 +218,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         endMorph = data.targetMorph;
         startMorph = transform.localScale;
-        owningPlayer = data.owningPlayer;
 
         sync = data.sync;
 
@@ -227,7 +239,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         projectileID = data.id;
 
         projectileManager = data.projectileManager;
-        IsLocalProjectile = data.IsLocalProjectile;
 
         chargePlayerEndScale = transform.localScale;
 
@@ -375,15 +386,18 @@ public sealed class ProjectileBehaviour : MonoBehaviour
         if (audioTimer < 1) audioTimer += Time.deltaTime * 20;
         else
         {
-            PLAYBACK_STATE playbackState;
-            shotInstance.getPlaybackState(out playbackState);
-            if (playbackState == PLAYBACK_STATE.PLAYING) shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
-            if (aliveSound)
+            if (builtIndAudio)
             {
-                aliveInstance.getPlaybackState(out playbackState);
-                if (playbackState == PLAYBACK_STATE.PLAYING) aliveInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+                PLAYBACK_STATE playbackState;
+                shotInstance.getPlaybackState(out playbackState);
+                if (playbackState == PLAYBACK_STATE.PLAYING) shotInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+                if (aliveSound)
+                {
+                    aliveInstance.getPlaybackState(out playbackState);
+                    if (playbackState == PLAYBACK_STATE.PLAYING) aliveInstance.setParameterByName(paramNameCameraPositionX, transform.position.x - Camera.main.transform.position.x);
+                }
+                audioTimer = 0;
             }
-            audioTimer = 0;
         }
 
         if (externalTrailRef)
@@ -398,8 +412,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
                 while (externalTrailSpawnTimer > externalTrailSpawnRate)
                 {
-                    ExternalTrailBehaviour externalTrail = Instantiate(externalTrailRef, transform.position, transform.rotation, null);
-                    if (externalTrail) externalTrail.Play(owningPlayer.PlayerColor.ParticleColor, owningPlayer.id, owningPlayer);
+                    ParticleBehaviour externalTrail = ParticlePool.Spawn(externalTrailRef, transform.position, transform.rotation, null);
+                    int pLength = externalTrail.ParticleSystems.Length;
+                    for (int i = 0; i < pLength; i++) owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(externalTrail.ParticleSystemRenderers[i], externalTrail.ParticleSystems[i]);
+                    //if (externalTrail) externalTrail.Play(owningPlayer.PlayerColor.ParticleColor, owningPlayer.id, owningPlayer);
                     externalTrailSpawnTimer -= externalTrailSpawnRate;
                 }
             }
@@ -642,7 +658,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
                     player.square.timeSinceHit = 0.25f;
 
-                    // Determine damage/slow based on whether this is the owner
                     float damage = (player.id == ownerId) ? 0 : aoeDamage;
                     float slow = (player.id == ownerId) ? 0 : data.slowDownAmount;
 
@@ -945,11 +960,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour
                         projectileManager.UpdateProjectile(this);
                         projectileManager.SpawnBounceParticles(hitpoint.point, Quaternion.Euler(0, 0, angle), data.typeID);
                     }
-/*                    ParticleBehaviour bounceParticles = ParticlePool.Spawn(data.bounceParticle, hitpoint.point, Quaternion.Euler(0, 0, angle));
-                    for (int i = 0; i < bounceParticles.ParticleSystems.Length; i++)
-                    {
-                        owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(bounceParticles.ParticleSystemRenderers[i], bounceParticles.ParticleSystems[i]);
-                    }*/
                 }
             }
             else
@@ -962,13 +972,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         if (data.rotationFlipOnImpact)
         {
-
             if (flipRotation) rb.angularVelocity = -data.spinSpeed;
             else rb.angularVelocity = data.spinSpeed;
             flipRotation = !flipRotation;
-
         }
-
     }
 
     public void OnDespawn(bool hit) => DestroyThisProjectile(hit);
@@ -986,11 +993,14 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         if (hit || aoe)
         {
-
-            EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
-            eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
-            eventInstance.setVolume(MySettings.Volume);
-            eventInstance.start();
+            if (builtIndAudio)
+            {
+                EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
+                eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
+                eventInstance.setVolume(MySettings.Volume);
+                eventInstance.start();
+                eventInstance.release();
+            }
 
             RaycastHit2D point = GetClosestEnvironmentPoint(boom.position);
             float angle = math.degrees(math.atan2(-point.normal.y, -point.normal.x));
@@ -1063,7 +1073,15 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     const int DIRS_COUNT = 8;
     readonly RaycastHit2D[] hitBuffer = new RaycastHit2D[1];
 
+    public event Action<IProjectileHandle> OnDestroyed;
 
+    public IPlayerHandle Owner => owningPlayer;
+
+    public uint NetworkID => projectileID;
+
+    public ushort TypeID => data.typeID;
+
+    public bool IsLocal => IsLocalProjectile;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     RaycastHit2D GetClosestEnvironmentPointDown(Vector2 origin, float maxDistance = 100f, float floorRadius = 0.5f)
@@ -1121,11 +1139,14 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
     public void HitReg()
     {
-
-        EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
-        eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
-        eventInstance.setVolume(MySettings.Volume);
-        eventInstance.start();
+        if (builtIndAudio)
+        {
+            EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
+            eventInstance.setParameterByName("CameraPositionX", transform.position.x - Camera.main.transform.position.x);
+            eventInstance.setVolume(MySettings.Volume);
+            eventInstance.start();
+            eventInstance.release();
+        }
 
         ParticleBehaviour impactParticles = ParticlePool.Spawn(data.impactParticle, boom.transform.position, transform.rotation, null);
 
@@ -1139,7 +1160,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour
     private void OnDestroy()
     {
 
-        shotInstance.release();
+        OnDestroyed?.Invoke(this);
 
         for (int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
 
@@ -1151,11 +1172,55 @@ public sealed class ProjectileBehaviour : MonoBehaviour
 
         if (aliveSound)
         {
-
-            aliveInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            aliveInstance.release();
-
+            if (builtIndAudio)
+            {
+                aliveInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                aliveInstance.release();
+            } 
         }
+    }
+
+    public void SetPosition(System.Numerics.Vector2 position)
+    {
+        rb.position = new Vector2(position.X, position.Y);
+        transform.position = new Vector3(position.X, position.Y, transform.position.z);
+    }
+
+    public System.Numerics.Vector2 GetPosition()
+    {
+        return new System.Numerics.Vector2(rb.position.x, rb.position.y);
+    }
+
+    public void SetVelocity(System.Numerics.Vector2 position)
+    {
+        rb.linearVelocity = new Vector2(position.X, position.Y);
+    }
+
+    public System.Numerics.Vector2 GetVelocity()
+    {
+        Vector2 vel = rb.linearVelocity;
+        return new System.Numerics.Vector2(vel.x, vel.y);
+    }
+
+    public void SetRotation(float rotation)
+    {
+        rb.rotation = rotation;
+        transform.rotation = Quaternion.Euler(0, 0, rotation);
+    }
+
+    public float GetRotation()
+    {
+        return rb.rotation;
+    }
+
+    public void SetAngularVelocity(float rotation)
+    {
+        rb.angularVelocity = rotation;
+    }
+
+    public float GetAngularVelocity()
+    {
+        return rb.angularVelocity;
     }
 }
 

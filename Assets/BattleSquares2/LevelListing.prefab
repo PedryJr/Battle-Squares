@@ -127,11 +127,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8198643403610208567}
+        m_TargetAssemblyTypeName: EditorLevelListing, Assembly-CSharp
+        m_MethodName: DELETE_LEVEL
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   offHoveredColor: {r: 0.1882353, g: 0.19215687, b: 0.19215687, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 0.74509805, g: 0.7607843, b: 0.7607843, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0.7607843, g: 0.18258825, b: 0.18258825, a: 1}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.15

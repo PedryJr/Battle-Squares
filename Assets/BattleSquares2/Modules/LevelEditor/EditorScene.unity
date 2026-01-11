@@ -194,6 +194,157 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2243214}
   m_CullTransparentMesh: 1
+--- !u!1 &49085417
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 49085418}
+  - component: {fileID: 49085423}
+  - component: {fileID: 49085422}
+  - component: {fileID: 49085421}
+  - component: {fileID: 49085420}
+  - component: {fileID: 49085419}
+  m_Layer: 5
+  m_Name: ExitButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &49085418
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49085417}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -32.000027}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1378300615}
+  m_Father: {fileID: 688527677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 158.23077, y: 115.384674}
+  m_SizeDelta: {x: 200, y: 120}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &49085419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49085417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc2e460bc430bca46a7027892f16323d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!114 &49085420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49085417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ec63e466ff1969469ab12a8e2b61ecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &49085421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49085417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62700d18a96ed11428276b681c52f1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectTransform: {fileID: 49085418}
+  clickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 49085419}
+        m_TargetAssemblyTypeName: EditorGenericButtonBehaviour, Assembly-CSharp
+        m_MethodName: EXIT
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+  currentColor: {r: 1, g: 1, b: 1, a: 1}
+  fromColor: {r: 1, g: 1, b: 1, a: 1}
+  toColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  isHovering: 0
+  animateColor: 1
+  enterHoverTransitionTime: 0.13
+  exitHoverTransitionTime: 0.13
+  clickTransitionTime: 0.13
+  multiplier: 1.25
+  inverseScroll: 0
+  initializeOffHoverColor: 1
+  animationType: 0
+--- !u!114 &49085422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49085417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
+  m_Color: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &49085423
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49085417}
+  m_CullTransparentMesh: 1
 --- !u!1 &71481256
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,7 +826,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 312.0769, y: 115.38464}
+  m_AnchoredPosition: {x: 312.0769, y: 115.38468}
   m_SizeDelta: {x: 500, y: -900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &225320943
@@ -1515,6 +1666,293 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &350514927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 350514928}
+  - component: {fileID: 350514930}
+  - component: {fileID: 350514929}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &350514928
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350514927}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 396054189}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &350514929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350514927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Save
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
+  m_sharedMaterial: {fileID: -607137550700216403, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 72
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 32
+  m_VerticalAlignment: 4096
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &350514930
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350514927}
+  m_CullTransparentMesh: 1
+--- !u!1 &396054188
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 396054189}
+  - component: {fileID: 396054194}
+  - component: {fileID: 396054193}
+  - component: {fileID: 396054192}
+  - component: {fileID: 396054191}
+  - component: {fileID: 396054190}
+  m_Layer: 5
+  m_Name: SaveButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &396054189
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396054188}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -32.000027}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 350514928}
+  m_Father: {fileID: 688527677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -158.23083, y: 115.384674}
+  m_SizeDelta: {x: 200, y: 120}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &396054190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396054188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc2e460bc430bca46a7027892f16323d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!114 &396054191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396054188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ec63e466ff1969469ab12a8e2b61ecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &396054192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396054188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62700d18a96ed11428276b681c52f1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectTransform: {fileID: 396054189}
+  clickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 396054190}
+        m_TargetAssemblyTypeName: EditorGenericButtonBehaviour, Assembly-CSharp
+        m_MethodName: SAVE
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+  currentColor: {r: 1, g: 1, b: 1, a: 1}
+  fromColor: {r: 1, g: 1, b: 1, a: 1}
+  toColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  isHovering: 0
+  animateColor: 1
+  enterHoverTransitionTime: 0.13
+  exitHoverTransitionTime: 0.13
+  clickTransitionTime: 0.13
+  multiplier: 1.25
+  inverseScroll: 0
+  initializeOffHoverColor: 1
+  animationType: 0
+--- !u!114 &396054193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396054188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
+  m_Color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &396054194
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396054188}
+  m_CullTransparentMesh: 1
 --- !u!1 &406596066
 GameObject:
   m_ObjectHideFlags: 0
@@ -2431,7 +2869,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 312.0769, y: -38.461548}
+  m_AnchoredPosition: {x: 312.0769, y: 19.230835}
   m_SizeDelta: {x: 500, y: -900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &534734269
@@ -2714,11 +3152,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -2726,6 +3170,7 @@ MonoBehaviour:
   clickTransitionTime: 0.13
   multiplier: 1.25
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!114 &558257116
 MonoBehaviour:
@@ -3267,11 +3712,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -3279,6 +3730,7 @@ MonoBehaviour:
   clickTransitionTime: 0.13
   multiplier: 1.25
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!114 &685403889
 MonoBehaviour:
@@ -3354,6 +3806,8 @@ RectTransform:
   - {fileID: 1817890933}
   - {fileID: 1490395467}
   - {fileID: 558257112}
+  - {fileID: 396054189}
+  - {fileID: 49085418}
   - {fileID: 1755263045}
   m_Father: {fileID: 2049631055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3714,11 +4168,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -3726,6 +4186,7 @@ MonoBehaviour:
   clickTransitionTime: 0.13
   multiplier: 1.25
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!114 &917120809
 MonoBehaviour:
@@ -4466,8 +4927,8 @@ GameObject:
   - component: {fileID: 1150903543}
   - component: {fileID: 1150903542}
   - component: {fileID: 1150903541}
-  - component: {fileID: 1150903540}
   - component: {fileID: 1150903544}
+  - component: {fileID: 1150903545}
   m_Layer: 5
   m_Name: DeleteLevel
   m_TagString: Untagged
@@ -4494,20 +4955,6 @@ RectTransform:
   m_AnchoredPosition: {x: 92, y: -192.30768}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1150903540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1150903538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f28b9a3b3370ae42903eaff20053dda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newLevelCreatorParent: {fileID: 2049631055}
-  newLevelNamerAndCreator: {fileID: 1292819234847645066, guid: 5e89e9a7c7864f34bab6e3117522e1b4, type: 3}
 --- !u!114 &1150903541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4520,13 +4967,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62700d18a96ed11428276b681c52f1cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 1150903539}
+  rectTransform: {fileID: 0}
   clickEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1150903540}
-        m_TargetAssemblyTypeName: NewLevelListing, Assembly-CSharp
-        m_MethodName: NEW_LEVEL
+      - m_Target: {fileID: 1150903545}
+        m_TargetAssemblyTypeName: DeleteLevelListing, Assembly-CSharp
+        m_MethodName: DELETE_LEVEL
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1150903545}
+        m_TargetAssemblyTypeName: DeleteLevelListing, Assembly-CSharp
+        m_MethodName: DELETE_LEVEL
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4541,13 +5003,17 @@ MonoBehaviour:
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 1, g: 0.504, b: 0.504, a: 1}
+  offHoveredColorDELETE_FLAG: {r: 0.766, g: 0.38474885, b: 0.38474885, a: 1}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 0
+  animateColor: 1
   enterHoverTransitionTime: 0.15
   exitHoverTransitionTime: 0.15
   clickTransitionTime: 0.15
   multiplier: 1.2
   inverseScroll: 0
+  initializeOffHoverColor: 0
   animationType: 1
 --- !u!114 &1150903542
 MonoBehaviour:
@@ -4599,6 +5065,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ec63e466ff1969469ab12a8e2b61ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1150903545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150903538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d7edaad6c03e404992d2dfe86c3545a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeleteLevelListing
 --- !u!1 &1171925549
 GameObject:
   m_ObjectHideFlags: 0
@@ -5349,7 +5827,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 312.0769, y: -346.15393}
+  m_AnchoredPosition: {x: 312.0769, y: -173.077}
   m_SizeDelta: {x: 500, y: -900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1260692905
@@ -6042,7 +6520,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 312.0769, y: -192.30774}
+  m_AnchoredPosition: {x: 312.0769, y: -76.92312}
   m_SizeDelta: {x: 500, y: -900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1366306374
@@ -6156,6 +6634,142 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ec63e466ff1969469ab12a8e2b61ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1378300614
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1378300615}
+  - component: {fileID: 1378300617}
+  - component: {fileID: 1378300616}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1378300615
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378300614}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 49085418}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1378300616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378300614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Exit
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
+  m_sharedMaterial: {fileID: -607137550700216403, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 72
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 32
+  m_VerticalAlignment: 4096
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1378300617
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378300614}
+  m_CullTransparentMesh: 1
 --- !u!1 &1404722189
 GameObject:
   m_ObjectHideFlags: 0
@@ -6632,11 +7246,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -6644,6 +7264,7 @@ MonoBehaviour:
   clickTransitionTime: 0.13
   multiplier: 1.25
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!114 &1490395471
 MonoBehaviour:
@@ -6848,11 +7469,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -6860,6 +7487,7 @@ MonoBehaviour:
   clickTransitionTime: 0.13
   multiplier: 1.25
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!114 &1559619818
 MonoBehaviour:
@@ -7157,11 +7785,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -7169,6 +7803,7 @@ MonoBehaviour:
   clickTransitionTime: 0.13
   multiplier: 1.25
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!114 &1624541824
 MonoBehaviour:
@@ -7706,11 +8341,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -7718,6 +8359,7 @@ MonoBehaviour:
   clickTransitionTime: 0.13
   multiplier: 1.5
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!114 &1755263049
 MonoBehaviour:
@@ -8301,11 +8943,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -8313,6 +8961,7 @@ MonoBehaviour:
   clickTransitionTime: 0.13
   multiplier: 1.25
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!114 &1817890937
 MonoBehaviour:
@@ -9435,11 +10084,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -9447,6 +10102,7 @@ MonoBehaviour:
   clickTransitionTime: 0.13
   multiplier: 1.25
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!114 &2054014001
 MonoBehaviour:
@@ -10421,11 +11077,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteEvent:
+    m_PersistentCalls:
+      m_Calls: []
   offHoveredColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   currentColor: {r: 1, g: 1, b: 1, a: 1}
   fromColor: {r: 1, g: 1, b: 1, a: 1}
   toColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
+  onHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  offHoveredColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
+  toColorDELETE_FLAG: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.15
@@ -10433,6 +11095,7 @@ MonoBehaviour:
   clickTransitionTime: 0.15
   multiplier: 1.2
   inverseScroll: 0
+  initializeOffHoverColor: 1
   animationType: 1
 --- !u!1 &5650350624787086974
 GameObject:

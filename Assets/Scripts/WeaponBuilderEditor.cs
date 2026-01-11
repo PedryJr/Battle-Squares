@@ -338,7 +338,7 @@ public class WeaponBuilderEditor : Editor
             EditorGUILayout.Space();
         }
 
-        EditorGUILayout.LabelField(specsProp.FindPropertyRelative("typeID").uintValue.ToString());
+        EditorGUILayout.PropertyField(specsProp.FindPropertyRelative("typeID"));
 
         serializedObject.ApplyModifiedProperties();
     }
