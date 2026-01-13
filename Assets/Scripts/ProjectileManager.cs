@@ -590,8 +590,8 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     internal void CreateWeaponFromMod(ref ProjectileCreator creator)
     {
-        FullFeatureWeapon weapon = runtimePrefabTemplates.CreateNewWeaponPrefab();
-
+        WeaponBuilder weapon = runtimePrefabTemplates.CreateNewWeaponPrefab(ref creator);
+        weapons[weapon.typeID] = weapon;
     }
 
     #endregion

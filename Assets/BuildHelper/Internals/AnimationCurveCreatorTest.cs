@@ -35,9 +35,16 @@ public class AnimationCurveCreatorTest : MonoBehaviour
     [SerializeField] AnimationCurve Curve;
     [SerializeField] string name;
 
+    
     public void ExportJson()
     {
         string path = "Assets/BuildHelper/" + name + ".json";
+        ExportJson(path, Curve);
+    }
+
+    public static void ExportJson(string path, AnimationCurve curve)
+    {
+
         if (string.IsNullOrEmpty(path)) return;
 
         AnimationCurveFile file = new AnimationCurveFile
@@ -48,7 +55,7 @@ public class AnimationCurveCreatorTest : MonoBehaviour
             }
         };
 
-        foreach (Keyframe k in Curve.keys)
+        foreach (Keyframe k in curve.keys)
         {
             file.curve.m_Curve.Add(new KeyframeData
             {
@@ -64,14 +71,40 @@ public class AnimationCurveCreatorTest : MonoBehaviour
         }
 
         File.WriteAllText(path, JsonConvert.SerializeObject(file, Formatting.Indented));
+
     }
 
 
     public void ImportJson()
     {
         string path = "Assets/BuildHelper/" + name + ".json";
+    }
 
-        if (string.IsNullOrEmpty(path)) return;
+    public static AnimationCurve ImportJson(string path)
+    {
+
+        AnimationCurve Curve = new AnimationCurve();
+
+
+        if (string.IsNullOrEmpty(path))
+        {
+            Curve.keys = new Keyframe[2] 
+            {
+                new Keyframe(0, 1),
+                new Keyframe(1, 1),
+            };
+            return Curve;
+        }
+
+        if (!File.Exists(path))
+        {
+            Curve.keys = new Keyframe[2]
+            {
+                new Keyframe(0, 1),
+                new Keyframe(1, 1),
+            };
+            return Curve;
+        }
 
         var file = JsonConvert.DeserializeObject<AnimationCurveFile>(
             File.ReadAllText(path));
@@ -94,6 +127,8 @@ public class AnimationCurveCreatorTest : MonoBehaviour
 
             Curve.AddKey(key);
         }
+
+        return Curve;
     }
 
 }

@@ -76,7 +76,10 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     public bool selectedLegacyMap = true;
     public int selectedMap;
-    public ulong id;
+
+    private PlayerID ID;
+
+    public ulong id => ID.networkID;
 
     public bool hasJump;
     public float fps = 6000;
@@ -409,8 +412,8 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         Span<bool> rotatedArray = stackalloc bool[100];
         for (int i = 0; i < 100; i++) rotatedArray[i] = boolArray[99 - i];
-        Texture2D texture = new Texture2D(10, 10, TextureFormat.RGBA32, false);
-        texture.filterMode = FilterMode.Point;
+        Texture2D texture = new Texture2D(10, 10, UnityEngine.TextureFormat.RGBA32, false);
+        texture.filterMode = UnityEngine.FilterMode.Point;
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 10; j++)
@@ -449,8 +452,8 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         rotatedArray[15] = boolArray[12];
 
 
-        Texture2D texture = new Texture2D(4, 4, TextureFormat.RGBA32, false);
-        texture.filterMode = FilterMode.Point;
+        Texture2D texture = new Texture2D(4, 4, UnityEngine.TextureFormat.RGBA32, false);
+        texture.filterMode = UnityEngine.FilterMode.Point;
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -544,7 +547,7 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         uint imageHeight = image.Value.Height;
         Vector2 imageDimentions = new Vector2(image.Value.Width, image.Value.Height);
 
-        Texture2D spriteTexture = new Texture2D((int)imageWidth, (int)imageHeight, TextureFormat.RGBA32, false, true);
+        Texture2D spriteTexture = new Texture2D((int)imageWidth, (int)imageHeight, UnityEngine.TextureFormat.RGBA32, false, true);
         Rect spriteRect = new Rect(new Vector2(0, 0), imageDimentions);
         Vector2 spritePivot = imageDimentions / 2;
 
@@ -991,6 +994,20 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public byte GetID() => (byte) id;
 
+    public readonly struct PlayerID
+    {
+        public readonly byte networkID;
+        public readonly byte localID;
+    }
+
+
+
+
+
+
+
+
+    //ModSDK Exposed symbols
     private void OnDestroy()
     {
         OnDestroyed?.Invoke(this);

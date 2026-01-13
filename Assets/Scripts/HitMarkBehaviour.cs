@@ -53,8 +53,10 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
     private SpriteRenderer mainRenderer;
     private static MaterialPropertyBlock SharedBlock = null;
 
-    private void Awake()
+    public void Initialize()
     {
+        if (!gameObject.activeSelf) gameObject.SetActive(true);
+
         if (SharedBlock == null) SharedBlock = new MaterialPropertyBlock();
 
         if (randomRotation && spawnStages != null)
@@ -87,6 +89,7 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
 
     void AssignStencilTexture(Texture renderTexture)
     {
+        if (SharedBlock == null) SharedBlock = new MaterialPropertyBlock();
         SharedBlock.SetTexture("_StencilGroup", renderTexture);
         mainRenderer.SetPropertyBlock(SharedBlock);
     }

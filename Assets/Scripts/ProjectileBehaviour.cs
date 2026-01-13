@@ -3,13 +3,10 @@ using FMOD.Studio;
 using FMODUnity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Scripting;
-using UnityEngine.UIElements;
 using static PlayerSynchronizer;
 using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
@@ -126,10 +123,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
     public ProjectileInitData data;
 
     [SerializeField]
-    ProjectileTrailBehaviour projectileTrailBehaviour;
+    public ProjectileTrailBehaviour projectileTrailBehaviour;
 
     [SerializeField]
-    ParticleBehaviour externalTrailRef;
+    public ParticleBehaviour externalTrailRef;
 
     [SerializeField]
     bool multiplySpawnrateByLifetime;
@@ -154,6 +151,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
     private void OnValidate()
     {
+
         projectileCollider = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -204,11 +202,12 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
     public void InitializeBullet(ref ProjectileInitData data)
     {
+        if(!gameObject.activeSelf) gameObject.SetActive(true);
 
         owningPlayer = data.owningPlayer;
         this.data.typeID = data.typeID;
         IsLocalProjectile = data.IsLocalProjectile;
-        UserMods.mc.RaiseOnProjectileSpawnEvent(this, ref data);
+        UserMods.RaiseOnProjectileSpawnEvent(this, ref data);
 
         initDamage = data.baseDamage;
         aoeDamage = data.aoeDamage * Mods.at[7];
@@ -1039,6 +1038,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         float angle = math.degrees(math.atan2(point.normal.y, point.normal.x));
         
         HitMarkBehaviour newHitMark = Instantiate(hitMark, toParent, true);
+        newHitMark.Initialize();
         newHitMark.transform.position = hitMarkPos;
         newHitMark.transform.rotation = Quaternion.Euler(0, 0, angle);
 

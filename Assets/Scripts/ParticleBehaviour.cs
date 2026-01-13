@@ -114,7 +114,9 @@ public sealed class ParticleBehaviour : MonoBehaviour
 
 
 
-    private void OnValidate()
+    private void OnValidate() => RefreshComp();
+
+    public void RefreshComp()
     {
         CacheParticleComponents();
 
@@ -169,6 +171,8 @@ public sealed class ParticleBehaviour : MonoBehaviour
     public void ResetParticle()
     {
         timer = 0;
+        //Added self activation if necessary
+        if (!gameObject.activeSelf) gameObject.SetActive(true);
         foreach (var ps in particleSystems) ps.Play();
         if (attatchment) attatchment.SetActive(true);
     }

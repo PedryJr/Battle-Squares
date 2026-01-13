@@ -1,37 +1,42 @@
 using BattleSquaresSDK;
-using FMOD.Studio;
 using Newtonsoft.Json;
-using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityEngine.Internal;
 using UnityEngine.Scripting;
+using UVec2 = UnityEngine.Vector2;
+using UVec3 = UnityEngine.Vector3;
+using UVec4 = UnityEngine.Vector4;
+using UQuat = UnityEngine.Quaternion;
+
+using SVec2 = System.Numerics.Vector2;
+using SVec3 = System.Numerics.Vector3;
+using SVec4 = System.Numerics.Vector4;
+using SQuat = System.Numerics.Quaternion;
 using static UnityVecToSystemVec;
 
 
 public class UnityVecToSystemVec
 {
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 cVec2(System.Numerics.Vector2 v) => new Vector2(v.X, v.Y);
+    public static UVec2 cVec2(SVec2 v) => new UVec2(v.X, v.Y);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static System.Numerics.Vector2 cVec2(Vector2 v) => new System.Numerics.Vector2(v.x, v.y);
-
+    public static SVec2 cVec2(UVec2 v) => new SVec2(v.x, v.y);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 cVec3(System.Numerics.Vector3 v) => new Vector3(v.X, v.Y, v.Z);
+    public static UVec3 cVec3(SVec3 v) => new UVec3(v.X, v.Y, v.Z);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static System.Numerics.Vector3 cVec3(Vector3 v) => new System.Numerics.Vector3(v.x, v.y, v.z);
-
+    public static SVec3 cVec3(UVec3 v) => new SVec3(v.x, v.y, v.z);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 cVec4(System.Numerics.Vector4 v) => new Vector4(v.X, v.Y, v.Z, v.W);
+    public static UVec4 cVec4(SVec4 v) => new UVec4(v.X, v.Y, v.Z, v.W);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static System.Numerics.Vector4 cVec4(Vector4 v) => new System.Numerics.Vector4(v.x, v.y, v.z, v.w);
-
+    public static SVec4 cVec4(UVec4 v) => new SVec4(v.x, v.y, v.z, v.w);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static UQuat cQuat(SQuat q) => new UQuat(q.X, q.Y, q.Z, q.W);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static SQuat cQuat(UQuat q) => new SQuat(q.x, q.y, q.z, q.w);
 }
 
 [Preserve]
@@ -41,6 +46,7 @@ public class ModLoader : MonoBehaviour
     private void Awake()
     {
         PhysicsBridge.Init();
+        GameSideBridge.InitializeBridge();
         ModContext.projectileManager = GetComponent<ProjectileManager>();
         ModContext.playerSynchronizer = GetComponent<PlayerSynchronizer>();
     }
@@ -60,15 +66,12 @@ public class ModLoader : MonoBehaviour
 public class PhysicsBridge
 {
 
-    public static void Init()
-    {
-        PhysBridge.RaycastInternal = RaycastImpl;
-    }
+    public static void Init() => PhysBridge.RaycastInternal = RaycastImpl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static HitInfo RaycastImpl(
-        System.Numerics.Vector2 origin,
-        System.Numerics.Vector2 direction,
+        SVec2 origin,
+        SVec2 direction,
         float distance,
         int layerMask)
     {
@@ -81,73 +84,99 @@ public class PhysicsBridge
 [Preserve]
 public static class UserMods
 {
-    [Preserve]
-    public static ModContext mc = new ModContext();
-    [Preserve]
-    private static readonly List<ModBase> _mods = new();
-    [Preserve]
-    [MethodImpl(MethodImplOptions.NoOptimization)]
+
+    public struct ModHook
+    {
+        public ModContext context;
+        public ModBase mod;
+        public string dllPath;
+        public string directoryPath;
+    }
+
+    public static ModHook[] hooks;
+
     public static void LoadMods(string folder)
     {
-
-        
-
         Directory.CreateDirectory(folder);
 
-        foreach (var path in Directory.GetFiles(folder, "*.dll", SearchOption.AllDirectories))
-        {
+#if UNITY_EDITOR
+        // In editor: Navigate from Assets folder up to project root, then into build directory
+        string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+        string testingModPath = Path.Combine(projectRoot, "build", "Build_Raw_Mono", "Battle Squares_Data", "Mod");
+#else
+        string testingModPath = Path.Combine(Application.dataPath, "Mod");
+#endif
+        Directory.CreateDirectory(testingModPath);
 
+        string internalModPath = testingModPath;
+
+        List<string> allModPaths = new List<string>();
+        allModPaths.AddRange(Directory.GetFiles(folder, "*.dll", SearchOption.AllDirectories));
+
+        if (Directory.Exists(internalModPath)) allModPaths.AddRange(Directory.GetFiles(internalModPath, "*.dll", SearchOption.AllDirectories));
+
+        hooks = new ModHook[allModPaths.Count];
+
+        for (int i = 0; i < allModPaths.Count; i++)
+        {
+            ref ModHook modHook = ref hooks[i];
+            string path = allModPaths[i];
             byte[] bytes = File.ReadAllBytes(path);
             Assembly asm = Assembly.Load(bytes);
+            string modDirectory = Path.GetDirectoryName(path)!;
 
             foreach (var type in asm.GetTypes())
             {
                 if (type.IsAbstract || type.IsInterface) continue;
                 if (!typeof(ModBase).IsAssignableFrom(type)) continue;
-
                 try
                 {
-
-                    object obj = Activator.CreateInstance(type);
-                    var mod = (ModBase)obj;
-                    mod.OnLoad(mc);
-                    _mods.Add(mod);
-
-                }catch(Exception e)
+                    ModContext context = new ModContext(modDirectory);
+                    var mod = (ModBase)Activator.CreateInstance(type)!;
+                    mod.OnLoad(context);
+                    modHook = new ModHook()
+                    {
+                        mod = mod,
+                        context = context,
+                        dllPath = path,
+                        directoryPath = modDirectory,
+                    };
+                }
+                catch (Exception e)
                 {
-                    Debug.LogError(e.Message);
+                    Debug.LogError($"Failed loading mod from {path}\n{e}");
                 }
             }
         }
     }
 
-    [Preserve]
-    [MethodImpl(MethodImplOptions.NoOptimization)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void OnUpdate(float dt)
     {
-        foreach (var mod in _mods) mod.OnUpdate(dt);
+        for (int i = 0; i < hooks.Length; i++) hooks[i].mod.OnUpdate(dt);
     }
 
-    [Preserve]
-    [MethodImpl(MethodImplOptions.NoOptimization)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void OnLateUpdate(float dt)
     {
-        foreach (var mod in _mods) mod.OnLateUpdate(dt);
+        for (int i = 0; i < hooks.Length; i++) hooks[i].mod.OnLateUpdate(dt);
     }
 
-    [Preserve]
-    [MethodImpl(MethodImplOptions.NoOptimization)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void OnFixedUpdate(float dt)
     {
-        foreach (var mod in _mods) mod.OnFixedUpdate(dt);
+        for (int i = 0; i < hooks.Length; i++) hooks[i].mod.OnFixedUpdate(dt);
     }
 
-    [Preserve]
-    [MethodImpl(MethodImplOptions.NoOptimization)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void UnloadMods()
     {
-        foreach (var mod in _mods) mod.OnUnload();
-        _mods.Clear();
+        for (int i = 0; i < hooks.Length; i++) hooks[i].mod.OnUnload();
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void RaiseOnProjectileSpawnEvent(ProjectileBehaviour projectile, ref ProjectileInitData data)
+    {
+        for (int i = 0; i < hooks.Length; i++) hooks[i].context.RaiseOnProjectileSpawnEvent(projectile, ref data);
     }
 }
 
@@ -166,21 +195,22 @@ public class ModContext : IModContext
 
     [Preserve]
     ModLogger logger = new ModLogger();
-    [Preserve]
-    internal string pathToMods;
+
     [Preserve]
     [MethodImpl(MethodImplOptions.NoOptimization)]
-    public ModContext()
+    public ModContext(string pathToMod)
     {
         logger = new ModLogger();
         projectileSpawnEvents = new List<IModContext.ProjectileSpawnEvent>();
-        pathToMods = SaveManager.modsPath;
+        ModRoot = pathToMod;
     }
 
     [Preserve]
     public BattleSquaresSDK.ILogger Logger => logger;
-    [Preserve]
-    public string PathToMods => pathToMods; 
+
+    readonly string ModRoot;
+    public string GetPathToRelative(string relativePath) => Path.Combine(ModRoot, relativePath);
+    public string GetPathToRoot() => ModRoot;
 
     [Preserve]
     [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -201,17 +231,33 @@ public class ModContext : IModContext
         ModProjectileConverter.Apply(ref data, projectileSpawnData.creationData);
     }
 
-    public ISoundHandle PlayAudio(string path)
-    {
-        return ProgrammerAudio.Instance.PlayDialogue(path);
-    }
+    public void PlayAudio(string path) => ProgrammerAudio.Instance.PlayDialogue(path);
 
     public void OnCreateProjectileAssets(IModContext.ProjectileCreationEvent handler)
     {
         ProjectileCreator newProjectileCreator = new ProjectileCreator();
         newProjectileCreator.typeID = projectileManager.GetNextAvailibleID();
+        SetupMinimalWorkingDefaults(ref newProjectileCreator);
         handler(ref newProjectileCreator);
         projectileManager.CreateWeaponFromMod(ref newProjectileCreator);
+    }
+
+    private void SetupMinimalWorkingDefaults(ref ProjectileCreator pc)
+    {
+        ref ProjectileParamConfig cfg = ref pc.projectileParamConfig;
+
+        cfg.projectileSpeed = 20f;
+        cfg.projectileAcceleration = 0f;
+        cfg.speedLimit = 50f;
+        cfg.lifeTime = 5f;
+
+        cfg.baseDamage = 1f;
+
+        cfg.projectileAmmo = 1;
+        cfg.reloadTime = 0.5f;
+        cfg.shootingInterval = 0.1f;
+        cfg.sync = true;
+        cfg.syncSpeed = 10f;
     }
 }
 
@@ -236,8 +282,8 @@ public static class ModProjectileConverter
         return new ProjectileInitializationData
         {
 
-            spawnPosition = new System.Numerics.Vector2(src.position.x, src.position.y),
-            spawnDirection = new System.Numerics.Vector2(src.direction.x, src.direction.y),
+            spawnPosition = new SVec2(src.position.x, src.position.y),
+            spawnDirection = new SVec2(src.direction.x, src.direction.y),
 
             Speed = src.speed,
             MinSpeed = src.minSpeed,
@@ -292,8 +338,8 @@ public static class ModProjectileConverter
     public static void Apply(ref ProjectileInitData dst, in ProjectileInitializationData src)
     {
 
-        dst.position = new Vector2(src.spawnPosition.X, src.spawnPosition.Y);
-        dst.direction = new Vector2(src.spawnDirection.X, src.spawnDirection.Y);
+        dst.position = new UVec2(src.spawnPosition.X, src.spawnPosition.Y);
+        dst.direction = new UVec2(src.spawnDirection.X, src.spawnDirection.Y);
 
         dst.speed = src.Speed;
         dst.minSpeed = src.MinSpeed;
@@ -344,20 +390,20 @@ public static class ModProjectileConverter
 }
 public static class AnimationCurveJsonUtility
 {
-    [System.Serializable]
+    [Serializable]
     public class AnimationCurveFile
     {
         public CurveData curve;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class CurveData
     {
         public string serializedVersion;
         public List<KeyframeData> m_Curve;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class KeyframeData
     {
         public string serializedVersion;
@@ -369,99 +415,5 @@ public static class AnimationCurveJsonUtility
         public int weightedMode;
         public float inWeight;
         public float outWeight;
-    }
-
-    public static AnimationCurve LoadCurveFromFile(string path)
-    {
-        try
-        {
-            string json = File.ReadAllText(path);
-            return LoadCurveFromJson(json);
-        }
-        catch(Exception e) { Debug.Log(e.Message); }
-        
-        AnimationCurve defaultCurve = new AnimationCurve();
-        Keyframe[] keys = new Keyframe[2]
-        {
-            new Keyframe(0, 1),
-            new Keyframe(1, 1),
-        };
-        defaultCurve.keys = keys;
-        return defaultCurve;
-    }
-
-    public static AnimationCurve LoadCurveFromJson(string json)
-    {
-        AnimationCurveFile file = JsonConvert.DeserializeObject<AnimationCurveFile>(json);
-        if (file?.curve?.m_Curve == null) return new AnimationCurve();
-
-        AnimationCurve curve = new AnimationCurve();
-
-        foreach (var k in file.curve.m_Curve)
-        {
-            Keyframe key = new Keyframe(
-                k.time,
-                k.value,
-                k.inSlope,
-                k.outSlope,
-                k.inWeight,
-                k.outWeight
-            )
-            {
-                weightedMode = (WeightedMode)k.weightedMode
-            };
-
-            curve.AddKey(key);
-        }
-
-        return curve;
-    }
-}
-
-public class SoundHandle : ISoundHandle
-{
-    private EventInstance _instance;
-    private GCHandle _handle;
-    private bool _stopped;
-
-    internal SoundHandle(EventInstance instance, GCHandle handle)
-    {
-        _instance = instance;
-        _handle = handle;
-        _stopped = false;
-    }
-
-    public void Stop()
-    {
-        if (_stopped) return;
-        _stopped = true;
-        _instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        _instance.release();
-        _handle.Free();
-    }
-
-    public void Pause()
-    {
-        if (_stopped) return;
-        _instance.setPaused(true);
-    }
-
-    public void Resume()
-    {
-        if (_stopped) return;
-        _instance.setPaused(false);
-    }
-
-    public void SetVolume(float volume)
-    {
-        if (_stopped) return;
-        _instance.setVolume(Mathf.Clamp01(volume));
-    }
-
-    public bool IsPlaying()
-    {
-        if (_stopped) return false;
-        _instance.getPlaybackState(out PLAYBACK_STATE state);
-        return state == PLAYBACK_STATE.PLAYING;
     }
 }
