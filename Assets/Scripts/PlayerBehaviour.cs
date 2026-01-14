@@ -77,10 +77,6 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public bool selectedLegacyMap = true;
     public int selectedMap;
 
-    private PlayerID ID;
-
-    public ulong id => ID.networkID;
-
     public bool hasJump;
     public float fps = 6000;
     public float oneFifthFps;
@@ -992,22 +988,11 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public byte GetID() => (byte) id;
-
-    public readonly struct PlayerID
-    {
-        public readonly byte networkID;
-        public readonly byte localID;
-    }
+    public byte GetID() => (byte)id;
+    public ulong id;
 
 
 
-
-
-
-
-
-    //ModSDK Exposed symbols
     private void OnDestroy()
     {
         OnDestroyed?.Invoke(this);

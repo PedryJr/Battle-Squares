@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: breh
+  m_Name: PlayerShader
   m_Shader: {fileID: 4800000, guid: ba63699ee296ca048a4390e1ec13e02d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -46,16 +46,18 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
+    - _DstBlend: 10
     - _EnableExternalAlpha: 0
+    - _SrcBlend: 5
     - _Stencil: 0
     - _StencilComp: 8
-    - _StencilOp: 0
+    - _StencilOp: 9
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
     - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.74901974, g: 0.74901974, b: 0.74901974, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

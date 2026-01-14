@@ -194,7 +194,7 @@ public class ModContext : IModContext
     private List<IModContext.ProjectileCreationEvent> projectileCreationEvents;
 
     [Preserve]
-    ModLogger logger = new ModLogger();
+    ModLogger logger;
 
     [Preserve]
     [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -264,11 +264,17 @@ public class ModContext : IModContext
 [Preserve]
 public class ModLogger : BattleSquaresSDK.ILogger
 {
-    [Preserve]
+    public bool enable { get; set; }
+
     [MethodImpl(MethodImplOptions.NoOptimization)]
     public void Log(string message)
     {
-        Debug.Log(message);
+        if(enable) VLog.Log(message);
+    }
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    public void Log(string message, float duration)
+    {
+        if(enable) VLog.Log(message, duration);
     }
 }
 

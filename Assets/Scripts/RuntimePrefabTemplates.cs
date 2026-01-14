@@ -1,6 +1,7 @@
 using BattleSquaresSDK;
 using System;
 using UnityEngine;
+using static AssetWrappers;
 using static WeaponBuilder;
 
 public class RuntimePrefabTemplates : MonoBehaviour
@@ -15,6 +16,14 @@ public class RuntimePrefabTemplates : MonoBehaviour
         newWeaponBuilder.specs.weaponName = creator.metaData.Name;
         newWeaponBuilder.specs.projectileSpawnEvents = new ProjectileSpawnEvent[0];
         newWeaponBuilder.specs.typeID = creator.TypeID;
+        if (!string.IsNullOrEmpty(creator.metaData.pathToLogoPNG))
+        {
+            ITexture2D itex = AssetCreator.CreateTexture(creator.metaData.pathToLogoPNG, BattleSquaresSDK.TextureWrapMode.Clamp, BattleSquaresSDK.FilterMode.Point);
+            ISprite isprite = AssetCreator.CreateSprite(itex, 100);
+
+            Sprite sprite = (isprite as SpriteWrapper).sprite;
+            newWeaponBuilder.specs.icon = sprite;
+        }
 
         ProjectileBehaviour newProjectile = Instantiate(fullFeatureWeapon.weapon.projectile);
 

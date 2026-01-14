@@ -1195,7 +1195,6 @@ MonoBehaviour:
   coloringComponent: {fileID: 2995831169349222189}
   selectedLegacyMap: 1
   selectedMap: 0
-  id: 0
   hasJump: 0
   fps: 6000
   oneFifthFps: 0
@@ -1270,6 +1269,7 @@ MonoBehaviour:
   spawnBuffer: 0
   newMods: 0
   jumpParticleRef: {fileID: 8567238288229006168, guid: 414f2ce96a088454aafac90bbb09133b, type: 3}
+  id: 0
 --- !u!114 &2995831169349222189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1283,7 +1283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hue: 0.5264285
-  playerMaterial: {fileID: -876546973899608171, guid: a1488dad8c03ba443a818f6b8ce37a0f, type: 3}
+  playerMaterial: {fileID: 2100000, guid: fe1e5febeafd983459fc4f6d2ad3b3cf, type: 2}
   projectileMaterial: {fileID: -876546973899608171, guid: fbed87eedacfac4429ace8489234b829, type: 3}
   particleMaterial: {fileID: -876546973899608171, guid: dad808b10b3ac2044a76c5ed232a1e80, type: 3}
   primaryColor:

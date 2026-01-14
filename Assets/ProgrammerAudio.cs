@@ -27,6 +27,7 @@ public class ProgrammerAudio : MonoBehaviour
 
         dialogueInstance.setUserData(GCHandle.ToIntPtr(stringHandle));
         dialogueInstance.setCallback(dialogueCallback);
+        dialogueInstance.setVolume(MySettings.Volume);
         dialogueInstance.start();
         dialogueInstance.release();
     }

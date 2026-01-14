@@ -2,16 +2,29 @@ Shader "Custom/PlayerShader"
 {
     Properties
     {
-        [MainColor] _BaseColor("Base Color", Color) = (1, 1, 1, 1)
-        [MainTexture] _BaseMap("Base Map", 2D) = "white"
+        _MainTex ("Sprite Texture", 2D) = "white" {}
+        [HDR] _Color ("Tint", Color) = (1,1,1,1)
+        
+        // Blend mode
+        [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Src Blend", Float) = 5
+        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Dst Blend", Float) = 10
         
         // Stencil properties for sprite masking
-        _Stencil("Stencil ID", Float) = 0
-        _StencilComp("Stencil Comparison", Float) = 3
-        _StencilOp("Stencil Operation", Float) = 0
-        _StencilWriteMask("Stencil Write Mask", Float) = 255
-        _StencilReadMask("Stencil Read Mask", Float) = 255
-        _ColorMask("Color Mask", Float) = 15
+        _Stencil ("Stencil ID", Float) = 0
+        _StencilComp ("Stencil Comparison", Float) = 8
+        _StencilOp ("Stencil Operation", Float) = 0
+        _StencilWriteMask ("Stencil Write Mask", Float) = 255
+        _StencilReadMask ("Stencil Read Mask", Float) = 255
+        _ColorMask ("Color Mask", Float) = 15
+
+        _NoiseTex1("Noise 1", 2D) = "white"{}
+        _Scale1("Scale 1", Range(0, 10)) = 1.0
+        _NoiseTex2("Noise 2", 2D) = "white"{}
+        _Scale2("Scale 2", Range(0, 10)) = 1.0
+        _NoiseTex3("Noise 3", 2D) = "white"{}
+        _Scale3("Scale 3", Range(0, 10)) = 1.0
+        _NoiseTex4("Noise 4", 2D) = "white"{}
+        _Scale4("Scale 4", Range(0, 10)) = 1.0
     }
 
     SubShader
@@ -21,42 +34,31 @@ Shader "Custom/PlayerShader"
             "RenderType" = "Transparent"
             "Queue" = "Transparent"
             "RenderPipeline" = "UniversalPipeline"
-            "IgnoreProjector" = "True"
+            "CanUseSpriteAtlas" = "True"
+            "PreviewType" = "Plane"
         }
 
-        // Stencil setup for sprite masking
         Stencil
         {
             Ref [_Stencil]
-            ReadMask [_StencilReadMask]
-            WriteMask [_StencilWriteMask]
             Comp [_StencilComp]
             Pass [_StencilOp]
+            ReadMask [_StencilReadMask]
+            WriteMask [_StencilWriteMask]
         }
-        
+
+        Blend [_SrcBlend] [_DstBlend]
+        ZWrite Off
+        Cull Off
         ColorMask [_ColorMask]
 
         Pass
         {
-            Tags { "LightMode" = "Universal2D" }
-            
-            Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite Off
-            Cull Off
-
             HLSLPROGRAM
-
             #pragma vertex vert
             #pragma fragment frag
 
-            // Enable 2D lighting
-            #pragma multi_compile _ USE_SHAPE_LIGHT_TYPE_0
-            #pragma multi_compile _ USE_SHAPE_LIGHT_TYPE_1
-            #pragma multi_compile _ USE_SHAPE_LIGHT_TYPE_2
-            #pragma multi_compile _ USE_SHAPE_LIGHT_TYPE_3
-
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
 
             struct Attributes
             {
@@ -70,41 +72,96 @@ Shader "Custom/PlayerShader"
                 float4 positionHCS : SV_POSITION;
                 float2 uv : TEXCOORD0;
                 float4 color : COLOR;
-                float2 lightingUV : TEXCOORD1;
             };
 
-            TEXTURE2D(_BaseMap);
-            SAMPLER(sampler_BaseMap);
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+
+            TEXTURE2D(_NoiseTex1);
+            SAMPLER(sampler_NoiseTex1);
+
+            TEXTURE2D(_NoiseTex2);
+            SAMPLER(sampler_NoiseTex2);
+
+            TEXTURE2D(_NoiseTex3);
+            SAMPLER(sampler_NoiseTex3);
+
+            TEXTURE2D(_NoiseTex4);
+            SAMPLER(sampler_NoiseTex4);
 
             CBUFFER_START(UnityPerMaterial)
-                half4 _BaseColor;
-                float4 _BaseMap_ST;
+                float4 _MainTex_ST;
+                float4 _Color;
             CBUFFER_END
 
             Varyings vert(Attributes IN)
             {
                 Varyings OUT;
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-                OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
-                OUT.color = IN.color;
-                
-                // Calculate lighting UV
-                float4 clipPos = OUT.positionHCS / OUT.positionHCS.w;
-                OUT.lightingUV = ComputeScreenPos(clipPos).xy;
-                
+                OUT.uv = TRANSFORM_TEX(IN.uv, _MainTex);
+                OUT.color = IN.color * _Color;
                 return OUT;
+            }
+
+            #define PI 3.14159265358979323846
+
+            float GetSquareFade(float2 uv, float size)
+            {
+                float2 p = abs(uv - 0.5) * 2.0 / size;
+                float d = max(p.x, p.y);   // square distance (0 = center, 1 = edge)
+
+                float fade = smoothstep(0.0, 0.8, d);
+                return fade;
+            }
+
+            float SampleNoise1(float2 uv, float speed, float powr)
+            {
+                float timer = _Time.y * speed;
+
+                uv.x += timer * 0.99;
+                uv.y += timer;
+
+                return pow(SAMPLE_TEXTURE2D(_NoiseTex1, sampler_NoiseTex1, uv ).r, powr);
+            }
+
+            float SampleNoise2(float2 uv, float speed, float powr)
+            {
+                float timer = _Time.y * speed;
+
+                uv.x += timer * 0.99;
+                uv.y += timer;
+
+                return pow(SAMPLE_TEXTURE2D(_NoiseTex2, sampler_NoiseTex2, uv ).r, powr);
             }
 
             half4 frag(Varyings IN) : SV_Target
             {
-                half4 texColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv);
-                half4 color = texColor * _BaseColor * IN.color;
-                
-                // Apply 2D lighting
-                half4 lighting = CombinedShapeLightShared(IN.lightingUV);
-                color.rgb *= lighting.rgb;
-                
-                return color;
+
+                half4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv);
+                half4 inputToGamma; 
+                inputToGamma.rgb = pow(IN.color.rgb, 1/2.2);
+                inputToGamma.a = IN.color.a;
+                half3 producedColor = inputToGamma.rgb;
+                half alpha = inputToGamma.a;
+                half4 output;
+
+                output.rgb = 0;
+
+                float fade = GetSquareFade(IN.uv, 1);
+
+                float l = 1.0;
+
+                l *= SampleNoise1(IN.uv, 0.21, 1);
+                l *= SampleNoise2(IN.uv, -0.2, 1);
+
+
+
+                output.rgb = lerp(producedColor * l, producedColor, fade);
+                output.a   = alpha * fade;
+
+                //output.rgba = inputToGamma;
+
+                return output;
             }
             ENDHLSL
         }

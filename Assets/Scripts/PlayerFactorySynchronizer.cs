@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using static PlayerBehaviour;
 using static PlayerSynchronizer;
 
 public class PlayerFactorySynchronizer : NetworkBehaviour
@@ -217,7 +218,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
     {
         newPlayer.id = playerData.networkId;
         newPlayer.selectedMap = playerData.selectedMap;
-    } 
+    }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void RequestPlayerSkinServerRpc(ulong requesterID, ulong skinOwnerID)
