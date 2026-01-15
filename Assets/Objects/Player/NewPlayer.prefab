@@ -1190,6 +1190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overrideMMR: 1432.36886156104
+  neighbours: {fileID: 0}
   playerLight: {fileID: 3159344491717468697}
   sensor: {fileID: 4821608779394464332}
   coloringComponent: {fileID: 2995831169349222189}
@@ -1288,7 +1289,7 @@ MonoBehaviour:
   particleMaterial: {fileID: -876546973899608171, guid: dad808b10b3ac2044a76c5ed232a1e80, type: 3}
   primaryColor:
     colorCorrectionType: 0
-    saturation: 0.835
+    saturation: 0.8
     value: 0.554
     alpha: 1
   secondaryColor:
@@ -1303,7 +1304,7 @@ MonoBehaviour:
     alpha: 0.314
   nozzleColor:
     colorCorrectionType: 1
-    saturation: 0.299
+    saturation: 0.35
     value: 1
     alpha: 1
   projectileColor:

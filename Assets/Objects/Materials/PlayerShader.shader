@@ -48,8 +48,8 @@ Shader "Custom/PlayerShader"
         }
 
         Blend [_SrcBlend] [_DstBlend]
-        ZWrite Off
-        Cull Off
+        ZWrite On
+        Cull Back
         ColorMask [_ColorMask]
 
         Pass
@@ -89,6 +89,11 @@ Shader "Custom/PlayerShader"
             TEXTURE2D(_NoiseTex4);
             SAMPLER(sampler_NoiseTex4);
 
+            float _Scale1;
+            float _Scale2;
+            float _Scale3;
+            float _Scale4;
+
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 float4 _Color;
@@ -97,6 +102,8 @@ Shader "Custom/PlayerShader"
             Varyings vert(Attributes IN)
             {
                 Varyings OUT;
+
+
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
                 OUT.uv = TRANSFORM_TEX(IN.uv, _MainTex);
                 OUT.color = IN.color * _Color;
@@ -110,13 +117,15 @@ Shader "Custom/PlayerShader"
                 float2 p = abs(uv - 0.5) * 2.0 / size;
                 float d = max(p.x, p.y);   // square distance (0 = center, 1 = edge)
 
-                float fade = smoothstep(0.0, 0.8, d);
-                return fade;
+                float fade = smoothstep(0.75, 1, d);
+                return pow(fade, 10);
             }
 
             float SampleNoise1(float2 uv, float speed, float powr)
             {
                 float timer = _Time.y * speed;
+
+                uv *= _Scale1;
 
                 uv.x += timer * 0.99;
                 uv.y += timer;
@@ -127,6 +136,8 @@ Shader "Custom/PlayerShader"
             float SampleNoise2(float2 uv, float speed, float powr)
             {
                 float timer = _Time.y * speed;
+
+                uv *= _Scale2;
 
                 uv.x += timer * 0.99;
                 uv.y += timer;
@@ -141,6 +152,7 @@ Shader "Custom/PlayerShader"
                 half4 inputToGamma; 
                 inputToGamma.rgb = pow(IN.color.rgb, 1/2.2);
                 inputToGamma.a = IN.color.a;
+                return inputToGamma;
                 half3 producedColor = inputToGamma.rgb;
                 half alpha = inputToGamma.a;
                 half4 output;
@@ -156,12 +168,12 @@ Shader "Custom/PlayerShader"
 
 
 
-                output.rgb = lerp(producedColor * l, producedColor, fade);
-                output.a   = alpha * fade;
+                output.rgb = producedColor;
+                output.a   = lerp(alpha, l, fade) * lerp(1, 0, fade);
+
 
                 //output.rgba = inputToGamma;
 
-                return output;
             }
             ENDHLSL
         }

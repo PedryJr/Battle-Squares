@@ -102,5 +102,4 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
         public string row3;
         public string row4;
     }
-
 }

@@ -25,6 +25,8 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     [ContextMenu("Log my mmr")]
     void LogCurrentMMRP() => Debug.Log(new EncryptedDouble(MMRlocation, 1000.0).Value);
 
+    public PlayerNeighbours neighbours;
+
     [SerializeField]
     Light2D playerLight;
     public const string MMRlocation = "SkillIssue";
@@ -987,9 +989,9 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public byte GetID() => (byte)id;
-    public ulong id;
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+   public byte GetID() => (byte)id;
+   public ulong id;
 
 
 

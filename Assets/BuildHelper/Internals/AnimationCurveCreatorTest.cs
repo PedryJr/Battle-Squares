@@ -35,13 +35,11 @@ public class AnimationCurveCreatorTest : MonoBehaviour
     [SerializeField] AnimationCurve Curve;
     [SerializeField] string name;
 
-    
     public void ExportJson()
     {
         string path = "Assets/BuildHelper/" + name + ".json";
         ExportJson(path, Curve);
     }
-
     public static void ExportJson(string path, AnimationCurve curve)
     {
 
@@ -73,13 +71,10 @@ public class AnimationCurveCreatorTest : MonoBehaviour
         File.WriteAllText(path, JsonConvert.SerializeObject(file, Formatting.Indented));
 
     }
-
-
     public void ImportJson()
     {
         string path = "Assets/BuildHelper/" + name + ".json";
     }
-
     public static AnimationCurve ImportJson(string path)
     {
 

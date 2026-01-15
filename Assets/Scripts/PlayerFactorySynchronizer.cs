@@ -3,11 +3,16 @@ using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using static PlayerBehaviour;
 using static PlayerSynchronizer;
 
 public class PlayerFactorySynchronizer : NetworkBehaviour
 {
+
+    [SerializeField]
+    PlayerController controllerPrefab;
 
     public float skinFetchesPerSecond = 1f;
     float skinFetchTimer = 0;
@@ -33,6 +38,38 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
     }
 
     private void FixedUpdate()
+    {
+        CheckLocalCoop();
+        SkinDownload();
+    }
+
+    void CheckLocalCoop()
+    {
+/*        if (SceneManager.GetActiveScene().name != "LobbyScene") return;
+        foreach (var item in Gamepad.all)
+        {
+            if (PlayerController.consumedDeviceIDs.Contains(item.deviceId)) continue;
+
+            if (item.selectButton.wasPressedThisFrame)
+            {
+                PlayerBehaviour newPlayer = Instantiate(playerSynchronizer.square);
+                newPlayer.SpawnEffect();
+                Instantiate(controllerPrefab, newPlayer.transform).SetTargetController(newPlayer);
+                playerSynchronizer.playerIdentities.Add(new PlayerData
+                {
+                    square = newPlayer,
+                    id = (ulong)(NetworkManager.LocalClientId + (ulong)PlayerController.consumedDeviceIDs.Count + 1),
+                    steamId = SteamClient.SteamId.Value
+                });
+                PlayerController.consumedDeviceIDs.Add(item.deviceId);
+                newPlayer.AssertSteamDataAvalible(SteamClient.SteamId.Value);
+                newPlayer.newColor = true;
+                newPlayer.neighbours.AddNeighbour(newPlayer);
+            }
+        }*/
+    }
+
+    void SkinDownload()
     {
         skinFetchTimer += Time.deltaTime * skinFetchesPerSecond;
         if (initEvents.Count > 0) RunSkinInitEvents();
@@ -106,6 +143,11 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         return !playerExists;
     }
 
+    public void CreateNewPlayerFromController(ulong networkID, byte localID)
+    {
+
+    }
+
     public void CreateNewPlayer(ulong id)
     {
 
@@ -166,11 +208,8 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         PlayerBehaviour newPlayer = Instantiate(playerSynchronizer.square);
 
         SetPlayerInitialData(ref newPlayer, ref playerData);
-
         SetPlayerLocality(ref newPlayer, ref playerData);
-
         SetPlayerSyncData(ref newPlayer, ref playerData);
-
         SpawnPlayer(ref newPlayer);
 
         if (!IsHost && newPlayer.GetID() == NetworkManager.LocalClientId)
@@ -188,7 +227,6 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
             playerSynchronizer.playerIdList.Add(newPlayer.id);
             playerSynchronizer.UpdateSelectedMap(playerSynchronizer.localSquare.selectedMap, playerSynchronizer.localSquare.selectedLegacyMap);
         }
-        // Request the skin: call ServerRpc which will forward to the skin owner client only.
         RequestPlayerSkinServerRpc(NetworkManager.LocalClientId, newPlayer.id);
         playerSynchronizer.clrUpdate = 1;
         newPlayer.newColor = true;
@@ -198,8 +236,10 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
     {
         if (playerData.networkId != NetworkManager.LocalClientId) return;
 
+        newPlayer.neighbours = newPlayer.gameObject.AddComponent<PlayerNeighbours>();
         playerSynchronizer.localSquare = newPlayer;
-        FindAnyObjectByType<PlayerController>().SetTargetController(playerSynchronizer.localSquare);
+        Instantiate(controllerPrefab).SetTargetController(newPlayer);
+        newPlayer.neighbours.AddNeighbour(newPlayer);
     }
 
     private void SetPlayerSyncData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)

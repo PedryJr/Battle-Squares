@@ -219,12 +219,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     public void DisconnectPlayer(ulong id)
     {
 
-        if (IsHost)
-        {
-
-            DisconnectPlayerRemotely(id);
-
-        }
+        if (IsHost) DisconnectPlayerRemotely(id);
 
     }
 

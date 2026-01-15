@@ -16,6 +16,8 @@ public class LogElementAnimation : MonoBehaviour
     float timeToFadeOut;
     [SerializeField]
     float maxPreferredHeight = 40f;
+    [SerializeField]
+    float maxPreferredWidth = 40f;
 
     Color visibleColor = Color.white;
     Color invisibleColor = Color.clear;
@@ -63,6 +65,7 @@ public class LogElementAnimation : MonoBehaviour
             text.color = Color.Lerp(invisibleColor, visibleColor, curveValue);
 
             element.preferredHeight = Mathf.Lerp(0f, maxPreferredHeight, curveValue);
+            element.preferredWidth = Mathf.Lerp(0f, maxPreferredWidth, curveValue);
         }
         else if (elapsedTime < timeToFadeIn + timeToStay)
         {
@@ -70,6 +73,7 @@ public class LogElementAnimation : MonoBehaviour
             if (element != null)
             {
                 element.preferredHeight = maxPreferredHeight;
+                element.preferredWidth = maxPreferredWidth;
             }
         }
         else if (elapsedTime < totalDuration)
@@ -84,6 +88,7 @@ public class LogElementAnimation : MonoBehaviour
 
             text.color = Color.Lerp(visibleColor, invisibleColor, curveValue);
             element.preferredHeight = Mathf.Lerp(maxPreferredHeight, 0f, curveValue);
+            element.preferredWidth = Mathf.Lerp(maxPreferredWidth, 0f, curveValue);
         }
         else
         {
