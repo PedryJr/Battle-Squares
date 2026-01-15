@@ -16,9 +16,9 @@ public class ComponentDriver : MonoBehaviour
     public void LazyAwake() => ModComponentInstance.OnAwake();
     public void LazyEnable() => ModComponentInstance.OnEnable();
     private void Start() => ModComponentInstance.OnStart();
-    private void Update() => ModComponentInstance.OnUpdate();
-    private void FixedUpdate() => ModComponentInstance.OnFixedUpdate();
-    private void LateUpdate() => ModComponentInstance.OnLateUpdate();
+    private void Update() => ModComponentInstance.OnUpdate(Time.deltaTime);
+    private void FixedUpdate() => ModComponentInstance.OnFixedUpdate(Time.deltaTime);
+    private void LateUpdate() => ModComponentInstance.OnLateUpdate(Time.deltaTime);
     private void OnEnable()
     {
         if (ModComponentInstance == null) lazyEnableFlag = true;
@@ -293,7 +293,7 @@ public partial class GameObjectWrapper : IGameObject
         }
     }
 
-    public void RemoveComponent(IComponent component)
+    public void RemoveComponent(ref IComponent component)
     {
         foreach (var driver in GetDrivers())
         {
@@ -301,6 +301,7 @@ public partial class GameObjectWrapper : IGameObject
             {
                 GameSideBridge.ReleaseRegisteredComponent(component, driver);
                 UnityEngine.Object.Destroy(driver);
+                component = null;
                 return;
             }
         }
