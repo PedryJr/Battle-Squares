@@ -20,6 +20,7 @@ namespace BattleSquaresSDK
         {
             return createSpriteDelegate(texture, PixelsPerUnit);
         }
+
         public static (ISprite, ITexture2D) CreateSprite(string PngPath, int PixelsPerUnit, TextureWrapMode wrapMode, FilterMode filterMode)
         {
             ITexture2D texture = CreateTexture(PngPath, wrapMode, filterMode);
