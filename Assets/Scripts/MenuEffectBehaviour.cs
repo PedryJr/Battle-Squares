@@ -37,7 +37,7 @@ public class MenuEffectBehaviour : MonoBehaviour
         public AnimationCurve curve;
     }
 
-    float timer;
+    float timer = -1;
 
     private void Awake()
     {
@@ -48,15 +48,9 @@ public class MenuEffectBehaviour : MonoBehaviour
         if (runOnce)
         {
             timer = 1F;
-            for (int i = 0; i < shapes.Length; i++)
-            {
-                AnimateTransform(shapes[i]);
-            }
+            for (int i = 0; i < shapes.Length; i++) AnimateTransform(shapes[i]);
 
-            for (int i = 0; i < visuals.Length; i++)
-            {
-                AnimateColor(visuals[i]);
-            }
+            for (int i = 0; i < visuals.Length; i++) AnimateColor(visuals[i]);
             Destroy(this);
         }
     }
@@ -66,19 +60,15 @@ public class MenuEffectBehaviour : MonoBehaviour
 
         timer += Time.deltaTime * 1F/animationTime;
 
-        if(timer >= 1F) 
+        if(timer <= 0) for (int i = 0; i < shapes.Length; i++) ZeroTransform(shapes[i]);
+
+        if (timer >= 1F) 
         {
             timer = 1F;
 
-            for (int i = 0; i < shapes.Length; i++)
-            {
-                AnimateTransform(shapes[i]);
-            }
+            for (int i = 0; i < shapes.Length; i++) AnimateTransform(shapes[i]);
 
-            for (int i = 0; i < visuals.Length; i++)
-            {
-                AnimateColor(visuals[i]);
-            }
+            for (int i = 0; i < visuals.Length; i++) AnimateColor(visuals[i]);
             runOnce = true;
             Destroy(this);
         }
@@ -119,6 +109,11 @@ public class MenuEffectBehaviour : MonoBehaviour
         shape.targetTransform.position = result1;
         shape.targetTransform.localScale = result2;
 
+    }
+
+    void ZeroTransform(Shapes shape)
+    {
+        shape.targetTransform.localScale = Vector3.zero;
     }
 
 }

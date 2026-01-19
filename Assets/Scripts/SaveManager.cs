@@ -29,11 +29,11 @@ public sealed class SaveManager : MonoBehaviour
 
         skin = GetComponent<Skin>();
         skin.Init();
+        MySettings.Init();
     }
 
     private void Start()
     {
-        MySettings.Init();
         UserStatsManager.Init();
     }
 

@@ -308,7 +308,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
             gameState = gameState,
         };
 
-        positionCompute = proximitySensorCalculation.Schedule(iterations, 64);
+        positionCompute = proximitySensorCalculation.ScheduleParallelByRef(iterations, 64, default);
 
         nativeProximitySensors.Clear();
         nativeForceFieldBlockers.Clear();
@@ -439,7 +439,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
 }
 
 [BurstCompile(FloatPrecision = floatPrecision, FloatMode = floatMode, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, OptimizeFor = optimizeFor)]
-unsafe struct ProximitySensorCalculation : IJobParallelFor
+unsafe struct ProximitySensorCalculation : IJobFor
 {
     const FloatPrecision floatPrecision = FloatPrecision.Low;
     const FloatMode floatMode = FloatMode.Fast;

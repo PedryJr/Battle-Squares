@@ -1,5 +1,6 @@
 using System;
 using System.Buffers.Binary;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -481,4 +482,34 @@ public static class MyExtentions
 
         return closestHit;
     }
+
+    public static string RemoveInvisibleChars(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+
+        var span = input.AsSpan().Trim();
+        if (span.Length == 0) return string.Empty;
+
+        bool hasInvisibleChars = false;
+        foreach (char c in span)
+        {
+            if (char.IsControl(c) || c == '\u200B' || c == '\u200C' || c == '\u200D' || c == '\uFEFF')
+            {
+                hasInvisibleChars = true;
+                break;
+            }
+        }
+
+        if (!hasInvisibleChars) return span.ToString().Normalize(NormalizationForm.FormC);
+
+        Span<char> buffer = span.Length <= 256 ? stackalloc char[span.Length] : new char[span.Length];
+        int writeIndex = 0;
+        foreach (char c in span)
+        {
+            if (!char.IsControl(c) && c != '\u200B' && c != '\u200C' && c != '\u200D' && c != '\uFEFF') buffer[writeIndex++] = c;
+        }
+
+        return new string(buffer.Slice(0, writeIndex)).Normalize(NormalizationForm.FormC);
+    }
+
 }

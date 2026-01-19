@@ -11949,7 +11949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44dd247a00edbfa44b77868d755af6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steamAppId: 3180450
+  steamAppId: 480
   targetSteamId: 0
   userSteamId: 0
 --- !u!114 &1938180161
@@ -12078,6 +12078,7 @@ GameObject:
   - component: {fileID: 7766882706945389871}
   - component: {fileID: 7766882706945389872}
   - component: {fileID: 7766882706945389873}
+  - component: {fileID: 7766882706945389874}
   m_Layer: 0
   m_Name: Synchronizer
   m_TagString: Sync
@@ -12443,7 +12444,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFactorySynchronizer
   ShowTopMostFoldoutHeaderGroup: 1
-  controllerPrefab: {fileID: 2080445172016167828, guid: 1729d05473a2ade4e836740df6121660, type: 3}
   skinFetchesPerSecond: 25
 --- !u!114 &7766882706945389870
 MonoBehaviour:
@@ -12503,6 +12503,30 @@ MonoBehaviour:
       Data3: 1179419320
       Data4: -1982377855
     Path: event:/ModdedSound/New Event
+--- !u!114 &7766882706945389874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae9c1901b646db0458f62f2439dfe37a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  playerBehaviour: {fileID: 0}
+  upInputDirection: {x: 0, y: 0}
+  downInputDirection: {x: 0, y: 0}
+  leftInputDirection: {x: 0, y: 0}
+  rightInputDirection: {x: 0, y: 0}
+  projectileDirection: {x: 0, y: 1}
+  finalDirection: {x: 0, y: 1}
+  aimingDirection: {x: 0, y: 1}
+  aimingDirectionSimple: {x: 0, y: 0}
+  inputJump: 0
+  shootPrimary: 0
+  shootSecondary: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

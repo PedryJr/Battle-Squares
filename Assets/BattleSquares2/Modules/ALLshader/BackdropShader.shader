@@ -32,6 +32,7 @@ Shader "*MyShaders/BackdropShader"
         Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
         Cull Back
         ZWrite [_ZWrite]
+        //ZTest LEqual
         
 
         Pass

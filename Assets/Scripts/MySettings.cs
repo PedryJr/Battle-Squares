@@ -94,7 +94,7 @@ public sealed class MySettings
         }
 
         // Apply the best resolution found
-        Screen.SetResolution(bestResolution.width, bestResolution.height, FullScreenMode.ExclusiveFullScreen, highestRefreshRate);
+        Screen.SetResolution(bestResolution.width, bestResolution.height, FullScreenMode.FullScreenWindow, highestRefreshRate);
 
         double finalRefreshRate = (double)highestRefreshRate.numerator / highestRefreshRate.denominator;
         Debug.Log($"Applied resolution: {bestResolution.width}x{bestResolution.height} @ {finalRefreshRate:F2}Hz");

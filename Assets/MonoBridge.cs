@@ -485,7 +485,7 @@ public partial class TransformWrapper : ITransform
     bool IComponentAccess.TryGetComponent<T>(out T component) => gameObject.TryGetComponent<T>(out component);
     T IComponentAccess.AddComponent<T>() => gameObject.AddComponent<T>();
     void IComponentAccess.RemoveComponent<T>() => gameObject.RemoveComponent<T>();
-    public void RemoveComponent(IComponent component) => gameObject.RemoveComponent(component);
+    public void RemoveComponent(ref IComponent component) => gameObject.RemoveComponent(ref component);
 }
 
 public static class GameSideBridge

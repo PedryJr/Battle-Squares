@@ -44,7 +44,6 @@ public sealed class EditorSwitchBehaviour : MonoBehaviour
 
     public void TOGGLEWORKSHOP()
     {
-
         workshopCanvasOn = !workshopCanvasOn;
 
         if (workshopCanvasOn)
@@ -54,6 +53,7 @@ public sealed class EditorSwitchBehaviour : MonoBehaviour
         }
         else
         {
+            workshopCanvas.GetComponentInChildren<WorkshopLoader>().DelistItems();
             workshopCanvas.gameObject.SetActive(false);
             mainCanvas.gameObject.SetActive(true);
         }

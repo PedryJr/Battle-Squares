@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+[ExecuteAlways]
 public sealed class TransformLockBehaviour : MonoBehaviour
 {
     Transform cachedTransform;

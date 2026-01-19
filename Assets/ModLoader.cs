@@ -5,18 +5,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Scripting;
-using UVec2 = UnityEngine.Vector2;
-using UVec3 = UnityEngine.Vector3;
-using UVec4 = UnityEngine.Vector4;
-using UQuat = UnityEngine.Quaternion;
-
+using static UnityVecToSystemVec;
+using SQuat = System.Numerics.Quaternion;
 using SVec2 = System.Numerics.Vector2;
 using SVec3 = System.Numerics.Vector3;
 using SVec4 = System.Numerics.Vector4;
-using SQuat = System.Numerics.Quaternion;
-using static UnityVecToSystemVec;
+using UQuat = UnityEngine.Quaternion;
+using UVec2 = UnityEngine.Vector2;
+using UVec3 = UnityEngine.Vector3;
+using UVec4 = UnityEngine.Vector4;
+using System.Security.Cryptography;
 
 
 public class UnityVecToSystemVec
@@ -104,49 +105,79 @@ public static class UserMods
         string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
         string testingModPath = Path.Combine(projectRoot, "build", "Build_Raw_Mono", "Battle Squares_Data", "Mod");
 #else
-        string testingModPath = Path.Combine(Application.dataPath, "Mod");
+    string testingModPath = Path.Combine(Application.dataPath, "Mod");
 #endif
         Directory.CreateDirectory(testingModPath);
 
         string internalModPath = testingModPath;
 
         List<string> allModPaths = new List<string>();
+
+        if (Directory.Exists(internalModPath))
+        {
+            allModPaths.AddRange(Directory.GetFiles(internalModPath, "*.dll", SearchOption.AllDirectories));
+        }
+
         allModPaths.AddRange(Directory.GetFiles(folder, "*.dll", SearchOption.AllDirectories));
 
-        if (Directory.Exists(internalModPath)) allModPaths.AddRange(Directory.GetFiles(internalModPath, "*.dll", SearchOption.AllDirectories));
-
-        hooks = new ModHook[allModPaths.Count];
+        List<ModHook> loadedMods = new List<ModHook>();
+        HashSet<string> loadedFileHashes = new HashSet<string>();
 
         for (int i = 0; i < allModPaths.Count; i++)
         {
-            ref ModHook modHook = ref hooks[i];
             string path = allModPaths[i];
+
+            string fileHash = ComputeFileHash(path);
+
+            if (loadedFileHashes.Contains(fileHash)) continue;
+
             byte[] bytes = File.ReadAllBytes(path);
             Assembly asm = Assembly.Load(bytes);
             string modDirectory = Path.GetDirectoryName(path)!;
+            bool modLoadedFromAssembly = false;
 
             foreach (var type in asm.GetTypes())
             {
                 if (type.IsAbstract || type.IsInterface) continue;
                 if (!typeof(ModBase).IsAssignableFrom(type)) continue;
+
                 try
                 {
                     ModContext context = new ModContext(modDirectory);
                     var mod = (ModBase)Activator.CreateInstance(type)!;
                     mod.OnLoad(context);
-                    modHook = new ModHook()
+
+                    loadedMods.Add(new ModHook()
                     {
                         mod = mod,
                         context = context,
                         dllPath = path,
                         directoryPath = modDirectory,
-                    };
+                    });
+
+                    modLoadedFromAssembly = true;
+                    if(context.Logger.enable) VLog.Log($"§mLoaded mod: {type.Name} from {path}", 5);
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Failed loading mod from {path}\n{e}");
+                    VLog.Log($"§4Failed loading mod from §6{path}\n§m{e}", 5);
                 }
             }
+
+            if (modLoadedFromAssembly) loadedFileHashes.Add(fileHash);
+        }
+
+        hooks = loadedMods.ToArray();
+        Debug.Log($"Total mods loaded: {hooks.Length}");
+    }
+
+    private static string ComputeFileHash(string filePath)
+    {
+        using (var sha256 = SHA256.Create())
+        {
+            byte[] bytes = File.ReadAllBytes(filePath);
+            byte[] hash = sha256.ComputeHash(bytes);
+            return BitConverter.ToString(hash).Replace("-", "");
         }
     }
 

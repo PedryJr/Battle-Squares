@@ -11,9 +11,6 @@ using static PlayerSynchronizer;
 public class PlayerFactorySynchronizer : NetworkBehaviour
 {
 
-    [SerializeField]
-    PlayerController controllerPrefab;
-
     public float skinFetchesPerSecond = 1f;
     float skinFetchTimer = 0;
 
@@ -238,7 +235,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
         newPlayer.neighbours = newPlayer.gameObject.AddComponent<PlayerNeighbours>();
         playerSynchronizer.localSquare = newPlayer;
-        Instantiate(controllerPrefab).SetTargetController(newPlayer);
+        GetComponent<PlayerController>().SetTargetController(newPlayer);
         newPlayer.neighbours.AddNeighbour(newPlayer);
     }
 
