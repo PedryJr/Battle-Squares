@@ -167,7 +167,8 @@ public sealed class NozzleBehaviour : MonoBehaviour
                     globalNozzleDirection - (relativePositionToPlayer / 3.5f),
                     Quaternion.Euler(0, 0, 
                     math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
-                    primary);
+                    primary,
+                    playerBehaviour.GetGameID());
             }
         }
         if (playerController.shootSecondary && secondaryReady)
@@ -178,7 +179,8 @@ public sealed class NozzleBehaviour : MonoBehaviour
                 projectileManager.SpawnNozzleParticles(
                     globalNozzleDirection - (relativePositionToPlayer / 3.5f),
                     Quaternion.Euler(0, 0, math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
-                    secondary);
+                    secondary,
+                    playerBehaviour.GetGameID());
             }
         }
     }

@@ -15,7 +15,7 @@ public sealed class BuiltMapSpawns : MonoBehaviour
 
     private void Start()
     {
-        transform.position = GetSpawn(playerSynchronizer.localSquare.GetID());
+        transform.position = GetSpawn(playerSynchronizer.localSquare.GetGameID());
     }
 
     float spawnCycle = 0f;
@@ -44,13 +44,13 @@ public sealed class BuiltMapSpawns : MonoBehaviour
         spawnCycle += Time.deltaTime;
         if (!playerSynchronizer.localSquare.isDead && !playerSynchronizer.localSquare.spawnBuffer)
         {
-            transform.position = GetSpawn(playerSynchronizer.localSquare.GetID());
+            transform.position = GetSpawn(playerSynchronizer.localSquare.GetGameID());
         }
     }
 
     int PlayerIdToListIndex(byte playerId)
     {
-        for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++) if (playerSynchronizer.playerIdentities[i].square.GetID() == playerId) return i;
+        for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++) if (playerSynchronizer.playerIdentities[i].square.GetGameID() == playerId) return i;
         return playerId;
     }
 

@@ -657,11 +657,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
                     player.square.timeSinceHit = 0.25f;
 
-                    float damage = (player.id == ownerId) ? 0 : aoeDamage;
-                    float slow = (player.id == ownerId) ? 0 : data.slowDownAmount;
+                    float damage = (player.square.GetGameID() == ownerId) ? 0 : aoeDamage;
+                    float slow = (player.square.GetGameID() == ownerId) ? 0 : data.slowDownAmount;
 
                     projectileManager.playerSynchronizer.UpdatePlayerHealth(
-                        player.square.GetID(),
+                        player.square.GetGameID(),
                         damage,
                         slow,
                         (byte)ownerId,
@@ -686,7 +686,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                     }
                     else if (flag.activityState == FlagActivityState.FollowTarget)
                     {
-                        if (flag.playerBehaviour.id == ownerId) skipHit = true;
+                        if (flag.playerBehaviour.GetGameID() == ownerId) skipHit = true;
                     }
                     else skipHit = true;
 
@@ -723,7 +723,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         if (playerBehaviour)
         {
 
-            if (playerBehaviour.id == owningPlayer.id) return;
+            if (playerBehaviour.GetGameID() == owningPlayer.GetGameID()) return;
 
             if (data.lingeringDamage > 0)
             {
@@ -735,7 +735,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
 
                     Vector2 direction = (playerBehaviour.rb.position - rb.position).normalized;
-                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.id, data.lingeringDamage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
+                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.GetGameID(), data.lingeringDamage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
 
 
                 }
@@ -755,17 +755,25 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
     void CollisionCheck(GameObject collidedWith)
     {
         if (destroyed) return;
-        if (!IsLocalProjectile) return;
 
+        ProjectileBehaviour projectileBehaviour = collidedWith.GetComponent<ProjectileBehaviour>();
         PlayerBehaviour playerBehaviour = collidedWith.gameObject.GetComponent<PlayerBehaviour>();
         FlagBehaviour flagBehaviour = collidedWith.GetComponent<FlagBehaviour>();
-        ProjectileBehaviour projectileBehaviour = collidedWith.GetComponent<ProjectileBehaviour>();
+
         bool environment = collidedWith.layer == LayerMask.NameToLayer("Environment");
 
-        if (playerBehaviour) PlayerCollisionCheck(playerBehaviour);
+        if (playerBehaviour)
+        {
+            if (playerBehaviour.GetGameID() == ownerId) return;
+            PlayerCollisionCheck(playerBehaviour);
+        }
         if (flagBehaviour) FlagCollisionCheck(flagBehaviour);
         if (environment && !stickToSender && !melee) EnvironmentCollisionCheck();
-        if (projectileBehaviour) ProjectileCollisionCheck(projectileBehaviour);
+        if (projectileBehaviour)
+        {
+            if (projectileBehaviour.ownerId == ownerId) return;
+            ProjectileCollisionCheck(projectileBehaviour);
+        }
     }
 
     List<PlayerBehaviour> playersCollidingWith;
@@ -779,7 +787,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
     void PlayerCollisionCheck(PlayerBehaviour playerBehaviour)
     {
-        if (playerBehaviour.isLocalPlayer) return;
         playerHit = playerBehaviour;
 
         if (data.dieOnImpact)
@@ -800,7 +807,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                     if (data.melee || stickToSender) damage *= Mods.at[6];
 
                     Vector2 direction = (playerBehaviour.rb.position - rb.position).normalized;
-                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.id, damage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
+                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.GetGameID(), damage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
                     playerBehaviour.timeSinceHit = 0.25f;
                     projectileManager.HitRegProjectile(projectileID);
 
@@ -811,7 +818,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                     if (data.melee || stickToSender) damage *= Mods.at[6];
 
                     Vector2 direction = (playerBehaviour.rb.position - rb.position).normalized;
-                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.id, damage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
+                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.GetGameID(), damage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
                     playerBehaviour.timeSinceHit = 0.25f;
                     projectileManager.HitRegProjectile(projectileID);
 
@@ -863,7 +870,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         }
         else if (flag.activityState == FlagActivityState.FollowTarget)
         {
-            if (flag.playerBehaviour.id == ownerId) skipHit = true;
+            if (flag.playerBehaviour.GetGameID() == ownerId) skipHit = true;
         }
 
         if (data.oneTimeHit)
@@ -957,7 +964,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                     if (IsLocalProjectile)
                     {
                         projectileManager.UpdateProjectile(this);
-                        projectileManager.SpawnBounceParticles(hitpoint.point, Quaternion.Euler(0, 0, angle), data.typeID);
+                        projectileManager.SpawnBounceParticles(hitpoint.point, Quaternion.Euler(0, 0, angle), data.typeID, ownerId);
                     }
                 }
             }

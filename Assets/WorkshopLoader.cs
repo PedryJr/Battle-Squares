@@ -90,7 +90,7 @@ public class WorkshopLoader : MonoBehaviour
         bufferComplete = false;
     }
 
-    public async void StartEnlistItems(string searchTerm = "")
+    public void StartEnlistItems(string searchTerm = "")
     {
         currentSearchTerm = searchTerm;
         DelistItems();

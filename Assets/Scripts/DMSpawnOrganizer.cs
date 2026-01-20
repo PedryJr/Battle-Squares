@@ -50,7 +50,7 @@ public sealed class DMSpawnOrganizer : MonoBehaviour
         {
             for (int j = 0; j < sortedPlayers.Length - 1 - i; j++)
             {
-                if (sortedPlayers[j].id > sortedPlayers[j + 1].id)
+                if (sortedPlayers[j].square.GetGameID() > sortedPlayers[j + 1].square.GetGameID())
                 {
                     PlayerData temp = sortedPlayers[j];
                     sortedPlayers[j] = sortedPlayers[j + 1];
@@ -63,7 +63,7 @@ public sealed class DMSpawnOrganizer : MonoBehaviour
         for (int i = 0; i < sortedPlayers.Length; i++)
         {
 
-            if (playerSynchronizer.localSquare.id == sortedPlayers[i].square.id)
+            if (playerSynchronizer.localSquare.GetGameID() == sortedPlayers[i].square.GetGameID())
             {
 
                 spawn.position = spawns[i].position;

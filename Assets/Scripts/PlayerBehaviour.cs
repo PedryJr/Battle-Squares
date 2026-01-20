@@ -37,7 +37,7 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     {
         get
         {
-            if (GetID() == playerSynchronizer.localSquare.GetID())
+            if (GetNetworkID() == playerSynchronizer.localSquare.GetNetworkID())
             {
                 if (localMMR == null) localMMR = new EncryptedDouble(MMRlocation, 1000.0);
                 return localMMR.Value;
@@ -47,7 +47,7 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         set
         {
             
-            if (GetID() == playerSynchronizer.localSquare.GetID())
+            if (GetNetworkID() == playerSynchronizer.localSquare.GetNetworkID())
             {
                 if (localMMR == null) localMMR = new EncryptedDouble(MMRlocation, value);
                 else localMMR.Value = value;
@@ -288,7 +288,6 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             if (isLocalPlayer)
             {
 
-                playerController = FindAnyObjectByType<PlayerController>();
                 GetComponentInChildren<NozzleBehaviour>().SetPlayerController(playerController, this);
                 playerTransform.position = GameObject.FindGameObjectWithTag("Spawn").transform.position;
                 playerSynchronizer = GameObject.FindGameObjectWithTag("Sync").GetComponent<PlayerSynchronizer>();
@@ -702,19 +701,19 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     {
 
         killStreak = 0;
-        hunter.Die((byte)id);
+        hunter.Die((byte)gameID);
 
         if (isLocalPlayer)
         {
             SetStats();
-            playerController.CancellAllInputs();
+            playerController.CancelAllInputs();
         }
         else SetStats();
 
         void SetStats()
         {
 
-            if (isLocalPlayer) mapSynchronizer.SpawnDogTag((byte) id, rb.position, rb.rotation, rb.linearVelocity / 2);
+            if (isLocalPlayer) mapSynchronizer.SpawnDogTag((byte) gameID, rb.position, rb.rotation, rb.linearVelocity / 2);
             if (isLocalPlayer) rb.position = deathChamber.position;
             if (isLocalPlayer) playerTransform.position = new Vector3(deathChamber.position.x, deathChamber.position.y, playerTransform.position.z);
             healthPoints = maxHealthPoints;
@@ -729,7 +728,7 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     {
 
         spawnBuffer = false;
-        hunter.Spawn((byte)id);
+        hunter.Spawn((byte)gameID);
 
         if (!spawn)
         {
@@ -784,7 +783,7 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
                 playerTransform.position = spawn.transform.position;
                 rb.simulated = true;
                 healthPoints = maxHealthPoints;
-                playerController.CancellAllInputs();
+                playerController.CancelAllInputs();
                 playerSynchronizer.UpdateHealth();
 
             }
@@ -960,7 +959,7 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             if(calculatedVelocity.y < 10f) calculatedVelocity.y = 10f;
             rb.linearVelocity = calculatedVelocity;
             Vector2 normalizedDirection = rb.linearVelocity.normalized;
-            playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetID());
+            playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
             playerController.inputJump = false;
         }
     }
@@ -989,11 +988,14 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     }
 
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-   public byte GetID() => (byte)id;
-   public ulong id;
+    public byte GetGameID() => gameID;
+    public byte GetNetworkID() => networkID;
+    
+    public void SetGameID(byte gameID) => this.gameID = gameID;
+    public void SetNetworkID(byte networkID) => this.networkID = networkID;
 
-
+    private byte gameID;
+    private byte networkID;
 
     private void OnDestroy()
     {
@@ -1002,7 +1004,7 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     public string Name => playerName;
 
-    public ulong NetworkID => id;
+    public ulong NetworkID => gameID;
 
     public ulong SteamID => steamId;
 

@@ -187,7 +187,7 @@ public sealed class PlayerSettingsBehaviour : MonoBehaviour
 
     public void KICK()
     {
-        playerSynchronizer.KickPlayerClientRpc((byte)selectedPlayer.id);
+        playerSynchronizer.KickPlayerClientRpc((byte)selectedPlayer.GetNetworkID());
     }
 
     public async void PROFILE()

@@ -41,7 +41,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
         mapSynchronizer = FindAnyObjectByType<MapSynchronizer>();
         foreach (PlayerData player in playerSynchronizer.playerIdentities)
         {
-            if ( (byte) player.id == playerId) owningPlayer = player.square;
+            if ( (byte) player.square.GetGameID() == playerId) owningPlayer = player.square;
             players.Add(player.square);
         }
 
@@ -58,7 +58,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
     private void Update()
     {
 
-        if (playerSynchronizer.localSquare.id == owningPlayer.id) UpdateSync();
+        if (playerSynchronizer.localSquare.GetGameID() == owningPlayer.GetGameID()) UpdateSync();
 
         target = Vector2.zero;
 
@@ -68,11 +68,11 @@ public sealed class DogTagBehaviour : MonoBehaviour
             Vector2 toTarget = player.rb.position - rb.position;
             if (toTarget.magnitude < 6f) target += toTarget;
 
-            if(playerSynchronizer.localSquare.id == owningPlayer.id)
+            if(playerSynchronizer.localSquare.GetGameID() == owningPlayer.GetGameID())
             {
                 if (toTarget.magnitude < 0.6f && !isCollected)
                 {
-                    mapSynchronizer.CollectDogTag(dogTagId, (byte) player.id);
+                    mapSynchronizer.CollectDogTag(dogTagId, (byte) player.GetGameID());
                     isCollected = true;
                 }
             }

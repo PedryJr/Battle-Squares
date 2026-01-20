@@ -1,4 +1,5 @@
 using ProximityChat;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -77,7 +78,7 @@ public sealed class VoiceHandle : NetworkBehaviour
             {
 
                 PlayerBehaviour player = null;
-                player = playerSynchronizer.GetPlayerById(OwnerClientId);
+                player = playerSynchronizer.playerIdentities.Where(x => x.square.GetNetworkID() == OwnerClientId).First().square;
                 if (player)
                 {
                     attatchedPlayer = player;

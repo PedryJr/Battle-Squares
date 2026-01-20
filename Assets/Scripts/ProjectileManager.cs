@@ -178,8 +178,8 @@ public sealed class ProjectileManager : NetworkBehaviour
         bitBool.SetBool(1, playSound);
         byte bitBoolAsByte = bitBool.GetMask();
 
-        SpawnProjectileRpc((byte)NetworkManager.LocalClientId, projectileId, typeID, position, direction, fluctuation, bitBoolAsByte);
-        SpawnProjectileEvent((byte)NetworkManager.LocalClientId, projectileId, typeID, position, direction, fluctuation, bitBoolAsByte);
+        SpawnProjectileRpc(shootingPlayer.GetGameID(), projectileId, typeID, position, direction, fluctuation, bitBoolAsByte);
+        SpawnProjectileEvent(shootingPlayer.GetGameID(), projectileId, typeID, position, direction, fluctuation, bitBoolAsByte);
     }
 
 
@@ -216,7 +216,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         
         WeaponToProjectileData(in weapon, ref data, projectileID, position, direction, fluctuation, owningPlayer);
 
-        projectileBehaviour.ownerId = owningPlayer.GetID();
+        projectileBehaviour.ownerId = owningPlayer.GetGameID();
         projectileBehaviour.InitializeBullet(ref data);
 
         multiplier1 = weapon.recoil * Mods.at[13];
@@ -330,7 +330,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         return null;
     }
 
-    public void SpawnNozzleParticles(in Vector3 particlePosition, in Quaternion particleRotation, in ushort projectileType)
+    public void SpawnNozzleParticles(in Vector3 particlePosition, in Quaternion particleRotation, in ushort projectileType, byte ownerID)
     {
 
         SByte3 sByte3 = GetParticleCompressor;
@@ -338,11 +338,10 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector3 rawData = new Vector3(particlePosition.x, particlePosition.y, Mathf.Repeat(particleRotation.eulerAngles.z, 360f));
         sByte3.SetFromVec3(rawData);
 
-        byte ownerId = playerSynchronizer.localSquare.GetID();
         Byte3 transformData = sByte3.GetByte3();
 
-        SpawnNozzleParticlesRpc(transformData, ownerId, projectileType);
-        SpawnNozzleParticlesEvent(transformData, ownerId, projectileType);
+        SpawnNozzleParticlesRpc(transformData, ownerID, projectileType);
+        SpawnNozzleParticlesEvent(transformData, ownerID, projectileType);
     }
 
     [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone)]
@@ -400,7 +399,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         projectile.morhpTime = projectile.data.morphTimeOnBounce;
     }
 
-    public void SpawnBounceParticles(in Vector3 particlePosition, in Quaternion particleRotation, in ushort projectileType)
+    public void SpawnBounceParticles(in Vector3 particlePosition, in Quaternion particleRotation, in ushort projectileType, byte ownerId)
     {
 
         SByte3 sByte3 = GetParticleCompressor;
@@ -408,7 +407,6 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector3 rawData = new Vector3(particlePosition.x, particlePosition.y, Mathf.Repeat(particleRotation.eulerAngles.z, 360f));
         sByte3.SetFromVec3(rawData);
 
-        byte ownerId = playerSynchronizer.localSquare.GetID();
         Byte3 transformData = sByte3.GetByte3();
 
         SpawnBounceParticlesRpc(transformData, ownerId, projectileType);

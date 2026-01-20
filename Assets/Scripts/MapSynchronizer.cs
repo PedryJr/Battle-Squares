@@ -168,7 +168,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
                 case FlagActivityState.FollowTarget:
                     foreach(PlayerData player in playerSynchronizer.playerIdentities)
                     {
-                        if(player.id != pId) continue;
+                        if(player.square.GetGameID() != pId) continue;
                         flagBehaviour.SetToFollowTarget(player.square, true);
                     }
                     break;
@@ -226,7 +226,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
     public void SyncDogTagsRpc(int id, byte[] data)
     {
 
-        if ((byte)playerSynchronizer.localSquare.id == data[13]) return;
+        if ((byte)playerSynchronizer.localSquare.GetGameID() == data[13]) return;
 
         DogTagBehaviour dogTagToSync = null;
 
@@ -281,7 +281,7 @@ public sealed class MapSynchronizer : NetworkBehaviour
 
         if (collectorId != NetworkManager.Singleton.LocalClientId) return;
 
-        if (collectorId == dogTagToCollect.owningPlayer.id) return;
+        if (collectorId == dogTagToCollect.owningPlayer.GetGameID()) return;
 
         playerSynchronizer.localSquare.score++;
         playerSynchronizer.UpdateScore();

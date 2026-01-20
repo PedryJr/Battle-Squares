@@ -36,7 +36,7 @@ public sealed class FlagPost : MonoBehaviour, IObjective
 
         foreach (FlagBehaviour flag in flags)
         {
-            flag.ownerId = player.id;
+            flag.ownerId = player.square.GetGameID();
             flag.color = player.square.PlayerColor.DogTagColor;
             flag.darkColor = player.square.PlayerColor.ParticleColor;
 
@@ -45,7 +45,7 @@ public sealed class FlagPost : MonoBehaviour, IObjective
             flag.flagParticleSystem.Play();
         }
 
-        ownerId = player.id;
+        ownerId = player.square.GetGameID();
 
         if (player.square.isLocalPlayer)
         {

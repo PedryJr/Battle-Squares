@@ -50,8 +50,8 @@ public sealed class ClientBehaviour : MonoBehaviour
         {
             foreach (PlayerData item in playerSynchronizer.playerIdentities)
             {
-                if (item.square.GetID() == playerSynchronizer.localSquare.GetID()) continue;
-                playerSynchronizer.KickPlayerClientRpc(item.square.GetID());
+                if (item.square.GetNetworkID() == playerSynchronizer.localSquare.GetNetworkID()) continue;
+                playerSynchronizer.KickPlayerClientRpc(item.square.GetNetworkID());
             }
         }
     }

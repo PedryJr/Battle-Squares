@@ -44,7 +44,7 @@ public sealed class ChatContainer : MonoBehaviour
 
         for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++)
         {
-            if (sentId == playerIdentities[i].id)
+            if (sentId == playerIdentities[i].square.GetGameID())
             {
                 contextContainer.color = playerIdentities[i].square.PlayerColor.ChatBoxColor;
                 return;

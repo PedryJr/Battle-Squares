@@ -129,7 +129,7 @@ public sealed class Hunter : NetworkBehaviour
     public void Kill(byte deadId, byte killerId)
     {
 
-        if ((byte)playerSynchronizer.localSquare.id != killerId) return;
+        if ((byte)playerSynchronizer.localSquare.GetGameID() != killerId) return;
 
         UserStatsManager.kills++;
 
@@ -159,8 +159,8 @@ public sealed class Hunter : NetworkBehaviour
             foreach(PlayerData player in playerSynchronizer.playerIdentities)
             {
 
-                if ((byte)player.id == deadId) deadPlayer = player.square;
-                if ((byte)player.id == killerId) killerPlayer = player.square;
+                if ((byte)player.square.GetGameID() == deadId) deadPlayer = player.square;
+                if ((byte)player.square.GetGameID() == killerId) killerPlayer = player.square;
 
             }
 
@@ -183,7 +183,7 @@ public sealed class Hunter : NetworkBehaviour
     public void Die(byte deadId)
     {
 
-        if ((byte)playerSynchronizer.localSquare.id != deadId) return;
+        if ((byte)playerSynchronizer.localSquare.GetGameID() != deadId) return;
 
         UserStatsManager.deaths++;
 
@@ -202,7 +202,7 @@ public sealed class Hunter : NetworkBehaviour
         if (!playerSynchronizer) return;
         if (!playerSynchronizer.localSquare) return;
 
-        if ((byte)playerSynchronizer.localSquare.id != spawnId) return;
+        if ((byte)playerSynchronizer.localSquare.GetGameID() != spawnId) return;
 
         dieTime = 0;
 
