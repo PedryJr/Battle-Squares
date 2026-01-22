@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
 
 [Preserve]
-public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
+public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 {
     [SerializeField] double overrideMMR = 0;
     [ContextMenu("Override my mmr")]
@@ -105,7 +105,26 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public Vector2 velocity;
     public float angularVelocity;
 
-    public float healthPoints = 20;
+    [SerializeField]
+    private float hp = 20f;
+
+    public float healthPoints
+    {
+        get
+        {
+            return hp;
+        }
+        set
+        {
+
+            float before = hp;
+            float after = value;
+            float delta = after - before;
+
+            hp = value;
+        }
+    }
+
     public float maxHealthPoints = 20;
     public Vector3 hpBarScale;
 
@@ -123,7 +142,6 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public Rigidbody2D rb;
 
     Transform nozzleTransform;
-    Transform deathChamber;
     public NozzleBehaviour nozzleBehaviour;
     public PlayerController playerController;
     PlayerSynchronizer playerSynchronizer;
@@ -148,8 +166,6 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     [SerializeField]
     DogTagBehaviour dogTag;
 
-    Transform spawn;
-
     public Sprite[] bodyFrames;
     public Sprite[] nozzleFrames;
 
@@ -167,6 +183,7 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Vector2 nozzleReferencePosition;
 
     public Vector3 spawnPosition;
+    public Vector3 deathPosition;
 
 
     public string playerName;
@@ -182,9 +199,9 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public bool steamDataApplied = false;
     ulong steamId;
 
+    public Vector2 toPos;
     public float newNozzleLerp;
     public Vector2 fromPos;
-    public Vector2 toPos;
     public Vector2 nozzlePosOffset;
     float nozzlePositionSpeed = 13;
     bool controlled;
@@ -195,6 +212,26 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     Transform playerTransform;
     Hunter hunter;
+
+    float speedParticleTimer;
+
+    [SerializeField]
+    ParticleColorApplicant[] speedParticles;
+
+    int speedParticleSwitcher;
+
+
+    [SerializeField]
+    EventReference playerSlap;
+    EventInstance playerSlapSound;
+
+    float slapTimer;
+    public Friend friend;
+    bool lastDeathState = false;
+    float deathTimer;
+    public bool spawnBuffer = false;
+    Color frozenColor = Color.white;
+    public bool newMods;
 
     private void Awake()
     {
@@ -214,62 +251,8 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         hpBarScale = Vector3.one;
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        h = UnityEngine.Random.Range(0f, 1f);
-
-        darkenSaturation = 1f;
-        darkenValue = 0.59f;
-        h = 0.0f;
-        Saturation = 0.6f;
-        Value = 0.81f;
-
         ApplyColors();
     }
-
-    private void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
-    {
-        if (this)
-        {
-            if (isLocalPlayer)
-            {
-                if (!NetworkManager.Singleton.IsHost) ready = false;
-
-                if (arg0.name == "GameScene")
-                {
-                    score = scoreManager.startScore;
-                }
-
-                spawnPosition = new Vector3(UnityEngine.Random.Range(0.0001f, 0.2001f), UnityEngine.Random.Range(0.0001f, 0.2001f), UnityEngine.Random.Range(0.0001f, 0.2001f));
-                playerSynchronizer.UpdateHealth();
-                CancelInvoke("RevivePlayer");
-            }
-            else
-            {
-                if (!NetworkManager.Singleton.IsHost) ready = false;
-
-                if (arg0.name == "GameScene") score = scoreManager.startScore;
-            }
-
-            GameObject deathObj = GameObject.FindGameObjectWithTag("Death");
-            GameObject spawnObj = GameObject.FindGameObjectWithTag("Spawn");
-
-            if (deathObj) deathChamber = deathObj.transform;
-            else deathChamber = spawnObj.transform;
-
-            if (isLocalPlayer) spawn = spawnObj.transform;
-
-            RevivePlayer();
-
-            if (isLocalPlayer) if (arg0.name == "GameScene") spawnBuffer = true;
-        }
-    }
-
-    public void AssertSteamDataAvalible(ulong steamId)
-    {
-        steamDataAvalible = true;
-        this.steamId = steamId;
-    }
-
-
     private void Start()
     {
         PlayerColor.SetColorHue(UnityEngine.Random.Range(0f, 1f));
@@ -282,8 +265,7 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
             DontDestroyOnLoad(gameObject);
             deathSoundInstance = RuntimeManager.CreateInstance(deathSoundReference);
-            spawn = GameObject.FindGameObjectWithTag("Spawn").transform;
-            deathChamber = GameObject.FindGameObjectWithTag("Death").transform;
+            SetSpawnAndDeathPositions();
 
             if (isLocalPlayer)
             {
@@ -324,241 +306,10 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         }
 
     }
-
-    float speedParticleTimer;
-
-    [SerializeField]
-    ParticleColorApplicant[] speedParticles;
-
-    int speedParticleSwitcher;
-
-    public void SpawnEffect()
-    {
-
-        isSpawning = true;
-
-        spriteRenderer.enabled = false;
-        healthbar.enabled = false;
-        nozzleBehaviour.spriteRenderer.enabled = false;
-        col.enabled = false;
-        rb.simulated = false;
-
-        playerSpawnEffectBehaviour = Instantiate(playerSpawnEffectBehaviourRef, playerTransform);
-        playerSpawnEffectBehaviour.Init(this);
-
-    }
-
-    [SerializeField]
-    EventReference playerSlap;
-    EventInstance playerSlapSound;
-
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Environment") ||
-            collision.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-
-            if (!hasJump) slapTimer = 0f;
-
-            if(slapTimer == 0)
-            {
-                if (!isLocalPlayer || SceneManager.GetActiveScene().name.Equals("LobbyScene"))
-                {
-
-                    Vector2 toCam = Camera.main.transform.position - playerTransform.position;
-                    float soundDirection = ConvertVector2ToAngle(toCam.normalized);
-                    float distance = toCam.magnitude;
-
-                    playerSlapSound.setParameterByName("Direction", soundDirection);
-                    playerSlapSound.setParameterByName("Distance", distance);
-
-                }
-                else
-                {
-
-                    playerSlapSound.setParameterByName("Direction", 0);
-                    playerSlapSound.setParameterByName("Distance", 0);
-
-                }
-
-                playerSlapSound.setParameterByName("Player Speed", slapIntensity);
-                playerSlapSound.setVolume(MySettings.Volume);
-                playerSlapSound.start();
-                slapTimer = 0.27f;
-
-            }
-
-            hasJump = true;
-            slapIntensity = 0;
-        }
-
-    }
-
-    public float ConvertVector2ToAngle(Vector2 direction)
-    {
-        float angleInRadians = Mathf.Atan2(direction.x, -direction.y);
-        float angleInDegrees = -(angleInRadians * Mathf.Rad2Deg);
-        if (angleInDegrees > 180) angleInDegrees -= 360;
-        return angleInDegrees;
-    }
-
-    public void CreateTextureFromBoolArray10BY10(bool[] boolArray, int frameIndex)
-    {
-
-        Span<bool> rotatedArray = stackalloc bool[100];
-        for (int i = 0; i < 100; i++) rotatedArray[i] = boolArray[99 - i];
-        Texture2D texture = new Texture2D(10, 10, UnityEngine.TextureFormat.RGBA32, false);
-        texture.filterMode = UnityEngine.FilterMode.Point;
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                int index = i * 10 + j;
-                Color color = rotatedArray[index] ? Color.white : Color.clear;
-                texture.SetPixel(j, i, color);
-            }
-        }
-
-        texture.Apply();
-        bodyFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 0.5f), 10);
-        if (frameIndex == 0) spriteRenderer.sprite = bodyFrames[frameIndex];
-    }
-
-    public void CreateTextureFromBoolArray4BY4(bool[] boolArray, int frameIndex)
-    {
-
-        Span<bool> rotatedArray = stackalloc bool[16];
-
-        rotatedArray[0] = boolArray[3];
-        rotatedArray[1] = boolArray[7];
-        rotatedArray[2] = boolArray[11];
-        rotatedArray[3] = boolArray[15];
-        rotatedArray[4] = boolArray[2];
-        rotatedArray[5] = boolArray[6];
-        rotatedArray[6] = boolArray[10];
-        rotatedArray[7] = boolArray[14];
-        rotatedArray[8] = boolArray[1];
-        rotatedArray[9] = boolArray[5];
-        rotatedArray[10] = boolArray[9];
-        rotatedArray[11] = boolArray[13];
-        rotatedArray[12] = boolArray[0];
-        rotatedArray[13] = boolArray[4];
-        rotatedArray[14] = boolArray[8];
-        rotatedArray[15] = boolArray[12];
-
-
-        Texture2D texture = new Texture2D(4, 4, UnityEngine.TextureFormat.RGBA32, false);
-        texture.filterMode = UnityEngine.FilterMode.Point;
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                int index = i * 4 + j;
-
-                Color color = rotatedArray[index] ? Color.white : Color.clear;
-                texture.SetPixel(j, i, color);
-            }
-        }
-        texture.Apply();
-        nozzleFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
-        if (frameIndex == 0) nozzleBehaviour.spriteRenderer.sprite = nozzleFrames[frameIndex];
-
-    }
-
-    float animationTimer;
-    public float frameRate = 10;
-    int animationIndex;
-    int lastAnimationIndex;
-
-    public void AnimatePlayer()
-    {
-
-        animationTimer = 1;
-
-    }
-
-    void ApplyPlayerAnimation()
-    {
-
-        if (animationTimer > 0) animationTimer -= Time.deltaTime * (frameRate / nozzleFrames.Length);
-        if (animationTimer < 0) animationTimer = 0;
-        if (animationTimer == 0)
-        {
-            animationIndex = 0;
-        }
-        else
-        {
-            animationIndex = Mathf.FloorToInt((1 - animationTimer) * bodyFrames.Length);
-        }
-
-        if(animationIndex != lastAnimationIndex)
-        {
-            nozzleBehaviour.spriteRenderer.sprite = nozzleFrames[animationIndex];
-            spriteRenderer.sprite = bodyFrames[animationIndex];
-            lastAnimationIndex = animationIndex;
-        }
-
-    }
-
-
-
-
-
-    public float darkenSaturation = 1f;
-    public float darkenValue = 0.59f;
-    public float Saturation = 0.6f;
-    public float Value = 0.81f;
-    public float h = 0.0f;
-
-
-    public void ApplyColors()
-    {
-        PlayerColor.RefreshColorComponents();
-        spriteRenderer.color = PlayerColor.ExposedHealthColor;
-        healthbar.color = PlayerColor.PrimaryColor;
-        nozzleBehaviour.spriteRenderer.color = PlayerColor.NozzleColor;
-        sensor.gridSpaceColor.color = PlayerColor.PrimaryColor;
-        playerLight.color = PlayerColor.LightColor;
-        newColor = false;
-    }
-
-    public Friend friend;
-
-    void ApplySteamData()
-    {
-        GetImageData(steamId);
-        friend = new Friend(steamId);
-        playerName = friend.Name;
-        steamDataApplied = true;
-    }
-
-    public async void GetImageData(SteamId steamId)
-    {
-
-        Steamworks.Data.Image? image = await SteamFriends.GetLargeAvatarAsync(steamId);
-
-        byte[] imageData = image.Value.Data;
-        uint imageWidth = image.Value.Width;
-        uint imageHeight = image.Value.Height;
-        Vector2 imageDimentions = new Vector2(image.Value.Width, image.Value.Height);
-
-        Texture2D spriteTexture = new Texture2D((int)imageWidth, (int)imageHeight, UnityEngine.TextureFormat.RGBA32, false, true);
-        Rect spriteRect = new Rect(new Vector2(0, 0), imageDimentions);
-        Vector2 spritePivot = imageDimentions / 2;
-
-        spriteTexture.LoadRawTextureData(imageData);
-        spriteTexture.Apply();
-
-        pfp = Sprite.Create(spriteTexture, spriteRect, spritePivot);
-
-    }
-
     private void Update()
     {
 
-        if(!steamDataApplied && steamDataAvalible) ApplySteamData();
+        if (!steamDataApplied && steamDataAvalible) ApplySteamData();
 
 #if UNITY_EDITOR
         newColor = true;
@@ -608,15 +359,10 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         slapIntensity = Mathf.Lerp(slapIntensity, rb.linearVelocity.magnitude + Mathf.Abs(rb.angularVelocity / 40f), Time.deltaTime * 10);
         slapTimer -= Time.deltaTime;
-        if(slapTimer < 0) slapTimer = 0;
+        if (slapTimer < 0) slapTimer = 0;
 
     }
 
-    float slapTimer;
-    bool lastDeathState = false;
-    float deathTimer;
-    public bool spawnBuffer = false;
-    [MethodImpl(512)]
     private void LateUpdate()
     {
 
@@ -624,18 +370,16 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         {
             if (playerSpawnEffectBehaviour)
             {
-
                 playerTransform.position = playerSpawnEffectBehaviour.transform.position;
                 rb.position = playerSpawnEffectBehaviour.transform.position;
                 rb.linearVelocity = Vector2.zero;
                 rb.angularVelocity = 0;
                 rb.rotation = 0f;
                 return;
-
             }
         }
 
-        nozzleTransform.position = playerTransform.position + (Vector3) nozzlePosOffset;
+        nozzleTransform.position = playerTransform.position + (Vector3)nozzlePosOffset;
         nozzleTransform.rotation = Quaternion.Euler(
                 0,
                 0,
@@ -647,55 +391,81 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         controlled = playerController;
 
-        if (isDead)
-        {
-            deathTimer += Time.deltaTime;
-            rb.position = deathChamber.position;
-            playerTransform.position = deathChamber.position;
-            if (deathTimer > 2) RevivePlayer();
-        }
-        else
-        {
-
-            deathTimer = 0;
-
-        }
+        UpdateLifeState();
 
         if (spawnBuffer)
         {
-
-            playerTransform.position = spawn.position;
-            rb.position = spawn.position;
+            playerTransform.position = spawnPosition;
+            rb.position = spawnPosition;
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0;
-            rb.rotation = spawn.eulerAngles.z;
+            rb.rotation = 0;
             return;
-        }
-
-        if (isDead != lastDeathState)
-        {
-            lastDeathState = isDead;
-
-            if (isDead)
-            {
-                spriteRenderer.enabled = false;
-                healthbar.enabled = false;
-                col.enabled = false;
-                nozzleBehaviour.spriteRenderer.enabled = false;
-                rb.simulated = false;
-                sensor.enabled = false;
-                playerLight.enabled = false;
-            }
         }
 
         if (controlled) SetMovementParameters(newMods);
 
     }
 
-    Color frozenColor = Color.white;
+    private void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
+    {
+        if (this)
+        {
+            if (isLocalPlayer)
+            {
+                if (!NetworkManager.Singleton.IsHost) ready = false;
 
-    public bool newMods;
+                if (arg0.name == "GameScene")
+                {
+                    score = scoreManager.startScore;
+                }
 
+                playerSynchronizer.UpdateHealth();
+                CancelInvoke("RevivePlayer");
+            }
+            else
+            {
+                if (!NetworkManager.Singleton.IsHost) ready = false;
+
+                if (arg0.name == "GameScene") score = scoreManager.startScore;
+            }
+
+            SetSpawnAndDeathPositions();
+
+            RevivePlayer();
+        }
+    }
+
+    public void SpawnEffect()
+    {
+
+        isSpawning = true;
+
+        spriteRenderer.enabled = false;
+        healthbar.enabled = false;
+        nozzleBehaviour.spriteRenderer.enabled = false;
+        col.enabled = false;
+        rb.simulated = false;
+
+        playerSpawnEffectBehaviour = Instantiate(playerSpawnEffectBehaviourRef, playerTransform);
+        playerSpawnEffectBehaviour.Init(this);
+
+    }
+
+    public void SetSpawnAndDeathPositions()
+    {
+        GameObject deathObj = GameObject.FindGameObjectWithTag("Death");
+        deathPosition = deathObj.transform.position;
+
+        if (BuiltMapSpawns.instance) spawnPosition = new float3((float2)BuiltMapSpawns.instance.GetSpawn(GetGameID()), playerTransform.position.z);
+        else
+        {
+            GameObject spawnObj = GameObject.FindGameObjectWithTag("Spawn");
+            if (spawnObj) spawnPosition = GameObject.FindGameObjectWithTag("Spawn").transform.position;
+        }
+        deathPosition.z = transform.position.z;
+        spawnPosition.z = transform.position.z;
+    }
 
     public void KillPlayer()
     {
@@ -714,14 +484,61 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         {
 
             if (isLocalPlayer) mapSynchronizer.SpawnDogTag((byte) gameID, rb.position, rb.rotation, rb.linearVelocity / 2);
-            if (isLocalPlayer) rb.position = deathChamber.position;
-            if (isLocalPlayer) playerTransform.position = new Vector3(deathChamber.position.x, deathChamber.position.y, playerTransform.position.z);
             healthPoints = maxHealthPoints;
             climax = 1;
             isDead = true;
+        }
+    }
 
+    public void UpdateLifeState()
+    {
+        if(lastDeathState != isDead)
+        {
+            //Transitions States
+            if (isDead)
+            {
+                playerTransform.position = deathPosition;
+                rb.position = deathPosition;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = 0;
+                rb.rotation = 0;
+            }
+            else
+            {
+                playerTransform.position = spawnPosition;
+                rb.position = spawnPosition;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = 0;
+                rb.rotation = 0;
+                deathTimer = 0;
+                isSpawning = false;
+            }
+        }
+        //Always Applied States
+        if (isDead)
+        {
+            deathTimer += Time.deltaTime;
+            if (deathTimer > 2) RevivePlayer();
+            if (playerLight.enabled) playerLight.enabled = false;
+            if (sensor.enabled) sensor.enabled = false;
+            if (spriteRenderer.enabled) spriteRenderer.enabled = false;
+            if (healthbar.enabled) healthbar.enabled = false;
+            if (nozzleBehaviour.spriteRenderer.enabled) nozzleBehaviour.spriteRenderer.enabled = false;
+            if (col.enabled) col.enabled = false;
+            if (rb.simulated) rb.simulated = false;
+        }
+        else
+        {
+            if (!playerLight.enabled) playerLight.enabled = true;
+            if (!sensor.enabled) sensor.enabled = true;
+            if (!spriteRenderer.enabled) spriteRenderer.enabled = true;
+            if (!healthbar.enabled) healthbar.enabled = true;
+            if (!nozzleBehaviour.spriteRenderer.enabled) nozzleBehaviour.spriteRenderer.enabled = true;
+            if (!col.enabled) col.enabled = true;
+            if (!rb.simulated)  rb.simulated = true;
         }
 
+        lastDeathState = isDead;
     }
 
     public void RevivePlayer()
@@ -729,79 +546,326 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         spawnBuffer = false;
         hunter.Spawn((byte)gameID);
+        SetSpawnAndDeathPositions();
 
-        if (!spawn)
+        isDead = false;
+        scoreDeducted = false;
+
+        UpdateLifeState();
+
+        if (playerSpawnEffectBehaviour)
         {
+            Destroy(playerSpawnEffectBehaviour.gameObject);
+            playerSpawnEffectBehaviour = null; 
+        } 
 
-            playerLight.enabled = true;
-            sensor.enabled = true;
-            isSpawning = false;
-            spriteRenderer.enabled = true;
-            healthbar.enabled = true;
-            nozzleBehaviour.spriteRenderer.enabled = true;
-            col.enabled = true;
-            rb.simulated = true;
-            isDead = false;
-            scoreDeducted = false;
-            playerTransform.position = deathChamber.position;
-            rb.position = deathChamber.position;
-            if (playerSpawnEffectBehaviour)
-            {
-                Destroy(playerSpawnEffectBehaviour.gameObject);
-                playerSpawnEffectBehaviour = null;
-            }
+        CancelInvoke("RevivePlayer");
 
-        }
-        else
-        {
-
-            CancelInvoke("RevivePlayer");
-
-            playerLight.enabled = true;
-            sensor.enabled = true;
-            isSpawning = false;
-            spriteRenderer.enabled = true;
-            healthbar.enabled = true;
-            nozzleBehaviour.spriteRenderer.enabled = true;
-            col.enabled = true;
-            rb.simulated = true;
-            isDead = false;
-            scoreDeducted = false;
-
-            if (playerSpawnEffectBehaviour)
-            {
-                Destroy(playerSpawnEffectBehaviour.gameObject);
-                playerSpawnEffectBehaviour = null;
-            }
-
-            if (isLocalPlayer)
-            {
-                rb.position = spawn.transform.position;
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = 0;
-                rb.rotation = 0;
-                playerTransform.position = spawn.transform.position;
-                rb.simulated = true;
-                healthPoints = maxHealthPoints;
-                playerController.CancelAllInputs();
-                playerSynchronizer.UpdateHealth();
-
-            }
+        if (isLocalPlayer)
+        { 
+            healthPoints = maxHealthPoints;
+            playerController.CancelAllInputs();
+            playerSynchronizer.UpdateHealth();
         }
     }
 
     public void RespawnPlayer()
     {
-
-        GameObject spawn = GameObject.FindGameObjectWithTag("Spawn");
-        if (!spawn) return;
-
-        rb.position = spawn.transform.position;
+        SetSpawnAndDeathPositions();
+        rb.position = spawnPosition;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = 0;
         rb.rotation = 0;
-        playerTransform.position = spawn.transform.position;
+        playerTransform.position = spawnPosition;
+    }
+}
 
+//Identity shit
+public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
+{
+    public void AssertSteamDataAvalible(ulong steamId)
+    {
+        steamDataAvalible = true;
+        this.steamId = steamId;
+    }
+    public void CreateTextureFromBoolArray10BY10(bool[] boolArray, int frameIndex)
+    {
+
+        Span<bool> rotatedArray = stackalloc bool[100];
+        for (int i = 0; i < 100; i++) rotatedArray[i] = boolArray[99 - i];
+        Texture2D texture = new Texture2D(10, 10, UnityEngine.TextureFormat.RGBA32, false);
+        texture.filterMode = UnityEngine.FilterMode.Point;
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                int index = i * 10 + j;
+                Color color = rotatedArray[index] ? Color.white : Color.clear;
+                texture.SetPixel(j, i, color);
+            }
+        }
+
+        texture.Apply();
+        bodyFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 10, 10), new Vector2(0.5f, 0.5f), 10);
+        if (frameIndex == 0) spriteRenderer.sprite = bodyFrames[frameIndex];
+    }
+
+    public void CreateTextureFromBoolArray4BY4(bool[] boolArray, int frameIndex)
+    {
+
+        Span<bool> rotatedArray = stackalloc bool[16];
+
+        rotatedArray[0] = boolArray[3];
+        rotatedArray[1] = boolArray[7];
+        rotatedArray[2] = boolArray[11];
+        rotatedArray[3] = boolArray[15];
+        rotatedArray[4] = boolArray[2];
+        rotatedArray[5] = boolArray[6];
+        rotatedArray[6] = boolArray[10];
+        rotatedArray[7] = boolArray[14];
+        rotatedArray[8] = boolArray[1];
+        rotatedArray[9] = boolArray[5];
+        rotatedArray[10] = boolArray[9];
+        rotatedArray[11] = boolArray[13];
+        rotatedArray[12] = boolArray[0];
+        rotatedArray[13] = boolArray[4];
+        rotatedArray[14] = boolArray[8];
+        rotatedArray[15] = boolArray[12];
+
+        Texture2D texture = new Texture2D(4, 4, UnityEngine.TextureFormat.RGBA32, false);
+        texture.filterMode = UnityEngine.FilterMode.Point;
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                int index = i * 4 + j;
+
+                Color color = rotatedArray[index] ? Color.white : Color.clear;
+                texture.SetPixel(j, i, color);
+            }
+        }
+        texture.Apply();
+        nozzleFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
+        if (frameIndex == 0) nozzleBehaviour.spriteRenderer.sprite = nozzleFrames[frameIndex];
+
+    }
+
+    public void ApplyColors()
+    {
+        PlayerColor.RefreshColorComponents();
+        spriteRenderer.color = PlayerColor.ExposedHealthColor;
+        healthbar.color = PlayerColor.PrimaryColor;
+        nozzleBehaviour.spriteRenderer.color = PlayerColor.NozzleColor;
+        sensor.gridSpaceColor.color = PlayerColor.PrimaryColor;
+        playerLight.color = PlayerColor.LightColor;
+        newColor = false;
+    }
+
+    void ApplySteamData()
+    {
+        GetImageData(steamId);
+        friend = new Friend(steamId);
+        playerName = friend.Name;
+        steamDataApplied = true;
+    }
+
+    public async void GetImageData(SteamId steamId)
+    {
+        Steamworks.Data.Image? image = await SteamFriends.GetLargeAvatarAsync(steamId);
+
+        byte[] imageData = image.Value.Data;
+        uint imageWidth = image.Value.Width;
+        uint imageHeight = image.Value.Height;
+        Vector2 imageDimentions = new Vector2(image.Value.Width, image.Value.Height);
+
+        Texture2D spriteTexture = new Texture2D((int)imageWidth, (int)imageHeight, UnityEngine.TextureFormat.RGBA32, false, true);
+        Rect spriteRect = new Rect(new Vector2(0, 0), imageDimentions);
+        Vector2 spritePivot = imageDimentions / 2;
+
+        spriteTexture.LoadRawTextureData(imageData);
+        spriteTexture.Apply();
+
+        pfp = Sprite.Create(spriteTexture, spriteRect, spritePivot);
+
+    }
+}
+
+//Movement shit
+public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
+{
+
+    float animationTimer;
+    public float frameRate = 10;
+    int animationIndex;
+    int lastAnimationIndex;
+
+    float acceleration;
+    float maxSpeed;
+
+    Vector2 velParam;
+    float xLimiter;
+    float yLimiter;
+    Vector2 forceLimiter;
+    Vector2 jumpVelocity;
+    Vector2 jumpDirection;
+    float jumpLimiter;
+
+    [SerializeField]
+    public ParticleBehaviour jumpParticleRef;
+
+    private void FixedUpdate()
+    {
+
+        if (isLocalPlayer)
+        {
+            CalculateNozzleMovementFromInput();
+            UpdateDataToSend();
+        }
+
+        flipFlop = !flipFlop;
+        if (flipFlop) return;
+
+        if (controlled)
+        {
+            ApplyTargetMovement();
+            ReAdjustMovementValues();
+        }
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Environment") ||
+            collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+
+            if (!hasJump) slapTimer = 0f;
+
+            if (slapTimer == 0)
+            {
+                if (!isLocalPlayer || SceneManager.GetActiveScene().name.Equals("LobbyScene"))
+                {
+
+                    Vector2 toCam = Camera.main.transform.position - playerTransform.position;
+                    float soundDirection = MyExtentions.ConvertVector2ToAngle(toCam.normalized);
+                    float distance = toCam.magnitude;
+
+                    playerSlapSound.setParameterByName("Direction", soundDirection);
+                    playerSlapSound.setParameterByName("Distance", distance);
+
+                }
+                else
+                {
+
+                    playerSlapSound.setParameterByName("Direction", 0);
+                    playerSlapSound.setParameterByName("Distance", 0);
+
+                }
+
+                playerSlapSound.setParameterByName("Player Speed", slapIntensity);
+                playerSlapSound.setVolume(MySettings.Volume);
+                playerSlapSound.start();
+                slapTimer = 0.27f;
+
+            }
+
+            hasJump = true;
+            slapIntensity = 0;
+        }
+    }
+
+    void CalculateNozzleMovementFromData()
+    {
+
+        if (newNozzleLerp < 1) newNozzleLerp += Time.deltaTime * nozzlePositionSpeed;
+        if (newNozzleLerp > 1) newNozzleLerp = 1;
+
+        nozzlePosOffset = Vector2.Lerp(
+            fromPos,
+            toPos,
+            math.smoothstep(0, 1, newNozzleLerp));
+    }
+
+    public void PlayNozzleRecoilAnimation()
+    {
+
+        fromPos = Vector2.zero;
+        newNozzleLerp = 0;
+        nozzlePosOffset = Vector2.Lerp(
+            fromPos,
+            toPos,
+            math.smoothstep(0, 1, newNozzleLerp));
+        playerSynchronizer.UpdateNozzle(GetGameID());
+
+    }
+
+    void CalculateNozzleRotation()
+    {
+        nozzleTransform.rotation = Quaternion.Euler(
+        0,
+        0,
+        math.degrees(math.atan2(
+                (nozzleTransform.position - playerTransform.position).y,
+                (nozzleTransform.position - playerTransform.position).x)));
+    }
+
+    public void AnimateNozzle(Vector3 from, Vector3 to)
+    {
+
+        nozzleReferencePosition = from - to;
+        newNozzlePositionTime = 0;
+        nozzleInputDirection = playerController.GetDirection();
+
+    }
+
+    void SetMovementParameters(bool newMod)
+    {
+
+        if (newMod)
+        {
+            acceleration = 130f * Mods.at[8];
+            maxSpeed = 23.5f * Mods.at[1];
+            newMods = false;
+        }
+
+        movementDirection = Vector2.Lerp(movementDirection, playerController.finalDirection, math.clamp(Time.deltaTime * 100, 0, 1));
+
+        (velParam.x, velParam.y) = (math.clamp(rb.linearVelocityX, -maxSpeed, maxSpeed), math.clamp(rb.linearVelocityY, -maxSpeed, maxSpeed));
+        (xLimiter, yLimiter) = (math.clamp(math.abs(movementDirection.x - (velParam.x / maxSpeed)), 0, 1), math.clamp(math.abs(movementDirection.y - (velParam.y / maxSpeed)), 0, 1));
+        forceLimiter = new Vector2(xLimiter, yLimiter);
+
+        jumpLimiter = 17.5f - math.clamp(rb.linearVelocityY / 2, -5, 10);
+        jumpDirection = (Vector2.up + (playerController.finalDirection * 0.2f)).normalized;
+        jumpVelocity = (jumpDirection * jumpLimiter) * Mods.at[2];
+
+        MyExtentions.GetClosestEnvironmentPoint(rb.position);
+        if (playerController.inputJump)
+        {
+            Vector2 calculatedVelocity = rb.linearVelocity + jumpVelocity;
+            if (calculatedVelocity.y < 10f) calculatedVelocity.y = 10f;
+            rb.linearVelocity = calculatedVelocity;
+            Vector2 normalizedDirection = rb.linearVelocity.normalized;
+            playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
+            playerController.inputJump = false;
+        }
+    }
+
+    void ApplyTargetMovement()
+    {
+        rb.AddForce(movementDirection * acceleration * forceLimiter, ForceMode2D.Force);
+        if (math.abs(rb.angularVelocity / 360) < 1f) rb.AddTorque(-movementDirection.x / 0.85f, ForceMode2D.Force);
+    }
+
+    void ReAdjustMovementValues()
+    {
+        (float posX, float posY) = (rb.position.x, rb.position.y);
+        rb.position = new Vector2(math.clamp(posX, -64, 64), math.clamp(posY, -64, 64));
+        if (rb.rotation > 360) rb.rotation -= 360;
+        if (rb.rotation < 0) rb.rotation += 360;
+        rb.angularVelocity = math.clamp(rb.angularVelocity, -1000, 1000);
+        (float nPosX, float nPosY) = (nozzleTransform.localPosition.x, nozzleTransform.localPosition.y);
+        nozzleTransform.localPosition = new Vector2(math.clamp(nPosX, -1, 1), math.clamp(nPosY, -1, 1));
     }
 
     void UpdateDataToSend()
@@ -848,155 +912,44 @@ public sealed class PlayerBehaviour : MonoBehaviour, IPlayerHandle
                 fromPos,
                 toPos, math.smoothstep(0, 1, newNozzleLerp));
 
-        if (shouldSync) playerSynchronizer.UpdateNozzle();
-
+        if (shouldSync) playerSynchronizer.UpdateNozzle(GetGameID());
     }
 
-    void CalculateNozzleMovementFromData()
+    public void AnimatePlayer() => animationTimer = 1;
+
+    void ApplyPlayerAnimation()
     {
 
-        if (newNozzleLerp < 1) newNozzleLerp += Time.deltaTime * nozzlePositionSpeed;
-        if (newNozzleLerp > 1) newNozzleLerp = 1;
+        if (animationTimer > 0) animationTimer -= Time.deltaTime * (frameRate / nozzleFrames.Length);
+        if (animationTimer < 0) animationTimer = 0;
+        if (animationTimer == 0) animationIndex = 0;
+        else animationIndex = Mathf.FloorToInt((1 - animationTimer) * bodyFrames.Length);
 
-        nozzlePosOffset = Vector2.Lerp(
-            fromPos,
-            toPos,
-            math.smoothstep(0, 1, newNozzleLerp));
-    }
-
-    public void PlayNozzleRecoilAnimation()
-    {
-
-        fromPos = Vector2.zero;
-        newNozzleLerp = 0;
-        nozzlePosOffset = Vector2.Lerp(
-            fromPos,
-            toPos,
-            math.smoothstep(0, 1, newNozzleLerp));
-        playerSynchronizer.UpdateNozzle();
-
-    }
-
-    void CalculateNozzleRotation()
-    {
-        nozzleTransform.rotation = Quaternion.Euler(
-        0,
-        0,
-        math.degrees(math.atan2(
-                (nozzleTransform.position - playerTransform.position).y,
-                (nozzleTransform.position - playerTransform.position).x)));
-    }
-
-    public void AnimateNozzle(Vector3 from, Vector3 to)
-    {
-
-        nozzleReferencePosition = from - to;
-        newNozzlePositionTime = 0;
-        nozzleInputDirection = playerController.GetDirection();
-
-    }
-
-    private void FixedUpdate()
-    {
-
-        if (isLocalPlayer)
+        if (animationIndex != lastAnimationIndex)
         {
-            CalculateNozzleMovementFromInput();
-            UpdateDataToSend();
-        }
-
-        flipFlop = !flipFlop;
-        if (flipFlop) return;
-
-        if (controlled)
-        {
-            ApplyTargetMovement();
-            ReAdjustMovementValues();
-        }
-
-    }
-
-    float acceleration;
-    float maxSpeed;
-
-    Vector2 velParam;
-    float xLimiter;
-    float yLimiter;
-    Vector2 forceLimiter;
-    Vector2 jumpVelocity;
-    Vector2 jumpDirection;
-    float jumpLimiter;
-
-    [SerializeField]
-    public ParticleBehaviour jumpParticleRef;
-
-    public event Action<IPlayerHandle> OnDestroyed;
-
-    void SetMovementParameters(bool newMod)
-    {
-
-        if (newMod)
-        {
-            acceleration = 130f * Mods.at[8];
-            maxSpeed = 23.5f * Mods.at[1];
-            newMods = false;
-        }
-
-        movementDirection = Vector2.Lerp(movementDirection, playerController.finalDirection, math.clamp(Time.deltaTime * 100, 0, 1));
-
-        (velParam.x, velParam.y) = (math.clamp(rb.linearVelocityX, -maxSpeed, maxSpeed), math.clamp(rb.linearVelocityY, -maxSpeed, maxSpeed));
-        (xLimiter, yLimiter) = (math.clamp(math.abs(movementDirection.x - (velParam.x / maxSpeed)), 0, 1), math.clamp(math.abs(movementDirection.y - (velParam.y / maxSpeed)), 0, 1));
-        forceLimiter = new Vector2(xLimiter, yLimiter);
-
-        jumpLimiter = 17.5f - math.clamp(rb.linearVelocityY / 2, -5, 10);
-        jumpDirection = (Vector2.up + (playerController.finalDirection * 0.2f)).normalized;
-        jumpVelocity = (jumpDirection * jumpLimiter) * Mods.at[2];
-
-        MyExtentions.GetClosestEnvironmentPoint(rb.position);
-        if (playerController.inputJump)
-        {
-            Vector2 calculatedVelocity = rb.linearVelocity + jumpVelocity;
-            if(calculatedVelocity.y < 10f) calculatedVelocity.y = 10f;
-            rb.linearVelocity = calculatedVelocity;
-            Vector2 normalizedDirection = rb.linearVelocity.normalized;
-            playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
-            playerController.inputJump = false;
+            nozzleBehaviour.spriteRenderer.sprite = nozzleFrames[animationIndex];
+            spriteRenderer.sprite = bodyFrames[animationIndex];
+            lastAnimationIndex = animationIndex;
         }
     }
-
-
-    void ApplyTargetMovement()
-    {
-        rb.AddForce(movementDirection * acceleration * forceLimiter, ForceMode2D.Force);
-        if (math.abs(rb.angularVelocity / 360) < 1f) rb.AddTorque(-movementDirection.x / 0.85f, ForceMode2D.Force);
-    }
-
-
-    void ReAdjustMovementValues()
-    {
-
-        (float posX, float posY) = (rb.position.x, rb.position.y);
-        rb.position = new Vector2(math.clamp(posX, -64, 64), math.clamp(posY, -64, 64));
-
-        if (rb.rotation > 360) rb.rotation -= 360;
-        if (rb.rotation < 0) rb.rotation += 360;
-
-        rb.angularVelocity = math.clamp(rb.angularVelocity, -1000, 1000);
-
-        (float nPosX, float nPosY) = (nozzleTransform.localPosition.x, nozzleTransform.localPosition.y);
-        nozzleTransform.localPosition = new Vector2(math.clamp(nPosX, -1, 1), math.clamp(nPosY, -1, 1));
-
-    }
-
+}
+//Id shit
+public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
+{
     public byte GetGameID() => gameID;
     public byte GetNetworkID() => networkID;
-    
+
     public void SetGameID(byte gameID) => this.gameID = gameID;
     public void SetNetworkID(byte networkID) => this.networkID = networkID;
 
     private byte gameID;
     private byte networkID;
+}
 
+//interface shit
+public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
+{
+    public event Action<IPlayerHandle> OnDestroyed;
     private void OnDestroy()
     {
         OnDestroyed?.Invoke(this);

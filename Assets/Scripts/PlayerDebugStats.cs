@@ -14,6 +14,8 @@ public class PlayerDebugStats : MonoBehaviour
     public const string LifeState = "LifeState: ";
     public const string PrimaryWeaponPrefix = "PrimaryWeapon: ";
     public const string SecondaryWeaponPrefix = "SecondaryWeapon: ";
+    public const string LocalityPrefix = "Connection: ";
+    public const string IdPrefix = "Id: ";
     public const char NewLine = '\n';
 
     StringBuilder builder = new StringBuilder(256);
@@ -51,6 +53,17 @@ public class PlayerDebugStats : MonoBehaviour
         else return "Alive";
     }
 
+    string GetPlayerLocality()
+    {
+        if (playerBehaviour.isLocalPlayer) return "Local";
+        else return "Remote";
+    }
+
+    string GetPlayerClientID()
+    {
+        return playerBehaviour.GetNetworkID().ToString();
+    }
+
     private void Update()
     {
         builder.Clear();
@@ -84,6 +97,18 @@ public class PlayerDebugStats : MonoBehaviour
 
         builder.Append(SecondaryWeaponPrefix);
         builder.Append(playerBehaviour.nozzleBehaviour.secondary);
+        builder.Append(NewLine);
+
+        builder.Append(IdPrefix);
+        builder.Append(playerBehaviour.GetGameID());
+        builder.Append(NewLine);
+
+        builder.Append(IdPrefix);
+        builder.Append(GetPlayerClientID());
+        builder.Append(NewLine);
+
+        builder.Append(LocalityPrefix);
+        builder.Append(GetPlayerLocality());
 
         textField.text = builder.ToString();
     }

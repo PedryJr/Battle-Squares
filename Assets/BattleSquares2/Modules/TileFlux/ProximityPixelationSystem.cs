@@ -9,6 +9,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static ProximityPixelationSystem;
+using static UnityEngine.Mesh;
 
 [BurstCompile]
 public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
@@ -187,11 +188,12 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         layout[1] = new VertexAttributeDescriptor(VertexAttribute.TexCoord2, VertexAttributeFormat.Float16, 2);
         layout[2] = new VertexAttributeDescriptor(VertexAttribute.TexCoord3, VertexAttributeFormat.Float16, 2);
 
-        CalculateProximityPixels();
-        spriteAsMesh.indexFormat = IndexFormat.UInt32;
+        spriteAsMesh.SetVertexBufferParams(iterations * 4, layout);
+        spriteAsMesh.SetIndexBufferParams(triangles.Length, IndexFormat.UInt32);
         spriteAsMesh.SetIndices(triangles.ToArray(), MeshTopology.Triangles, 0, calculateBounds: false);
-        spriteAsMesh.bounds = new Bounds(Vector3.zero, Vector3.one * 2048);
         spriteAsMesh.MarkDynamic();
+        spriteAsMesh.bounds = new Bounds(Vector3.zero, Vector3.one * 2048);
+        
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -274,14 +276,18 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         }
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SafeComplete(in JobHandle jobHandle)
     {
         if (jobHandle.IsCompleted) return;
         jobHandle.Complete();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AddForceFieldBlocker(ForceFieldBlockerData forceFieldBlockerData) => nativeForceFieldBlockers.Add(forceFieldBlockerData);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AddProximitySensor(ref GridSpaceForceField newData) => nativeProximitySensors.Add(newData);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AssertMainCamera(Camera newMainCamera) => mainCamera = newMainCamera;
 
 
@@ -290,9 +296,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     void CalculateProximityPixels()
     {
 
-        positionCompute.Complete();
         
-        gameState.Dispose();
         gameState = GetNativeGameState();
 
         (vertexDatas, vertexDatasSwap) = (vertexDatasSwap, vertexDatas);
@@ -309,19 +313,18 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         };
 
         positionCompute = proximitySensorCalculation.ScheduleParallelByRef(iterations, 64, default);
+        positionCompute.Complete();
 
         nativeProximitySensors.Clear();
         nativeForceFieldBlockers.Clear();
+        gameState.Dispose();
 
-        spriteAsMesh.SetVertexBufferParams(vertexDatas.Length, layout);
         spriteAsMesh.SetVertexBufferData(vertexDatas, 0, 0, vertexDatas.Length);
+        spriteAsMesh.UploadMeshData(false);
     }
 
-
-    private void LateUpdate()
-    {
-        Graphics.RenderMesh(renderParams, spriteAsMesh, 0, transform.localToWorldMatrix);
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void LateUpdate() => Graphics.RenderMesh(renderParams, spriteAsMesh, 0, transform.localToWorldMatrix);
 
     [BurstCompile(FloatPrecision = FloatPrecision.Low, FloatMode = FloatMode.Fast, DisableDirectCall = false, DisableSafetyChecks = false, OptimizeFor = OptimizeFor.Performance)]
     public struct ForceFieldBlockerData

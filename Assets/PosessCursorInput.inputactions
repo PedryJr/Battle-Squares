@@ -1,0 +1,55 @@
+{
+    "version": 1,
+    "name": "PosessCursorInput",
+    "maps": [
+        {
+            "name": "PosessionActions",
+            "id": "0308349b-bb3a-4673-aa63-f22762e591b4",
+            "actions": [
+                {
+                    "name": "MoveAround",
+                    "type": "Value",
+                    "id": "28398eb2-612c-4976-9e5d-80b42e3a2521",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "386b3a34-b92b-42b9-8250-2db554c3e6ab",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b1e256c9-d244-4c28-b686-e995ac6966b0",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveAround",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "203110a1-6892-43ff-8e62-8a4568415a0e",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

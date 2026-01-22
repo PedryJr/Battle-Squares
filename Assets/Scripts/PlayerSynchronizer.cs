@@ -1,16 +1,15 @@
+using Netcode.Transports.Facepunch; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Netcode.Transports.Facepunch;
-using Steamworks;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static BinaryVectors;
 
-public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
+public sealed class PlayerSynchronizer : NetworkBehaviour
 {
     PlayerFactorySynchronizer playerFactorySynchronizer;
     public static PlayerSynchronizer Instance;
@@ -82,8 +81,6 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     private void NetworkManager_OnConnectionEvent(NetworkManager networkManager, ConnectionEventData arg2)
     {
-
-        if (arg2.EventType == ConnectionEvent.PeerConnected) playerFactorySynchronizer.CreateNewPlayer(arg2.ClientId);
         if (arg2.EventType == ConnectionEvent.ClientConnected) playerFactorySynchronizer.CreateNewPlayer(arg2.ClientId);
         if (arg2.EventType == ConnectionEvent.PeerDisconnected) DisconnectPlayer(arg2.ClientId);
         if (arg2.EventType == ConnectionEvent.ClientDisconnected) DisconnectPlayer(arg2.ClientId);
@@ -216,9 +213,16 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     
     public void DisconnectPlayer(ulong id)
     {
-
-        if (IsHost) DisconnectPlayerRemotely(id);
-
+        if(id == NetworkManager.LocalClientId)
+        {
+            //Host probably had an alt f4 moment..
+            DisconnectPlayerLocally();
+        }
+        else
+        {
+            if (!IsHost) return;
+            DisconnectPlayerRemotely(id);
+        }
     }
 
     
@@ -227,10 +231,8 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
         if (hostShutdown)
         {
-
             DisconnectPlayerLocally();
             return;
-
         }
 
         List<PlayerData> refreshedIdentities = new List<PlayerData>();
@@ -456,22 +458,20 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         if (!player.isDead) MyExtentions.DecompressRigidbody(data, player.rb, 200f); 
     }
 
-    public void UpdateNozzle()
+    public void UpdateNozzle(byte playerID)
     {
+        PlayerBehaviour player = GetPlayerById(playerID);
 
-        foreach (var player in playerIdentities)
-        {
-            if (!player.square.isLocalPlayer) continue;
+        if (!player) return;
+        if (!player.isLocalPlayer) return;
 
-            byte sourceId = player.square.GetGameID();
-            byte[] compFromPos = MyExtentions.EncodeNozzlePosition(player.square.fromPos.x, player.square.fromPos.y);
-            byte[] compToPos = MyExtentions.EncodeNozzlePosition(player.square.toPos.x, player.square.toPos.y);
-            byte[] data = new byte[5] { sourceId, compFromPos[0], compFromPos[1], compToPos[0], compToPos[1] };
-            UpdateNozzleRpc(data);
-        }
+        byte[] compFromPos = MyExtentions.EncodeNozzlePosition(player.fromPos.x, player.fromPos.y);
+        byte[] compToPos = MyExtentions.EncodeNozzlePosition(player.toPos.x, player.toPos.y);
+        byte[] data = new byte[5] { playerID, compFromPos[0], compFromPos[1], compToPos[0], compToPos[1] };
+        UpdateNozzleRpc(data);
     }
 
-    [Rpc(SendTo.Everyone, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.NotMe, Delivery = RpcDelivery.Unreliable)]
     void UpdateNozzleRpc(byte[] data)
     {
         if (playerIdentities == null) return;
@@ -497,14 +497,23 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     
     public void UpdateColor()
     {
-        ulong sourceId = networkManager.LocalClientId;
-        byte[] data = new byte[2]
+        foreach (var item in playerIdentities)
         {
-            (byte) sourceId,
-            (byte) math.round(localSquare.PlayerColor.ReadColorHue * 256)
-        };
 
-        UpdateColortRpc(data); 
+            PlayerBehaviour player = item.square;
+            if (!player) continue;
+            if (!player.isLocalPlayer) continue;
+
+            ulong sourceId = player.GetGameID();
+            byte[] data = new byte[2]
+            {
+            (byte) sourceId,
+            (byte) math.round(player.PlayerColor.ReadColorHue * 256)
+            };
+
+            UpdateColortRpc(data);
+
+        }
     }
 
     [Rpc(SendTo.Everyone, Delivery = RpcDelivery.Unreliable)]
@@ -524,7 +533,21 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         player.PlayerColor.SetColorHue(data[1] / 256f);
         player.newColor = true;
     }
-    
+
+    public void UpdateHealth(byte targetGameID)
+    {
+        foreach (var item in playerIdentities)
+        {
+            if (!item.square.isLocalPlayer) continue;
+            
+            byte sourceId = item.square.GetGameID();
+
+            if (sourceId != targetGameID) continue;
+
+            UpdateHealthRpc(sourceId, item.square.healthPoints);
+        }
+    }
+
     public void UpdateHealth()
     {
         foreach (var item in playerIdentities)
@@ -535,7 +558,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     void UpdateHealthRpc(byte sourceId, float data)
     {
         if (playerIdentities == null) return;
@@ -549,7 +572,6 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     void StoreHealthData(PlayerBehaviour player, byte sourceId, float data)
     {
-
         player.healthPoints = data;
     }
     
@@ -574,7 +596,6 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         PlayerBehaviour player = GetPlayerById(sourceId);
         if (player == null) return;
         if (player.isLocalPlayer) return;
-
         StoreScoreData(player, sourceId, data);
     }
 
@@ -662,27 +683,17 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
     public void UpdatePlayerHealth(byte id, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
-
-        if(IsHost) UpdatePlayerHealthClientRpc(id, damage, slowDownAmount, responsibleId, knockBack);
-        else UpdatePlayerHealthServerRpc(id, damage, slowDownAmount, responsibleId, knockBack);
-
+        UpdatePlayerHealthServerRpc(id, damage, slowDownAmount, responsibleId, knockBack);
         UpdatePlayerHealthFunc(id, damage, slowDownAmount, responsibleId, knockBack);
     }
 
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone)]
     public void UpdatePlayerHealthServerRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
-        UpdatePlayerHealthClientRpc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
-    }
-
-    [ClientRpc]
-    public void UpdatePlayerHealthClientRpc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
-    {
-        if (localSquare.GetGameID() == responsibleId) return;
         UpdatePlayerHealthFunc(affectedId, damage, slowDownAmount, responsibleId, knockBack);
     }
 
-    void UpdatePlayerHealthFunc(byte affectedId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
+    void UpdatePlayerHealthFunc(byte victimId, float damage, float slowDownAmount, byte responsibleId, Vector2 knockBack)
     {
 
         bool kill = false;
@@ -690,19 +701,16 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
         PlayerBehaviour affectedPlayer = null;
         PlayerBehaviour responsiblePlayer = null;
 
-        affectedPlayer = GetPlayerById(affectedId);
+        affectedPlayer = GetPlayerById(victimId);
         responsiblePlayer = GetPlayerById(responsibleId);
-
 
         if (affectedPlayer)
         {
-
             if (!affectedPlayer.isDead)
             {
 
                 affectedPlayer.rb.AddForce(knockBack, ForceMode2D.Impulse);
-                affectedPlayer.healthPoints -= damage;
-                affectedPlayer.healthPoints = math.clamp(affectedPlayer.healthPoints, 0, affectedPlayer.maxHealthPoints);
+                affectedPlayer.healthPoints = math.clamp(affectedPlayer.healthPoints - damage, 0, affectedPlayer.maxHealthPoints);
 
                 affectedPlayer.rb.linearDamping = math.clamp(affectedPlayer.rb.linearDamping + slowDownAmount, 0.1f, 100f);
                 affectedPlayer.rb.angularDamping = math.clamp(affectedPlayer.rb.angularDamping + slowDownAmount, 0.1f, 100f);
@@ -716,7 +724,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
                 kill = true;
                 PlayerDeathEffect(affectedPlayer);
-                hunter.Kill(affectedId, responsibleId);
+                hunter.Kill(victimId, responsibleId);
                 affectedPlayer.KillPlayer();
 
             }
@@ -728,17 +736,17 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
 
         if (kill && 
             scoreManager.gameMode == ScoreManager.Mode.DM && 
-            responsiblePlayer.GetGameID() == localSquare.GetGameID() &&
+            responsiblePlayer.isLocalPlayer &&
             scoreManager.inGame)
         {
 
-            if (responsiblePlayer) responsiblePlayer.score++;
+            Debug.Log("Score Increment!");
 
+            if (responsiblePlayer) responsiblePlayer.score++;
         }
 
-        if (affectedPlayer.GetGameID() == localSquare.GetGameID() && !localSquare.isDead) UpdateHealth();
-
-        if (responsiblePlayer.GetGameID() == localSquare.GetGameID()) UpdateScore();
+        if (affectedPlayer.isLocalPlayer && responsiblePlayer.isLocalPlayer && !affectedPlayer.isDead) UpdateHealth();
+        if (responsiblePlayer.isLocalPlayer) UpdateScore();
 
     }
 
@@ -814,7 +822,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public PlayerBehaviour GetPlayerById(byte id)
     {
-        foreach (PlayerData player in playerIdentities) if ((byte)player.square.GetGameID() == id) return player.square;
+        foreach (PlayerData player in playerIdentities) if (player.square.GetGameID() == id) return player.square;
         return null;
     }
 
@@ -904,7 +912,7 @@ public unsafe sealed class PlayerSynchronizer : NetworkBehaviour
     void FetchMMRRpc()
     {
         localSquare.StorePreviousMMR();
-        StoreMMRRpc(localSquare.GetNetworkID(), localSquare.MMR);
+        StoreMMRRpc(localSquare.GetGameID(), localSquare.MMR);
     }
 
     [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone)]

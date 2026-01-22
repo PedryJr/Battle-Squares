@@ -11116,6 +11116,8 @@ MonoBehaviour:
   scale: 0.01625
   forceEnable: 1
   click: 0
+  sensitivity: 0.8
+  alwaysPosess: 1
   skipColorManip: 0
 --- !u!222 &847592640
 CanvasRenderer:

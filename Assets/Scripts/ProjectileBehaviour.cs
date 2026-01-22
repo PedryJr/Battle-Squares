@@ -664,7 +664,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                         player.square.GetGameID(),
                         damage,
                         slow,
-                        (byte)ownerId,
+                        ownerId,
                         direction * data.knockback
                     );
 
@@ -735,7 +735,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
 
                     Vector2 direction = (playerBehaviour.rb.position - rb.position).normalized;
-                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.GetGameID(), data.lingeringDamage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
+                    projectileManager.playerSynchronizer.UpdatePlayerHealth(playerBehaviour.GetGameID(), data.lingeringDamage, data.slowDownAmount, ownerId, direction * data.knockback);
 
 
                 }
@@ -755,18 +755,32 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
     void CollisionCheck(GameObject collidedWith)
     {
         if (destroyed) return;
+        if (!IsLocalProjectile) return;
 
         ProjectileBehaviour projectileBehaviour = collidedWith.GetComponent<ProjectileBehaviour>();
-        PlayerBehaviour playerBehaviour = collidedWith.gameObject.GetComponent<PlayerBehaviour>();
+        PlayerBehaviour playerBehaviour = collidedWith.GetComponent<PlayerBehaviour>();
         FlagBehaviour flagBehaviour = collidedWith.GetComponent<FlagBehaviour>();
 
         bool environment = collidedWith.layer == LayerMask.NameToLayer("Environment");
 
+
+
+
+
+
+
+
+
         if (playerBehaviour)
         {
-            if (playerBehaviour.GetGameID() == ownerId) return;
+            //Self hit, lets not.
+            if (playerBehaviour.GetGameID() == owningPlayer.GetGameID()) return;
+            if (!playerBehaviour.isLocalPlayer && !owningPlayer.isLocalPlayer) return;
+
             PlayerCollisionCheck(playerBehaviour);
         }
+
+
         if (flagBehaviour) FlagCollisionCheck(flagBehaviour);
         if (environment && !stickToSender && !melee) EnvironmentCollisionCheck();
         if (projectileBehaviour)
@@ -798,17 +812,17 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
         if (data.damageOnImpact)
         {
-            if (playerBehaviour)
+            if (playerHit)
             {
 
-                if (data.oneTimeHit && !playersHit.Contains(playerBehaviour))
+                if (data.oneTimeHit && !playersHit.Contains(playerHit))
                 {
 
                     if (data.melee || stickToSender) damage *= Mods.at[6];
 
-                    Vector2 direction = (playerBehaviour.rb.position - rb.position).normalized;
-                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.GetGameID(), damage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
-                    playerBehaviour.timeSinceHit = 0.25f;
+                    Vector2 direction = (playerHit.rb.position - rb.position).normalized;
+                    projectileManager.playerSynchronizer.UpdatePlayerHealth(playerHit.GetGameID(), damage, data.slowDownAmount, ownerId, direction * data.knockback);
+                    playerHit.timeSinceHit = 0.25f;
                     projectileManager.HitRegProjectile(projectileID);
 
                 }
@@ -817,9 +831,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
                     if (data.melee || stickToSender) damage *= Mods.at[6];
 
-                    Vector2 direction = (playerBehaviour.rb.position - rb.position).normalized;
-                    projectileManager.playerSynchronizer.UpdatePlayerHealth((byte)playerBehaviour.GetGameID(), damage, data.slowDownAmount, (byte)ownerId, direction * data.knockback);
-                    playerBehaviour.timeSinceHit = 0.25f;
+                    Vector2 direction = (playerHit.rb.position - rb.position).normalized;
+                    projectileManager.playerSynchronizer.UpdatePlayerHealth(playerHit.GetGameID(), damage, data.slowDownAmount, ownerId, direction * data.knockback);
+                    playerHit.timeSinceHit = 0.25f;
                     projectileManager.HitRegProjectile(projectileID);
 
                 }

@@ -94,39 +94,39 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Up"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""56a1be27-a9bb-4af8-81f4-c12c03f1a8db"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Down"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""3ef32b23-7d33-470a-8289-d06f41b86f3e"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Left"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""0fe7e5c9-cc68-4d7f-835c-db0f28d08dc7"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Right"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""421e1a7c-9aaa-4fe8-8238-3c26ccd2fa8c"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Jump"",
@@ -168,6 +168,15 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""name"": ""SecondaryConst"",
                     ""type"": ""Button"",
                     ""id"": ""dc975ee8-50cf-4fd3-a93c-70c0d896f7ee"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleMousePosession"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b0c23bf-72f8-4429-9788-3399ffc8db83"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -414,6 +423,17 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""SecondaryConst"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d0ffef57-9d43-4b37-993d-923352471cc1"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleMousePosession"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -735,6 +755,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         m_SquareController_PrimaryConst = m_SquareController.FindAction("PrimaryConst", throwIfNotFound: true);
         m_SquareController_Secondary = m_SquareController.FindAction("Secondary", throwIfNotFound: true);
         m_SquareController_SecondaryConst = m_SquareController.FindAction("SecondaryConst", throwIfNotFound: true);
+        m_SquareController_ToggleMousePosession = m_SquareController.FindAction("ToggleMousePosession", throwIfNotFound: true);
         // GameUI
         m_GameUI = asset.FindActionMap("GameUI", throwIfNotFound: true);
         m_GameUI_ToggleUI = m_GameUI.FindAction("ToggleUI", throwIfNotFound: true);
@@ -851,6 +872,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_SquareController_PrimaryConst;
     private readonly InputAction m_SquareController_Secondary;
     private readonly InputAction m_SquareController_SecondaryConst;
+    private readonly InputAction m_SquareController_ToggleMousePosession;
     /// <summary>
     /// Provides access to input actions defined in input action map "SquareController".
     /// </summary>
@@ -898,6 +920,10 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "SquareController/SecondaryConst".
         /// </summary>
         public InputAction @SecondaryConst => m_Wrapper.m_SquareController_SecondaryConst;
+        /// <summary>
+        /// Provides access to the underlying input action "SquareController/ToggleMousePosession".
+        /// </summary>
+        public InputAction @ToggleMousePosession => m_Wrapper.m_SquareController_ToggleMousePosession;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -951,6 +977,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @SecondaryConst.started += instance.OnSecondaryConst;
             @SecondaryConst.performed += instance.OnSecondaryConst;
             @SecondaryConst.canceled += instance.OnSecondaryConst;
+            @ToggleMousePosession.started += instance.OnToggleMousePosession;
+            @ToggleMousePosession.performed += instance.OnToggleMousePosession;
+            @ToggleMousePosession.canceled += instance.OnToggleMousePosession;
         }
 
         /// <summary>
@@ -989,6 +1018,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @SecondaryConst.started -= instance.OnSecondaryConst;
             @SecondaryConst.performed -= instance.OnSecondaryConst;
             @SecondaryConst.canceled -= instance.OnSecondaryConst;
+            @ToggleMousePosession.started -= instance.OnToggleMousePosession;
+            @ToggleMousePosession.performed -= instance.OnToggleMousePosession;
+            @ToggleMousePosession.canceled -= instance.OnToggleMousePosession;
         }
 
         /// <summary>
@@ -1649,6 +1681,13 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSecondaryConst(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleMousePosession" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleMousePosession(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "GameUI" which allows adding and removing callbacks.

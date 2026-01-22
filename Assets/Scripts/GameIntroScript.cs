@@ -104,17 +104,8 @@ public sealed class GameIntroScript : MonoBehaviour
 
     private void OnDestroy()
     {
-
         PlayerController controller = FindAnyObjectByType<PlayerController>();
         if (controller) controller.EnableController();
-
-        if (SceneManager.GetActiveScene().name.Equals("GameScene"))
-        {
-            PlayerSynchronizer playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
-            if (playerSynchronizer) playerSynchronizer.localSquare.spawnBuffer = false;
-
-        }
-
     }
 
 }

@@ -149,6 +149,13 @@ public static class MyExtentions
         float radians = math.radians(angle);
         return new Vector2(math.cos(radians), math.sin(radians)).normalized;
     }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float ConvertVector2ToAngle(Vector2 direction)
+    {
+        float angleInDegrees = -(Mathf.Atan2(direction.x, -direction.y) * Mathf.Rad2Deg);
+        if (angleInDegrees > 180) angleInDegrees -= 360;
+        return angleInDegrees;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string SanitizeMessage(string message) => Regex.Replace(message.Length > 120 ? message.Substring(0, 120) : message,

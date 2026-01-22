@@ -17,7 +17,6 @@ public sealed class DogTagBehaviour : MonoBehaviour
     [SerializeField]
     ParticleBehaviour collectParticles;
 
-    List<PlayerBehaviour> players = new List<PlayerBehaviour>();
     public PlayerBehaviour owningPlayer;
 
     PlayerSynchronizer playerSynchronizer;
@@ -41,8 +40,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
         mapSynchronizer = FindAnyObjectByType<MapSynchronizer>();
         foreach (PlayerData player in playerSynchronizer.playerIdentities)
         {
-            if ( (byte) player.square.GetGameID() == playerId) owningPlayer = player.square;
-            players.Add(player.square);
+            if (  player.square.GetGameID() == playerId) owningPlayer = player.square;
         }
 
         spriteRenderer.color = owningPlayer.PlayerColor.DogTagColor;
@@ -58,18 +56,19 @@ public sealed class DogTagBehaviour : MonoBehaviour
     private void Update()
     {
 
-        if (playerSynchronizer.localSquare.GetGameID() == owningPlayer.GetGameID()) UpdateSync();
-
         target = Vector2.zero;
 
-        foreach (PlayerBehaviour player in players)
+        foreach (PlayerData pData in playerSynchronizer.playerIdentities)
         {
+            PlayerBehaviour player = pData.square;
             if (!player) continue;
+            if (player.isDead) continue;
             Vector2 toTarget = player.rb.position - rb.position;
             if (toTarget.magnitude < 6f) target += toTarget;
 
-            if(playerSynchronizer.localSquare.GetGameID() == owningPlayer.GetGameID())
+            if(player.GetGameID() == owningPlayer.GetGameID())
             {
+                if(player.isLocalPlayer) UpdateSync();
                 if (toTarget.magnitude < 0.6f && !isCollected)
                 {
                     mapSynchronizer.CollectDogTag(dogTagId, (byte) player.GetGameID());
@@ -139,18 +138,14 @@ public sealed class DogTagBehaviour : MonoBehaviour
             Vector3 position = player.rb.position;
             position.z = transform.position.z;
 
-            ParticleBehaviour newParticle = Instantiate(collectParticles, position, transform.rotation, null);
+            ParticleBehaviour newParticle = ParticlePool.Spawn(collectParticles, position, transform.rotation, null);
+            ParticleSystem[] particleSystems = newParticle.ParticleSystems;
+            ParticleSystemRenderer[] particleSystemRenderers = newParticle.ParticleSystemRenderers;
 
-            foreach (ParticleSystemRenderer particle in newParticle.GetComponentsInChildren<ParticleSystemRenderer>())
-            {
-                Material particleMaterial = Instantiate(particle.material);
-                particle.material = particleMaterial;
-                particle.material.color = particleColor;
-            }
+            int length = newParticle.ParticleSystemRenderers.Length;
+            for(int i = 0; i < length; i++) 
+                owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(particleSystemRenderers[i], particleSystems[i]);
         }
-
         Destroy(gameObject);
-
     }
-
 }

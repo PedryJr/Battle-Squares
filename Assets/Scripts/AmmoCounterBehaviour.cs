@@ -3,7 +3,6 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-[BurstCompile]
 public sealed class AmmoCounterBehaviour : MonoBehaviour
 {
     [SerializeField]
@@ -28,15 +27,15 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
 
     private Color emptyColor;
 
-    [BurstCompile]
     public void UnitHUD()
     {
+        
         emptyColor = GetComponent<Image>().color;
 
         PlayerSynchronizer playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         nozzleBehaviour = playerSynchronizer.localSquare.nozzleBehaviour;
         playerColoringBehaviour = playerSynchronizer.localSquare.PlayerColor;
-
+        
         if (primary)
         {
             ammoVisualizers = new VisualElement[nozzleBehaviour.primaryAmmo];
@@ -55,7 +54,6 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         }
     }
 
-    [BurstCompile]
     private void Update()
     {
         UpdateContainer();
@@ -69,7 +67,6 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         ammoContainer.color = playerColoringBehaviour.AmmoContainerColor;
     }
 
-    [BurstCompile]
     public void UpdatePrimary()
     {
         if (!nozzleBehaviour) return;
@@ -113,7 +110,6 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         }
     }
 
-    [BurstCompile]
     public void UpdateSecondary()
     {
         if (!nozzleBehaviour) return;
@@ -156,7 +152,6 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         }
     }
 
-    [BurstCompile]
     public void UpdateWeaponType()
     {
 
@@ -196,7 +191,6 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         UpdateWeaponType();
     }
 
-    [BurstCompile]
     private struct VisualElement
     {
         public Image image;

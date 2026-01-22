@@ -1,9 +1,0 @@
-C:\Users\Pedry\Documents\GitHub\Battle-Squares\Assets\Plugins\BSMOD\Release\netstandard2.1\BattleSquaresSDK.deps.json
-C:\Users\Pedry\Documents\GitHub\Battle-Squares\Assets\Plugins\BSMOD\Release\netstandard2.1\BattleSquaresSDK.dll
-C:\Users\Pedry\Documents\GitHub\Battle-Squares\Assets\Plugins\BSMOD\Release\netstandard2.1\BattleSquaresSDK.pdb
-C:\Users\Pedry\source\repos\BattleSquaresSDK\obj\Release\netstandard2.1\BattleSquaresSDK.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Pedry\source\repos\BattleSquaresSDK\obj\Release\netstandard2.1\BattleSquaresSDK.AssemblyInfoInputs.cache
-C:\Users\Pedry\source\repos\BattleSquaresSDK\obj\Release\netstandard2.1\BattleSquaresSDK.AssemblyInfo.cs
-C:\Users\Pedry\source\repos\BattleSquaresSDK\obj\Release\netstandard2.1\BattleSquaresSDK.csproj.CoreCompileInputs.cache
-C:\Users\Pedry\source\repos\BattleSquaresSDK\obj\Release\netstandard2.1\BattleSquaresSDK.dll
-C:\Users\Pedry\source\repos\BattleSquaresSDK\obj\Release\netstandard2.1\BattleSquaresSDK.pdb

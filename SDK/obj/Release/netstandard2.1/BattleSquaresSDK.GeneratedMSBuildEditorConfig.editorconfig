@@ -1,8 +1,0 @@
-is_global = true
-build_property.RootNamespace = BattleSquaresSDK
-build_property.ProjectDir = C:\Users\Pedry\Documents\GitHub\Battle-Squares\SDK\
-build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
-build_property.CsWinRTUseWindowsUIXamlProjections = false
-build_property.EffectiveAnalysisLevelStyle = 
-build_property.EnableCodeStyleSeverity = 

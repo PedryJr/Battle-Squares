@@ -1,12 +1,10 @@
-using Steamworks;
-using Steamworks.Data;
-using System;
+using Steamworks; 
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-using static PlayerBehaviour;
+using UnityEngine.SceneManagement; 
 using static PlayerSynchronizer;
 
 public class PlayerFactorySynchronizer : NetworkBehaviour
@@ -53,7 +51,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         {
             if (PlayerController.consumedDeviceIDs.Contains(item.deviceId)) continue;
 
-            if (item.selectButton.wasPressedThisFrame)
+            if (item.startButton.wasPressedThisFrame)
             {
                 CreateNewPlayerFromControllerRpc(NetworkManager.LocalClientId);
                 //PlayerController.consumedDeviceIDs.Add(item.deviceId);
@@ -120,7 +118,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         return collectedSkinData.ToArray();
     }
 
-    bool IsNewPlayer(ulong playerId)
+    bool IsNewPlayer(byte playerId)
     {
         bool playerExists = false;
         if (playerSynchronizer.playerIdentities == null) playerSynchronizer.playerIdentities = new List<PlayerData>();
@@ -143,7 +141,6 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
     public void CreateNewPlayer(ulong id)
     {
-
         byte networkID = (byte)id;
         byte gameID = playerIDIncrementor;
         playerIDIncrementor++;
@@ -171,14 +168,37 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         scoreManager.gameMode = currentGameState.currentGameMode;
         for (int i = 0; i < currentGameState.mods.Length; i++) Mods.at[i] = currentGameState.mods[i];
 
+        //Ensure the player that triggered the "create player" function is created.
+        if(currentGameState.newNetworkID == NetworkManager.LocalClientId)
+        {
+            PlayerFactory(currentGameState.selectedMap, currentGameState.newNetworkID, currentGameState.newGameID, SteamClient.SteamId);
+        }
+
+        //Ensure all local players are created on clients that might have them missing.
+        List<PlayerData> playerIdentities = playerSynchronizer.playerIdentities;
+        if(playerIdentities != null)
+        {
+            for(int i = 0; i < playerIdentities.Count; i++)
+            {
+                PlayerBehaviour player = playerIdentities[i].square;
+                if (!player.isLocalPlayer) return;
+                if (player.isLocalPlayer) PlayerFactory(currentGameState.selectedMap, player.GetNetworkID(), player.GetGameID(), player.SteamID);
+            }
+        }
+    }
+
+    //Generates a player on all clients, should that player not exist..
+    void PlayerFactory(int selectedMap, byte networkID, byte gameID, ulong steamID)
+    {
+
         PlayerFactoryDataPacket playerFactoryData = new PlayerFactoryDataPacket();
-
-        playerFactoryData.selectedMap = currentGameState.selectedMap;
-        playerFactoryData.steamId = SteamClient.SteamId.Value;
+        playerFactoryData.selectedMap = selectedMap;
+        playerFactoryData.steamId = steamID;
         playerFactoryData.MMR = new EncryptedDouble(PlayerBehaviour.MMRlocation, 1000.0).Value;
-        playerFactoryData.networkId = currentGameState.newNetworkID;
-        playerFactoryData.gameID = currentGameState.newGameID;
+        playerFactoryData.networkId = networkID;
+        playerFactoryData.gameID = gameID;
 
+        //Dispatch player creation on all clients
         PlayerFactoryRpc(playerFactoryData);
     }
 
@@ -192,7 +212,6 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         if (IsNewPlayer(playerData.gameID)) InstantiateNewPlayer(ref playerData);
 
         playerSynchronizer.UpdateColor();
-        playerSynchronizer.UpdateNozzle();
         playerSynchronizer.UpdateRigidBody();
         playerSynchronizer.UpdateHealth();
         playerSynchronizer.UpdatePlayerReady(playerSynchronizer.localSquare.ready);
@@ -233,13 +252,9 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
     private void SetPlayerLocality(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
     {
-        if (playerData.networkId != NetworkManager.LocalClientId) return;
-
-        newPlayer.neighbours = newPlayer.gameObject.AddComponent<PlayerNeighbours>();
-        playerSynchronizer.localSquare = newPlayer;
-        PlayerInputManager playerInputManager = GetComponent<PlayerInputManager>();
+        newPlayer.isLocalPlayer = true;
+        if(!playerSynchronizer.localSquare) playerSynchronizer.localSquare = newPlayer;
         Instantiate<PlayerController>(controllerPrefab).SetTargetController(newPlayer);
-        newPlayer.neighbours.AddNeighbour(newPlayer);
     }
 
     private void SetPlayerSyncData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)

@@ -8,9 +8,17 @@ public sealed class BuiltMapSpawns : MonoBehaviour
 
     PlayerSynchronizer playerSynchronizer;
 
+    public static BuiltMapSpawns instance;
+
     private void Awake()
     {
+        instance = this;
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
     }
 
     private void Start()
@@ -27,14 +35,6 @@ public sealed class BuiltMapSpawns : MonoBehaviour
         
         spawns = GetComponentsInChildren<Transform>().Where(t => t != transform).ToArray();
         foreach (var item in spawns) item.SetParent(transform.parent, true);
-        /*        foreach (PlayerData player in playerSynchronizer.playerIdentities)
-                {
-                    Debug.Log($"Player ID: {player.square.GetID()} assigned to spawn at position {GetSpawn(player.square.GetID())}");
-                }*/
-
-/*        Debug.Log($"Player ID: {0} assigned to spawn at position {GetSpawn(0)}");
-        Debug.Log($"Player ID: {1} assigned to spawn at position {GetSpawn(1)}");*/
-
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector2 GetSpawn(byte playerId) => spawns[(int)((spawnCycle * 2) + PlayerIdToListIndex(playerId)) % spawns.Length].position;
@@ -42,9 +42,12 @@ public sealed class BuiltMapSpawns : MonoBehaviour
     private void Update()
     {
         spawnCycle += Time.deltaTime;
-        if (!playerSynchronizer.localSquare.isDead && !playerSynchronizer.localSquare.spawnBuffer)
+        for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++)
         {
-            transform.position = GetSpawn(playerSynchronizer.localSquare.GetGameID());
+            PlayerBehaviour player = playerSynchronizer.playerIdentities[i].square;
+            if (!player.isLocalPlayer) continue;
+            if (!(!player.isDead && !player.spawnBuffer)) continue;
+            transform.position = GetSpawn(player.GetGameID());
         }
     }
 

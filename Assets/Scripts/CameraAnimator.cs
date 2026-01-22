@@ -9,13 +9,15 @@ using static PlayerSynchronizer;
 
 public sealed class CameraAnimator : MonoBehaviour
 {
+
+    [SerializeField] float vDist;
+    [SerializeField] float hDist;
+
     [SerializeField] float StencilEffectRenderScale;
     [SerializeField] float ThermalEffectRenderScale;
 
-    [SerializeField]
-    Camera stencilRenderer;
-    [SerializeField]
-    Camera thermalRenderer;
+    [SerializeField] Camera stencilRenderer;
+    [SerializeField] Camera thermalRenderer;
 
     private static Camera _stencilRenderer;
     public static Camera StencilRenderer 

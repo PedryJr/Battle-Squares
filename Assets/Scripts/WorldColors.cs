@@ -31,7 +31,7 @@ public class WorldColors : MonoBehaviour
 
     private void Start()
     {
-
+        
         for (int i = lights.Count - 1; i >= 0; i--)
         {
             if (!lights[i]) lights.RemoveAt(i);
