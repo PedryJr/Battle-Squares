@@ -179,6 +179,8 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Vector2 nozzlePositionOffset;
     Vector2 nozzleInputDirection;
 
+    Vector2 lastRbVelocity;
+
     float newNozzlePositionTime;
     Vector2 nozzleReferencePosition;
 
@@ -235,6 +237,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     private void Awake()
     {
+        lastRbVelocity = new Vector2();
         playerTransform = transform;
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         scoreManager = FindAnyObjectByType<ScoreManager>();
@@ -259,7 +262,6 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         PlayerColor.AssignMaterialToPlayer(spriteRenderer);
         PlayerColor.AssignMaterialToPlayer(healthbar);
         PlayerColor.AssignMaterialToPlayer(nozzleBehaviour.spriteRenderer);
-
         try
         {
 
@@ -342,15 +344,11 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         else fpsCapture += 10;
 
         if (isLocalPlayer)
-        {
-
+        { 
             if (climax > 0) climax -= Time.deltaTime * 0.3f;
-            else if (climax < 0) climax = 0;
-
-            if (rb.position.y < -60) RespawnPlayer();
-
+            else if (climax < 0) climax = 0; 
+            if (rb.position.y < -60) RespawnPlayer(); 
         }
-        else CalculateNozzleMovementFromData();
 
         if (rb.linearDamping > 0.1f) rb.linearDamping -= Time.deltaTime * 80;
         if (rb.angularDamping > 0.1f) rb.angularDamping -= Time.deltaTime * 80;
@@ -379,16 +377,6 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             }
         }
 
-        nozzleTransform.position = playerTransform.position + (Vector3)nozzlePosOffset;
-        nozzleTransform.rotation = Quaternion.Euler(
-                0,
-                0,
-                math.degrees(math.atan2(
-                        (nozzleTransform.position - playerTransform.position).y,
-                        (nozzleTransform.position - playerTransform.position).x)));
-
-        nozzleTransform.localPosition = Vector2.ClampMagnitude(nozzleTransform.localPosition, 1.133f);
-
         controlled = playerController;
 
         UpdateLifeState();
@@ -404,6 +392,8 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         }
 
         if (controlled) SetMovementParameters(newMods);
+
+        AnimateNozzleToAimDirection();
 
     }
 
@@ -647,7 +637,6 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         texture.Apply();
         nozzleFrames[frameIndex] = Sprite.Create(texture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
         if (frameIndex == 0) nozzleBehaviour.spriteRenderer.sprite = nozzleFrames[frameIndex];
-
     }
 
     public void ApplyColors()
@@ -710,113 +699,120 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Vector2 jumpDirection;
     float jumpLimiter;
 
+    public AimDirection aimDirectionEnum = AimDirection.North;
+    public Vector2 aimDirection
+    {
+        get => AimDirectionToVector(aimDirectionEnum);
+        set
+        {
+            aimDirectionEnum = VectorToAimDirection(value);
+            if (isLocalPlayer) playerSynchronizer.UpdateNozzle(GetGameID());
+        }
+    }
+    public Vector2 moveDirection;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Vector2 AimDirectionToVector(AimDirection dir)
+    {
+        return dir switch
+        {
+            AimDirection.East => Vector2.right,
+            AimDirection.NorthEast => new Vector2(1, 1).normalized * 1.145f,
+            AimDirection.North => Vector2.up,
+            AimDirection.NorthWest => new Vector2(-1, 1).normalized * 1.145f,
+            AimDirection.West => Vector2.left,
+            AimDirection.SouthWest => new Vector2(-1, -1).normalized * 1.145f,
+            AimDirection.South => Vector2.down,
+            AimDirection.SouthEast => new Vector2(1, -1).normalized * 1.145f,
+            _ => Vector2.zero
+        };
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public AimDirection VectorToAimDirection(Vector2 v)
+    {
+        if (Mathf.Approximately(v.magnitude, 0)) return aimDirectionEnum;
+        float angle = Mathf.Atan2(v.y, v.x);
+        if (angle < 0) angle += Mathf.PI * 2f;
+        int index = Mathf.RoundToInt(angle / (Mathf.PI / 4f)) % 8;
+        return (AimDirection)index;
+    }
+
+
+    public enum AimDirection : byte
+    {
+        East = 0,
+        NorthEast = 1,
+        North = 2,
+        NorthWest = 3,
+        West = 4, 
+        SouthWest = 5,
+        South = 6,
+        SouthEast = 7
+    }
+
+
     [SerializeField]
     public ParticleBehaviour jumpParticleRef;
 
     private void FixedUpdate()
-    {
+    { 
 
-        if (isLocalPlayer)
+        if(!Mathf.Approximately(lastRbVelocity.sqrMagnitude, rb.linearVelocity.sqrMagnitude))
         {
-            CalculateNozzleMovementFromInput();
-            UpdateDataToSend();
+            if(isLocalPlayer) playerSynchronizer.UpdateRigidBody(GetGameID());
         }
-
         flipFlop = !flipFlop;
-        if (flipFlop) return;
-
+        if (flipFlop) return; 
         if (controlled)
         {
             ApplyTargetMovement();
             ReAdjustMovementValues();
-        }
-
+        } 
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Environment") ||
-            collision.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-
-            if (!hasJump) slapTimer = 0f;
-
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Environment") || collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        { 
+            if (!hasJump) slapTimer = 0f; 
             if (slapTimer == 0)
             {
                 if (!isLocalPlayer || SceneManager.GetActiveScene().name.Equals("LobbyScene"))
-                {
-
+                { 
                     Vector2 toCam = Camera.main.transform.position - playerTransform.position;
                     float soundDirection = MyExtentions.ConvertVector2ToAngle(toCam.normalized);
-                    float distance = toCam.magnitude;
-
+                    float distance = toCam.magnitude; 
                     playerSlapSound.setParameterByName("Direction", soundDirection);
-                    playerSlapSound.setParameterByName("Distance", distance);
-
+                    playerSlapSound.setParameterByName("Distance", distance); 
                 }
                 else
-                {
-
+                { 
                     playerSlapSound.setParameterByName("Direction", 0);
-                    playerSlapSound.setParameterByName("Distance", 0);
-
-                }
-
+                    playerSlapSound.setParameterByName("Distance", 0); 
+                } 
                 playerSlapSound.setParameterByName("Player Speed", slapIntensity);
                 playerSlapSound.setVolume(MySettings.Volume);
                 playerSlapSound.start();
-                slapTimer = 0.27f;
-
-            }
-
+                slapTimer = 0.27f; 
+            } 
             hasJump = true;
             slapIntensity = 0;
         }
     }
 
-    void CalculateNozzleMovementFromData()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void PlayNozzleRecoilAnimation() => nozzleBehaviour.transform.localPosition = Vector3.Lerp(nozzleBehaviour.transform.localPosition, Vector3.zero, 0.99f);
+
+    private void AnimateNozzleToAimDirection()
     {
-
-        if (newNozzleLerp < 1) newNozzleLerp += Time.deltaTime * nozzlePositionSpeed;
-        if (newNozzleLerp > 1) newNozzleLerp = 1;
-
-        nozzlePosOffset = Vector2.Lerp(
-            fromPos,
-            toPos,
-            math.smoothstep(0, 1, newNozzleLerp));
-    }
-
-    public void PlayNozzleRecoilAnimation()
-    {
-
-        fromPos = Vector2.zero;
-        newNozzleLerp = 0;
-        nozzlePosOffset = Vector2.Lerp(
-            fromPos,
-            toPos,
-            math.smoothstep(0, 1, newNozzleLerp));
-        playerSynchronizer.UpdateNozzle(GetGameID());
-
-    }
-
-    void CalculateNozzleRotation()
-    {
-        nozzleTransform.rotation = Quaternion.Euler(
-        0,
-        0,
-        math.degrees(math.atan2(
-                (nozzleTransform.position - playerTransform.position).y,
-                (nozzleTransform.position - playerTransform.position).x)));
-    }
-
-    public void AnimateNozzle(Vector3 from, Vector3 to)
-    {
-
-        nozzleReferencePosition = from - to;
-        newNozzlePositionTime = 0;
-        nozzleInputDirection = playerController.GetDirection();
-
+        float rot = 0;
+        Vector3 pos = nozzleBehaviour.transform.position;
+        pos = Vector3.Lerp(pos, transform.position + (Vector3)aimDirection, Time.deltaTime * 25);
+        nozzleBehaviour.transform.position = pos; 
+        Vector2 delta = transform.position - nozzleBehaviour.transform.position; 
+        rot = MyExtentions.ConvertVector2ToAngle(delta);
+        nozzleBehaviour.transform.rotation = Quaternion.Euler(0f, 0f, rot - 180);
     }
 
     void SetMovementParameters(bool newMod)
@@ -829,14 +825,14 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             newMods = false;
         }
 
-        movementDirection = Vector2.Lerp(movementDirection, playerController.finalDirection, math.clamp(Time.deltaTime * 100, 0, 1));
+        movementDirection = Vector2.Lerp(movementDirection, moveDirection, math.clamp(Time.deltaTime * 100, 0, 1));
 
         (velParam.x, velParam.y) = (math.clamp(rb.linearVelocityX, -maxSpeed, maxSpeed), math.clamp(rb.linearVelocityY, -maxSpeed, maxSpeed));
         (xLimiter, yLimiter) = (math.clamp(math.abs(movementDirection.x - (velParam.x / maxSpeed)), 0, 1), math.clamp(math.abs(movementDirection.y - (velParam.y / maxSpeed)), 0, 1));
         forceLimiter = new Vector2(xLimiter, yLimiter);
 
         jumpLimiter = 17.5f - math.clamp(rb.linearVelocityY / 2, -5, 10);
-        jumpDirection = (Vector2.up + (playerController.finalDirection * 0.2f)).normalized;
+        jumpDirection = (Vector2.up + (movementDirection * 0.2f)).normalized;
         jumpVelocity = (jumpDirection * jumpLimiter) * Mods.at[2];
 
         MyExtentions.GetClosestEnvironmentPoint(rb.position);
@@ -864,55 +860,6 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         if (rb.rotation > 360) rb.rotation -= 360;
         if (rb.rotation < 0) rb.rotation += 360;
         rb.angularVelocity = math.clamp(rb.angularVelocity, -1000, 1000);
-        (float nPosX, float nPosY) = (nozzleTransform.localPosition.x, nozzleTransform.localPosition.y);
-        nozzleTransform.localPosition = new Vector2(math.clamp(nPosX, -1, 1), math.clamp(nPosY, -1, 1));
-    }
-
-    void UpdateDataToSend()
-    {
-
-        position = rb.position;
-        rotation = rb.rotation;
-        velocity = rb.linearVelocity;
-        angularVelocity = rb.angularVelocity;
-        localNozzlePosition = nozzleTransform.position - playerTransform.position;
-        nozzleRotation = nozzleTransform.rotation.eulerAngles.z;
-
-    }
-
-
-    void CalculateNozzleMovementFromInput()
-    {
-
-        bool shouldSync = false;
-
-
-        newNozzlePositionTime = math.clamp(newNozzlePositionTime + (Time.deltaTime * nozzlePositionSpeed), 0, 1);
-
-        if (newNozzleLerp < 1) newNozzleLerp += Time.deltaTime * nozzlePositionSpeed;
-        if (newNozzleLerp > 1) newNozzleLerp = 1;
-
-        if (nozzleInputDirection != playerController.aimingDirection && playerController.aimingDirection.magnitude > 0)
-        {
-
-            nozzleInputDirection = playerController.aimingDirection;
-            float distance = (rb.position - (Vector2)nozzleBehaviour.transform.position).magnitude;
-            Vector2 direction = (Vector2)nozzleBehaviour.transform.position - rb.position;
-
-            toPos = Vector2.ClampMagnitude(playerController.aimingDirection, 1.128f);
-            fromPos = direction * distance;
-
-            newNozzleLerp = 0;
-
-            shouldSync = true;
-
-        }
-
-        nozzlePosOffset = Vector2.Lerp(
-                fromPos,
-                toPos, math.smoothstep(0, 1, newNozzleLerp));
-
-        if (shouldSync) playerSynchronizer.UpdateNozzle(GetGameID());
     }
 
     public void AnimatePlayer() => animationTimer = 1;
@@ -969,7 +916,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     {
         rb.position = new Vector2(position.X, position.Y);
         transform.position = new Vector3(position.X, position.Y, transform.position.z);
-        playerSynchronizer.UpdateRigidBody();
+        playerSynchronizer.UpdateRigidBody(GetGameID());
     }
     [Preserve]
     [MethodImpl(MethodImplOptions.NoOptimization)]

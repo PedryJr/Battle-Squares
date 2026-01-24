@@ -171,7 +171,7 @@ Shader "Custom/PlayerShader"
                 output.rgb = producedColor;
                 output.a   = lerp(alpha, l, fade) * lerp(1, 0, fade);
 
-
+                return output;
                 //output.rgba = inputToGamma;
 
             }

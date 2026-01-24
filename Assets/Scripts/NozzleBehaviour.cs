@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
@@ -162,11 +163,9 @@ public sealed class NozzleBehaviour : MonoBehaviour
         {
             if (ShootWeapon(primary))
             {
-                playerBehaviour.AnimateNozzle(Vector3.zero, Vector3.zero);
                 projectileManager.SpawnNozzleParticles(
-                    globalNozzleDirection - (relativePositionToPlayer / 3.5f),
-                    Quaternion.Euler(0, 0, 
-                    math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
+                    GetParticlePoint(),
+                    GetFireRot(),
                     primary,
                     playerBehaviour.GetGameID());
             }
@@ -175,10 +174,9 @@ public sealed class NozzleBehaviour : MonoBehaviour
         {
             if (ShootWeapon(secondary))
             {
-                playerBehaviour.AnimateNozzle(Vector3.zero, Vector3.zero);
                 projectileManager.SpawnNozzleParticles(
-                    globalNozzleDirection - (relativePositionToPlayer / 3.5f),
-                    Quaternion.Euler(0, 0, math.degrees(math.atan2(relativePositionToPlayer.y, relativePositionToPlayer.x))),
+                    GetParticlePoint(),
+                    GetFireRot(),
                     secondary,
                     playerBehaviour.GetGameID());
             }
@@ -230,21 +228,30 @@ public sealed class NozzleBehaviour : MonoBehaviour
                 fire = true;
 
             }
-
         }
-
         if (fire)
         {
 
             projectileManager.SpawnProjectile(
                 type,
-                globalNozzleDirection,
-                relativePositionToPlayer.normalized,
+                GetFirePoint(),
+                playerBehaviour.aimDirection,
                 playerBehaviour);
             playerBehaviour.PlayNozzleRecoilAnimation();
         }
         return fire;
 
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Vector2 GetParticlePoint() => (Vector2)playerBehaviour.transform.position + (playerBehaviour.aimDirection / 1.8f);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Vector2 GetFirePoint() => (Vector2)transform.position - (playerBehaviour.aimDirection / 2f);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Quaternion GetFireRot()
+    {
+        Vector2 aimDirection = playerBehaviour.aimDirection;
+        return Quaternion.Euler(0f, 0f, math.degrees(math.atan2(aimDirection.y, aimDirection.x)));
     }
 
     public void UpdateWeaponTypes(ushort newWeapon)

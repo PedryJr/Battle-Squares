@@ -212,7 +212,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         if (IsNewPlayer(playerData.gameID)) InstantiateNewPlayer(ref playerData);
 
         playerSynchronizer.UpdateColor();
-        playerSynchronizer.UpdateRigidBody();
+        playerSynchronizer.UpdateRigidBody(playerData.gameID);
         playerSynchronizer.UpdateHealth();
         playerSynchronizer.UpdatePlayerReady(playerSynchronizer.localSquare.ready);
 
@@ -252,9 +252,12 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
     private void SetPlayerLocality(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
     {
-        newPlayer.isLocalPlayer = true;
-        if(!playerSynchronizer.localSquare) playerSynchronizer.localSquare = newPlayer;
-        Instantiate<PlayerController>(controllerPrefab).SetTargetController(newPlayer);
+        if (playerData.networkId == (byte) NetworkManager.LocalClientId)
+        {
+            newPlayer.isLocalPlayer = true;
+            if (!playerSynchronizer.localSquare) playerSynchronizer.localSquare = newPlayer;
+            Instantiate<PlayerController>(controllerPrefab).SetTargetController(newPlayer);
+        }
     }
 
     private void SetPlayerSyncData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
@@ -403,15 +406,64 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
 
 
+    // PSEUDOCODE / PLAN (detailed):
+    // - On receiving the "skin finished" client RPC:
+    //   1. Resolve the PlayerBehaviour that corresponds to the `gameID` (this is the id used as key in activeSkinDataBuffers).
+    //      - If no player found, log a warning and exit early.
+    //   2. Try to look up a SkinDataBuffer in `activeSkinDataBuffers` using `gameID`.
+    //      - If missing, log a warning and exit early (avoid KeyNotFoundException).
+    //   3. If buffer exists, call `AssignBufferDataToPlayerSkin()` inside a try/catch to avoid crashing when data is malformed or incomplete.
+    //      - Log any exception details for debugging.
+    //   4. Remove the buffer entry from `activeSkinDataBuffers` after applying it.
+    //   5. Use `gameID` (not `skinOwnerID`) when resolving the player for safer and consistent lookup.
+    //   6. Keep debug messages informative but defensive (check for nulls).
+    //
+    // This replaces the previous implementation to prevent crashes when the buffer or player is not present
+    // (which could happen when re-creating lobbies or when requests are out-of-order).
+
     [ClientRpc(Delivery = RpcDelivery.Reliable)]
     public void SendPlayerSkinFinishedDataClientRpc(byte requesterID, byte skinOwnerID, byte gameID, ClientRpcParams clientRpcParams = default)
     {
-        string output = $"" +
-            $"Skin request processed, recieving finished notify from id: {skinOwnerID}." +
-            $"Skin request processed, recieving finished notify from player named: {playerSynchronizer.GetPlayerById(skinOwnerID).name}.";
-        Debug.Log(output);
+        // Resolve the player by the gameID (this is the key used to store buffers).
+        PlayerBehaviour targetPlayer = null;
+        try
+        {
+            targetPlayer = playerSynchronizer.GetPlayerById(gameID);
+        }
+        catch
+        {
+            // Defensive: if GetPlayerById throws, ensure we still handle gracefully.
+            targetPlayer = null;
+        }
 
-        activeSkinDataBuffers[gameID].AssignBufferDataToPlayerSkin();
+        if (targetPlayer == null)
+        {
+            Debug.Log($"SendPlayerSkinFinishedDataClientRpc: no player found for gameID {gameID}. OwnerNetworkID={skinOwnerID}, Requester={requesterID}");
+            // Clean up any stale entry if present
+            if (activeSkinDataBuffers.ContainsKey(gameID))
+            {
+                activeSkinDataBuffers.Remove(gameID);
+            }
+            return;
+        }
+
+        Debug.Log($"Skin request processed, receiving finished notify from id: {skinOwnerID}. Player: {targetPlayer.name}.");
+
+        if (!activeSkinDataBuffers.TryGetValue(gameID, out var buffer))
+        {
+            Debug.Log($"SendPlayerSkinFinishedDataClientRpc: no skin data buffer found for gameID {gameID}. OwnerNetworkID={skinOwnerID}, Requester={requesterID}");
+            return;
+        }
+
+        try
+        {
+            buffer.AssignBufferDataToPlayerSkin();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log($"SendPlayerSkinFinishedDataClientRpc: error applying skin for gameID {gameID}: {ex}");
+        }
+
         activeSkinDataBuffers.Remove(gameID);
     }
 

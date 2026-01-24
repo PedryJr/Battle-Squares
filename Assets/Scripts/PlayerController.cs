@@ -306,29 +306,23 @@ public sealed partial class PlayerController : MonoBehaviour
 
         inputs = new Inputs();
 
-        inputs.SquareController.Up.performed += OnUpPerformed;
-        inputs.SquareController.Up.canceled += OnUpCanceled;
-
-        inputs.SquareController.Down.performed += OnDownPerformed;
-        inputs.SquareController.Down.canceled += OnDownCanceled;
-
-        inputs.SquareController.Left.performed += OnLeftPerformed;
-        inputs.SquareController.Left.canceled += OnLeftCanceled;
-
-        inputs.SquareController.Right.performed += OnRightPerformed;
-        inputs.SquareController.Right.canceled += OnRightCanceled;
+        inputs.SquareController.Up.performed += HandleUp;
+        inputs.SquareController.Up.canceled += HandleUp;
+        inputs.SquareController.Down.performed += HandleDown;
+        inputs.SquareController.Down.canceled += HandleDown;
+        inputs.SquareController.Left.performed += HandleLeft;
+        inputs.SquareController.Left.canceled += HandleLeft;
+        inputs.SquareController.Right.performed += HandleRight;
+        inputs.SquareController.Right.canceled += HandleRight;
 
         inputs.SquareController.Jump.performed += OnJumpPerformed;
 
         inputs.SquareController.PrimaryConst.performed += OnPrimaryConstPerformed;
-        inputs.SquareController.PrimaryConst.canceled += OnPrimaryConstCanceled;
-
+        inputs.SquareController.PrimaryConst.canceled += OnPrimaryConstCanceled; 
         inputs.SquareController.SecondaryConst.performed += OnSecondaryConstPerformed;
-        inputs.SquareController.SecondaryConst.canceled += OnSecondaryConstCanceled;
-
+        inputs.SquareController.SecondaryConst.canceled += OnSecondaryConstCanceled; 
         inputs.SquareController.Primary.performed += OnPrimaryPerformed;
-        inputs.SquareController.Primary.canceled += OnPrimaryCanceled;
-
+        inputs.SquareController.Primary.canceled += OnPrimaryCanceled; 
         inputs.SquareController.Secondary.performed += OnSecondaryPerformed;
         inputs.SquareController.Secondary.canceled += OnSecondaryCanceled;
 
@@ -367,77 +361,44 @@ public sealed partial class PlayerController
     public static bool showCursor = true;
 
     float regs;
+     
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnUpPerformed(CallbackContext context)
+    private void HandleUp(CallbackContext context)
     {
-        if (!ValidateDeadzone(context.ReadValue<float>())) return;
         if (!ValidateInput()) return;
-        upInputDirection = new Vector2(0, 1f);
+        upInputDirection = new Vector2(0, context.ReadValue<float>());
         SetFinalInputDirection();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnUpCanceled(CallbackContext context)
+    private void HandleDown(CallbackContext context)
     {
-        upInputDirection = Vector2.zero;
-        SetFinalInputDirection();
-    }
-
-    
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnDownPerformed(CallbackContext context)
-    {
-        if (!ValidateDeadzone(context.ReadValue<float>())) return;
         if (!ValidateInput()) return;
-        downInputDirection = new Vector2(0, -1f);
+        downInputDirection = new Vector2(0, -context.ReadValue<float>());
         SetFinalInputDirection();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnDownCanceled(CallbackContext context)
+    private void HandleLeft(CallbackContext context)
     {
-        downInputDirection = Vector2.zero;
-        SetFinalInputDirection();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnLeftPerformed(CallbackContext context)
-    {
-        if (!ValidateDeadzone(context.ReadValue<float>())) return;
         if (!ValidateInput()) return;
-        leftInputDirection = new Vector2(-1, 0);
+        leftInputDirection = new Vector2(-context.ReadValue<float>(), 0);
         SetFinalInputDirection();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnLeftCanceled(CallbackContext context)
+    private void HandleRight(CallbackContext context)
     {
-        leftInputDirection = Vector2.zero;
-        SetFinalInputDirection();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnRightPerformed(CallbackContext context)
-    {
-        if (!ValidateDeadzone(context.ReadValue<float>())) return;
         if (!ValidateInput()) return;
-        rightInputDirection = new Vector2(1, 0);
-        SetFinalInputDirection();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnRightCanceled(CallbackContext context)
-    {
-        rightInputDirection = Vector2.zero;
+        rightInputDirection = new Vector2(context.ReadValue<float>(), 0);
         SetFinalInputDirection();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnJumpPerformed(CallbackContext context)
     {
-        if (useCachedInput) return;
+        if (zeroInput) return;
         if (!ValidateInput()) return;
         if (playerBehaviour.hasJump)
         {
@@ -450,7 +411,7 @@ public sealed partial class PlayerController
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnPrimaryConstPerformed(CallbackContext context)
     {
-        if (useCachedInput) return;
+        if (zeroInput) return;
         if (!ValidateInput()) return;
         shootPrimary = true;
     }
@@ -464,7 +425,7 @@ public sealed partial class PlayerController
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnSecondaryConstPerformed(CallbackContext context)
     {
-        if (useCachedInput) return;
+        if (zeroInput) return;
         if (!ValidateInput()) return;
         shootSecondary = true;
     }
@@ -478,7 +439,7 @@ public sealed partial class PlayerController
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnPrimaryPerformed(CallbackContext context)
     {
-        if (useCachedInput) return;
+        if (zeroInput) return;
         if (!ValidateInput() || uiRegs != 0) return;
         shootPrimary = true;
     }
@@ -492,7 +453,7 @@ public sealed partial class PlayerController
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnSecondaryPerformed(CallbackContext context)
     {
-        if (useCachedInput) return;
+        if (zeroInput) return;
         if (!ValidateInput() || uiRegs != 0) return;
         shootSecondary = true;
     }
@@ -501,13 +462,6 @@ public sealed partial class PlayerController
     private void OnSecondaryCanceled(CallbackContext context)
     {
         shootSecondary = false;
-    }
-
-    //Testing a 0.5 deadzone for now (should make corner aiming easier)
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private bool ValidateDeadzone(float v)
-    {
-        return v > 0.5f;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -542,49 +496,29 @@ public sealed partial class PlayerController
     void SetFinalInputDirection()
     {
         if (controllerTarget == null) return;
-
-        Vector2 usedInput = useCachedInput ? 
-            cachedInputUp +
-            cachedInputDown +
-            cachedInputLeft + 
-            cachedInputRight :
-            upInputDirection +
-            downInputDirection +
-            leftInputDirection +
-            rightInputDirection;
-
-        finalDirection =
-            Vector2.Lerp((useCachedInput ? cachedInputUp : upInputDirection) * 0.4f, useCachedInput ? cachedInputUp : upInputDirection, Mods.at[9]) +
-            Vector2.Lerp((useCachedInput ? cachedInputDown : downInputDirection) * 0.3f, useCachedInput ? cachedInputDown : downInputDirection, Mods.at[9]) +
-                                      (useCachedInput ? cachedInputLeft : leftInputDirection) +
-                                      (useCachedInput ? cachedInputRight : rightInputDirection);
-
-        aimingDirection = usedInput;
-
-        if (!((downInputDirection + upInputDirection) == Vector2.zero && (leftInputDirection + rightInputDirection) == Vector2.zero)) projectileDirection = usedInput;
+        Vector2 up = zeroInput ? Vector2.zero : upInputDirection;
+        Vector2 down = zeroInput ? Vector2.zero : downInputDirection;
+        Vector2 left = zeroInput ? Vector2.zero : leftInputDirection;
+        Vector2 right = zeroInput ? Vector2.zero : rightInputDirection;
+        Vector2 accumInput = up + down + left + right;
+        playerBehaviour.aimDirection = DeadzoneCompute.Instance.ProcessDeadzone(accumInput);
+        float mod = Mods.at[9];
+        playerBehaviour.moveDirection = Vector2.Lerp(up * 0.4f, up, mod) + Vector2.Lerp(down * 0.3f, down, mod) + left + right;
     }
 
-    [SerializeField]
-    bool useCachedInput = false;
-    Vector2 cachedInputLeft;
-    Vector2 cachedInputRight;
-    Vector2 cachedInputUp;
-    Vector2 cachedInputDown;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Vector2 GetDirection() => aimingDirection != Vector2.zero ? aimingDirection : finalDirection;
+
+    [SerializeField]
+    bool zeroInput = false;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EnableController()
     {
-        useCachedInput = false;
+        zeroInput = false;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void DisableController()
     {
-        cachedInputDown = downInputDirection;
-        cachedInputLeft = leftInputDirection;
-        cachedInputRight = rightInputDirection;
-        cachedInputDown = upInputDirection;
-        useCachedInput = true;
+        zeroInput = true;
     }
 }

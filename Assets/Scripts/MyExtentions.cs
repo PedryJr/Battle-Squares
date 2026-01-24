@@ -87,40 +87,27 @@ public static class MyExtentions
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float DecodeRotation(byte[] bytes)
-    {
-
-        if (bytes.Length != 2)
-            throw new ArgumentException("Input must be exactly 2 bytes.");
-
+    { 
+        if (bytes.Length != 2) throw new ArgumentException("Input must be exactly 2 bytes."); 
         int highByte = bytes[0] & 0xFF;
-        int lowByte = bytes[1] & 0xFF;
-
-        int scaledRotation = (highByte << 8) | lowByte;
-
-        float rotation = (scaledRotation / 65535.0f) * 360.0f;
-
-        return rotation;
-
+        int lowByte = bytes[1] & 0xFF; 
+        int scaledRotation = (highByte << 8) | lowByte; 
+        float rotation = (scaledRotation / 65535.0f) * 360.0f; 
+        return rotation; 
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] EncodeFloat(float value)
-    {
-
+    { 
         float minValue = -1000.0f;
         float maxValue = 1000.0f;
-        int range = (int)(maxValue - minValue);
-
-        int scaledValue = (int)(((value - minValue) / range) * 16777215);
-
-        scaledValue = math.max(0, math.min(16777215, scaledValue));
-
+        int range = (int)(maxValue - minValue); 
+        int scaledValue = (int)(((value - minValue) / range) * 16777215); 
+        scaledValue = math.max(0, math.min(16777215, scaledValue)); 
         byte byte1 = (byte)((scaledValue >> 16) & 0xFF);
         byte byte2 = (byte)((scaledValue >> 8) & 0xFF);
-        byte byte3 = (byte)(scaledValue & 0xFF);
-
-        return new byte[] { byte1, byte2, byte3 };
-
+        byte byte3 = (byte)(scaledValue & 0xFF); 
+        return new byte[] { byte1, byte2, byte3 }; 
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -152,10 +139,12 @@ public static class MyExtentions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float ConvertVector2ToAngle(Vector2 direction)
     {
-        float angleInDegrees = -(Mathf.Atan2(direction.x, -direction.y) * Mathf.Rad2Deg);
-        if (angleInDegrees > 180) angleInDegrees -= 360;
-        return angleInDegrees;
+        direction.Normalize();
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        if (angle < 0) angle += 360f;
+        return angle;
     }
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string SanitizeMessage(string message) => Regex.Replace(message.Length > 120 ? message.Substring(0, 120) : message,

@@ -134,7 +134,6 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     
     void LateHudInit()
     {
-
         AmmoCounterBehaviour[] ammoCounters = FindObjectsByType<AmmoCounterBehaviour>(FindObjectsSortMode.None);
         foreach (AmmoCounterBehaviour ammoCounter in ammoCounters)
         {
@@ -302,96 +301,23 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void KickPlayerClientRpc(byte id)
     {
-
         if (localSquare.GetNetworkID() != id) return;
-
         DisconnectPlayerLocally();
-
     }
 
-    
     public void DisconnectPlayerLocally()
     {
         NetworkManager.Shutdown(true);
         FacepunchTransport ft = GameObject.FindGameObjectWithTag("Net").GetComponent<FacepunchTransport>();
         ft.DisconnectLocalClient();
         ft.Shutdown();
-
         SceneManager.LoadSceneAsync("MenuScene");
-
         SteamNetwork.CreateNewLobby();
-
-        foreach (ProjectileBehaviour projectile in projectileManager.projectiles)
-        {
-
-            if (projectile != null) Destroy(projectile.gameObject);
-
-        }
-
+        foreach (ProjectileBehaviour projectile in projectileManager.projectiles) if (projectile != null) Destroy(projectile.gameObject);
         projectileManager.projectiles.Clear();
-
-        if (playerIdentities != null)
-        {
-            foreach (PlayerData player in playerIdentities)
-            {
-
-                Destroy(player.square.gameObject);
-
-            }
-
-            //playerIdentities = null;
-        }
+        if (playerIdentities != null) foreach (PlayerData player in playerIdentities) Destroy(player.square.gameObject);
         playerIdentities.Clear();
-
     }
-
-/*    public void CreateNewPlayer(ulong id)
-    {
-
-        if (!IsHost) return;
-        GameStateDataPacket currentGameState = new GameStateDataPacket();
-
-        currentGameState.currentGameMode = scoreManager.gameMode;
-        currentGameState.mods = (float[]) Mods.at.Clone();
-
-        RoundTripCollectorClientRpc(currentGameState);
-    }*/
-/*
-    bool FetchSkinValidity()
-    {
-        bool skinValidCheck = true;
-        foreach (var frame in skinData.skinFrames) skinValidCheck = frame.valid && skinValidCheck;
-        return skinValidCheck;
-    }
-    int FetchFrameCount() => FetchSkinValidity() ? skinData.frames : 1;
-    float FetchFrameAnimation() => FetchSkinValidity() ? skinData.frameRate : 0F;
-    byte[] FetchFramePixels() => FetchSkinValidity() ? GetCustomSkin() : MyExtentions.BoolArrayToByteArray(defaultSkin);*/
-/*    byte[] GetCustomSkin()
-    {
-        byte[] frameBuffer;
-        List<byte> collectedSkinData = new List<byte>();
-        foreach (SkinData.SkinFrame frame in skinData.skinFrames)
-        {
-            frameBuffer = MyExtentions.BoolArrayToByteArray(frame.frame);
-            collectedSkinData.AddRange(frameBuffer);
-        }
-        return collectedSkinData.ToArray();
-    }*/
-/*
-    bool IsNewPlayer(ulong playerId)
-    {
-        bool playerExists = false;
-        if(playerIdentities == null) playerIdentities = new List<PlayerData>();
-        foreach (PlayerData player in playerIdentities)
-        {
-            if ((byte)player.id == playerId)
-            {
-                playerExists = true;
-                break;
-            }
-        }
-        return !playerExists;
-    }*/
 
     [ClientRpc] public void SendModsDataClientRpc(float[] mods)
     {
@@ -411,15 +337,12 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     bool rbFlip = false;
     void UpdatePlayerData()
     {
-
         float deltaTime = Time.deltaTime;
         rbFlip = !rbFlip;
 
         if (stopUpdate) return;
         if (localSquare == null) return;
         if (playerIdentities == null) return;
-
-        if(rbFlip) UpdateRigidBody();
 
         if (clrUpdate > 0)
         {
@@ -429,77 +352,69 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         }
     }
 
-    public void UpdateRigidBody()
+    public void UpdateRigidBody(byte playerId)
     {
+        PlayerBehaviour player = GetPlayerById(playerId);
+        if (!player.isLocalPlayer) return;
 
-        foreach (var player in playerIdentities)
-        {
-            if (player.square.GetNetworkID() != NetworkManager.LocalClientId) continue;
-            byte[] data = MyExtentions.CompressRigidbody(player.square.rb);
-            UpdateRigidBodyRpc(data, player.square.GetGameID());
-        }
+        Vector2 pos = player.rb.position;
+        Vector2 vel = player.rb.linearVelocity;
+        float ang = player.rb.rotation;
+        float angvel = player.rb.angularVelocity;
 
+        UpdateRigidBodyRpc(pos, vel, ang, angvel, player.GetGameID());
     }
 
-    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
-    void UpdateRigidBodyRpc(byte[] data, byte id)
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
+    void UpdateRigidBodyRpc(Vector2 pos, Vector2 vel, float ang, float angvel, byte id)
     {
-        if (playerIdentities == null) return;
-
+        
+        if (playerIdentities == null)
+        {
+            VLog.Log("playerIdentities is null...");
+            return;
+        }
         PlayerBehaviour player = GetPlayerById(id);
         if (player == null) return;
-        if (player.isLocalPlayer) return;
-
-        StorePlayerRigidBodyData(player, data);
+        StorePlayerRigidBodyData(player, pos, vel, ang, angvel);
     }
 
-    void StorePlayerRigidBodyData(PlayerBehaviour player, byte[] data)
-    { 
-        if (!player.isDead) MyExtentions.DecompressRigidbody(data, player.rb, 200f); 
+    void StorePlayerRigidBodyData(PlayerBehaviour player, Vector2 pos, Vector2 vel, float ang, float angvel)
+    {
+        if(!player.isDead)
+        {
+            player.rb.position = pos;
+            player.rb.linearVelocity = vel;
+            player.rb.rotation = ang;
+            player.rb.angularVelocity = angvel;
+        }
+        else
+        {
+            VLog.Log("the player is dead, rejecting position sync...");
+        }
     }
 
     public void UpdateNozzle(byte playerID)
     {
         PlayerBehaviour player = GetPlayerById(playerID);
-
-        if (!player) return;
-        if (!player.isLocalPlayer) return;
-
-        byte[] compFromPos = MyExtentions.EncodeNozzlePosition(player.fromPos.x, player.fromPos.y);
-        byte[] compToPos = MyExtentions.EncodeNozzlePosition(player.toPos.x, player.toPos.y);
-        byte[] data = new byte[5] { playerID, compFromPos[0], compFromPos[1], compToPos[0], compToPos[1] };
+        if (!player) return; 
+        byte[] data = new byte[2] { player.GetGameID(), (byte) player.aimDirectionEnum }; 
         UpdateNozzleRpc(data);
     }
 
-    [Rpc(SendTo.NotMe, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     void UpdateNozzleRpc(byte[] data)
     {
         if (playerIdentities == null) return;
-
         PlayerBehaviour player = GetPlayerById(data[0]);
         if (player == null) return;
-        if (player.isLocalPlayer) return;
-
-        StoreNozzleData(player, data);
-    }
-
-    void StoreNozzleData(PlayerBehaviour player, byte[] comp)
-    {
-
-        (float fromX, float fromY) = MyExtentions.DecodeNozzlePosition(new byte[2] { comp[1], comp[2] });
-        (float toX, float toY) = MyExtentions.DecodeNozzlePosition(new byte[2] { comp[3], comp[4] });
-
-        player.fromPos = new Vector2(fromX, fromY);
-        player.toPos = new Vector2(toX, toY);
-        player.newNozzleLerp = 0;
-
+        player.aimDirectionEnum = (PlayerBehaviour.AimDirection) data[1];
     }
     
     public void UpdateColor()
     {
         foreach (var item in playerIdentities)
         {
-
             PlayerBehaviour player = item.square;
             if (!player) continue;
             if (!player.isLocalPlayer) continue;
@@ -507,16 +422,14 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             ulong sourceId = player.GetGameID();
             byte[] data = new byte[2]
             {
-            (byte) sourceId,
-            (byte) math.round(player.PlayerColor.ReadColorHue * 256)
+                (byte) sourceId,
+                (byte) math.round(player.PlayerColor.ReadColorHue * 256)
             };
-
-            UpdateColortRpc(data);
-
+            UpdateColortRpc(data); 
         }
     }
 
-    [Rpc(SendTo.Everyone, Delivery = RpcDelivery.Unreliable)]
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
     void UpdateColortRpc(byte[] data)
     {
         if (playerIdentities == null) return;
@@ -976,7 +889,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     void SpawnJumpParticlesEvent(byte[] data, byte playerId)
     {
-        PlayerBehaviour player = GetPlayerById((byte)playerId);
+        PlayerBehaviour player = GetPlayerById(playerId);
         if (!player) return;
         
         SByte3 particleCompressor = ProjectileManager.GetParticleCompressor;
