@@ -172,6 +172,145 @@ public static class PolygonColliderMerger
     #region Public API
 
     /// <summary>
+    /// Splits a large island cluster into multiple smaller clusters for better batching performance.
+    /// </summary>
+    /// <param name="islandCluster">The cluster to split</param>
+    /// <param name="generatedClusterPrefab">Prefab to instantiate for new clusters</param>
+    /// <param name="maxIslandsPerCluster">Maximum number of islands (paths) per cluster</param>
+    /// <returns>Array of new cluster GameObjects (including the original modified cluster)</returns>
+    public static PolygonCollider2D[] SplitCluster(PolygonCollider2D islandCluster, PolygonCollider2D generatedClusterPrefab, int maxIslandsPerCluster = 8)
+    {
+        if (islandCluster == null)
+        {
+            Debug.LogError("PolygonColliderMerger.SplitCluster: islandCluster is null");
+            return new PolygonCollider2D[0];
+        }
+
+        if (generatedClusterPrefab == null)
+        {
+            Debug.LogError("PolygonColliderMerger.SplitCluster: generatedClusterPrefab is null");
+            return new PolygonCollider2D[0];
+        }
+
+        // Check if splitting is necessary
+        int totalPaths = islandCluster.pathCount;
+        if (totalPaths <= maxIslandsPerCluster)
+        {
+            Debug.Log($"PolygonColliderMerger.SplitCluster: Cluster has {totalPaths} paths, no split needed (max: {maxIslandsPerCluster})");
+            return new PolygonCollider2D[] { islandCluster };
+        }
+
+        // Extract all paths from the original cluster
+        List<PolygonData> allPolygons = new List<PolygonData>();
+        for (int i = 0; i < totalPaths; i++)
+        {
+            Vector2[] localPath = islandCluster.GetPath(i);
+            if (localPath != null && localPath.Length >= MIN_POLYGON_POINTS)
+            {
+                allPolygons.Add(new PolygonData(localPath));
+            }
+        }
+
+        if (allPolygons.Count == 0)
+        {
+            Debug.LogWarning("PolygonColliderMerger.SplitCluster: No valid polygons found in cluster");
+            return new PolygonCollider2D[] { islandCluster };
+        }
+
+        // Calculate how many clusters we need
+        int numClusters = Mathf.CeilToInt((float)allPolygons.Count / maxIslandsPerCluster);
+        List<PolygonCollider2D> resultClusters = new List<PolygonCollider2D>();
+
+        // Group polygons spatially for better locality
+        List<PolygonData> sortedPolygons = SortPolygonsSpatially(allPolygons);
+
+        // Distribute polygons across clusters
+        for (int clusterIndex = 0; clusterIndex < numClusters; clusterIndex++)
+        {
+            int startIdx = clusterIndex * maxIslandsPerCluster;
+            int endIdx = Mathf.Min(startIdx + maxIslandsPerCluster, sortedPolygons.Count);
+            int pathCount = endIdx - startIdx;
+
+            PolygonCollider2D targetCollider;
+
+            if (clusterIndex == 0)
+            {
+                // Use the original cluster for the first group
+                targetCollider = islandCluster;
+            }
+            else
+            {
+                // Instantiate new cluster from prefab
+                GameObject newClusterObj = Object.Instantiate(
+                    generatedClusterPrefab.gameObject,
+                    islandCluster.transform.position,
+                    islandCluster.transform.rotation,
+                    islandCluster.transform.parent
+                );
+
+                newClusterObj.name = $"{islandCluster.gameObject.name}_Split_{clusterIndex}";
+                targetCollider = newClusterObj.GetComponent<PolygonCollider2D>();
+
+                if (targetCollider == null)
+                {
+                    Debug.LogError($"PolygonColliderMerger.SplitCluster: Prefab missing PolygonCollider2D component");
+                    Object.Destroy(newClusterObj);
+                    continue;
+                }
+            }
+
+            // Copy transform properties
+            targetCollider.offset = islandCluster.offset;
+
+            // Assign paths to this cluster
+            List<Vector2[]> clusterPaths = new List<Vector2[]>();
+            for (int i = startIdx; i < endIdx; i++)
+            {
+                Vector2[] validatedPath = ValidateAndFixPolygon(sortedPolygons[i].Points);
+                if (validatedPath != null && validatedPath.Length >= MIN_POLYGON_POINTS)
+                {
+                    clusterPaths.Add(validatedPath);
+                }
+            }
+
+            // Apply paths to the collider
+            if (clusterPaths.Count > 0)
+            {
+                targetCollider.pathCount = clusterPaths.Count;
+                for (int i = 0; i < clusterPaths.Count; i++)
+                {
+                    targetCollider.SetPath(i, clusterPaths[i]);
+                }
+
+                resultClusters.Add(targetCollider);
+            }
+            else
+            {
+                Debug.LogWarning($"PolygonColliderMerger.SplitCluster: Cluster {clusterIndex} has no valid paths");
+                if (clusterIndex > 0)
+                {
+                    Object.Destroy(targetCollider.gameObject);
+                }
+            }
+        }
+
+        Debug.Log($"PolygonColliderMerger.SplitCluster: Split {totalPaths} paths into {resultClusters.Count} clusters");
+        return resultClusters.ToArray();
+    }
+
+    /// <summary>
+    /// Sorts polygons spatially for better locality when splitting clusters.
+    /// Uses a simple sweep-line approach based on centroid positions.
+    /// </summary>
+    private static List<PolygonData> SortPolygonsSpatially(List<PolygonData> polygons)
+    {
+        // Calculate centroids and sort by position (left-to-right, then bottom-to-top)
+        return polygons.OrderBy(p => p.Bounds.center.x)
+                      .ThenBy(p => p.Bounds.center.y)
+                      .ToList();
+    }
+
+    /// <summary>
     /// Merges a set of polygon collider islands into an existing island cluster.
     /// OPTIMIZED: Uses spatial partitioning for better performance with many islands.
     /// VALIDATED: Ensures all polygons pass Unity's verification.

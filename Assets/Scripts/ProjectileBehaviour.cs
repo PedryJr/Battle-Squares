@@ -1068,7 +1068,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         else if (toParent.parent && toParent.parent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
         else if (toParent.parent && toParent.parent.parent && toParent.parent.parent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
 
-        AutoPooledPool<ProjectileForceAnimationBehaviour>.Spawn(AssetResources.ProjectileForceEffect, transform.position, transform.rotation, null).Initialize(this);
+        AutoPooledPool<ProjectileForceAnimationBehaviour>.Spawn(AssetResources.ProjectileForceEffect, hitMarkPos, transform.rotation, null).Initialize(this);
     }
 
 

@@ -19,8 +19,6 @@ public sealed class EditorSwitchBehaviour : MonoBehaviour
     [SerializeField]
     Canvas workshopCanvas;
 
-    [SerializeField]
-
     public void TOGGLEEDITOR(Variant variant)
     {
         if(variant == Variant.Skin)

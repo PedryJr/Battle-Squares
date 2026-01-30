@@ -90,22 +90,6 @@ Shader "*MyShaders/BackdropShader"
                 float4 _Color;
             CBUFFER_END
 
-            #if USE_SHAPE_LIGHT_TYPE_0
-            SHAPE_LIGHT(0)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_1
-            SHAPE_LIGHT(1)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_2
-            SHAPE_LIGHT(2)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_3
-            SHAPE_LIGHT(3)
-            #endif
-
             float _Tiling;
             float _ColorToEffect;
             float _ColorStrength;
@@ -130,7 +114,7 @@ Shader "*MyShaders/BackdropShader"
                 return o;
             }
 
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
+            //#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
             #include "Assets/BattleSquares2/Scripts/ProximityPixelationSystem/SampleProximityColorBuffer.hlsl"
 
             float4 SampleFromEnergy(float2 uv)
@@ -154,14 +138,11 @@ Shader "*MyShaders/BackdropShader"
                 const float4 energyColor1 = SampleFromEnergy(i.uv);
                 const float4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 const float4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
-                SurfaceData2D surfaceData;
-                InputData2D inputData;
+                //SurfaceData2D surfaceData;
+                //InputData2D inputData;
 
-                InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
-                InitializeInputData(i.uv, i.lightingUV, inputData);
-
-                SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
-
+                //InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
+                //InitializeInputData(i.uv, i.lightingUV, inputData);
 
                 //float4 spriteColor = CombinedShapeLightShared(surfaceData, inputData);
                 //float4 spriteColor = CombinedShapeLightShared(surfaceData, inputData);

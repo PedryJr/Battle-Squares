@@ -64,7 +64,7 @@ Shader "*MyShaders/StencilDraw"
                 float4 myOut        : SV_Target0;
             };
 
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
+            //#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DebugMipmapStreamingMacros.hlsl"
 
             TEXTURE2D(_MainTex);
@@ -90,22 +90,6 @@ Shader "*MyShaders/StencilDraw"
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Pos7)
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Stencil)
             UNITY_INSTANCING_BUFFER_END(Props)
-
-            #if USE_SHAPE_LIGHT_TYPE_0
-            SHAPE_LIGHT(0)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_1
-            SHAPE_LIGHT(1)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_2
-            SHAPE_LIGHT(2)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_3
-            SHAPE_LIGHT(3)
-            #endif
 
             Varyings CombinedShapeLightVertex(Attributes v)
             {
