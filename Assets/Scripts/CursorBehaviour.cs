@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Unity.Burst;
@@ -72,6 +74,9 @@ public sealed class CursorBehaviour : MonoBehaviour
             isPosessed = true;
         }
     }
+    PosessCursorInput lmaoInputs;
+
+
 
     float h, s, v;
     [BurstCompile]
@@ -86,20 +91,35 @@ public sealed class CursorBehaviour : MonoBehaviour
         image.sprite = anim[0];
 
         inputs = new Inputs();
-        posessionInputs = new PosessCursorInput();
+/*        
         posessionInputs.PosessionActions.MoveAround.performed += MoveAround_performed;
+        posessionInputs = new PosessCursorInput();
         posessionInputs.PosessionActions.MoveAround.canceled += MoveAround_canceled;
 
         posessionInputs.PosessionActions.Click.performed += Click_canceled;
-        posessionInputs.PosessionActions.Click.canceled += Click_performed;
+        posessionInputs.PosessionActions.Click.canceled += Click_performed;*/
 
-        posessionInputs.Enable();
 
-        if (!alwaysPosess)
+/*        lmaoInputs = new PosessCursorInput();
+        lmaoInputs.PosessionActions.No.performed += (_) =>
+        {
+            VLog.Log("AtTempting click");
+            MouseClickDown(true, false);
+        };
+        lmaoInputs.PosessionActions.No.canceled += (_) =>
+        {
+            VLog.Log("AtTempting click");
+            MouseClickDown(true, true);
+        };
+        lmaoInputs.Enable();
+
+        posessionInputs.Enable();*/
+
+/*        if (!alwaysPosess)
         {
             inputUser = InputUser.CreateUserWithoutPairedDevices();
             inputUser.AssociateActionsWithUser(posessionInputs);
-        }
+        }*/
 
         inputs.Cursor.DoLocation.performed += (context) =>
         {
@@ -135,43 +155,39 @@ public sealed class CursorBehaviour : MonoBehaviour
         isAppFocused = obj;
     }
 
-    [DllImport("bsmie", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void MoveMouse(float dx, float dy, float sensitivity);
 
-    [DllImport("bsmie", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void MouseClickDown(bool left, bool up);
 
-    private void MoveAround_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) => moveDirection = Vector2.zero;
-    private void MoveAround_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => moveDirection = obj.ReadValue<Vector2>();
+/*    private void MoveAround_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) => moveDirection = Vector2.zero;
+    private void MoveAround_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => moveDirection = obj.ReadValue<Vector2>();*/
 
-    private void Click_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+/*    private void Click_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        bool invPosessCondition = !isPosessed || !isAppFocused;
         if (alwaysPosess) MouseClickDown(true, false);
         else if (isPosessed && isAppFocused) MouseClickDown(true, false);
     }
     private void Click_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        bool invPosessCondition = !isPosessed || !isAppFocused;
         if (alwaysPosess) MouseClickDown(true, true);
         else if (isPosessed && isAppFocused) MouseClickDown(true, true);
-    }
+    }*/
+
 
     private void LateUpdate()
     {
-        bool invPosessCondition = !isPosessed || !isAppFocused;
-        if (alwaysPosess || !invPosessCondition) PosessCursor();
+
+        /*        bool invPosessCondition = !isPosessed || !isAppFocused;
+                if (alwaysPosess || !invPosessCondition) PosessCursor();*/
     }
 
     void PosessCursor()
     {
-        Vector2 posessionMovement = moveDirection * Time.deltaTime * ((Display.main.systemWidth + Display.main.systemHeight) / 2f);
+/*        Vector2 posessionMovement = moveDirection * Time.deltaTime * ((Display.main.systemWidth + Display.main.systemHeight) / 2f);
         MoveMouse(posessionMovement.x, -posessionMovement.y, sensitivity);
 
         Vector3 debugPosStart = transform.position;
         debugPosStart.z = Camera.main.transform.position.z + 3f;
 
-        Debug.DrawLine(debugPosStart, debugPosStart + (Vector3)moveDirection, Color.green, Time.deltaTime);
+        Debug.DrawLine(debugPosStart, debugPosStart + (Vector3)moveDirection, Color.green, Time.deltaTime);*/
     }
 
 
@@ -287,7 +303,13 @@ public sealed class CursorBehaviour : MonoBehaviour
 
     private void OnDestroy()
     {
-        
+
+/*        posessionInputs.PosessionActions.MoveAround.performed -= MoveAround_performed;
+        posessionInputs.PosessionActions.MoveAround.canceled -= MoveAround_canceled;
+
+        posessionInputs.PosessionActions.Click.performed -= Click_canceled;
+        posessionInputs.PosessionActions.Click.canceled -= Click_performed;*/
+
         inputs.Dispose();
 
     }

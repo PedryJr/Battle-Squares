@@ -94,23 +94,14 @@ public struct Spline2D
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float2 Evaluate(float t)
         {
-            EvaluateBursted(ref _unused, t, P0, P1, P2, P3);
-            return _unused;
-        }
-
-        [BurstCompile]
-        private static void EvaluateBursted(ref float2 cache, in float t, in float2 P0, in float2 P1, in float2 P2, in float2 P3)
-        {
             float u = 1f - t;
             float tt = t * t;
             float uu = u * u;
             float uuu = uu * u;
             float ttt = tt * t;
 
-            cache = (uuu * P0) +
-                   (3f * uu * t * P1) +
-                   (3f * u * tt * P2) +
-                   (ttt * P3);
+            _unused = (uuu * P0) + (3f * uu * t * P1) + (3f * u * tt * P2) + (ttt * P3);
+            return _unused;
         }
     }
 
@@ -118,10 +109,6 @@ public struct Spline2D
     private float _cachedLength;
     private float[] _arcLengths;
 
-    /// <summary>
-    /// Creates a spline from a linked array of control points.
-    /// Valid counts: 4, 7, 10, 13... (4 + 3*(n-1)).
-    /// </summary>
     public Spline2D(Vector2[] controlPoints)
     {
         if (controlPoints == null || controlPoints.Length < 4)
@@ -132,7 +119,6 @@ public struct Spline2D
             return;
         }
 
-        // each extra segment contributes 3 points
         int segCount = 1 + (controlPoints.Length - 4) / 3;
         _segments = new BezierSegment[segCount];
 
@@ -145,7 +131,7 @@ public struct Spline2D
                 controlPoints[idx + 2],
                 controlPoints[idx + 3]
             );
-            idx += 3; // advance by 3 to reuse the shared endpoint
+            idx += 3;
         }
 
         _cachedLength = 0f;

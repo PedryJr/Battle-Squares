@@ -16,26 +16,15 @@ public sealed class CameraAnimator : MonoBehaviour
     [SerializeField] float StencilEffectRenderScale;
     [SerializeField] float ThermalEffectRenderScale;
 
-    [SerializeField] Camera stencilRenderer;
-    [SerializeField] Camera thermalRenderer;
+    [SerializeField] Camera effectRenderer;
 
-    private static Camera _stencilRenderer;
-    public static Camera StencilRenderer 
-    { 
-        get 
-        {
-            if(!_stencilRenderer) _stencilRenderer = FindAnyObjectByType<CameraAnimator>(FindObjectsInactive.Exclude).stencilRenderer;
-            return _stencilRenderer;
-        }
-    }
-
-    private static Camera _thermalRenderer;
-    public static Camera ThermalRenderer
+    private static Camera _effectRenderer;
+    public static Camera EtencilRenderer
     {
         get
         {
-            if (!_thermalRenderer) _thermalRenderer = FindAnyObjectByType<CameraAnimator>(FindObjectsInactive.Exclude).thermalRenderer;
-            return _thermalRenderer;
+            if (!_effectRenderer) _effectRenderer = FindAnyObjectByType<CameraAnimator>(FindObjectsInactive.Exclude).effectRenderer;
+            return _effectRenderer;
         }
     }
 
@@ -79,6 +68,10 @@ public sealed class CameraAnimator : MonoBehaviour
     private float fromOrthoSize;
     private float toOrthoSize;
 
+    // Bounds tracking for local players
+    private Vector2 minBounds;
+    private Vector2 maxBounds;
+
     private void Start()
     {
         cameraTransform = transform;
@@ -97,7 +90,7 @@ public sealed class CameraAnimator : MonoBehaviour
 
     public void PlayTheme(EventReference battleThemeReference)
     {
-        if(battleThemeInstance.isValid()) battleThemeInstance.release();
+        if (battleThemeInstance.isValid()) battleThemeInstance.release();
         battleThemeInstance = RuntimeManager.CreateInstance(battleThemeReference);
         battleThemeInstance.setVolume(initCameraTimer * MySettings.Volume);
         battleThemeInstance.start();
@@ -136,27 +129,79 @@ public sealed class CameraAnimator : MonoBehaviour
         if (introTimer > 1) introTimer = 1;
 
         targetPosition = Vector2.zero;
+        minBounds = new Vector2(float.MaxValue, float.MaxValue);
+        maxBounds = new Vector2(float.MinValue, float.MinValue);
 
         i = 0;
+        int localPlayerCount = 0;
+        bool anyLocalPlayerAlive = false;
+        List<PlayerData> localPlayers = new List<PlayerData>();
+
         if (playerSynchronizer.playerIdentities != null)
         {
+            // First pass: collect all local players and check if any are alive
             foreach (PlayerData playerData in playerSynchronizer.playerIdentities)
             {
-                xDif = Mathf.Abs(playerData.square.rb.position.x - playerSynchronizer.localSquare.rb.position.x);
-                yDif = Mathf.Abs(playerData.square.rb.position.y - playerSynchronizer.localSquare.rb.position.y);
-                if (xDif > 32) continue;
-                if (yDif > 32 / 1.777778f) continue;
-                if (playerData.square.isDead) continue;
+                byte networkId = playerData.square.GetNetworkID();
 
-                targetPosition += playerData.square.rb.position;
-                i++;
+                // Check if this is a local player (same network ID as localSquare)
+                if (playerSynchronizer.localSquare != null && networkId == playerSynchronizer.localSquare.GetNetworkID())
+                {
+                    localPlayers.Add(playerData);
+                    if (!playerData.square.isDead)
+                    {
+                        anyLocalPlayerAlive = true;
+                    }
+                }
+            }
+
+            // Second pass: calculate camera target
+            foreach (PlayerData playerData in playerSynchronizer.playerIdentities)
+            {
+                Vector2 playerPos = playerData.square.rb.position;
+
+                // Always include all local players in camera tracking
+                bool isLocalPlayer = localPlayers.Contains(playerData);
+
+                if (isLocalPlayer)
+                {
+                    if (!playerData.square.isDead)
+                    {
+                        // Track bounds for local players
+                        minBounds.x = Mathf.Min(minBounds.x, playerPos.x);
+                        minBounds.y = Mathf.Min(minBounds.y, playerPos.y);
+                        maxBounds.x = Mathf.Max(maxBounds.x, playerPos.x);
+                        maxBounds.y = Mathf.Max(maxBounds.y, playerPos.y);
+
+                        targetPosition += playerPos;
+                        i++;
+                        localPlayerCount++;
+                    }
+                }
+                else
+                {
+                    // For non-local players, only include if they're close to the camera center
+                    Vector2 cameraCenter = localPlayerCount > 0 ? targetPosition / localPlayerCount : (Vector2)cameraTransform.position;
+
+                    xDif = Mathf.Abs(playerPos.x - cameraCenter.x);
+                    yDif = Mathf.Abs(playerPos.y - cameraCenter.y);
+
+                    if (xDif > 20) continue;
+                    if (yDif > 20 / 1.777778f) continue;
+                    if (playerData.square.isDead) continue;
+
+                    targetPosition += playerPos;
+                    i++;
+                }
             }
         }
 
-        if (playerSynchronizer.localSquare.isDead)
+        // If all local players are dead, focus on spawn
+        if (!anyLocalPlayerAlive && localPlayers.Count > 0)
         {
             targetPosition = spawn.position;
             i = 1;
+            minBounds = maxBounds = spawn.position;
         }
 
         if (transitionTimer < 1)
@@ -170,30 +215,91 @@ public sealed class CameraAnimator : MonoBehaviour
             lastI = i;
             transitionTimer = 0;
             fromOrthoSize = aCamera.orthographicSize;
-            toOrthoSize = 14.5f + Mathf.Clamp((i - 1) * 2f, 0, 2.8f);
+
+            // Calculate required orthographic size to fit all local players
+            float requiredSize = CalculateRequiredOrthoSize(localPlayerCount);
+            toOrthoSize = requiredSize;
+
             multiplier1 = 0.1f;
         }
 
         cameraLerp = cameraAnimation.Evaluate(transitionTimer);
 
-        multiplier1 = Mathf.Lerp(multiplier1, Mathf.SmoothStep(offset, 1f, Mathf.Clamp01(Mathf.Clamp(playerSynchronizer.localSquare.rb.linearVelocity.magnitude / 55f, 0, 1f)) + offset), Time.deltaTime * 1.75f);
+        // Average velocity of local players for camera smoothing
+        float avgVelocity = 0f;
+        float avgVerticalVelocity = 0f;
 
-        if (playerSynchronizer.localSquare.rb.linearVelocityY < 0) multiplier2 = Mathf.Lerp(multiplier2, -Mathf.Abs(playerSynchronizer.localSquare.rb.linearVelocityY / 10.5f), Time.deltaTime * 2);
-        else multiplier2 = Mathf.Lerp(multiplier2, 0, Time.deltaTime * 2);
-
-        if (i == 1)
+        if (localPlayers.Count > 0)
         {
-            targetPosition = Vector2.Lerp(targetPosition + new Vector2(0, cameraYOffset), targetPosition, Mathf.Abs(multiplier2));
+            foreach (PlayerData localPlayer in localPlayers)
+            {
+                if (!localPlayer.square.isDead)
+                {
+                    avgVelocity += localPlayer.square.rb.linearVelocity.magnitude;
+                    avgVerticalVelocity += localPlayer.square.rb.linearVelocityY;
+                }
+            }
+            avgVelocity /= Mathf.Max(1, localPlayerCount);
+            avgVerticalVelocity /= Mathf.Max(1, localPlayerCount);
         }
+
+        multiplier1 = Mathf.Lerp(multiplier1, Mathf.SmoothStep(offset, 1f, Mathf.Clamp01(Mathf.Clamp(avgVelocity / 55f, 0, 1f)) + offset), Time.deltaTime * 1.75f);
+
+        if (avgVerticalVelocity < 0)
+            multiplier2 = Mathf.Lerp(multiplier2, -Mathf.Abs(avgVerticalVelocity / 10.5f), Time.deltaTime * 2);
+        else
+            multiplier2 = Mathf.Lerp(multiplier2, 0, Time.deltaTime * 2);
+
+        if (i == 1) targetPosition = Vector2.Lerp(targetPosition + new Vector2(0, cameraYOffset), targetPosition, Mathf.Abs(multiplier2));
 
         if (i != 0) (toPos.x, toPos.y, toPos.z) = (targetPosition.x / i, targetPosition.y / i, z);
 
         cameraTransform.position = Vector3.Lerp(cameraTransform.position, toPos, Time.deltaTime * 6.5f * multiplier1);
         aCamera.orthographicSize = math.lerp(aCamera.orthographicSize, Mathf.Lerp(fromOrthoSize, toOrthoSize, cameraLerp), Time.deltaTime * 10);
 
-        stencilRenderer.orthographicSize = aCamera.orthographicSize;
-        thermalRenderer.orthographicSize = aCamera.orthographicSize;
+        effectRenderer.orthographicSize = aCamera.orthographicSize;
 
+    }
+
+    private float CalculateRequiredOrthoSize(int localPlayerCount)
+    {
+        // Base size
+        float baseSize = 14.5f;
+
+        if (localPlayerCount <= 1)
+        {
+            // Single player or none - use default behavior
+            return baseSize + Mathf.Clamp((i - 1) * 2f, 0, 2.8f);
+        }
+
+        // Calculate bounds size
+        float boundsWidth = maxBounds.x - minBounds.x;
+        float boundsHeight = maxBounds.y - minBounds.y;
+
+        // Add padding (50% extra space around players)
+        float paddingMultiplier = 1.5f;
+        boundsWidth *= paddingMultiplier;
+        boundsHeight *= paddingMultiplier;
+
+        // Calculate required orthographic size to fit the bounds
+        // Ortho size is half-height of the view
+        float requiredHeightSize = boundsHeight / 2f;
+
+        // Account for aspect ratio (width constraint)
+        float aspectRatio = 1.777778f; // 16:9
+        float requiredWidthSize = boundsWidth / (2f * aspectRatio);
+
+        // Take the larger of the two
+        float requiredSize = Mathf.Max(requiredHeightSize, requiredWidthSize);
+
+        // Clamp to reasonable values
+        requiredSize = Mathf.Max(requiredSize, baseSize);
+        requiredSize = Mathf.Min(requiredSize, baseSize + 8f); // Max zoom out
+
+        // Also consider nearby players for additional zoom
+        float nearbyBonus = Mathf.Clamp((i - localPlayerCount) * 1.5f, 0, 2.8f);
+
+        return requiredSize + nearbyBonus;
     }
 
 
@@ -217,7 +323,27 @@ public sealed class CameraAnimator : MonoBehaviour
             }
         }
 
-        if (playerSynchronizer.localSquare) processVolume.weight = playerSynchronizer.localSquare.climax;
+        // Average climax across all local players for effects
+        if (playerSynchronizer.playerIdentities != null)
+        {
+            float totalClimax = 0f;
+            int localCount = 0;
+
+            foreach (PlayerData playerData in playerSynchronizer.playerIdentities)
+            {
+                if (playerSynchronizer.localSquare != null &&
+                    playerData.square.GetNetworkID() == playerSynchronizer.localSquare.GetNetworkID())
+                {
+                    totalClimax += playerData.square.climax;
+                    localCount++;
+                }
+            }
+
+            if (localCount > 0)
+            {
+                processVolume.weight = totalClimax / localCount;
+            }
+        }
 
         soundUpdateTimer += Time.deltaTime * 5;
         if (soundUpdateTimer > 1f) SoundUpdates();
@@ -230,8 +356,12 @@ public sealed class CameraAnimator : MonoBehaviour
         soundUpdateTimer = 0;
         if (!playerSynchronizer.localSquare) return;
 
-        if (playerSynchronizer.localSquare.transform.position.magnitude < 50) battleThemeInstance.setParameterByName("CameraPositionX", playerSynchronizer.localSquare.transform.position.x);
-        else battleThemeInstance.setParameterByName("CameraPositionX", 0);
+        // Use the primary local player (localSquare) for sound parameters
+        if (playerSynchronizer.localSquare.transform.position.magnitude < 50)
+            battleThemeInstance.setParameterByName("CameraPositionX", playerSynchronizer.localSquare.transform.position.x);
+        else
+            battleThemeInstance.setParameterByName("CameraPositionX", 0);
+
         battleThemeInstance.setParameterByName("Climax", playerSynchronizer.localSquare.climax);
         battleThemeInstance.setParameterByName("Intensity", Mathf.Clamp01(playerSynchronizer.localSquare.nozzleBehaviour.intensity));
     }

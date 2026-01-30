@@ -45,7 +45,7 @@ MonoBehaviour:
   m_UseNativeRenderPass: 0
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 98304
+    m_Bits: 360448
   m_TransparencySortMode: 2
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
   m_HDREmulationScale: 1
@@ -67,8 +67,8 @@ MonoBehaviour:
   m_UseCameraSortingLayersTexture: 0
   m_CameraSortingLayersTextureBound: -1
   m_CameraSortingLayerDownsamplingMethod: 0
-  m_MaxLightRenderTextureCount: 16
-  m_MaxShadowRenderTextureCount: 16
+  m_MaxLightRenderTextureCount: 32
+  m_MaxShadowRenderTextureCount: 32
   m_PostProcessData: {fileID: 0}
   m_DefaultMaterialType: 1
   m_DefaultCustomMaterial: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}

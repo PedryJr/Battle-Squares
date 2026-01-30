@@ -387,11 +387,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             player.rb.linearVelocity = vel;
             player.rb.rotation = ang;
             player.rb.angularVelocity = angvel;
-        }
-        else
-        {
-            VLog.Log("the player is dead, rejecting position sync...");
-        }
+        } 
     }
 
     public void UpdateNozzle(byte playerID)
@@ -742,20 +738,14 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
     public void SpreadInGameMessageRpc(string message, byte playerId)
-    {
-
+    { 
         PlayerBehaviour source = null;
-        MessageRecieverBehaviour messageReciever = null;
-
-        source = GetPlayerById(playerId);
-
-        messageReciever = FindAnyObjectByType<MessageRecieverBehaviour>();
-
+        MessageRecieverBehaviour messageReciever = null; 
+        source = GetPlayerById(playerId); 
+        messageReciever = FindAnyObjectByType<MessageRecieverBehaviour>(); 
         if (!source) return;
-        if (!messageReciever) return;
-
-        messageReciever.CreateNewMessage(message, source);
-
+        if (!messageReciever) return; 
+        messageReciever.CreateNewMessage(message, source); 
     }
     
     public void SyncMods(int index, float value)

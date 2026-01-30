@@ -13,25 +13,32 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     [SerializeField] public Color arenaColor;
     [SerializeField] public Color animatedColor;
 
+    [SerializeField]
     MeshRenderer shapeRenderer;
+    [SerializeField]
+    MeshFilter renderMesh;
+
+    [SerializeField]
+    MeshRenderer stencilRenderer;
+    [SerializeField]
+    MeshFilter stencilMesh;
     private void Awake()
     {
-        shapeRenderer = GetComponent<MeshRenderer>();
         TEMPFUNC();
-        GetComponent<MeshFilter>().sharedMesh = octagonalMinimal;
-        stencilRenderer.GetComponent<MeshFilter>().sharedMesh = octagonalMinimal;
+        renderMesh.sharedMesh = octagonalMinimal;
+        stencilMesh.sharedMesh = octagonalMinimal;
     }
     [MethodImpl(512)]
     void TEMPFUNC()
     {
-        if (!BuiltShapeBehaviour.octagonalMesh)
+        if (!octagonalMesh)
         {
             octagonalMesh = new Mesh();
             octagonalMesh.name = "Octagon";
-            octagonalMesh.SetVertexBufferParams(8, BuiltShapeBehaviour.GetOctagonalAttributelLight);
-            octagonalMesh.SetVertexBufferData(BuiltShapeBehaviour.GetOctagonalVerticesVec2Light, 0, 0, 8);
+            octagonalMesh.SetVertexBufferParams(8, GetOctagonalAttributelLight);
+            octagonalMesh.SetVertexBufferData(GetOctagonalVerticesVec2Light, 0, 0, 8);
             octagonalMesh.indexFormat = IndexFormat.UInt16;
-            octagonalMesh.SetIndices(BuiltShapeBehaviour.GetOctagonalIndices, MeshTopology.Triangles, 0, calculateBounds: false);
+            octagonalMesh.SetIndices(GetOctagonalIndices, MeshTopology.Triangles, 0, calculateBounds: false);
             octagonalMesh.bounds = new Bounds(Vector3.zero, new Vector3(512, 512, 1));
             octagonalMesh.UploadMeshData(true);
         }
@@ -40,7 +47,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         {
             octagonalMinimal = new Mesh();
 
-            half2[] octagonalVerts = BuiltShapeBehaviour.GetOctagonalVerticesVec2Light;
+            half2[] octagonalVerts = GetOctagonalVerticesVec2Light;
             half2[] minimalVerts = new half2[8];
             for (int i = 0; i < minimalVerts.Length; i++)
             {
@@ -169,7 +176,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
         if (!IsStatic)
         {
-            gameObject.AddComponent<ShadowCaster2D>().castingOption = ShadowCaster2D.ShadowCastingOptions.CastAndSelfShadow;
+            gameObject.GetComponent<ShadowCaster2D>().castingOption = ShadowCaster2D.ShadowCastingOptions.CastShadow;
             gameObject.AddComponent<ShadowCaster2DController>().UpdateShadowFromPoints(correctedPoints);
             if (!builder.animatedAnimationsAwaitingShapes.ContainsKey(animatorIndex)) builder.animatedAnimationsAwaitingShapes.Add(animatorIndex, new List<Transform>());
             builder.animatedAnimationsAwaitingShapes[animatorIndex].Add(transform);
@@ -221,9 +228,6 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
         return animatorIndex;
     }
-
-    [SerializeField]
-    MeshRenderer stencilRenderer;
     [MethodImpl(512)]
     public void AssignStencil(float stencilValueInt, bool spawnStencilInfector)
     {

@@ -22,6 +22,9 @@ public class AssetResources : MonoBehaviour
     [SerializeField] private SpawnEventHandle spawnEventHandle;
     public static SpawnEventHandle SpawnEventHandle => Instance.spawnEventHandle;
 
+    [SerializeField] private ProjectileForceAnimationBehaviour projectileForceEffect;
+    public static ProjectileForceAnimationBehaviour ProjectileForceEffect => Instance.projectileForceEffect;
+
     public static AssetResources Instance 
     { 
         get; 

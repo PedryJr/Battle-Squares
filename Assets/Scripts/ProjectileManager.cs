@@ -17,8 +17,6 @@ using Random = System.Random;
 public sealed class ProjectileManager : NetworkBehaviour
 {
 
-
-
     [SerializeField]
     public WeaponBuilder[] newWeapons;
     public Dictionary<ushort, WeaponBuilder> weapons;
@@ -43,18 +41,10 @@ public sealed class ProjectileManager : NetworkBehaviour
         projectiles = new List<ProjectileBehaviour>();
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
         SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
-        for (ushort i = 0; i < newWeapons.Length; i++)
-        {
-            weapons[newWeapons[i].typeID] = newWeapons[i];
-        }
+        for (ushort i = 0; i < newWeapons.Length; i++) weapons[newWeapons[i].typeID] = newWeapons[i];
     }
 
-    private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
-    {
-
-        projectiles.Clear();
-
-    }
+    private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1) => projectiles.Clear();
 
     private void Update()
     {
@@ -117,7 +107,7 @@ public sealed class ProjectileManager : NetworkBehaviour
                 float angleAtI = startAngle + (burstAngleStep * i);
                 if (angleAtI > 180f) angleAtI -= 360f;
 
-                Vector2 newDirection = MyExtentions.AngleToNormalizedCoordinate(angleAtI);
+                Vector2 newDirection = MyExtentions.DegreesToVector2(angleAtI);
 
                 SpawnProjectileOnAllClients(typeID, position, newDirection, shootingPlayer, weapon, i == 0);
             }
@@ -156,7 +146,7 @@ public sealed class ProjectileManager : NetworkBehaviour
                 float angleAtI = startAngle + (burstAngleStep * i);
                 if (angleAtI > 180f) angleAtI -= 360f;
 
-                Vector2 newDirection = MyExtentions.AngleToNormalizedCoordinate(angleAtI);
+                Vector2 newDirection = MyExtentions.DegreesToVector2(angleAtI);
 
                 SpawnProjectileOnAllClients(typeID, position, newDirection, shootingPlayer, weapon, i == 0);
             }
@@ -225,6 +215,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         forceToAdd = -direction.normalized * multiplier1 * multiplier2;
         owningPlayer.rb.AddForce(forceToAdd, ForceMode2D.Impulse);
         owningPlayer.AnimatePlayer();
+        owningPlayer.PlayNozzleRecoilAnimation();
     }
 
     void WeaponToProjectileData(in Weapon weapon, ref ProjectileInitData data, uint projectileID, Vector2 position, Vector2 direction, float[] fluctuation, PlayerBehaviour owningPlayer)

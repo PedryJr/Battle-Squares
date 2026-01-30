@@ -179,7 +179,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Vector2 nozzlePositionOffset;
     Vector2 nozzleInputDirection;
 
-    Vector2 lastRbVelocity;
+    Vector2 lastRBPosition;
 
     float newNozzlePositionTime;
     Vector2 nozzleReferencePosition;
@@ -237,7 +237,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     private void Awake()
     {
-        lastRbVelocity = new Vector2();
+        lastRBPosition = new Vector2();
         playerTransform = transform;
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         scoreManager = FindAnyObjectByType<ScoreManager>();
@@ -699,20 +699,38 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Vector2 jumpDirection;
     float jumpLimiter;
 
-    public AimDirection aimDirectionEnum = AimDirection.North;
+    const AimDirection startDirection = AimDirection.North;
+
+    private AimDirection internalAimDirectionEnum = startDirection;
+    private Vector2 cachedDirection = AimDirectionToVector(startDirection);
+    Vector3 nozzlePos = AimDirectionToVector(startDirection);
+
+    public AimDirection aimDirectionEnum
+    {
+        get { return internalAimDirectionEnum; } 
+        set 
+        { 
+            internalAimDirectionEnum = value;
+            cachedDirection = AimDirectionToVector(aimDirectionEnum);
+        }
+    }
+
     public Vector2 aimDirection
     {
-        get => AimDirectionToVector(aimDirectionEnum);
+        get => cachedDirection;
         set
         {
-            aimDirectionEnum = VectorToAimDirection(value);
+            AimDirection newDir = VectorToAimDirection(value);
+            if (newDir == aimDirectionEnum) return; 
+            aimDirectionEnum = newDir; 
             if (isLocalPlayer) playerSynchronizer.UpdateNozzle(GetGameID());
         }
     }
+
     public Vector2 moveDirection;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Vector2 AimDirectionToVector(AimDirection dir)
+    private static Vector2 AimDirectionToVector(AimDirection dir)
     {
         return dir switch
         {
@@ -728,7 +746,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         };
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public AimDirection VectorToAimDirection(Vector2 v)
+    private AimDirection VectorToAimDirection(Vector2 v)
     {
         if (Mathf.Approximately(v.magnitude, 0)) return aimDirectionEnum;
         float angle = Mathf.Atan2(v.y, v.x);
@@ -756,17 +774,17 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     private void FixedUpdate()
     { 
-
-        if(!Mathf.Approximately(lastRbVelocity.sqrMagnitude, rb.linearVelocity.sqrMagnitude))
-        {
-            if(isLocalPlayer) playerSynchronizer.UpdateRigidBody(GetGameID());
-        }
         flipFlop = !flipFlop;
         if (flipFlop) return; 
         if (controlled)
         {
             ApplyTargetMovement();
             ReAdjustMovementValues();
+            if (!Mathf.Approximately(lastRBPosition.sqrMagnitude, rb.position.sqrMagnitude))
+            {
+                playerSynchronizer.UpdateRigidBody(GetGameID());
+                lastRBPosition = rb.position;
+            }
         } 
     }
 
@@ -781,7 +799,10 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
                 if (!isLocalPlayer || SceneManager.GetActiveScene().name.Equals("LobbyScene"))
                 { 
                     Vector2 toCam = Camera.main.transform.position - playerTransform.position;
-                    float soundDirection = MyExtentions.ConvertVector2ToAngle(toCam.normalized);
+
+                    Vector2 toCamDir = toCam.normalized;
+                    float soundDirection = Mathf.Atan2(toCamDir.y, toCamDir.x) * Mathf.Rad2Deg;
+                    if (soundDirection < 0) soundDirection += 360f;
                     float distance = toCam.magnitude; 
                     playerSlapSound.setParameterByName("Direction", soundDirection);
                     playerSlapSound.setParameterByName("Distance", distance); 
@@ -802,18 +823,26 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void PlayNozzleRecoilAnimation() => nozzleBehaviour.transform.localPosition = Vector3.Lerp(nozzleBehaviour.transform.localPosition, Vector3.zero, 0.99f);
+    public void PlayNozzleRecoilAnimation() => nozzlePos = Vector3.LerpUnclamped(nozzlePos, Vector3.zero, 1.2f);
 
     private void AnimateNozzleToAimDirection()
     {
-        float rot = 0;
-        Vector3 pos = nozzleBehaviour.transform.position;
-        pos = Vector3.Lerp(pos, transform.position + (Vector3)aimDirection, Time.deltaTime * 25);
-        nozzleBehaviour.transform.position = pos; 
-        Vector2 delta = transform.position - nozzleBehaviour.transform.position; 
-        rot = MyExtentions.ConvertVector2ToAngle(delta);
-        nozzleBehaviour.transform.rotation = Quaternion.Euler(0f, 0f, rot - 180);
+        float speed = 20f;
+
+        Vector3 targetPos = (Vector3)aimDirection;
+        nozzlePos = Vector3.MoveTowards(
+            nozzlePos,
+            targetPos,
+            speed * Time.deltaTime
+        );
+
+        nozzleBehaviour.transform.position = transform.position + nozzlePos;
+
+        Vector2 delta = transform.position - nozzleBehaviour.transform.position;
+        float rot = MyExtentions.Vector2ToDegrees(delta);
+        nozzleBehaviour.transform.rotation = Quaternion.Euler(0f, 0f, rot);
     }
+
 
     void SetMovementParameters(bool newMod)
     {
@@ -844,6 +873,8 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             Vector2 normalizedDirection = rb.linearVelocity.normalized;
             playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
             playerController.inputJump = false;
+            //Cheat shoot an update so jump is more responsive
+            playerSynchronizer.UpdateRigidBody(GetGameID());
         }
     }
 

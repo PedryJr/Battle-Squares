@@ -181,6 +181,15 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Start"",
+                    ""type"": ""Button"",
+                    ""id"": ""40becfdb-132b-4d37-ac1e-1704a690c61b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -434,6 +443,17 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ToggleMousePosession"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e389d874-4ab9-4902-a6d1-71cb943f4040"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Start"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -756,6 +776,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         m_SquareController_Secondary = m_SquareController.FindAction("Secondary", throwIfNotFound: true);
         m_SquareController_SecondaryConst = m_SquareController.FindAction("SecondaryConst", throwIfNotFound: true);
         m_SquareController_ToggleMousePosession = m_SquareController.FindAction("ToggleMousePosession", throwIfNotFound: true);
+        m_SquareController_Start = m_SquareController.FindAction("Start", throwIfNotFound: true);
         // GameUI
         m_GameUI = asset.FindActionMap("GameUI", throwIfNotFound: true);
         m_GameUI_ToggleUI = m_GameUI.FindAction("ToggleUI", throwIfNotFound: true);
@@ -873,6 +894,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_SquareController_Secondary;
     private readonly InputAction m_SquareController_SecondaryConst;
     private readonly InputAction m_SquareController_ToggleMousePosession;
+    private readonly InputAction m_SquareController_Start;
     /// <summary>
     /// Provides access to input actions defined in input action map "SquareController".
     /// </summary>
@@ -924,6 +946,10 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "SquareController/ToggleMousePosession".
         /// </summary>
         public InputAction @ToggleMousePosession => m_Wrapper.m_SquareController_ToggleMousePosession;
+        /// <summary>
+        /// Provides access to the underlying input action "SquareController/Start".
+        /// </summary>
+        public InputAction @Start => m_Wrapper.m_SquareController_Start;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -980,6 +1006,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @ToggleMousePosession.started += instance.OnToggleMousePosession;
             @ToggleMousePosession.performed += instance.OnToggleMousePosession;
             @ToggleMousePosession.canceled += instance.OnToggleMousePosession;
+            @Start.started += instance.OnStart;
+            @Start.performed += instance.OnStart;
+            @Start.canceled += instance.OnStart;
         }
 
         /// <summary>
@@ -1021,6 +1050,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @ToggleMousePosession.started -= instance.OnToggleMousePosession;
             @ToggleMousePosession.performed -= instance.OnToggleMousePosession;
             @ToggleMousePosession.canceled -= instance.OnToggleMousePosession;
+            @Start.started -= instance.OnStart;
+            @Start.performed -= instance.OnStart;
+            @Start.canceled -= instance.OnStart;
         }
 
         /// <summary>
@@ -1688,6 +1720,13 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnToggleMousePosession(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Start" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnStart(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "GameUI" which allows adding and removing callbacks.

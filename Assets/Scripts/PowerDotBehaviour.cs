@@ -14,8 +14,16 @@ public class PowerDotBehaviour : MonoBehaviour
 
     float timer;
 
-    private void Awake()
+    [SerializeField]
+    bool begone;
+
+    private void Start()
     {
+        if (begone)
+        {
+            Destroy(gameObject);
+            return;
+        }
         timer = 0;
         meshRenderer = GetComponent<MeshRenderer>();
         materialPropertyBlock = new MaterialPropertyBlock();

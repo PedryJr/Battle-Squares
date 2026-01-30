@@ -29,8 +29,7 @@ Transform:
   m_LocalPosition: {x: 0, y: -2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6238972326302329634}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!114 &8567238288229006168
@@ -48,90 +47,7 @@ MonoBehaviour:
   particleSystems: []
   particleSystemsRenderers: []
   supportObjectPooling: 1
-  variantID: 5295421214307208437
+  variantID: 15509574206626412358
   lifeTime: 0.2
   attatchmentLifeTime: 0.1
-  attatchment: {fileID: 7641025526820123033}
---- !u!1 &7641025526820123033
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6238972326302329634}
-  - component: {fileID: 6356776931483126921}
-  m_Layer: 0
-  m_Name: JumpForceField
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6238972326302329634
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7641025526820123033}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3211484792558052454}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6356776931483126921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7641025526820123033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
-  gridSpaceColor:
-    color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0
-    saturationBoost: 0
-  sensorData:
-    colorValue:
-      x: 0
-      y: 0
-      z: 0
-    colorRadius: 0
-    origin:
-      x: 0
-      y: 0
-    rotation: 0
-    warpSpeed: 3
-    chroma: 0
-    enableBlockerInfluence: 0
-    blockerFalloff: 0
-    enablePositionWarp: 1
-    positionWarpStrength: 0.05
-    positionWarpFallof: 5
-    positionWarpRadius: 2
-    enableScaleWarp: 1
-    scaleWarpStrength: -1
-    scaleWarpFalloff: 2
-    scaleWarpRadius: 2
-    enableRotationWarp: 0
-    rotationWarpStrength: 0
-    rotationWarpFalloff: 0
-    rotationWarpRadius: 0
-    enableSwirl: 0
-    swirlStrength: 1
-    swirlFalloff: 1
-    swirlRadius: 3
-    enablePulsation: 0
-    pulsationFrequency: 5
-    pulsationAmplitude: 0.5
-    pulsationFallof: 1
-    pulsationRadius: 2
+  attatchment: {fileID: 0}

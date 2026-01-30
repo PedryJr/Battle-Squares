@@ -1,24 +1,35 @@
 using System;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering.Universal;
 
-public class StencilRenderer : MonoBehaviour
+public class EffectRenderer : MonoBehaviour
 {
 
     int w, h;
-    static RenderTexture renderTexture;
-    public static Action<Texture> OnStencilChange;
+    static RenderTexture effectTexture;
+    public static Action<Texture> onEffectTextureChanged;
 
     Camera cam;
 
+    [SerializeField]
+    Material thermalScreen;
+
+    [SerializeField]
+    Renderer2DData renderer2D;
+
     private void Awake()
     {
-        OnStencilChange = (e) => { };
-        renderTexture = new RenderTexture(2, 2, 24);
+        onEffectTextureChanged = (e) => { };
+        effectTexture = new RenderTexture(2, 2, 24);
         w = -1;
         h = -1;
         cam = GetComponent<Camera>();
-        cam.targetTexture = renderTexture;
+        cam.targetTexture = effectTexture;
+        thermalScreen.SetTexture("_DistortionTexture", effectTexture);
+        FullScreenPassRendererFeature fullScreenPass;
+        renderer2D.TryGetRendererFeature(out fullScreenPass);
+        fullScreenPass.passMaterial = thermalScreen;
     }
 
     private void Start() => TryResize();
@@ -39,13 +50,17 @@ public class StencilRenderer : MonoBehaviour
 
     void Resize()
     {
-        if (renderTexture) Destroy(renderTexture);
-        renderTexture = CreateNewStencil(w, h);
-        cam.targetTexture = renderTexture;
-        OnStencilChange(renderTexture);
+        if (effectTexture) Destroy(effectTexture);
+        effectTexture = CreateNewStencil(w, h);
+        cam.targetTexture = effectTexture;
+        onEffectTextureChanged(effectTexture);
+
+        thermalScreen.SetTexture("_DistortionTexture", effectTexture);
+        FullScreenPassRendererFeature fullScreenPass = renderer2D.rendererFeatures[renderer2D.rendererFeatures.Count - 1] as FullScreenPassRendererFeature;
+        fullScreenPass.passMaterial = thermalScreen;
     }
 
-    public static void AssignTextureToProp(in MaterialPropertyBlock mat, in string propName) => mat.SetTexture(propName, renderTexture);
+    public static void AssignTextureToProp(in MaterialPropertyBlock mat, in string propName) => mat.SetTexture(propName, effectTexture);
 
 
     RenderTexture CreateNewStencil(int w, int h)

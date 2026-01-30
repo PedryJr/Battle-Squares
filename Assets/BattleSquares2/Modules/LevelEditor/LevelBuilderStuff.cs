@@ -31,6 +31,9 @@ public sealed class LevelBuilderStuff : MonoBehaviour
     [SerializeField]
     BuiltShapeBehaviour builtShapeDynamicTemplate;
 
+    [SerializeField]
+    GameObject preparedShadowContainer;
+
     Transform mapParent = null;
 
     public static SimplifiedShapeData[] loadedSimplifiedShapeData;
@@ -40,6 +43,8 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
     public List<BuiltShapeBehaviour> builtShapes;
     public List<BuiltShapeBehaviour> builtShapesNoApplication;
+
+    public List<StaticShadowColliderObj> builtStaticShadowColliders;
 
     [SerializeField]
     Transform levelOutput;
@@ -51,16 +56,11 @@ public sealed class LevelBuilderStuff : MonoBehaviour
     public void Awake()
     {
 
-        foreach (var item in loadedSimplifiedShapeData)
-        {
-            Debug.Log(item.coord.GetPosition());
-            Debug.Log(item.param.GetVec4());
-        }
-
         STENCIL_OFFSET = 0.1f;
         animatedAnimationsAwaitingShapes = new Dictionary<int, List<Transform>>();
         builtShapes = new List<BuiltShapeBehaviour>();
         builtShapesNoApplication = new List<BuiltShapeBehaviour>();
+        builtStaticShadowColliders = new List<StaticShadowColliderObj>();
 
         staticParent = Instantiate(staticParent, levelOutput);
         staticParent.position = Vector3.zero;
@@ -80,12 +80,6 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             return;
         }
         mapParent = new GameObject("Map Parent").transform;
-        mapParent.gameObject.AddComponent<CompositeShadowCaster2D>();
-        MyLog.Output("Builder is expecting to build these arrays with length");
-        MyLog.Output(loadedSimplifiedShapeData.Length);
-        MyLog.Output(simplifiedAnimationDatas.Length);
-        MyLog.Output(simplifiedLightData.Length);
-        MyLog.Output(simplifiedSpawnData.Length);
 
         BuildAllShapes();
         BuildAllLights();
@@ -95,7 +89,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
         BuildProxies();
 
-        BuildStencils();
+        BuildStaticShadowColliderIslandCluster();
 
         CleanupBuilder();
     }
@@ -124,31 +118,37 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         builtShapes.Clear();
         builtShapesNoApplication = null;
         builtShapes = null;
-        Resources.UnloadUnusedAssets();
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
     }
-    [MethodImpl(512)]
-    void BuildStencils()
+    
+    
+    void BuildStaticShadowColliderIslandCluster()
     {
-/*
-        List<Transform>[] animationGroups = animatedAnimationsAwaitingShapes.Values.ToArray();
-*/
-        //foreach (var item in builtShapes) item.AssignStencil(1f, false);
-/*
-        int stencilAccumulation = 0;
+        //Main island cluster object
+        GameObject islandCluster = Instantiate(preparedShadowContainer, Vector3.zero, Quaternion.identity);
+        islandCluster.AddComponent<StencilInfectorBehaviour>().SetStencil(2);
+        PolygonCollider2D islandClusterCollider = islandCluster.AddComponent<PolygonCollider2D>();
+        ShadowCaster2D islandClusterShadow = islandCluster.GetComponent<ShadowCaster2D>();
+        ShadowCaster2DController shadowCaster2DController = islandCluster.AddComponent<ShadowCaster2DController>();
 
-        for (int i = 0; i < testList.Count; i++) testList[i].AddComponent<StencilInfectorBehaviour>();
+        //Setup collider for island cluster collider.
+        islandClusterCollider.pathCount = 0;
+        islandClusterCollider.useDelaunayMesh = true;
+        
+        //Generate island cluster collider
+        PolygonCollider2D[] newIslands = new PolygonCollider2D[builtStaticShadowColliders.Count];
+        for (int i = 0; i < newIslands.Length; i++) newIslands[i] = builtStaticShadowColliders[i].collider;
+        PolygonColliderMerger.MergeIslands(islandClusterCollider, newIslands);
+        for (int i = 0; i < newIslands.Length; i++) Destroy(newIslands[i].gameObject);
 
+        //Add shadow support to the cluster.
+        islandClusterShadow.castingOption = ShadowCaster2D.ShadowCastingOptions.CastAndSelfShadow;
+        shadowCaster2DController.UpdateFromCollider();
 
-
-        for (int i = 0; i < animationGroups.Length; i++)
-            for (int j = 0; j < animationGroups[i].Count; j++) 
-                animationGroups[i][j].GetComponent<BuiltShapeBehaviour>().AssignStencil(stencilAccumulation++, true);*/
+        //Set layer to allow physics interaction.
+        islandCluster.layer = LayerMask.NameToLayer("Environment");
     }
-    [MethodImpl(512)]
+
+
     void BuildProxies()
     {
         stencilAccumulation++;
@@ -161,7 +161,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         {
             if (meshRenderersInComposite[i].gameObject.name.Equals("BuiltShapeStencil"))
             {
-                MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
+                //MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
                 BuiltShapeBehaviour shape = meshRenderersInComposite[i].transform.parent.GetComponent<BuiltShapeBehaviour>();
 
 
@@ -171,7 +171,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         }
     }
 
-    [MethodImpl(512)]
+
     void BuildPath(int index, CompositeCollider2D composite, int stencil)
     {
 
@@ -179,26 +179,35 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         Vector2[] points = new Vector2[pointCount];
         composite.GetPath(index, points);
 
-        GameObject test = new GameObject("StaticShape");
+        GameObject test = Instantiate(preparedShadowContainer);
         test.layer = 9;
         test.transform.position = composite.transform.position;
         PolygonCollider2D col = test.AddComponent<PolygonCollider2D>();
         col.useDelaunayMesh = true;
         col.points = points;
-        ShadowCaster2D shadowCaster2D = test.AddComponent<ShadowCaster2D>();
+        ShadowCaster2D shadowCaster2D = test.GetComponent<ShadowCaster2D>();
         shadowCaster2D.castingOption = ShadowCaster2D.ShadowCastingOptions.CastAndSelfShadow;
         ShadowCaster2DController shadowController2D = test.AddComponent<ShadowCaster2DController>();
         shadowController2D.UpdateFromCollider();
         test.AddComponent<StencilInfectorBehaviour>().SetStencil(stencil);
+
+        StaticShadowColliderObj shadowColliderObj = new StaticShadowColliderObj();
+        shadowColliderObj.collider = col;
+        shadowColliderObj.shadowCaster = shadowCaster2D;
+        shadowColliderObj.shadowController = shadowController2D;
+        builtStaticShadowColliders.Add(shadowColliderObj);
+
     }
-    [MethodImpl(512)]
+
+
     void BuildAllMapSpawns()
     {
         mapSpawns = Instantiate(mapSpawns, levelOutput);
         foreach (ByteCoord spawn in simplifiedSpawnData) Instantiate(aMapSpawn, spawn.GetPosition(), Quaternion.identity, mapSpawns.transform);
         mapSpawns.InitializeSpawns();
     }
-    [MethodImpl(512)]
+
+
     void BuildAllAnimations()
     {
         foreach (KeyValuePair<int, List<Transform>> item in animatedAnimationsAwaitingShapes)
@@ -216,7 +225,8 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             stencilAccumulation++;
         }
     }
-    [MethodImpl(512)]
+
+
     void BuildAllLights()
     {
         foreach (var item in simplifiedLightData)
@@ -231,7 +241,8 @@ public sealed class LevelBuilderStuff : MonoBehaviour
     }
 
     int stencilAccumulation = 1;
-    [MethodImpl(512)]
+
+
     void BuildAllShapes()
     {
         for (int i = 0; i < loadedSimplifiedShapeData.Length; i++)
@@ -254,7 +265,8 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
         staticParent.GetComponent<CompositeCollider2D>().edgeRadius = 0f;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
+
     bool CachedMapIsInvalid()
     {
         if (loadedSimplifiedShapeData == null) return true;
@@ -264,5 +276,12 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         return false;
     }
 
+
+    public struct StaticShadowColliderObj
+    {
+        public PolygonCollider2D collider;
+        public ShadowCaster2D shadowCaster;
+        public ShadowCaster2DController shadowController;
+    }
 
 }

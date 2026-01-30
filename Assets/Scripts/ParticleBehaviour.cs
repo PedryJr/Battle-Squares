@@ -57,7 +57,6 @@ public static class ParticlePool
     {
         if (particle == null || !particle.supportObjectPooling) return;
 
-        //particle.gameObject.SetActive(false);
         for (int i = 0; i < particle.ParticleSystems.Length; i++) particle.ParticleSystems[i].Stop(false, ParticleSystemStopBehavior.StopEmitting);
 
         ulong id = particle.variantID;
@@ -106,8 +105,7 @@ public sealed class ParticleBehaviour : MonoBehaviour
         foreach (var ps in setps)
         {
             particleSystems[index] = ps;
-            particleSystemsRenderers[index] = ps.GetComponent<ParticleSystemRenderer>();
-
+            particleSystemsRenderers[index] = ps.GetComponent<ParticleSystemRenderer>(); 
             index++;
         }
     }
@@ -147,10 +145,8 @@ public sealed class ParticleBehaviour : MonoBehaviour
         if (attatchment && attatchment.activeSelf && timer > attatchmentLifeTime) attatchment.SetActive(false);
         if (timer > lifeTime)
         {
-            if (supportObjectPooling)
-                ParticlePool.ReturnToPool(this);
-            else
-                Destroy(gameObject);
+            if (supportObjectPooling) ParticlePool.ReturnToPool(this);
+            else Destroy(gameObject);
         }
     }
 

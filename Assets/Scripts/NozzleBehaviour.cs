@@ -25,44 +25,19 @@ public sealed class NozzleBehaviour : MonoBehaviour
 
     public float intensity;
 
-    int a = 82375459;
-    int b = 89346787;
-    int c = 89457937;
+    public int primaryAmmo;
+    public int secondaryAmmo;
+    public int primaryShots;
+    public int secondaryShots;
 
-    int _primaryAmmo;
-    int _secondaryAmmo;
-    int _primaryShots;
-    int _secondaryShots;
+    public float primaryTimeSinceShot { get; private set; }
+    public float primaryFireTime { get; private set; }
+    public float secondaryTimeSinceShot { get; private set; }
+    public float secondaryFireTime { get; private set; }
 
-    public int primaryAmmo
-    {
-        get => _primaryAmmo ^ b ^ a ^ c;
-        set => _primaryAmmo = value ^ a ^ c ^ b;
-    }
-    public int secondaryAmmo
-    {
-        get => _secondaryAmmo ^ b ^ c ^ a;
-        set => _secondaryAmmo = value ^ b ^ c ^ a;
-    }
-    public int primaryShots
-    {
-        get => _primaryShots ^ b ^ c ^ a;
-        set => _primaryShots = value ^ a ^ c ^ b;
-    }
-    public int secondaryShots
-    {
-        get => _secondaryShots ^ a ^ b ^ c;
-        set => _secondaryShots = value ^ a ^ c ^ b;
-    }
-
-    public float primaryTimeSinceShot;
-    public float primaryFireTime;
-    public float secondaryTimeSinceShot;
-    public float secondaryFireTime;
-
-    public float primaryTimeSinceEmpty;
+    public float primaryTimeSinceEmpty { get; private set; }
     public float primaryReloadTime;
-    public float secondaryTimeSinceEmpty;
+    public float secondaryTimeSinceEmpty { get; private set; }
     public float secondaryReloadTime;
 
     public bool primaryHoldable = false;
@@ -237,7 +212,6 @@ public sealed class NozzleBehaviour : MonoBehaviour
                 GetFirePoint(),
                 playerBehaviour.aimDirection,
                 playerBehaviour);
-            playerBehaviour.PlayNozzleRecoilAnimation();
         }
         return fire;
 
@@ -246,7 +220,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector2 GetParticlePoint() => (Vector2)playerBehaviour.transform.position + (playerBehaviour.aimDirection / 1.8f);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Vector2 GetFirePoint() => (Vector2)transform.position - (playerBehaviour.aimDirection / 2f);
+    public Vector2 GetFirePoint() => (Vector2)playerBehaviour.transform.position + (playerBehaviour.aimDirection / 1.5f);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Quaternion GetFireRot()
     {

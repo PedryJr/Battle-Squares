@@ -213,20 +213,23 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     }
 
     float registerDT = 0f;
-    float frameRate = 60f;
-    float frameTimer = 0f;
+    float accumulator = 0f;
+    const float updateRate = 60f;
+    const float fixedDT = 1f / updateRate;
 
     private void Update()
     {
-        frameTimer += Time.deltaTime;
-        if(frameTimer > 1f / frameRate)
+        accumulator += Time.deltaTime;
+
+        while (accumulator >= fixedDT)
         {
-            registerDT = Mathf.Max(frameTimer, Time.deltaTime);
-            foreach (var item in sensorObjects) if (item) item.CustomUpdate();
+            registerDT = fixedDT; 
+            foreach (var item in sensorObjects) item.CustomUpdate();
             CalculateProximityPixels();
-            frameTimer = 0f;
+            accumulator -= fixedDT;
         }
     }
+
 
 
     private void OnDestroy()
@@ -296,7 +299,9 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     void CalculateProximityPixels()
     {
 
+        positionCompute.Complete();
         
+        gameState.Dispose();
         gameState = GetNativeGameState();
 
         (vertexDatas, vertexDatasSwap) = (vertexDatasSwap, vertexDatas);
@@ -313,11 +318,9 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         };
 
         positionCompute = proximitySensorCalculation.ScheduleParallelByRef(iterations, 64, default);
-        positionCompute.Complete();
 
         nativeProximitySensors.Clear();
         nativeForceFieldBlockers.Clear();
-        gameState.Dispose();
 
         spriteAsMesh.SetVertexBufferData(vertexDatas, 0, 0, vertexDatas.Length);
         spriteAsMesh.UploadMeshData(false);

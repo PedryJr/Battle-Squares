@@ -10,7 +10,7 @@ Shader "RenderFeatures/ThermalReadAndApply"
     {
         Tags { "RenderType"="Opaque" "Queue"="Overlay" }
         Cull Back 
-        ZWrite Off 
+        ZWrite On
         ZTest Always
 
         Pass
@@ -54,7 +54,7 @@ Shader "RenderFeatures/ThermalReadAndApply"
                 float2 uv = i.uv;
 
                 float2 distortedUv = 0;
-                distortedUv += tex2D(_DistortionTexture, uv).r;
+                distortedUv += tex2D(_DistortionTexture, uv).g;
                 distortedUv *= _DistortStrength;
 
                 distortedUv += uv;

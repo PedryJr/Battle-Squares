@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1625723881570478094}
   - component: {fileID: 3230000773134604271}
   - component: {fileID: -3438963122069973725}
-  - component: {fileID: 1694199888061291303}
   - component: {fileID: 7580242539375389875}
   m_Layer: 7
   m_Name: Ricochet
@@ -136,6 +135,7 @@ MonoBehaviour:
   hit: 0
   sync: 0
   flipFlop: 0
+  builtIndAudio: 1
   hitMark: {fileID: 7378723969388511367, guid: 8cec5e615eff25d4783f982df3926e9f, type: 3}
   trailParticles: {fileID: 227063848627397678}
   trailParticleSystem: {fileID: 8440552164618030048}
@@ -280,57 +280,6 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &1694199888061291303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3066612454653962984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
-  gridSpaceColor:
-    color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0
-    saturationBoost: 0
-  sensorData:
-    colorValue:
-      x: 0
-      y: 0
-      z: 0
-    colorRadius: 0
-    origin:
-      x: 0
-      y: 0
-    rotation: 0
-    warpSpeed: 3.1
-    chroma: 0
-    enableBlockerInfluence: 0
-    blockerFalloff: 0
-    enablePositionWarp: 1
-    positionWarpStrength: 2.09
-    positionWarpFallof: 2.43
-    positionWarpRadius: 1
-    enableScaleWarp: 1
-    scaleWarpStrength: -1
-    scaleWarpFalloff: 1
-    scaleWarpRadius: 2
-    enableRotationWarp: 0
-    rotationWarpStrength: 4.47
-    rotationWarpFalloff: 2.11
-    rotationWarpRadius: 3.91
-    enableSwirl: 0
-    swirlStrength: 3
-    swirlFalloff: 1
-    swirlRadius: 4
-    enablePulsation: 1
-    pulsationFrequency: 200
-    pulsationAmplitude: 5
-    pulsationFallof: 1
-    pulsationRadius: 1
 --- !u!61 &7580242539375389875
 BoxCollider2D:
   m_ObjectHideFlags: 0

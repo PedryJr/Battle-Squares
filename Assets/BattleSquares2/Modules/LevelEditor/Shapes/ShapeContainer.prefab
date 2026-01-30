@@ -46,43 +46,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
     color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0.00001
+    radius: 5
     saturationBoost: 0
-  sensorData:
+  gridSpaceSensor:
     colorValue:
       x: 0
       y: 0
       z: 0
-    colorRadius: 0.00001
+    colorRadius: 0
     origin:
-      x: -9.481486
-      y: -2.3015828
+      x: 0
+      y: 0
     rotation: 0
-    warpSpeed: 20
+    warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 0
-    positionWarpStrength: -1
-    positionWarpFallof: 3
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
     positionWarpRadius: 5
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.2
-    scaleWarpFalloff: 2
-    scaleWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 6.21
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.3
-    swirlFalloff: 1
-    swirlRadius: 5
-    enablePulsation: 1
-    pulsationFrequency: 4
-    pulsationAmplitude: 0.1
-    pulsationFallof: 2.2
-    pulsationRadius: 5
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &776643258494153505
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,43 +129,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
     color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0.00001
+    radius: 5
     saturationBoost: 0
-  sensorData:
+  gridSpaceSensor:
     colorValue:
       x: 0
       y: 0
       z: 0
-    colorRadius: 0.00001
+    colorRadius: 0
     origin:
-      x: -9.481486
-      y: -2.3015828
+      x: 0
+      y: 0
     rotation: 0
-    warpSpeed: 20
+    warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 0
-    positionWarpStrength: -1
-    positionWarpFallof: 3
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
     positionWarpRadius: 5
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.2
-    scaleWarpFalloff: 2
-    scaleWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 6.21
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.3
-    swirlFalloff: 1
-    swirlRadius: 5
-    enablePulsation: 1
-    pulsationFrequency: 4
-    pulsationAmplitude: 0.1
-    pulsationFallof: 2.2
-    pulsationRadius: 5
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &1396072962573971140
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,43 +212,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
     color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0.00001
+    radius: 5
     saturationBoost: 0
-  sensorData:
+  gridSpaceSensor:
     colorValue:
       x: 0
       y: 0
       z: 0
-    colorRadius: 0.00001
+    colorRadius: 0
     origin:
-      x: -9.481486
-      y: -2.3015828
+      x: 0
+      y: 0
     rotation: 0
-    warpSpeed: 20
+    warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 0
-    positionWarpStrength: -1
-    positionWarpFallof: 3
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
     positionWarpRadius: 5
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.2
-    scaleWarpFalloff: 2
-    scaleWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 6.21
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.3
-    swirlFalloff: 1
-    swirlRadius: 5
-    enablePulsation: 1
-    pulsationFrequency: 4
-    pulsationAmplitude: 0.1
-    pulsationFallof: 2.2
-    pulsationRadius: 5
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &1492090092345683004
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,43 +295,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
     color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0.00001
+    radius: 5
     saturationBoost: 0
-  sensorData:
+  gridSpaceSensor:
     colorValue:
       x: 0
       y: 0
       z: 0
-    colorRadius: 0.00001
+    colorRadius: 0
     origin:
-      x: -9.481486
-      y: -2.3015828
+      x: 0
+      y: 0
     rotation: 0
-    warpSpeed: 20
+    warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 0
-    positionWarpStrength: -1
-    positionWarpFallof: 3
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
     positionWarpRadius: 5
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.2
-    scaleWarpFalloff: 2
-    scaleWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 6.21
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.3
-    swirlFalloff: 1
-    swirlRadius: 5
-    enablePulsation: 1
-    pulsationFrequency: 4
-    pulsationAmplitude: 0.1
-    pulsationFallof: 2.2
-    pulsationRadius: 5
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &2388161371375359627
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,43 +378,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
     color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0.00001
+    radius: 5
     saturationBoost: 0
-  sensorData:
+  gridSpaceSensor:
     colorValue:
       x: 0
       y: 0
       z: 0
-    colorRadius: 0.00001
+    colorRadius: 0
     origin:
-      x: -9.481486
-      y: -2.3015828
+      x: 0
+      y: 0
     rotation: 0
-    warpSpeed: 20
+    warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 0
-    positionWarpStrength: -1
-    positionWarpFallof: 3
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
     positionWarpRadius: 5
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.2
-    scaleWarpFalloff: 2
-    scaleWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 6.21
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.3
-    swirlFalloff: 1
-    swirlRadius: 5
-    enablePulsation: 1
-    pulsationFrequency: 4
-    pulsationAmplitude: 0.1
-    pulsationFallof: 2.2
-    pulsationRadius: 5
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &3198043604171846238
 GameObject:
   m_ObjectHideFlags: 0
@@ -467,6 +467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438ac164fa30cf94da37c56f79788b10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShapeContainer
+  snappingOnGenerate: 1
   mousePosOnGenerate: {x: 0, y: 0}
   mousePosOnRelease: {x: 0, y: 0}
   _material: {fileID: 2100000, guid: f2cd34d07e336e04cac0ca84eadd0fc1, type: 2}
@@ -522,43 +523,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
     color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0.00001
+    radius: 5
     saturationBoost: 0
-  sensorData:
+  gridSpaceSensor:
     colorValue:
       x: 0
       y: 0
       z: 0
-    colorRadius: 0.00001
+    colorRadius: 0
     origin:
-      x: -9.481486
-      y: -2.3015828
+      x: 0
+      y: 0
     rotation: 0
-    warpSpeed: 20
+    warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 0
-    positionWarpStrength: -1
-    positionWarpFallof: 3
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
     positionWarpRadius: 5
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.2
-    scaleWarpFalloff: 2
-    scaleWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 6.21
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.3
-    swirlFalloff: 1
-    swirlRadius: 5
-    enablePulsation: 1
-    pulsationFrequency: 4
-    pulsationAmplitude: 0.1
-    pulsationFallof: 2.2
-    pulsationRadius: 5
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &4729452604706853817
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,43 +606,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
     color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0.00001
+    radius: 5
     saturationBoost: 0
-  sensorData:
+  gridSpaceSensor:
     colorValue:
       x: 0
       y: 0
       z: 0
-    colorRadius: 0.00001
+    colorRadius: 0
     origin:
-      x: -9.481486
-      y: -2.3015828
+      x: 0
+      y: 0
     rotation: 0
-    warpSpeed: 20
+    warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 0
-    positionWarpStrength: -1
-    positionWarpFallof: 3
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
     positionWarpRadius: 5
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.2
-    scaleWarpFalloff: 2
-    scaleWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 6.21
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.3
-    swirlFalloff: 1
-    swirlRadius: 5
-    enablePulsation: 1
-    pulsationFrequency: 4
-    pulsationAmplitude: 0.1
-    pulsationFallof: 2.2
-    pulsationRadius: 5
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &7865693698544090147
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,40 +689,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
     color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0.00001
+    radius: 5
     saturationBoost: 0
-  sensorData:
+  gridSpaceSensor:
     colorValue:
       x: 0
       y: 0
       z: 0
-    colorRadius: 0.00001
+    colorRadius: 0
     origin:
-      x: -9.481486
-      y: -2.3015828
+      x: 0
+      y: 0
     rotation: 0
-    warpSpeed: 20
+    warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 0
-    positionWarpStrength: -1
-    positionWarpFallof: 3
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
     positionWarpRadius: 5
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.2
-    scaleWarpFalloff: 2
-    scaleWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 6.21
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.3
-    swirlFalloff: 1
-    swirlRadius: 5
-    enablePulsation: 1
-    pulsationFrequency: 4
-    pulsationAmplitude: 0.1
-    pulsationFallof: 2.2
-    pulsationRadius: 5
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0

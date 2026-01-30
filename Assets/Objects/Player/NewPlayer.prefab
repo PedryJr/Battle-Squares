@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
-  m_SortingOrder: 4
+  m_SortingOrder: 6
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -163,10 +163,10 @@ MonoBehaviour:
   m_ComponentVersion: 2
   m_LightType: 3
   m_BlendStyleIndex: 1
-  m_FalloffIntensity: 1
-  m_Color: {r: 1, g: 0, b: 0.72098255, a: 0.414}
+  m_FalloffIntensity: 0.55
+  m_Color: {r: 0.223, g: 0.036795005, b: 0.11535024, a: 0.759}
   m_Intensity: 0.1
-  m_LightVolumeIntensity: 1
+  m_LightVolumeIntensity: 0.1
   m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}
@@ -174,7 +174,7 @@ MonoBehaviour:
   m_LightOrder: 0
   m_AlphaBlendOnOverlap: 0
   m_OverlapOperation: 1
-  m_NormalMapDistance: 13.99
+  m_NormalMapDistance: 0
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
   m_ShadowsEnabled: 1
@@ -189,7 +189,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.5
-  m_PointLightOuterRadius: 25.25
+  m_PointLightOuterRadius: 7
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -240,45 +240,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  proximityPixelSensor: {fileID: 11400000, guid: 064515fa5e654ae4cb4a3c18dd23ca81, type: 2}
   gridSpaceColor:
     color: {r: 0.554, g: 0.5160676, b: 0.09141002, a: 1}
     radius: 10
     saturationBoost: 1
-  sensorData:
+  gridSpaceSensor:
     colorValue:
-      x: 0.554
-      y: 0.5160676
-      z: 0.09141002
-    colorRadius: 7.8
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
     origin:
-      x: -0.6528262
-      y: -7.992456
-    rotation: 90.09174
-    warpSpeed: 2
-    chroma: -2
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 0
+    chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 1
-    positionWarpStrength: 2.6
-    positionWarpFallof: 10
-    positionWarpRadius: 2
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.125
-    scaleWarpFalloff: 10
-    scaleWarpRadius: 2
+    blockerFalloff: 0
+    enablePositionWarp: 0
+    positionWarpStrength: 0
+    positionWarpFallof: 0
+    positionWarpRadius: 0
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 1
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.01
-    swirlFalloff: 4.46
-    swirlRadius: 6
-    enablePulsation: 1
-    pulsationFrequency: 10
-    pulsationAmplitude: 0.15
-    pulsationFallof: 4
-    pulsationRadius: 3
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &6913139940880432840
 GameObject:
   m_ObjectHideFlags: 0
@@ -1213,7 +1214,6 @@ MonoBehaviour:
   spawnBuffer: 0
   newMods: 0
   frameRate: 10
-  aimDirectionEnum: 2
   moveDirection: {x: 0, y: 0}
   jumpParticleRef: {fileID: 8567238288229006168, guid: 414f2ce96a088454aafac90bbb09133b, type: 3}
 --- !u!114 &2995831169349222189
@@ -1234,111 +1234,139 @@ MonoBehaviour:
   particleMaterial: {fileID: -876546973899608171, guid: dad808b10b3ac2044a76c5ed232a1e80, type: 3}
   primaryColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.8
     value: 0.554
     alpha: 1
   secondaryColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 1
     value: 1
     alpha: 1
   exposedHealthColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.835
     value: 0.628
     alpha: 0.314
   nozzleColor:
     colorCorrectionType: 1
+    hue: 0
     saturation: 0.35
     value: 1
     alpha: 1
   projectileColor:
     colorCorrectionType: 2
+    hue: 0
     saturation: 0.392
     value: 1
     alpha: 1
   particleColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.75
     value: 0.75
     alpha: 1
   chatBubbleColor:
     colorCorrectionType: 2
+    hue: 0
     saturation: 0.781
     value: 1
     alpha: 1
   dogTagColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.75
     value: 0.75
     alpha: 1
   hitMarkColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.5
     value: 1
     alpha: 0
   hitMarkFadeColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.495
     value: 0.725
     alpha: 1
   pfpBorderNotReadyColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.588
     value: 0.342
     alpha: 1
   pfpBorderIsReadyColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.588
     value: 0.753
     alpha: 1
   cursorColorOnHover:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.835
     value: 0.75
     alpha: 1
   cursorColorOffHover:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.835
     value: 0.75
     alpha: 1
   selectedWeaponColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.755
     value: 1
     alpha: 1
   highlightedWeaponColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.595
     value: 1
     alpha: 1
   uiKnobColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.462
     value: 0.75
     alpha: 1
   uiButtonColorNormal:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.835
     value: 0.602
     alpha: 1
   uiButtonColorHighlighted:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.544
     value: 0.684
     alpha: 1
   ammoColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.571
     value: 0.75
     alpha: 1
   ammoContainerColor:
     colorCorrectionType: 1
+    hue: 0
     saturation: 0.11
     value: 0.316
     alpha: 0.502
   lightColor:
     colorCorrectionType: 0
+    hue: 0
     saturation: 0.835
     value: 0.223
     alpha: 0.759
+  projectileLightColor:
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.835
+    value: 0.628
+    alpha: 0.314

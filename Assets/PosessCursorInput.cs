@@ -109,6 +109,15 @@ public partial class @PosessCursorInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""No"",
+                    ""type"": ""Button"",
+                    ""id"": ""d02cede1-ddac-4d91-b767-e8afef66b6ca"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -133,6 +142,17 @@ public partial class @PosessCursorInput: IInputActionCollection2, IDisposable
                     ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ece4c55b-3c3c-47ac-9f69-b551de921b9c"",
+                    ""path"": ""<Keyboard>/rightBracket"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""No"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -143,6 +163,7 @@ public partial class @PosessCursorInput: IInputActionCollection2, IDisposable
         m_PosessionActions = asset.FindActionMap("PosessionActions", throwIfNotFound: true);
         m_PosessionActions_MoveAround = m_PosessionActions.FindAction("MoveAround", throwIfNotFound: true);
         m_PosessionActions_Click = m_PosessionActions.FindAction("Click", throwIfNotFound: true);
+        m_PosessionActions_No = m_PosessionActions.FindAction("No", throwIfNotFound: true);
     }
 
     ~@PosessCursorInput()
@@ -225,6 +246,7 @@ public partial class @PosessCursorInput: IInputActionCollection2, IDisposable
     private List<IPosessionActionsActions> m_PosessionActionsActionsCallbackInterfaces = new List<IPosessionActionsActions>();
     private readonly InputAction m_PosessionActions_MoveAround;
     private readonly InputAction m_PosessionActions_Click;
+    private readonly InputAction m_PosessionActions_No;
     /// <summary>
     /// Provides access to input actions defined in input action map "PosessionActions".
     /// </summary>
@@ -244,6 +266,10 @@ public partial class @PosessCursorInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PosessionActions/Click".
         /// </summary>
         public InputAction @Click => m_Wrapper.m_PosessionActions_Click;
+        /// <summary>
+        /// Provides access to the underlying input action "PosessionActions/No".
+        /// </summary>
+        public InputAction @No => m_Wrapper.m_PosessionActions_No;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -276,6 +302,9 @@ public partial class @PosessCursorInput: IInputActionCollection2, IDisposable
             @Click.started += instance.OnClick;
             @Click.performed += instance.OnClick;
             @Click.canceled += instance.OnClick;
+            @No.started += instance.OnNo;
+            @No.performed += instance.OnNo;
+            @No.canceled += instance.OnNo;
         }
 
         /// <summary>
@@ -293,6 +322,9 @@ public partial class @PosessCursorInput: IInputActionCollection2, IDisposable
             @Click.started -= instance.OnClick;
             @Click.performed -= instance.OnClick;
             @Click.canceled -= instance.OnClick;
+            @No.started -= instance.OnNo;
+            @No.performed -= instance.OnNo;
+            @No.canceled -= instance.OnNo;
         }
 
         /// <summary>
@@ -347,5 +379,12 @@ public partial class @PosessCursorInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnClick(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "No" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNo(InputAction.CallbackContext context);
     }
 }

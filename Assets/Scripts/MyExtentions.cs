@@ -112,45 +112,29 @@ public static class MyExtentions
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float DecodeFloat(byte[] bytes) => -1000.0f + ((((bytes[0] << 16) | (bytes[1] << 8) | bytes[2]) / 16777215.0f) * (int)(1000.0f - -1000.0f));
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] EncodeNozzlePosition(float x, float y) => new byte[] { (byte)((math.clamp(x, -1, 1) + 1.0f) * 127.5f), (byte)((math.clamp(y, -1, 1) + 1.0f) * 127.5f) };
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static (float, float) DecodeNozzlePosition(byte[] bytes) => ((bytes[0] / 127.5f) - 1.0f, (bytes[1] / 127.5f) - 1.0f);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float EaseInOutCubic(float x) => x < 0.5 ? 4 * x * x * x : 1 - (float)math.pow(-2 * x + 2, 3) / 2;
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float EaseInExpo(float x) => x == 0 ? 0 : (float)math.pow(2, 10 * x - 10);
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float EaseInQuad(float x) => x * x;
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float EaseOutQuad(float x) => 1 - (1 - x) * (1 - x);
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 AngleToNormalizedCoordinate(float angle)
-    {
-        float radians = math.radians(angle);
-        return new Vector2(math.cos(radians), math.sin(radians)).normalized;
-    }
+    public static Vector2 DegreesToVector2(float angleInDegrees) => RadiansToVector2(Mathf.Deg2Rad * angleInDegrees);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float ConvertVector2ToAngle(Vector2 direction)
-    {
-        direction.Normalize();
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        if (angle < 0) angle += 360f;
-        return angle;
-    }
-
-
+    public static Vector2 RadiansToVector2(float angleInRadians) => new Vector2(math.cos(angleInRadians), math.sin(angleInRadians));
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string SanitizeMessage(string message) => Regex.Replace(message.Length > 120 ? message.Substring(0, 120) : message,
-            @"[^\p{L}\p{N}\p{Sc}\p{Sm}\p{Mn}\p{Pc}\p{Pd}\p{Zs}.,<>{}|_+=!?;:'""\-\(\)]", string.Empty);
-
-
+    public static float Vector2ToDegrees(Vector2 direction) => Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float Vector2ToRadians(Vector2 direction) => Mathf.Atan2(direction.y, direction.x);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string SanitizeMessage(string message, int maxLength = 120) => Regex.Replace(message.Length > maxLength ? message.Substring(0, maxLength) : message,
+            @"[^\p{L}\p{N}\p{Sc}\p{Sm}\p{Mn}\p{Pc}\p{Pd}\p{Zs}!@#$%\^&\*\(\)_\+\-=\[\]\\\{\}\|;:'"",\.\/<>?\`~]", string.Empty);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float EaseOnHover(float x) => 1 - math.pow(1 - x, 5);
 
@@ -163,7 +147,6 @@ public static class MyExtentions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] BoolArrayToByteArray(bool[] boolArray)
     {
-
         int boolCount = boolArray.Length;
         int byteCount = (boolArray.Length + 7) / 8;
         byte[] byteArray = new byte[byteCount];

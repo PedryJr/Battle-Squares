@@ -1,81 +1,52 @@
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-public unsafe sealed class HitMarkBehaviour : MonoBehaviour
+public sealed class HitMarkBehaviour : AutoPooledBehaviour
 {
+    private const float FadeInDuration = 0.15f;
+    private const float StayDuration = 20f;
+    private const float FadeOutDuration = 0.15f;
 
-    private const float ShrinkSpeed = 8f;
-
-
-    [SerializeField]
-    ImpactForceBehaviour impactForce;
     public float zPos;
-    public float timer;
     public byte ownerId;
-    public PlayerBehaviour owner;
-    float fadeOut = 0;
+    private PlayerBehaviour owner;
 
-    [SerializeField]
-    bool canExpand;
-
-    [SerializeField]
-    bool randomSpawning;
-
-    [SerializeField]
-    bool randomRotation;
-
-    [SerializeField]
-    float spawnChance;
-
-    [SerializeField]
-    bool grow;
-
-    [SerializeField]
-    public SpawnStageBehaviour[] spawnStages;
-
-    float spawnTimerOne;
-    bool spawn1;
-
-    float spawnTimerTwo;
-    bool spawn2;
-
-    float spawnTimerThree;
-    bool spawn3;
-
-    public Color spawnColor;
-    public Color fadeColor;
-
-    private const float TimeAlive = 5f;
-
-    private SpriteRenderer mainRenderer;
+    private SpriteRenderer spriteRenderer;
     private static MaterialPropertyBlock SharedBlock = null;
 
-    public void Initialize()
+    //Starts at 0
+    private Vector3 targetScale;
+
+    private enum FadeState
     {
+        FadeIn,
+        Stay,
+        FadeOut
+    }
+
+    private FadeState currentState = FadeState.FadeIn;
+    private float stateTimer = 0f;
+    private Color hitmarkSpawnColor;
+    private Color hitMarkFadeColor;
+
+    private void Awake()
+    {
+        targetScale = transform.localScale;
+    }
+
+    public void Initialize(PlayerBehaviour owner)
+    {
+        this.owner = owner;
         if (!gameObject.activeSelf) gameObject.SetActive(true);
 
         if (SharedBlock == null) SharedBlock = new MaterialPropertyBlock();
 
-        if (randomRotation && spawnStages != null)
-        {
-            for (int i = 0; i < spawnStages.Length; i++)
-            {
-                spawnStages[i].transform.rotation = Quaternion.Euler(0, 0, Random.Range(0f, 360f));
-            }
-        }
-
-        mainRenderer = GetComponentInChildren<SpriteRenderer>();
-        if (mainRenderer != null) mainRenderer.sortingOrder = 2;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null) spriteRenderer.sortingOrder = 2;
 
         transform.position += new Vector3(0, 0, LevelBuilderStuff.STENCIL_OFFSET);
-    }
-
-    private void Start()
-    {
-        impactForce = Instantiate(impactForce, transform.position, transform.rotation, null);
+        transform.localScale = Vector3.zero;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -83,109 +54,94 @@ public unsafe sealed class HitMarkBehaviour : MonoBehaviour
     {
         float scaled = stencil / 2048f;
         SharedBlock.SetVector("_HitMarkStencil", new Vector4(scaled, scaled, scaled, scaled));
-        StencilRenderer.AssignTextureToProp(SharedBlock, "_StencilGroup");
-        mainRenderer.SetPropertyBlock(SharedBlock);
+        EffectRenderer.AssignTextureToProp(SharedBlock, "_StencilGroup");
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.SetPropertyBlock(SharedBlock);
+        }
     }
 
     void AssignStencilTexture(Texture renderTexture)
     {
         if (SharedBlock == null) SharedBlock = new MaterialPropertyBlock();
         SharedBlock.SetTexture("_StencilGroup", renderTexture);
-        mainRenderer.SetPropertyBlock(SharedBlock);
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.SetPropertyBlock(SharedBlock);
+        }
     }
-
-    bool trackScaleInit;
-    Vector3 scaleFrom;
 
     private void Update()
     {
-        float dt = Time.deltaTime;
-        timer += dt;
-
-        Color hitmarkSpawnColor = owner.PlayerColor.HitMarkColor;
-        Color hitMarkFadeColor = owner.PlayerColor.HitMarkFadeColor;
-
-        spawnColor = Color.Lerp(hitmarkSpawnColor, hitMarkFadeColor, Mathf.Clamp01(Mathf.SmoothStep(0, 1, timer * (1f/0.15f))));
-
-        if (timer > TimeAlive) fadeOut += Time.deltaTime * ShrinkSpeed;
-
-        SpawnStages(dt);
-
-        if (fadeOut >= 1f) Destroy(gameObject);
-        else
+        if (!owner)
         {
+            AutoPooledPool<HitMarkBehaviour>.ReturnToPool(this);
+            return;
+        }
 
-            if (fadeOut >= 0f)
-            {
+        float dt = Time.deltaTime;
+        stateTimer += dt;
 
-                if(!trackScaleInit)
+        switch (currentState)
+        {
+            case FadeState.FadeIn:
+                float fadeInProgress = MyExtentions.EaseOutQuad(Mathf.Clamp01(stateTimer / FadeInDuration));
+                transform.localScale = Vector3.Lerp(Vector3.zero, targetScale, fadeInProgress);
+                spriteRenderer.color = Color.Lerp(owner.PlayerColor.HitMarkColor, owner.PlayerColor.HitMarkFadeColor, Mathf.SmoothStep(0, 1, fadeInProgress));
+
+                if (stateTimer >= FadeInDuration)
                 {
-                    scaleFrom = transform.localScale;
-                    trackScaleInit = true;
+                    currentState = FadeState.Stay;
+                    stateTimer = 0f;
+                    transform.localScale = targetScale;
                 }
+                break;
 
-                transform.localScale = Vector3.Lerp(scaleFrom, Vector3.zero, MyExtentions.EaseInQuad(fadeOut));
+            case FadeState.Stay:
 
-                int countSpawnStages = spawnStages.Length;
-                ref var spawnStageSearchSpace = ref MemoryMarshal.GetReference(spawnStages.AsSpan());
-                for (int i = 0; i < countSpawnStages; i++)
+                if (stateTimer >= StayDuration)
                 {
-                    ref SpawnStageBehaviour stage = ref Unsafe.Add(ref spawnStageSearchSpace, i);
-                    int countSprites = stage.sprites.Length;
-                    ref var spriteSearchSpace = ref MemoryMarshal.GetReference(stage.sprites.AsSpan());
-                    for (int j = 0; j < countSprites; j++)
-                    {
-                        ref SpriteRenderer sr = ref Unsafe.Add(ref spriteSearchSpace, j);
-                        if (sr.enabled)
-                            sr.color = spawnColor;
-                    }
+                    currentState = FadeState.FadeOut;
+                    stateTimer = 0f;
                 }
+                break;
 
-            }
+            case FadeState.FadeOut:
+                float fadeOutProgress = MyExtentions.EaseInQuad(Mathf.Clamp01(stateTimer / FadeOutDuration));
+                transform.localScale = Vector3.Lerp(targetScale, Vector3.zero, MyExtentions.EaseInQuad(fadeOutProgress));
+
+                if (fadeOutProgress >= 1f)
+                {
+                    AutoPooledPool<HitMarkBehaviour>.ReturnToPool(this);
+                    return;
+                }
+                break;
         }
 
         Vector3 posBuffer = transform.position;
         posBuffer.z += 0.001f * dt;
         transform.position = posBuffer;
-
-    }
-
-    private void SpawnStages(float dt)
-    {
-
-        int countSpawnStages = spawnStages.Length;
-        ref var spawnStageSearchSpace = ref MemoryMarshal.GetReference(spawnStages.AsSpan());
-        for (int i = 0; i < countSpawnStages; i++)
-        {
-            ref SpawnStageBehaviour stage = ref Unsafe.Add(ref spawnStageSearchSpace, i);
-            if (stage.hasSpawned) continue;
-
-            stage.spawnTimer += dt;
-            if (stage.spawnTimer > stage.spawnTime)
-            {
-                int countSprites = stage.sprites.Length;
-                ref var spriteSearchSpace = ref MemoryMarshal.GetReference(stage.sprites.AsSpan());
-                for (int j = 0; j < countSprites; j++)
-                {
-                    ref SpriteRenderer sr = ref Unsafe.Add(ref spriteSearchSpace, j);
-                    if (randomSpawning && Random.Range(0f, 1f) > spawnChance) continue;
-
-                    sr.enabled = true;
-                    stage.hasSpawned = true;
-                }
-
-                if (grow) stage.doScale = true;
-            }
-        }
     }
 
     private void OnEnable()
     {
-        StencilRenderer.OnStencilChange += AssignStencilTexture;
+        EffectRenderer.onEffectTextureChanged += AssignStencilTexture;
     }
 
     private void OnDisable()
     {
-        StencilRenderer.OnStencilChange -= AssignStencilTexture;
+        EffectRenderer.onEffectTextureChanged -= AssignStencilTexture;
+    }
+
+    protected override void OnSpawned()
+    {
+        stateTimer = 0f;
+        currentState = FadeState.FadeIn;
+    }
+
+    protected override void OnReturnedToPool()
+    {
+        stateTimer = 0f;
+        currentState = FadeState.FadeIn;
     }
 }

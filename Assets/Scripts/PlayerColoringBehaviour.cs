@@ -116,6 +116,11 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
     [SerializeField] ColorComponent lightColor;
     public Color LightColor => lightColor.ActiveColor;
 
+    [SerializeField] ColorComponent projectileLightColor;
+    public Color ProjectileLightColor => projectileLightColor.ActiveColor;
+    public float projectileLightColorSAT => projectileLightColor.ReadSat;
+    public float projectileLightColorVAL => projectileLightColor.ReadValue;
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RefreshColorComponents()
@@ -142,24 +147,29 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         hitMarkFadeColor.SetHue(hue);
         highlightedWeaponColor.SetHue(hue);
         ammoContainerColor.SetHue(hue);
+        projectileLightColor.SetHue(hue);
     }
 
     [Serializable]
     public struct ColorComponent
     {
         [SerializeField] CorrectionType colorCorrectionType;
-        [SerializeField, Range(0f, 1f)] private float saturation;
-        [SerializeField, Range(0f, 1f)] private float value;
-        [SerializeField, Range(0f, 1f)] private float alpha;
-
+        [HideInInspector] public float hue;
+        [SerializeField, Range(0f, 1f)] public float saturation;
+        [SerializeField, Range(0f, 1f)] public float value;
+        [SerializeField, Range(0f, 1f)] public float alpha;
         [HideInInspector] private Color activeColor;
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetHue(in float hue)
         {
+            this.hue = hue;
             activeColor = Color.HSVToRGB(hue, saturation, value, true);
             activeColor.a = alpha;
         }
+
+        public float ReadSat => saturation;
+        public float ReadValue => value;
+        public float ReadHue => hue;
 
         public Color ActiveColor
         {
@@ -169,18 +179,15 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
                 {
                     case CorrectionType.Linear: return activeColor.linear;
                     case CorrectionType.Gamma: return activeColor.gamma;
-                        default: return activeColor;
+                    default: return activeColor;
                 }
             }
         }
-
         enum CorrectionType
         {
             Raw = 0,
             Linear = 1,
             Gamma = 2,
         }
-
     }
-
 }

@@ -127,7 +127,7 @@ Material:
     - _UNITY_VERTEX_INPUT_INSTANCE_ID: 0
     - _UVSec: 0
     - _ZWrite: 1
-    - _zPos: 49.64
+    - _zPos: 5
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}

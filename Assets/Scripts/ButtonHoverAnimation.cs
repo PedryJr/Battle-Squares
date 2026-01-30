@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,8 +8,35 @@ using UnityEngine.UI;
 
 public sealed class ButtonHoverAnimation : MonoBehaviour
 {
+    public static bool NavigatingUI;
+
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private UnityEvent clickEvent;
+
+    public bool isSelected = false;
+    public void CLICK_FROM_NAN()
+    {
+        if(isSelected) ButtonClick();
+    }
+    public void SELECT_FROM_NAV()
+    {
+        if(!isSelected)
+        {
+            OnHover();
+            isSelected = true;
+        }
+    }
+
+    [SerializeField] bool enableSelectUp;
+    [SerializeField] Action selectUp;
+    void SelectUp()
+    {
+        if (!isSelected) return;
+        if (!NavigatingUI) return;
+        if (!enableSelectUp) return;
+        selectUp();
+        ExitHover();
+    }
 
     private TextMeshProUGUI tmp;
     private Button button;

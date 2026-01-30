@@ -12,7 +12,8 @@ Shader "Custom/Thermal"
     {
         Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
 
-        Blend SrcAlpha OneMinusSrcAlpha
+        Blend One One
+
 
         Pass
         {
@@ -76,9 +77,9 @@ Shader "Custom/Thermal"
 
                 float2 tiledUv = i.positionWS / 10.0;
 
-                half4 distortion = SAMPLE_TEXTURE2D(_DistortionMap1, sampler_DistortionMap1, tiledUv).r * DistortionStrength() * _Multiplier;
+                half4 distortion = SAMPLE_TEXTURE2D(_DistortionMap1, sampler_DistortionMap1, tiledUv).g * DistortionStrength() * _Multiplier;
 
-                float fallof = pow(SAMPLE_TEXTURE2D(_DistortionMap2, sampler_DistortionMap2, i.uv).r, _DistortionExponential);
+                float fallof = pow(SAMPLE_TEXTURE2D(_DistortionMap2, sampler_DistortionMap2, i.uv).g, _DistortionExponential);
 
                 distortion *= fallof;
 

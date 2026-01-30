@@ -50,13 +50,13 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         foreach (var item in Gamepad.all)
         {
             if (PlayerController.consumedDeviceIDs.Contains(item.deviceId)) continue;
-
-            if (item.startButton.wasPressedThisFrame)
-            {
-                CreateNewPlayerFromControllerRpc(NetworkManager.LocalClientId);
-                //PlayerController.consumedDeviceIDs.Add(item.deviceId);
-            }
+            if (item.startButton.wasPressedThisFrame) CreateNewPlayerFromControllerRpc(NetworkManager.LocalClientId);
         }
+    }
+
+    public void CreateNewPlayerFromFirstController()
+    {
+        CreateNewPlayerFromControllerRpc(NetworkManager.LocalClientId);
     }
 
     void SkinDownload()

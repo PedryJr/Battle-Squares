@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static PlayerSynchronizer;
 using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
@@ -281,16 +282,16 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
         if (flipFlop)
         {
-            meleeStartDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation + (data.swingDegrees / 2f));
-            meleeEndDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation - (data.swingDegrees / 2f));
+            meleeStartDirection = MyExtentions.DegreesToVector2(rb.rotation + (data.swingDegrees / 2f));
+            meleeEndDirection = MyExtentions.DegreesToVector2(rb.rotation - (data.swingDegrees / 2f));
 
             meleeStartRot = data.meleeRotation / 2f;
             meleeEndRot = -data.meleeRotation / 2f;
         }
         else
         {
-            meleeStartDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation - (data.swingDegrees / 2f));
-            meleeEndDirection = MyExtentions.AngleToNormalizedCoordinate(rb.rotation + (data.swingDegrees / 2f));
+            meleeStartDirection = MyExtentions.DegreesToVector2(rb.rotation - (data.swingDegrees / 2f));
+            meleeEndDirection = MyExtentions.DegreesToVector2(rb.rotation + (data.swingDegrees / 2f));
 
             meleeStartRot = -data.meleeRotation / 2f;
             meleeEndRot = data.meleeRotation / 2f;
@@ -957,8 +958,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                 float incomingAngle = Vector2.Angle(-incomingDirection, Vector2.right);
                 float normalAngle = Vector2.Angle(normal, Vector2.right);
 
-                Vector2 crossA = MyExtentions.AngleToNormalizedCoordinate(normalAngle + 90);
-                Vector2 crossB = MyExtentions.AngleToNormalizedCoordinate(normalAngle - 90);
+                Vector2 crossA = MyExtentions.DegreesToVector2(normalAngle + 90);
+                Vector2 crossB = MyExtentions.DegreesToVector2(normalAngle - 90);
 
                 if (Vector2.Distance(crossA, -incomingDirection) > Vector2.Distance(crossB, -incomingDirection)) slidingDirection = crossA;
                 else slidingDirection = crossB;
@@ -1036,6 +1037,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
         }
 
+
         Destroy(gameObject);
 
     }
@@ -1058,24 +1060,15 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
         float angle = math.degrees(math.atan2(point.normal.y, point.normal.x));
         
-        HitMarkBehaviour newHitMark = Instantiate(hitMark, toParent, true);
-        newHitMark.Initialize();
-        newHitMark.transform.position = hitMarkPos;
-        newHitMark.transform.rotation = Quaternion.Euler(0, 0, angle);
+        HitMarkBehaviour newHitMark = AutoPooledPool<HitMarkBehaviour>.Spawn(hitMark, hitMarkPos, Quaternion.Euler(0, 0, angle), toParent);
+        newHitMark.Initialize(owningPlayer);
 
-        newHitMark.ownerId = (byte)ownerId;
-        newHitMark.owner = owningPlayer;
         StencilInfectorBehaviour stencilInfectorBehaviour;
         if (toParent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
         else if (toParent.parent && toParent.parent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
         else if (toParent.parent && toParent.parent.parent && toParent.parent.parent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
 
-        Color color = owningPlayer.PlayerColor.HitMarkColor;
-        newHitMark.spawnColor = color;
-        newHitMark.fadeColor = new UnityEngine.Color(color.r, color.g, color.b, 0f);
-
-        Instantiate(AssetResources.PowerDot, hitMarkPos, transform.rotation, transform.parent);
-
+        AutoPooledPool<ProjectileForceAnimationBehaviour>.Spawn(AssetResources.ProjectileForceEffect, transform.position, transform.rotation, null).Initialize(this);
     }
 
 
@@ -1183,7 +1176,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
         OnDestroyed?.Invoke(this);
 
-        for (int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
+        //for (int i = 0; i < spriteRenderer.materials.Length; i++) Destroy(spriteRenderer.materials[i]);
 
         if (owningPlayer)
         {
