@@ -152,7 +152,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         col.points = points;
         ShadowCaster2D shadowCaster2D = test.GetComponent<ShadowCaster2D>();
         shadowCaster2D.castingOption = ShadowCaster2D.ShadowCastingOptions.CastAndSelfShadow;
-        ShadowCaster2DController shadowController2D = test.AddComponent<ShadowCaster2DController>();
+        ShadowCaster2DController shadowController2D = test.GetComponent<ShadowCaster2DController>();
         shadowController2D.UpdateFromCollider();
         test.AddComponent<StencilInfectorBehaviour>().SetStencil(stencil);
     }
@@ -201,6 +201,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             Destroy(newIslands[i].gameObject.GetComponent<StencilInfectorBehaviour>());
             Destroy(newIslands[i].gameObject.GetComponent<Rigidbody2D>());
         }
+        animationGroup.GetComponent<ShadowCaster2DController>().UpdateFromCollider();
     }
 
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Mathematics;
@@ -17,8 +18,11 @@ public sealed class LevelAnimationGroup : MonoBehaviour
     Transform cachedTransform;
     Rigidbody2D rb;
 
+    List<PlayerBehaviour> playersOnShape;
+
     private void Awake()
     {
+        playersOnShape = new List<PlayerBehaviour>();
         rb = GetComponent<Rigidbody2D>();
         cachedTransform = transform;
     }
@@ -63,11 +67,31 @@ public sealed class LevelAnimationGroup : MonoBehaviour
         transform.position = targetPosition;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!collision.gameObject.TryGetComponent(out PlayerBehaviour playerBehaviour)) return;
+        if (!playersOnShape.Contains(playerBehaviour)) playersOnShape.Add(playerBehaviour);
+        
+        VLog.Log($"&a{playerBehaviour.playerName}");
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (!collision.gameObject.TryGetComponent(out PlayerBehaviour playerBehaviour)) return;
+        if (playersOnShape.Contains(playerBehaviour)) playersOnShape.Remove(playerBehaviour);
+        VLog.Log($"&e{playerBehaviour.playerName}");
+        
+    }
+
     void MoveToward(Vector2 targetPosition)
     {
         Vector2 delta = targetPosition - rb.position;
         rb.linearVelocity = delta / Time.fixedDeltaTime / 2f;
         rb.position = targetPosition;
+        foreach (PlayerBehaviour player in playersOnShape)
+        {
+            player.rb.position = player.rb.position + delta;
+        }
     }
 
 

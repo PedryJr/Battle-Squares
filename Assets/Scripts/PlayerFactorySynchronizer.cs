@@ -17,6 +17,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
     ScoreManager scoreManager;
     PlayerSynchronizer playerSynchronizer;
+    PlayerControllerManager playerControllerManager;
     public static PlayerFactorySynchronizer Instance;
 
     List<M_SkinInit> initEvents;
@@ -29,6 +30,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
     private void Awake()
     {
+        playerControllerManager = GetComponent<PlayerControllerManager>();
         Instance = this;
         scoreManager = GetComponent<ScoreManager>();
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
@@ -40,8 +42,12 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        CheckLocalCoop();
         SkinDownload();
+    }
+
+    void Update()
+    {
+        CheckLocalCoop();
     }
 
     void CheckLocalCoop()
@@ -49,7 +55,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         if (SceneManager.GetActiveScene().name != "LobbyScene") return;
         foreach (var item in Gamepad.all)
         {
-            if (PlayerController.consumedDeviceIDs.Contains(item.deviceId)) continue;
+            if (!playerControllerManager.IsDeviceValidForRegistrationEXTERN(item)) continue;
             if (item.startButton.wasPressedThisFrame) CreateNewPlayerFromControllerRpc(NetworkManager.LocalClientId);
         }
     }
@@ -256,7 +262,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         {
             newPlayer.isLocalPlayer = true;
             if (!playerSynchronizer.localSquare) playerSynchronizer.localSquare = newPlayer;
-            Instantiate<PlayerController>(controllerPrefab).SetTargetController(newPlayer);
+            playerControllerManager.SpawnController(Instantiate<PlayerController>(controllerPrefab).SetTargetController(newPlayer));
         }
     }
 

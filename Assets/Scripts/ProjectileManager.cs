@@ -209,7 +209,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         projectileBehaviour.ownerId = owningPlayer.GetGameID();
         projectileBehaviour.InitializeBullet(ref data);
 
-        multiplier1 = weapon.recoil * Mods.at[13];
+        multiplier1 = weapon.recoil * Mods.Recoil;
         multiplier2 = MyExtentions.EaseOutQuad(math.clamp(1 - (playerSynchronizer.localSquare.rb.linearVelocity.magnitude / 28), 0, 1));
 
         forceToAdd = -direction.normalized * multiplier1 * multiplier2;

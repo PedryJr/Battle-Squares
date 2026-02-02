@@ -12,393 +12,124 @@ public sealed partial class PlayerController : MonoBehaviour
 {
     [SerializeField][Range(0f, 1f)] float deadzoneRadius = 0.5f;
     [SerializeField][Range(0f, 1f)] float cornerBias = 0.3f;
-
-    [SerializeField]
-    public List<int> displayConsumedIDS;
-
-    PlayerFactorySynchronizer playerFactory;
+    
     Inputs inputs;
-    InputUser inputUser;
+    InputUser user;
 
-    private float lastPairingAttempt = 0f;
-    private const float PAIRING_COOLDOWN = 0.1f;
+    InputDevice[] internalAssignedDevices;
+    void UpdateDeviceList() => inputs.devices = internalAssignedDevices;
 
-    private static Dictionary<int, PlayerController> deviceOwnership = new Dictionary<int, PlayerController>();
-    public static HashSet<int> consumedDeviceIDs = new HashSet<int>();
+    private List<int> devicesInUse;
 
-    private static bool firstPlayerExists = false;
-    private bool needsRepairing = false;
-    private bool isFirstPlayer = false;
-
-    private int currentDeviceId = -1;
-    private int releasedGamepadId = -1;
-
-    [SerializeField] private int displayCurrentDevice = -1;
-
-    private void OnDestroy()
-    {
-        InputSystem.onDeviceChange -= OnDeviceChange; 
-        ReleaseCurrentDevice(); 
-        if (isFirstPlayer) firstPlayerExists = false;
-    }
-
-    private void FixedUpdate()
-    {
-        ValidateAndMaintainBinding();
-    }
-
-    private void LateUpdate()
-    {
-        if (!playerBehaviour) Destroy(gameObject);
-        displayCurrentDevice = currentDeviceId;
-        displayConsumedIDS = consumedDeviceIDs.ToList();
-    }
-
-    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
-    {
-        if (device is not Gamepad gamepad) return;
-
-        switch (change)
-        {
-            case InputDeviceChange.Added:
-                if (currentDeviceId == -1 || needsRepairing)
-                {
-                    needsRepairing = true;
-                }
-                break;
-
-            case InputDeviceChange.Removed:
-            case InputDeviceChange.Disconnected:
-                if (gamepad.deviceId == currentDeviceId)
-                {
-                    Debug.LogWarning($"Player {gameObject.name} lost device {currentDeviceId}");
-                    ReleaseCurrentDevice();
-                    needsRepairing = true;
-                }
-                break;
-
-            case InputDeviceChange.Reconnected:
-                if (currentDeviceId == -1 && needsRepairing)
-                {
-                    needsRepairing = true;
-                }
-                break;
-        }
-    }
-
-    private void OnStartPressed(CallbackContext context)
-    {
-        if (!isFirstPlayer)
-        {
-            inputs.SquareController.Start.performed -= OnStartPressed;
-            return;
-        }
-
-        if (context.control.device is Gamepad gamepad)
-        {
-            int pressedDeviceId = gamepad.deviceId;
-            if (currentDeviceId == pressedDeviceId)
-            {
-                Debug.Log($"First player pressed Start on gamepad {pressedDeviceId} - spawning new player and releasing gamepad");
-                releasedGamepadId = currentDeviceId;
-                ReleaseCurrentDevice();
-                playerFactory.CreateNewPlayerFromFirstController();
-                inputs.SquareController.Start.performed -= OnStartPressed;
-            }
-        }
-    }
-
-    void ValidateAndMaintainBinding()
-    {
-        if (isFirstPlayer) ValidateKeyboardMouse();
-        else ValidateGamepad();
-
-        List<int> staleDevices = new List<int>();
-        foreach (var kvp in deviceOwnership)
-        {
-            if (kvp.Value == null) staleDevices.Add(kvp.Key);
-        }
-        foreach (int deviceId in staleDevices)
-        {
-            deviceOwnership.Remove(deviceId);
-            consumedDeviceIDs.Remove(deviceId);
-            Debug.Log($"Cleaned up stale device {deviceId}");
-        }
-
-        if ((currentDeviceId == -1 || needsRepairing) && Time.realtimeSinceStartup - lastPairingAttempt > PAIRING_COOLDOWN)
-        {
-            lastPairingAttempt = Time.realtimeSinceStartup;
-            AttemptPairing();
-        }
-    }
-
-    void ValidateKeyboardMouse()
-    { 
-        var keyboard = Keyboard.current;
-        var mouse = Mouse.current;
-
-        if (keyboard == null || mouse == null) return;
-
-        if (!inputUser.valid || !inputUser.pairedDevices.Any(d => d is Keyboard) || !inputUser.pairedDevices.Any(d => d is Mouse)) needsRepairing = true;
-
-        if (currentDeviceId != -1)
-        {
-            bool deviceExists = Gamepad.all.Any(g => g.deviceId == currentDeviceId);
-
-            if (!deviceExists)
-            {
-                currentDeviceId = -1;
-                needsRepairing = true;
-            }
-        }
-    }
-
-    void ValidateGamepad()
-    {
-        if (currentDeviceId != -1)
-        {
-            bool deviceExists = Gamepad.all.Any(g => g.deviceId == currentDeviceId);
-
-            if (!deviceExists)
-            {
-                ReleaseCurrentDevice();
-                needsRepairing = true;
-            }
-        }
-
-        if (currentDeviceId != -1)
-        {
-            if (deviceOwnership.TryGetValue(currentDeviceId, out PlayerController owner))
-            {
-                if (owner != this)
-                {
-                    ReleaseCurrentDevice();
-                    needsRepairing = true;
-                }
-            }
-            else
-            {
-                deviceOwnership[currentDeviceId] = this;
-                if (!consumedDeviceIDs.Contains(currentDeviceId))
-                {
-                    consumedDeviceIDs.Add(currentDeviceId);
-                }
-            }
-        }
-
-        if (currentDeviceId != -1 && inputUser.valid)
-        {
-            bool correctlyPaired = false;
-            bool hasWrongDevice = false;
-
-            foreach (var device in inputUser.pairedDevices)
-            {
-                if (device.deviceId == currentDeviceId) correctlyPaired = true;
-                else if (device is Gamepad) hasWrongDevice = true;
-            }
-
-            if (hasWrongDevice || !correctlyPaired)
-            {
-                if (inputUser.valid) inputUser.UnpairDevices();
-                needsRepairing = true;
-            }
-        }
-    }
-
-    void AttemptPairing()
-    {
-        if (isFirstPlayer) PairFirstPlayer();
-        else PairGamepad();
-    }
-
-    void PairFirstPlayer()
-    {
-        var keyboard = Keyboard.current;
-        var mouse = Mouse.current;
-
-        if (keyboard == null || mouse == null) return;
-
-        if (!inputUser.valid)
-        {
-            inputUser = InputUser.CreateUserWithoutPairedDevices();
-            inputUser.AssociateActionsWithUser(inputs);
-        }
-
-        if (inputUser.pairedDevices.Count > 0) inputUser.UnpairDevices();
-
-        try
-        {
-            InputUser.PerformPairingWithDevice(keyboard, inputUser);
-            InputUser.PerformPairingWithDevice(mouse, inputUser);
-
-            var allGamepads = Gamepad.all.ToList();
-            Gamepad targetGamepad = null;
-
-            foreach (var gamepad in allGamepads)
-            {
-                int deviceId = gamepad.deviceId;
-                if (deviceId == releasedGamepadId) continue;
-
-                if (!consumedDeviceIDs.Contains(deviceId))
-                {
-                    targetGamepad = gamepad;
-                    break;
-                }
-            }
-
-            if (targetGamepad != null)
-            {
-                int deviceIdToPair = targetGamepad.deviceId;
-                if (deviceOwnership.TryGetValue(deviceIdToPair, out PlayerController currentOwner))
-                {
-                    if (currentOwner != null && currentOwner != this && currentOwner.currentDeviceId == deviceIdToPair) targetGamepad = null;
-                }
-
-                if (targetGamepad != null)
-                {
-                    InputUser.PerformPairingWithDevice(targetGamepad, inputUser);
-
-                    bool gamepadPaired = inputUser.pairedDevices.Any(d => d.deviceId == deviceIdToPair);
-                    if (gamepadPaired)
-                    {
-                        currentDeviceId = deviceIdToPair;
-                        consumedDeviceIDs.Add(deviceIdToPair);
-                        deviceOwnership[deviceIdToPair] = this;
-                    }
-                }
-            }
-
-            needsRepairing = false;
-            inputs.SquareController.Enable();
-        }
-        catch { }
-    }
-
-    void PairGamepad()
-    {
-        var allGamepads = Gamepad.all.ToList();
-
-        if (allGamepads.Count == 0) return;
-
-        Gamepad targetGamepad = null;
-
-        foreach (var gamepad in allGamepads)
-        {
-            int deviceId = gamepad.deviceId;
-
-            if (!consumedDeviceIDs.Contains(deviceId))
-            {
-                targetGamepad = gamepad;
-                break;
-            }
-            else if (currentDeviceId == -1 && deviceOwnership.TryGetValue(deviceId, out PlayerController owner) && owner == this)
-            {
-                targetGamepad = gamepad;
-                break;
-            }
-        }
-
-        if (targetGamepad == null) return;
-
-        int deviceIdToPair = targetGamepad.deviceId;
-
-        if (deviceOwnership.TryGetValue(deviceIdToPair, out PlayerController currentOwner))
-        {
-            if (currentOwner != null && currentOwner != this && currentOwner.currentDeviceId == deviceIdToPair) return;
-        }
-
-        if (currentDeviceId != -1 && currentDeviceId != deviceIdToPair) ReleaseCurrentDevice();
-
-        if (inputUser.valid && inputUser.pairedDevices.Count > 0) inputUser.UnpairDevices();
-
-        consumedDeviceIDs.Add(deviceIdToPair);
-        deviceOwnership[deviceIdToPair] = this;
-
-        if (!inputUser.valid)
-        {
-            inputUser = InputUser.CreateUserWithoutPairedDevices();
-            inputUser.AssociateActionsWithUser(inputs);
-        }
-
-        try
-        {
-            InputUser.PerformPairingWithDevice(targetGamepad, inputUser, InputUserPairingOptions.UnpairCurrentDevicesFromUser); 
-            bool pairingSucceeded = inputUser.valid && inputUser.pairedDevices.Any(d => d.deviceId == deviceIdToPair);
-
-            if (pairingSucceeded)
-            {
-                currentDeviceId = deviceIdToPair;
-                needsRepairing = false; 
-                inputs.SquareController.Enable();
-            }
-            else
-            {
-                consumedDeviceIDs.Remove(deviceIdToPair);
-                deviceOwnership.Remove(deviceIdToPair); 
-            }
-        }
-        catch (Exception e)
-        {
-            consumedDeviceIDs.Remove(deviceIdToPair);
-            deviceOwnership.Remove(deviceIdToPair); 
-        }
-    }
-
-    void ReleaseCurrentDevice()
-    { 
-        if (isFirstPlayer)
-        {
-            if (currentDeviceId != -1)
-            {
-                consumedDeviceIDs.Remove(currentDeviceId);
-                deviceOwnership.Remove(currentDeviceId); 
-                if (releasedGamepadId == -1) releasedGamepadId = currentDeviceId; 
-                currentDeviceId = -1; 
-                if (inputUser.valid)
-                {
-                    inputUser.UnpairDevices();
-                    needsRepairing = true;
-                }
-            }
-        }
-        else
-        { 
-            if (currentDeviceId != -1)
-            {
-                consumedDeviceIDs.Remove(currentDeviceId);
-                deviceOwnership.Remove(currentDeviceId);
-                currentDeviceId = -1;
-            } 
-            if (inputUser.valid) inputUser.UnpairDevices();
-        }
-    }
-
-    //Factory calls this function to bind a local player that just spawned to a new instance of "PlayerController"
-    //Kindof acts like an initializer.
-    public void SetTargetController(PlayerBehaviour playerBehaviour)
+    public PlayerController SetTargetController(PlayerBehaviour playerBehaviour)
     {
         this.playerBehaviour = playerBehaviour;
         controllerTarget = this.playerBehaviour.GetComponent<Rigidbody2D>();
-        playerBehaviour.playerController = this; 
-        if (!firstPlayerExists)
+        playerBehaviour.playerController = this;
+        return this;
+    }
+
+    public void PairDevice(InputDevice device)
+    {
+        if (device == null) return;
+
+        List<InputDevice> devices = new List<InputDevice>(internalAssignedDevices);
+        devices.Add(device);
+        internalAssignedDevices = devices.ToArray();
+
+        UpdateDeviceList();
+
+        /*        inputs.Disable();
+                user = InputUser.PerformPairingWithDevice(device, user, InputUserPairingOptions.None);
+                user.AssociateActionsWithUser(inputs);
+                inputs.Enable();
+
+                if (!devicesInUse.Contains(device.deviceId)) devicesInUse.Add(device.deviceId);*/
+    }
+
+    public void UnpairDevice(InputDevice device)
+    {
+        if (device == null) return;
+
+        List<InputDevice> devices = new List<InputDevice>(internalAssignedDevices);
+        devices.Remove(device);
+        internalAssignedDevices = devices.ToArray();
+
+        UpdateDeviceList();
+/*        inputs.Disable();
+
+        List<InputDevice> alreadyPairedDevices = new List<InputDevice>();
+        foreach (InputDevice alreadyPaired in InputSystem.devices) if(devicesInUse.Contains(alreadyPaired.deviceId)) alreadyPairedDevices.Add(alreadyPaired);
+        devicesInUse.Clear();
+        
+        user = InputUser.CreateUserWithoutPairedDevices();
+
+        foreach (var item in alreadyPairedDevices)
         {
-            isFirstPlayer = true;
-            firstPlayerExists = true; 
+            if (item.deviceId == device.deviceId) continue;
+            user = InputUser.PerformPairingWithDevice(item, user, InputUserPairingOptions.None);
+            if (!devicesInUse.Contains(item.deviceId)) devicesInUse.Add(item.deviceId);
+        }
+        user.AssociateActionsWithUser(inputs);
+        inputs.Enable();*/
+
+    }
+
+    public bool IsUsingDevice(int deviceId)
+    {
+        return devicesInUse.Contains(deviceId);
+    }
+
+    public bool IsUsingDevice(InputDevice device)
+    {
+        return device != null && devicesInUse.Contains(device.deviceId);
+    }
+
+    public List<int> GetPairedDeviceIds()
+    {
+        return new List<int>(devicesInUse);
+    }
+
+    public bool HasAnyDevices()
+    {
+        return devicesInUse.Count > 0;
+    }
+
+    public void ClearAllDevices()
+    {
+
+        inputs.Disable();
+
+        devicesInUse.Clear();
+        user = InputUser.CreateUserWithoutPairedDevices();
+        user.AssociateActionsWithUser(inputs);
+
+        inputs.Enable();
+    }
+
+    public void AssociateUserWithDevices(InputDevice[] userDevices)
+    {
+        inputs.Disable();
+        user = InputUser.CreateUserWithoutPairedDevices();
+        devicesInUse.Clear();
+
+        foreach (InputDevice device in userDevices)
+        {
+            user = InputUser.PerformPairingWithDevice(device, user, InputUserPairingOptions.None);
+            devicesInUse.Add(device.deviceId);
         }
 
-        if (!inputUser.valid) inputUser = InputUser.CreateUserWithoutPairedDevices(); 
-        inputUser.AssociateActionsWithUser(inputs); 
-        needsRepairing = true;
-        AttemptPairing();
+        user.AssociateActionsWithUser(inputs);
+        inputs.Enable();
     }
-     
+
 
     private void Awake()
     {
-        playerFactory = FindAnyObjectByType<PlayerFactorySynchronizer>();
-        InputSystem.onDeviceChange += OnDeviceChange;
         DontDestroyOnLoad(this.gameObject);
 
+        controllerManager = FindAnyObjectByType<PlayerControllerManager>();
+        devicesInUse = new List<int>();
         inputs = new Inputs();
 
         inputs.SquareController.Up.performed += HandleUp;
@@ -420,9 +151,13 @@ public sealed partial class PlayerController : MonoBehaviour
         inputs.SquareController.Primary.canceled += OnPrimaryCanceled; 
         inputs.SquareController.Secondary.performed += OnSecondaryPerformed;
         inputs.SquareController.Secondary.canceled += OnSecondaryCanceled;
-         
-        inputs.SquareController.Start.performed += OnStartPressed;
-        inputUser = InputUser.CreateUserWithoutPairedDevices();
+
+        internalAssignedDevices = new InputDevice[0];
+/*
+        user = InputUser.CreateUserWithoutPairedDevices();
+        user.AssociateActionsWithUser(inputs);*/
+
+        inputs.Enable();
 
         SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
     }
@@ -431,10 +166,16 @@ public sealed partial class PlayerController : MonoBehaviour
     {
         if (arg1.name == "LobbyScene") EnableController();
     }
+
+    private void OnDestroy()
+    {
+        controllerManager.DespawnController(this);
+    }
 }
 
 public sealed partial class PlayerController
 {
+    PlayerControllerManager controllerManager;
     Rigidbody2D controllerTarget;
     public PlayerBehaviour playerBehaviour;
 
@@ -598,7 +339,7 @@ public sealed partial class PlayerController
         Vector2 left = leftInputDirection * inputMask;
         Vector2 right = rightInputDirection * inputMask;
 
-        float mod = Mods.at[9];
+        float mod = Mods.NormalizeMovement;
         float upScale = Mathf.Lerp(0.4f, 1f, mod);
         float downScale = Mathf.Lerp(0.3f, 1f, mod);
         playerBehaviour.moveDirection = up * upScale + down * downScale + left + right;

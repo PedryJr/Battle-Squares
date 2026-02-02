@@ -850,7 +850,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         if (newMod)
         {
             acceleration = 130f * Mods.at[8];
-            maxSpeed = 23.5f * Mods.at[1];
+            maxSpeed = 23.5f * Mods.PlayerSpeed;
             newMods = false;
         }
 
@@ -862,7 +862,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         jumpLimiter = 17.5f - math.clamp(rb.linearVelocityY / 2, -5, 10);
         jumpDirection = (Vector2.up + (movementDirection * 0.2f)).normalized;
-        jumpVelocity = (jumpDirection * jumpLimiter) * Mods.at[2];
+        jumpVelocity = (jumpDirection * jumpLimiter) * Mods.JumpForce;
 
         MyExtentions.GetClosestEnvironmentPoint(rb.position);
         if (playerController.inputJump)
@@ -930,6 +930,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public event Action<IPlayerHandle> OnDestroyed;
     private void OnDestroy()
     {
+        if (playerController) Destroy(playerController.gameObject);
         OnDestroyed?.Invoke(this);
     }
 

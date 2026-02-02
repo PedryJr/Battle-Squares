@@ -211,7 +211,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         UserMods.RaiseOnProjectileSpawnEvent(this, ref data);
 
         initDamage = data.baseDamage;
-        aoeDamage = data.aoeDamage * Mods.at[7];
+        aoeDamage = data.aoeDamage * Mods.AoeDamage;
         damageScaleOverTime = data.damageTimeScale;
         skipAoeOnHit = data.skipAoeOnTargetHit;
         stickToSender = data.stickToSender;
@@ -260,7 +260,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         transform.rotation = rotationQ;
 
         if (data.noGravity) rb.gravityScale = 0f;
-        else rb.gravityScale *= Mods.at[5];
+        else rb.gravityScale *= Mods.ProjectileGravity;
 
         if (stickToSender)
         {
@@ -276,7 +276,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
         if (trailParticles) owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(trailParticles, trailParticles.GetComponent<ParticleSystem>());
 
-        damage = initDamage * Mods.at[4];
+        damage = initDamage * Mods.BaseDamage;
         speedModifier = data.acceleration;
         melee = data.melee;
 
@@ -302,8 +302,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         if (!IsLocalProjectile) gameObject.layer = LayerMask.NameToLayer("RemoteProjectile");
         projectileManager.projectiles.Add(this);
         lastPos = rb.position;
-        rb.linearVelocity *= Mods.at[3];
-        this.data.knockback *= Mods.at[12];
+        rb.linearVelocity *= Mods.ProjectileSpeed;
+        this.data.knockback *= Mods.Knockback;
         SetupAllProxySpawns(ProjectileSpawnEvent.EventType.Birth);
     }
 
@@ -494,7 +494,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         Vector2 vel, pos;
         float ang, rot, oldRot;
 
-        damage += Time.deltaTime * (damageScaleOverTime * Mods.at[11]);
+        damage += Time.deltaTime * (damageScaleOverTime * Mods.DamageOverTime);
         damage = Mathf.Abs(damage);
         timeAlive += Time.deltaTime;
         morhpTime += Time.deltaTime;
@@ -819,7 +819,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                 if (data.oneTimeHit && !playersHit.Contains(playerHit))
                 {
 
-                    if (data.melee || stickToSender) damage *= Mods.at[6];
+                    if (data.melee || stickToSender) damage *= Mods.MeleeDamage;
 
                     Vector2 direction = (playerHit.rb.position - rb.position).normalized;
                     projectileManager.playerSynchronizer.UpdatePlayerHealth(playerHit.GetGameID(), damage, data.slowDownAmount, ownerId, direction * data.knockback);
@@ -830,7 +830,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                 else if (!data.oneTimeHit)
                 {
 
-                    if (data.melee || stickToSender) damage *= Mods.at[6];
+                    if (data.melee || stickToSender) damage *= Mods.MeleeDamage;
 
                     Vector2 direction = (playerHit.rb.position - rb.position).normalized;
                     projectileManager.playerSynchronizer.UpdatePlayerHealth(playerHit.GetGameID(), damage, data.slowDownAmount, ownerId, direction * data.knockback);
