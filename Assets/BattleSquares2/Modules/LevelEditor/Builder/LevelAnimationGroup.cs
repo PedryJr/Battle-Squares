@@ -48,39 +48,33 @@ public sealed class LevelAnimationGroup : MonoBehaviour
     void FixedUpdate()
     {
         if (!constructed) return;
+        float splineTravel;
+        splineTravel = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
+        splineTravel = Mathf.Repeat(splineTravel, 1f);
 
-        animationTimer = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
+        float withOffset = Mathf.Repeat(splineTravel + animationOffset, 1f);
 
-        Vector2 targetPosition = animationPath.Evaluate(Mathf.Repeat(animationTimer + animationOffset, 1f));
-
+        Vector2 targetPosition = animationPath.Evaluate(withOffset);
         MoveToward(targetPosition);
     }
 
-    private void Update()
+/*    private void Update()
     {
         if (!constructed) return;
-
         animationTimer = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
-
         Vector2 targetPosition = animationPath.Evaluate(Mathf.Repeat(animationTimer + animationOffset, 1f));
-
-        transform.position = targetPosition;
-    }
+    }*/
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!collision.gameObject.TryGetComponent(out PlayerBehaviour playerBehaviour)) return;
         if (!playersOnShape.Contains(playerBehaviour)) playersOnShape.Add(playerBehaviour);
-        
-        VLog.Log($"&a{playerBehaviour.playerName}");
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (!collision.gameObject.TryGetComponent(out PlayerBehaviour playerBehaviour)) return;
         if (playersOnShape.Contains(playerBehaviour)) playersOnShape.Remove(playerBehaviour);
-        VLog.Log($"&e{playerBehaviour.playerName}");
-        
     }
 
     void MoveToward(Vector2 targetPosition)
@@ -88,13 +82,9 @@ public sealed class LevelAnimationGroup : MonoBehaviour
         Vector2 delta = targetPosition - rb.position;
         rb.linearVelocity = delta / Time.fixedDeltaTime / 2f;
         rb.position = targetPosition;
-        foreach (PlayerBehaviour player in playersOnShape)
-        {
-            player.rb.position = player.rb.position + delta;
-        }
+        transform.position = targetPosition;
+        foreach (PlayerBehaviour player in playersOnShape) player.rb.position = player.rb.position + delta;
     }
-
-
 }
 
 [BurstCompile]
@@ -124,8 +114,10 @@ public struct Spline2D
             float uuu = uu * u;
             float ttt = tt * t;
 
-            _unused = (uuu * P0) + (3f * uu * t * P1) + (3f * u * tt * P2) + (ttt * P3);
-            return _unused;
+            return (uuu * P0) +
+                   (3f * uu * t * P1) +
+                   (3f * u * tt * P2) +
+                   (ttt * P3);
         }
     }
 

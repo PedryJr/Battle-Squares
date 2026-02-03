@@ -47,4 +47,24 @@ public class WorldColors : MonoBehaviour
 
     }
 
+#if UNITY_EDITOR
+    [SerializeField] bool editInPlaymode = true;
+
+    private void Update()
+    {
+        if (!editInPlaymode) return;
+        for (int i = lights.Count - 1; i >= 0; i--)
+        {
+            if (!lights[i]) lights.RemoveAt(i);
+            else
+            {
+                lights[i].color = lightColor;
+                lights[i].intensity = maxLightStrength * lightDensity;
+                lights[i].shadowIntensity = shadowDesnity;
+            }
+        }
+        pixelEffectMaterial.SetColor("_Color", pixeleffectColor);
+        arenaMaterial.SetColor("_ColorOverride", arenaColor);
+    }
+#endif
 }

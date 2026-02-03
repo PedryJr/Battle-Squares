@@ -13011,11 +13011,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   pixelEffectMaterial: {fileID: 2100000, guid: f83b658e1a8e2f346ad93bef2fbf3525, type: 2}
   arenaMaterial: {fileID: 2100000, guid: e4ce0fc8ac88f8845860c1aa6b60db4d, type: 2}
-  pixeleffectColor: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
+  pixeleffectColor: {r: 0.25882354, g: 0.25882354, b: 0.25882354, a: 1}
   arenaColor: {r: 0.156, g: 0.156, b: 0.156, a: 0.14901961}
   lightColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
   lightDensity: 1
   shadowDesnity: 0.552
+  editInPlaymode: 1
 --- !u!4 &1679761553
 Transform:
   m_ObjectHideFlags: 0

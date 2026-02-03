@@ -494,8 +494,9 @@ public sealed class AnimationAnchor : MonoBehaviour
     public static ComplexAnimationData ConvertFromSimpleAnimationData(SimplifiedAnimationData simple)
     {
         ComplexAnimationData complexAnimationData = new ComplexAnimationData();
-        complexAnimationData.animationSpeed = (simple.animationSpeed / 100f) - 1f;
-        complexAnimationData.animationOffset = (simple.animationOffset / 100f) - 1f;
+        complexAnimationData.animationSpeed = simple.animationSpeed;
+        complexAnimationData.animationOffset = simple.animationOffset;
+
 
         complexAnimationData.segmentCoords = new Vector2[simple.segmentCoords.Length];
         for (int i = 0; i < complexAnimationData.segmentCoords.Length; i++)
@@ -512,12 +513,11 @@ public sealed class AnimationAnchor : MonoBehaviour
         SimplifiedAnimationData data = new SimplifiedAnimationData();
 
 
-        data.animationSpeed = (byte) Mathf.RoundToInt((splineSpeed + 1f) * 100);
-        data.animationOffset = (byte) Mathf.RoundToInt((splineOffset + 1f) * 100);
+        data.animationSpeed = splineSpeed;
+        data.animationOffset = splineOffset;
+
 
         data.segmentCoords = new ByteCoord[(splineMods.Count * 3) + 1];
-
-        //Add start first, then the rest of the mods
 
         ByteCoord start = new ByteCoord();
         start.SetPosition(transform.position);
@@ -541,34 +541,61 @@ public sealed class AnimationAnchor : MonoBehaviour
         return data;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static float EncodeSigned01(float v)
+    {
+        return Mathf.Clamp01((v + 1f) * 0.5f) * 200f;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static float DecodeSigned01(float v)
+    {
+        return (Mathf.Clamp(v, 0f, 200f) / 200f) * 2f - 1f;
+    }
+
     [Serializable]
     public struct SimplifiedAnimationData : INetworkSerializable
     {
-        public ByteCoord animationParams;
+        public float animationSpeed;
+        public float animationOffset;
         public ByteCoord[] segmentCoords;
         public int[] linkedShapes;
 
-        [JsonIgnore]
+/*        [JsonIgnore]
         public float animationSpeed
         {
             get { return animationParams.GetPosition().x; }
-            set { animationParams.SetPosition(new Vector3(value, animationParams.GetPosition().y, 0)); }
+            set
+            {
+                Vector3 p = animationParams.GetPosition();
+                p.y = value;
+                animationParams.SetPosition(p);
+            }
+
         }
         [JsonIgnore]
         public float animationOffset
         {
             get { return animationParams.GetPosition().y; }
-            set { animationParams.SetPosition(new Vector3(animationParams.GetPosition().x, value, 0)); }
-        }
+            set
+            {
+                Vector3 p = animationParams.GetPosition();
+                p.x = value;
+                animationParams.SetPosition(p);
+            }
+
+        }*/
 
         public int GetSize() => 1 + 1 + (sizeof(int) * (linkedShapes != null ? linkedShapes.Length : 0)) + (ByteCoord.GetSize() * (segmentCoords != null ? segmentCoords.Length : 0));
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
-            serializer.SerializeValue(ref animationParams);
+            serializer.SerializeValue(ref animationSpeed);
+            serializer.SerializeValue(ref animationOffset);
             serializer.SerializeValue(ref segmentCoords);
             serializer.SerializeValue(ref linkedShapes);
         }
+
     }
 
     public struct ComplexAnimationData

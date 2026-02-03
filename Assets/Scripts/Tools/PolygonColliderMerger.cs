@@ -1,9 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Clipper2Lib;
 
 /// <summary>
 /// OPTIMIZED and ROBUST Tooling class for merging 2D Polygon Colliders in Unity.
+/// Uses Clipper2 library for reliable polygon union operations on both convex and concave polygons.
 /// Includes validation to prevent Unity's "failed verification" warnings.
 /// </summary>
 public static class PolygonColliderMerger
@@ -14,6 +16,9 @@ public static class PolygonColliderMerger
     private const int MIN_POLYGON_POINTS = 3;
     private const float MIN_POLYGON_AREA = 0.0001f;
     private const float DUPLICATE_VERTEX_THRESHOLD = 0.001f;
+
+    // Clipper2 scaling factor for converting float to long (Clipper2 uses integer coordinates)
+    private const double CLIPPER_SCALE = 100000.0;
 
     #region Data Structures
 
@@ -314,6 +319,7 @@ public static class PolygonColliderMerger
     /// Merges a set of polygon collider islands into an existing island cluster.
     /// OPTIMIZED: Uses spatial partitioning for better performance with many islands.
     /// VALIDATED: Ensures all polygons pass Unity's verification.
+    /// Uses Clipper2 for robust polygon union operations.
     /// </summary>
     public static bool MergeIslands(PolygonCollider2D islandCluster, PolygonCollider2D[] newIslands)
     {
@@ -356,7 +362,7 @@ public static class PolygonColliderMerger
             return false;
         }
 
-        // Merge all polygons efficiently
+        // Merge all polygons efficiently using Clipper2
         List<Vector2[]> mergedPaths = MergePolygonsOptimized(allPolygons);
 
         // Validate and apply merged paths
@@ -402,6 +408,8 @@ public static class PolygonColliderMerger
         }
 
         PolygonCollider2D newCollider = targetObject.AddComponent<PolygonCollider2D>();
+        newCollider.pathCount = 0;
+        newCollider.useDelaunayMesh = true;
 
         List<PolygonData> allPolygons = new List<PolygonData>();
 
@@ -424,7 +432,7 @@ public static class PolygonColliderMerger
             }
         }
 
-        // Merge and apply
+        // Merge and apply using Clipper2
         List<Vector2[]> mergedPaths = MergePolygonsOptimized(allPolygons);
 
         // Validate paths
@@ -602,10 +610,11 @@ public static class PolygonColliderMerger
 
     #endregion
 
-    #region Optimized Merging
+    #region Clipper2-Based Polygon Merging
 
     /// <summary>
-    /// OPTIMIZED: Merges polygons using spatial partitioning and union-find.
+    /// OPTIMIZED: Merges polygons using spatial partitioning and Clipper2.
+    /// Groups nearby polygons and merges them using robust Clipper2 union operations.
     /// </summary>
     private static List<Vector2[]> MergePolygonsOptimized(List<PolygonData> polygons)
     {
@@ -663,7 +672,7 @@ public static class PolygonColliderMerger
             groups[root].Add(polygons[i]);
         }
 
-        // Merge each group
+        // Merge each group using Clipper2
         List<Vector2[]> result = new List<Vector2[]>();
         foreach (var group in groups.Values)
         {
@@ -673,11 +682,8 @@ public static class PolygonColliderMerger
             }
             else
             {
-                Vector2[] merged = MergePolygonGroup(group);
-                if (merged != null && merged.Length >= MIN_POLYGON_POINTS)
-                {
-                    result.Add(merged);
-                }
+                List<Vector2[]> merged = MergePolygonGroupWithClipper(group);
+                result.AddRange(merged);
             }
         }
 
@@ -685,29 +691,96 @@ public static class PolygonColliderMerger
     }
 
     /// <summary>
-    /// Merges a group of connected polygons into a single polygon.
+    /// Merges a group of connected polygons using Clipper2 union operation.
+    /// Returns a list of resulting polygons (may be multiple if union creates separate islands).
     /// </summary>
-    private static Vector2[] MergePolygonGroup(List<PolygonData> group)
+    private static List<Vector2[]> MergePolygonGroupWithClipper(List<PolygonData> group)
     {
         if (group.Count == 0)
-            return new Vector2[0];
+            return new List<Vector2[]>();
 
         if (group.Count == 1)
-            return group[0].Points;
+            return new List<Vector2[]> { group[0].Points };
 
-        Vector2[] result = group[0].Points;
-
-        for (int i = 1; i < group.Count; i++)
+        try
         {
-            result = UnionPolygons(result, group[i].Points);
-            if (result == null || result.Length < MIN_POLYGON_POINTS)
+            // Convert Unity polygons to Clipper2 paths
+            PathsD clipperSubjects = new PathsD();
+
+            foreach (var polygon in group)
             {
-                Debug.LogWarning($"PolygonColliderMerger: Merge failed at polygon {i} in group");
-                return group[0].Points; // Return first polygon as fallback
+                PathD path = Vector2ArrayToClipperPath(polygon.Points);
+                if (path.Count >= MIN_POLYGON_POINTS)
+                {
+                    clipperSubjects.Add(path);
+                }
             }
+
+            if (clipperSubjects.Count == 0)
+                return new List<Vector2[]>();
+
+            // Perform union operation
+            PathsD solution = Clipper.Union(clipperSubjects, FillRule.NonZero);
+
+            // Convert back to Unity polygons
+            List<Vector2[]> result = new List<Vector2[]>();
+            foreach (var path in solution)
+            {
+                Vector2[] unityPolygon = ClipperPathToVector2Array(path);
+                if (unityPolygon != null && unityPolygon.Length >= MIN_POLYGON_POINTS)
+                {
+                    result.Add(unityPolygon);
+                }
+            }
+
+            // If Clipper2 failed or produced invalid results, return original polygons
+            if (result.Count == 0)
+            {
+                Debug.LogWarning("PolygonColliderMerger: Clipper2 union produced no valid results, returning original polygons");
+                return group.Select(p => p.Points).ToList();
+            }
+
+            return result;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"PolygonColliderMerger: Clipper2 union failed with exception: {e.Message}");
+            // Return original polygons as fallback
+            return group.Select(p => p.Points).ToList();
+        }
+    }
+
+    /// <summary>
+    /// Converts a Unity Vector2 array to a Clipper2 PathD.
+    /// </summary>
+    private static PathD Vector2ArrayToClipperPath(Vector2[] polygon)
+    {
+        PathD path = new PathD(polygon.Length);
+
+        foreach (var point in polygon)
+        {
+            path.Add(new PointD(point.x, point.y));
         }
 
-        return result;
+        return path;
+    }
+
+    /// <summary>
+    /// Converts a Clipper2 PathD to a Unity Vector2 array.
+    /// </summary>
+    private static Vector2[] ClipperPathToVector2Array(PathD path)
+    {
+        if (path == null || path.Count < MIN_POLYGON_POINTS)
+            return null;
+
+        Vector2[] polygon = new Vector2[path.Count];
+
+        for (int i = 0; i < path.Count; i++)
+        {
+            polygon[i] = new Vector2((float)path[i].x, (float)path[i].y);
+        }
+
+        return polygon;
     }
 
     /// <summary>
@@ -715,8 +788,8 @@ public static class PolygonColliderMerger
     /// </summary>
     private static bool BoundsOverlapOrNear(Bounds b1, Bounds b2, float threshold)
     {
-        Vector2 min1 = (Vector2) b1.min - Vector2.one * threshold;
-        Vector2 max1 =(Vector2) b1.max + Vector2.one * threshold;
+        Vector2 min1 = (Vector2)b1.min - Vector2.one * threshold;
+        Vector2 max1 = (Vector2)b1.max + Vector2.one * threshold;
         Vector2 min2 = (Vector2)b2.min - Vector2.one * threshold;
         Vector2 max2 = (Vector2)b2.max + Vector2.one * threshold;
 
@@ -725,10 +798,14 @@ public static class PolygonColliderMerger
 
     #endregion
 
-    #region Polygon Operations
+    #region Polygon Query Utilities
 
+    /// <summary>
+    /// Checks if two polygons overlap or touch (within threshold).
+    /// </summary>
     private static bool PolygonsOverlapOrTouch(Vector2[] poly1, Vector2[] poly2)
     {
+        // Check if any vertices are inside or near the other polygon
         int sampleSize = Mathf.Min(5, poly1.Length);
         for (int i = 0; i < sampleSize; i++)
         {
@@ -745,175 +822,26 @@ public static class PolygonColliderMerger
                 return true;
         }
 
+        // Check if edges intersect
         if (PolygonsIntersect(poly1, poly2))
             return true;
 
         return false;
     }
 
-    private static Vector2[] UnionPolygons(Vector2[] poly1, Vector2[] poly2)
-    {
-        List<Vector2> allPoints = new List<Vector2>(poly1);
-        allPoints.AddRange(poly2);
-
-        if (ArePolygonsConvex(poly1) && ArePolygonsConvex(poly2))
-        {
-            return ConvexHull(allPoints);
-        }
-        else
-        {
-            return MergeNonConvexPolygons(poly1, poly2);
-        }
-    }
-
-    private static Vector2[] MergeNonConvexPolygons(Vector2[] poly1, Vector2[] poly2)
-    {
-        List<Vector2> combined = new List<Vector2>();
-
-        foreach (Vector2 v in poly1)
-        {
-            if (!IsPointInPolygon(v, poly2))
-                combined.Add(v);
-        }
-
-        foreach (Vector2 v in poly2)
-        {
-            if (!IsPointInPolygon(v, poly1))
-                combined.Add(v);
-        }
-
-        List<Vector2> intersections = FindEdgeIntersections(poly1, poly2);
-        combined.AddRange(intersections);
-
-        if (combined.Count >= MIN_POLYGON_POINTS)
-        {
-            Vector2 center = GetCentroid(combined);
-            combined = combined.OrderBy(v => Mathf.Atan2(v.y - center.y, v.x - center.x)).ToList();
-            return combined.ToArray();
-        }
-
-        List<Vector2> allPoints = new List<Vector2>(poly1);
-        allPoints.AddRange(poly2);
-        return ConvexHull(allPoints);
-    }
-
-    private static List<Vector2> FindEdgeIntersections(Vector2[] poly1, Vector2[] poly2)
-    {
-        List<Vector2> intersections = new List<Vector2>();
-
-        for (int i = 0; i < poly1.Length; i++)
-        {
-            Vector2 p1 = poly1[i];
-            Vector2 p2 = poly1[(i + 1) % poly1.Length];
-
-            for (int j = 0; j < poly2.Length; j++)
-            {
-                Vector2 p3 = poly2[j];
-                Vector2 p4 = poly2[(j + 1) % poly2.Length];
-
-                if (LineSegmentsIntersect(p1, p2, p3, p4, out Vector2 intersection))
-                {
-                    intersections.Add(intersection);
-                }
-            }
-        }
-
-        return intersections;
-    }
-
-    private static bool LineSegmentsIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, out Vector2 intersection)
-    {
-        intersection = Vector2.zero;
-
-        float d = (p2.x - p1.x) * (p4.y - p3.y) - (p2.y - p1.y) * (p4.x - p3.x);
-
-        if (Mathf.Abs(d) < EPSILON)
-            return false;
-
-        float t = ((p3.x - p1.x) * (p4.y - p3.y) - (p3.y - p1.y) * (p4.x - p3.x)) / d;
-        float u = ((p3.x - p1.x) * (p2.y - p1.y) - (p3.y - p1.y) * (p2.x - p1.x)) / d;
-
-        if (t >= 0 && t <= 1 && u >= 0 && u <= 1)
-        {
-            intersection = new Vector2(p1.x + t * (p2.x - p1.x), p1.y + t * (p2.y - p1.y));
-            return true;
-        }
-
-        return false;
-    }
-
-    private static Vector2[] ConvexHull(List<Vector2> points)
-    {
-        if (points.Count < 3)
-            return points.ToArray();
-
-        Vector2 start = points.OrderBy(p => p.y).ThenBy(p => p.x).First();
-
-        List<Vector2> sorted = points.Where(p => p != start)
-            .OrderBy(p => Mathf.Atan2(p.y - start.y, p.x - start.x))
-            .ToList();
-
-        Stack<Vector2> hull = new Stack<Vector2>();
-        hull.Push(start);
-        hull.Push(sorted[0]);
-
-        for (int i = 1; i < sorted.Count; i++)
-        {
-            Vector2 top = hull.Pop();
-            while (hull.Count > 0 && CrossProduct(hull.Peek(), top, sorted[i]) <= 0)
-            {
-                top = hull.Pop();
-            }
-            hull.Push(top);
-            hull.Push(sorted[i]);
-        }
-
-        return hull.Reverse().ToArray();
-    }
-
-    private static float CrossProduct(Vector2 o, Vector2 a, Vector2 b)
-    {
-        return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
-    }
-
-    private static bool ArePolygonsConvex(Vector2[] polygon)
-    {
-        if (polygon.Length < 3)
-            return false;
-
-        bool? isPositive = null;
-
-        for (int i = 0; i < polygon.Length; i++)
-        {
-            Vector2 p1 = polygon[i];
-            Vector2 p2 = polygon[(i + 1) % polygon.Length];
-            Vector2 p3 = polygon[(i + 2) % polygon.Length];
-
-            float cross = CrossProduct(p1, p2, p3);
-
-            if (Mathf.Abs(cross) > EPSILON)
-            {
-                if (isPositive == null)
-                    isPositive = cross > 0;
-                else if (isPositive != (cross > 0))
-                    return false;
-            }
-        }
-
-        return true;
-    }
-
+    /// <summary>
+    /// Checks if a point is inside or near a polygon boundary.
+    /// </summary>
     private static bool IsPointInOrNearPolygon(Vector2 point, Vector2[] polygon, float threshold)
     {
         if (IsPointInPolygon(point, polygon))
             return true;
 
-        int sampleSize = Mathf.Min(polygon.Length, 10);
-        for (int i = 0; i < sampleSize; i++)
+        // Check distance to edges
+        for (int i = 0; i < polygon.Length; i++)
         {
-            int idx = i * polygon.Length / sampleSize;
-            Vector2 p1 = polygon[idx];
-            Vector2 p2 = polygon[(idx + 1) % polygon.Length];
+            Vector2 p1 = polygon[i];
+            Vector2 p2 = polygon[(i + 1) % polygon.Length];
 
             float distance = PointToLineSegmentDistance(point, p1, p2);
             if (distance < threshold)
@@ -923,6 +851,9 @@ public static class PolygonColliderMerger
         return false;
     }
 
+    /// <summary>
+    /// Ray casting algorithm to check if point is inside polygon.
+    /// </summary>
     private static bool IsPointInPolygon(Vector2 point, Vector2[] polygon)
     {
         bool inside = false;
@@ -941,6 +872,9 @@ public static class PolygonColliderMerger
         return inside;
     }
 
+    /// <summary>
+    /// Calculates the minimum distance from a point to a line segment.
+    /// </summary>
     private static float PointToLineSegmentDistance(Vector2 point, Vector2 lineStart, Vector2 lineEnd)
     {
         Vector2 line = lineEnd - lineStart;
@@ -955,6 +889,9 @@ public static class PolygonColliderMerger
         return Vector2.Distance(point, projection);
     }
 
+    /// <summary>
+    /// Checks if any edges of two polygons intersect.
+    /// </summary>
     private static bool PolygonsIntersect(Vector2[] poly1, Vector2[] poly2)
     {
         for (int i = 0; i < poly1.Length; i++)
@@ -975,14 +912,39 @@ public static class PolygonColliderMerger
         return false;
     }
 
-    private static Vector2 GetCentroid(List<Vector2> points)
+    /// <summary>
+    /// Checks if line segments intersect and returns intersection point.
+    /// </summary>
+    private static bool LineSegmentsIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, out Vector2 intersection)
     {
-        Vector2 sum = Vector2.zero;
-        foreach (Vector2 p in points)
-            sum += p;
-        return sum / points.Count;
+        intersection = Vector2.zero;
+
+        float d = (p2.x - p1.x) * (p4.y - p3.y) - (p2.y - p1.y) * (p4.x - p3.x);
+
+        // Parallel or coincident
+        if (Mathf.Abs(d) < EPSILON)
+            return false;
+
+        float t = ((p3.x - p1.x) * (p4.y - p3.y) - (p3.y - p1.y) * (p4.x - p3.x)) / d;
+        float u = ((p3.x - p1.x) * (p2.y - p1.y) - (p3.y - p1.y) * (p2.x - p1.x)) / d;
+
+        // Check if intersection is within both line segments
+        if (t >= 0 && t <= 1 && u >= 0 && u <= 1)
+        {
+            intersection = new Vector2(p1.x + t * (p2.x - p1.x), p1.y + t * (p2.y - p1.y));
+            return true;
+        }
+
+        return false;
     }
 
+    #endregion
+
+    #region Transform Utilities
+
+    /// <summary>
+    /// Transforms polygon points from local to world space.
+    /// </summary>
     private static Vector2[] TransformPoints(Vector2[] points, Transform transform, Vector2 offset)
     {
         Vector2[] transformed = new Vector2[points.Length];
@@ -994,6 +956,9 @@ public static class PolygonColliderMerger
         return transformed;
     }
 
+    /// <summary>
+    /// Applies merged paths to a polygon collider in local space.
+    /// </summary>
     private static void ApplyMergedPaths(PolygonCollider2D collider, List<Vector2[]> worldPaths)
     {
         collider.pathCount = worldPaths.Count;
@@ -1010,6 +975,9 @@ public static class PolygonColliderMerger
         }
     }
 
+    /// <summary>
+    /// Simplifies a polygon by removing collinear points.
+    /// </summary>
     public static Vector2[] SimplifyPolygon(Vector2[] polygon, float tolerance = EPSILON)
     {
         return RemoveCollinearPoints(polygon);

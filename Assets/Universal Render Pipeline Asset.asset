@@ -71,14 +71,14 @@ MonoBehaviour:
   m_SoftShadowQuality: 1
   m_AdditionalLightsCookieResolution: 2048
   m_AdditionalLightsCookieFormat: 3
-  m_UseSRPBatcher: 1
-  m_SupportsDynamicBatching: 1
+  m_UseSRPBatcher: 0
+  m_SupportsDynamicBatching: 0
   m_MixedLightingSupported: 0
   m_SupportsLightCookies: 0
   m_SupportsLightLayers: 0
   m_DebugLevel: 0
   m_StoreActionsOptimization: 0
-  m_UseAdaptivePerformance: 1
+  m_UseAdaptivePerformance: 0
   m_ColorGradingMode: 1
   m_ColorGradingLutSize: 65
   m_AllowPostProcessAlphaOutput: 0
