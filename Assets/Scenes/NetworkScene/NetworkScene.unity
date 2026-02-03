@@ -13290,6 +13290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243baf199fd19084b8d9539bbb6d4fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  hitmarkAsset: {fileID: 7378723969388511367, guid: 022725c5781f8644bbda6afaf2033327, type: 3}
   defaultButtonHoverColorSettings: {fileID: 11400000, guid: d0ce81a52739e914aa2857c9023ac8c1, type: 2}
   defaultButtonMaterial: {fileID: 2100000, guid: e15e3aff27289654298a6086f6e3e541, type: 2}
   hitmarkMaterial: {fileID: 2100000, guid: cd2908cfd919909478bd90c43dea0d9b, type: 2}

@@ -18,33 +18,6 @@ MonoBehaviour:
     launchParticle: {fileID: 4313180367996257349, guid: 6784c58aca5da3644917ab374eec1c9d, type: 3}
     bounceParticle: {fileID: 0}
     impactParticle: {fileID: 4313180367996257349, guid: 69d34a0ca2a5b48489453ceacfcccbd1, type: 3}
-    projectileAmmo: 6
-    reloadTime: 1.45
-    shootingInterval: 0.04
-    projectileSpeed: 35
-    projectileAcceleration: 0
-    lifeTime: 2
-    holdable: 0
-    burst: 0
-    burstSpread: 0
-    bounces: 0
-    fluctuation: 0
-    noGravity: 1
-    dieOnImpact: 1
-    damageOnImpact: 1
-    sticky: 0
-    aoe: 0
-    skipAoeOnTargetHit: 0
-    knockback: 7
-    speedLimit: 100
-    minSpeed: 0
-    aoeDamage: 0
-    baseDamage: 4
-    damageTimeScale: 0
-    recoil: 8
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 0}
-    timeToMorph: 0
     morphAnimation:
       serializedVersion: 2
       m_Curve:
@@ -69,14 +42,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    sync: 0
-    syncSpeed: 0
-    stickToSender: 0
-    melee: 0
-    oneTimeHit: 0
-    meleeRange: 0
-    swingDegrees: 0
-    meleeRotation: 0
     meleePosAnimation:
       serializedVersion: 2
       m_Curve: []
@@ -89,30 +54,69 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    flipFlop: 0
-    homing: 0
+    projectileSpawnEvents: []
+    weaponName: Revolver
+    targetMorph: {x: 0, y: 0, z: 0}
+    reloadTime: 1.45
+    shootingInterval: 0.04
+    projectileSpeed: 35
+    projectileAcceleration: 0
+    lifeTime: 2
+    burstSpread: 0
+    fluctuation: 0
+    aoe: 0
+    knockback: 7
+    speedLimit: 100
+    minSpeed: 0
+    aoeDamage: 0
+    baseDamage: 4
+    damageTimeScale: 0
+    recoil: 8
+    timeToMorph: 0
+    syncSpeed: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
     homingStrength: 0
     homingDistance: 0
     spinSpeed: 0
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 1
-    dontBlockProjectiles: 0
-    bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
-    alignDirection: 0
-    typeID: 20543
-    clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
     spawnOffsetPadding: -1.03
-    hover: 0
     hoverDistance: 0
     hoverStrength: 0
     hoverFloorRadius: 0
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
-    projectileSpawnEvents: []
-    weaponName: Revolver
+    morphTimeOnBounce: 0
+    projectileAmmo: 6
+    burst: 0
+    typeID: 20543
+    bounces: 0
+    holdable: 0
+    noGravity: 1
+    dieOnImpact: 1
+    damageOnImpact: 1
+    sticky: 0
+    skipAoeOnTargetHit: 0
+    enableMorph: 0
+    setMorphOnBounce: 0
+    sync: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    flipFlop: 0
+    homing: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 1
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    alignDirection: 0
+    clampMorph: 1
+    hover: 0
+    delistWeapon: 0
+    hitMarkSize: 1

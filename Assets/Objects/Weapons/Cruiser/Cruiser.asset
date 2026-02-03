@@ -101,3 +101,4 @@ MonoBehaviour:
     clampMorph: 1
     hover: 1
     delistWeapon: 0
+    hitMarkSize: 2

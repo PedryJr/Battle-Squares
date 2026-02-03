@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1888476509390542038}
   - component: {fileID: 7378723969388511367}
-  - component: {fileID: -8207663968585998623}
+  - component: {fileID: 1377112337195757521}
   m_Layer: 13
-  m_Name: HitMark
+  m_Name: HitMarkBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,8 +28,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.65, y: 1.65, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3.64, y: 3.64, z: 2.2060606}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -46,11 +46,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   supportObjectPooling: 1
-  variantID: 6346008941078625165
+  variantID: 1686442938254544532
   zPos: -4
   ownerId: 0
---- !u!212 &-8207663968585998623
+--- !u!212 &1377112337195757521
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -96,6 +97,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 0.72955966, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -105,5 +107,4 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0

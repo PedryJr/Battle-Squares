@@ -182,3 +182,4 @@ MonoBehaviour:
     clampMorph: 0
     hover: 0
     delistWeapon: 0
+    hitMarkSize: 0

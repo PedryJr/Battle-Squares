@@ -99,6 +99,7 @@ public class WeaponBuilderEditor : Editor
     SerializedProperty delistWeapon;
     SerializedProperty setMorphTimeOnBounce;
     SerializedProperty morphTimeOnBounce;
+    SerializedProperty hitMarkSize;
 
     void OnEnable()
     {
@@ -176,6 +177,7 @@ public class WeaponBuilderEditor : Editor
         delistWeapon = specsProp.FindPropertyRelative("delistWeapon");
         setMorphTimeOnBounce = specsProp.FindPropertyRelative("setMorphOnBounce");
         morphTimeOnBounce = specsProp.FindPropertyRelative("morphTimeOnBounce");
+        hitMarkSize = specsProp.FindPropertyRelative("hitMarkSize");
     }
 
     public override void OnInspectorGUI()
@@ -197,6 +199,7 @@ public class WeaponBuilderEditor : Editor
             EditorGUILayout.PropertyField(bounceParticle);
             EditorGUILayout.PropertyField(impactParticle);
             EditorGUILayout.PropertyField(lifeTime);
+            EditorGUILayout.PropertyField(hitMarkSize);
             EditorGUILayout.PropertyField(spawnOffsetPadding);
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();

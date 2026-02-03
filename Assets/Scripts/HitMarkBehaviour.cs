@@ -30,13 +30,9 @@ public sealed class HitMarkBehaviour : AutoPooledBehaviour
     private Color hitmarkSpawnColor;
     private Color hitMarkFadeColor;
 
-    private void Awake()
+    public void Initialize(PlayerBehaviour owner, float hitMarkSize)
     {
-        targetScale = transform.localScale;
-    }
-
-    public void Initialize(PlayerBehaviour owner)
-    {
+        targetScale = new Vector3(hitMarkSize, hitMarkSize, 1f);
         this.owner = owner;
         if (!gameObject.activeSelf) gameObject.SetActive(true);
 

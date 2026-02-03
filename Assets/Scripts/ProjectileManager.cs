@@ -287,6 +287,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         data.setMorphOnBounce = weapon.setMorphOnBounce;
         data.morphTimeOnBounce = weapon.morphTimeOnBounce;
         data.typeID = weapon.typeID;
+        data.hitMarkSize = weapon.hitMarkSize;
     }
 
 

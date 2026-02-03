@@ -1057,11 +1057,10 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         
         if (aoe) hitMarkPos = new Vector3(boom.transform.position.x, boom.transform.position.y, transform.position.z);
         else hitMarkPos = new Vector3(point.point.x, point.point.y, transform.position.z);
-
         float angle = math.degrees(math.atan2(point.normal.y, point.normal.x));
         
-        HitMarkBehaviour newHitMark = AutoPooledPool<HitMarkBehaviour>.Spawn(hitMark, hitMarkPos, Quaternion.Euler(0, 0, angle), toParent);
-        newHitMark.Initialize(owningPlayer);
+        HitMarkBehaviour newHitMark = AutoPooledPool<HitMarkBehaviour>.Spawn(AssetResources.GetHitmarkAsset, hitMarkPos, Quaternion.Euler(0, 0, angle), toParent);
+        newHitMark.Initialize(owningPlayer, data.hitMarkSize);
 
         StencilInfectorBehaviour stencilInfectorBehaviour;
         if (toParent.TryGetComponent(out stencilInfectorBehaviour)) newHitMark.AssignStencil(stencilInfectorBehaviour.GetStencil());
@@ -1322,4 +1321,5 @@ public struct ProjectileInitData
     public bool alignDirection;
     public bool clampMorph;
     public bool hover;
+    public float hitMarkSize;
 }

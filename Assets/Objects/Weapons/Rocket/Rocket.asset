@@ -18,47 +18,12 @@ MonoBehaviour:
     launchParticle: {fileID: 4313180367996257349, guid: 407e4aa50b4ac3246ae54abf626c8b81, type: 3}
     bounceParticle: {fileID: 0}
     impactParticle: {fileID: 4313180367996257349, guid: 72f1be016aee4eb469e98f6df7d9f0e4, type: 3}
-    projectileAmmo: 2
-    reloadTime: 1.5
-    shootingInterval: 0.04
-    projectileSpeed: 6.9
-    projectileAcceleration: 3
-    lifeTime: 4
-    holdable: 0
-    burst: 0
-    burstSpread: 0
-    bounces: 0
-    fluctuation: 0
-    noGravity: 1
-    dieOnImpact: 1
-    damageOnImpact: 1
-    sticky: 0
-    aoe: 4
-    skipAoeOnTargetHit: 1
-    knockback: 16.5
-    speedLimit: 65
-    minSpeed: 0
-    aoeDamage: 5
-    baseDamage: 10
-    damageTimeScale: 0
-    recoil: 7.6
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 0}
-    timeToMorph: 0
     morphAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    sync: 0
-    syncSpeed: 0
-    stickToSender: 0
-    melee: 0
-    oneTimeHit: 0
-    meleeRange: 0
-    swingDegrees: 0
-    meleeRotation: 0
     meleePosAnimation:
       serializedVersion: 2
       m_Curve: []
@@ -71,31 +36,69 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    flipFlop: 0
-    homing: 0
+    projectileSpawnEvents: []
+    weaponName: Rocket
+    targetMorph: {x: 0, y: 0, z: 0}
+    reloadTime: 1.5
+    shootingInterval: 0.04
+    projectileSpeed: 6.9
+    projectileAcceleration: 3
+    lifeTime: 4
+    burstSpread: 0
+    fluctuation: 0
+    aoe: 4
+    knockback: 16.5
+    speedLimit: 65
+    minSpeed: 0
+    aoeDamage: 5
+    baseDamage: 10
+    damageTimeScale: 0
+    recoil: 7.6
+    timeToMorph: 0
+    syncSpeed: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
     homingStrength: 0
     homingDistance: 0
     spinSpeed: 0
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 1
-    dontBlockProjectiles: 0
-    bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
-    alignDirection: 0
-    typeID: 32777
-    clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
     spawnOffsetPadding: 0
-    hover: 0
     hoverDistance: 0
     hoverStrength: 0
     hoverFloorRadius: 0
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
-    projectileSpawnEvents: []
-    weaponName: Rocket
+    morphTimeOnBounce: 0
+    projectileAmmo: 2
+    burst: 0
+    typeID: 32777
+    bounces: 0
+    holdable: 0
+    noGravity: 1
+    dieOnImpact: 1
+    damageOnImpact: 1
+    sticky: 0
+    skipAoeOnTargetHit: 1
+    enableMorph: 0
+    setMorphOnBounce: 0
+    sync: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    flipFlop: 0
+    homing: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 1
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    alignDirection: 0
+    clampMorph: 1
+    hover: 0
     delistWeapon: 0
+    hitMarkSize: 2.4
