@@ -6,14 +6,12 @@ public class DestroyedFlag
 {
     public bool IsDestroyed;
 }
-
 public static class AutoPooledPool<T> where T : AutoPooledBehaviour
 {
     struct AutoPooledTracker
     {
         public T behaviour;
         public DestroyedFlag destroyedFlag;
-
         public AutoPooledTracker(T behaviour)
         {
             this.behaviour = behaviour;
@@ -21,7 +19,6 @@ public static class AutoPooledPool<T> where T : AutoPooledBehaviour
             destroyedFlag.IsDestroyed = false;
         }
     }
-
     private static readonly Dictionary<ulong, Stack<AutoPooledTracker>> pools = new();
 
     public static T Spawn(
@@ -31,17 +28,14 @@ public static class AutoPooledPool<T> where T : AutoPooledBehaviour
         in Transform parent = null)
     {
         T behaviour = null;
-
         if (prefab.SupportsPooling)
         {
             ulong id = prefab.VariantID;
-
             if (!pools.TryGetValue(id, out var stack))
             {
                 stack = new Stack<AutoPooledTracker>();
                 pools[id] = stack;
             }
-
             while (stack.Count > 0)
             {
                 AutoPooledTracker tracker = stack.Pop();
@@ -52,7 +46,6 @@ public static class AutoPooledPool<T> where T : AutoPooledBehaviour
                     break;
                 }
             }
-
             if (behaviour == null)
             {
                 behaviour = UnityEngine.Object.Instantiate(prefab, position, rotation, parent);
@@ -64,7 +57,6 @@ public static class AutoPooledPool<T> where T : AutoPooledBehaviour
         behaviour.transform.position = position;
         behaviour.transform.rotation = rotation;
         if (parent != null) behaviour.transform.SetParent(parent, true);
-
         behaviour.OnSpawnedInternal();
         return behaviour;
     }
@@ -85,20 +77,22 @@ public static class AutoPooledPool<T> where T : AutoPooledBehaviour
 
 public abstract class AutoPooledBehaviour : MonoBehaviour
 {
-    [SerializeField] private bool supportObjectPooling = true;
+    [SerializeField] protected bool supportObjectPooling = true;
     [SerializeField] private ulong variantID = 0;
     private bool initialized = false;
     private DestroyedFlag destroyedFlag;
     public bool SupportsPooling => supportObjectPooling;
     public ulong VariantID => variantID;
     internal DestroyedFlag DestroyedFlag => destroyedFlag;
-
     private void OnDestroy()
     {
         if (SupportsPooling && destroyedFlag != null) destroyedFlag.IsDestroyed = true;
     }
-
-    protected virtual void OnValidate()
+    public virtual void OnValidate()
+    {
+        RefreshComp();
+    }
+    protected void RefreshComp()
     {
         if (!supportObjectPooling) return;
 
@@ -115,8 +109,8 @@ public abstract class AutoPooledBehaviour : MonoBehaviour
             ((ulong)buf[5] << 40) |
             ((ulong)buf[6] << 48) |
             ((ulong)buf[7] << 56);
-    }
 
+    }
     internal void InitializeForPooling(DestroyedFlag destroyedFlag)
     {
         if (initialized) return;
@@ -124,17 +118,13 @@ public abstract class AutoPooledBehaviour : MonoBehaviour
         gameObject.SetActive(false);
         this.destroyedFlag = destroyedFlag;
     }
-
-
     protected abstract void OnSpawned();
     protected abstract void OnReturnedToPool();
-
     public void OnSpawnedInternal()
     {
         if (!gameObject.activeSelf) gameObject.SetActive(true);
         OnSpawned();
     }
-
     public void OnReturnedToPoolInternal()
     {
         OnReturnedToPool();

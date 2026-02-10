@@ -30,4 +30,5 @@ EditorBuildSettings:
     com.unity.addressableassets: {fileID: 11400000, guid: 14d721dca69026a439c08484e1df2335, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: b7b47f3acca291845b09de5e59848083, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: caeeeb8e8f605dc42866145ecbfdef4a, type: 3}
+    com.unity.ml-agents.settings: {fileID: 11400000, guid: 796b492666c48ec42b80c01717a73c04, type: 2}
   m_UseUCBPForAssetBundles: 0

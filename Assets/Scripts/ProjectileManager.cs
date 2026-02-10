@@ -82,7 +82,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector2 correctedPositionToGround = position;
         Vector2 simulatedNozzlePosition = position + (direction * weapon.spawnOffsetPadding);
 
-        RaycastHit2D groundHit = Physics2D.Linecast(position, simulatedNozzlePosition, ProjectileBehaviour.ENVIRONTMENT_MASK);
+        RaycastHit2D groundHit = Physics2D.Linecast(position, simulatedNozzlePosition, PhysicsMasks.ENVIRONTMENT_MASK);
         if (groundHit.transform)
         {
             float padding = weapon.spawnOffsetPadding;
@@ -119,9 +119,8 @@ public sealed class ProjectileManager : NetworkBehaviour
     {
         Weapon weapon = GetRawWeaponByTypeID(typeID);
 
-
         Vector2 correctedPositionToGround = position;
-        RaycastHit2D groundHit = Physics2D.Linecast(shootingPlayer.transform.position, position, ProjectileBehaviour.ENVIRONTMENT_MASK);
+        RaycastHit2D groundHit = Physics2D.Linecast(shootingPlayer.transform.position, position, PhysicsMasks.ENVIRONTMENT_MASK);
         if (groundHit.transform)
         {
             float padding = weapon.spawnOffsetPadding;
@@ -352,7 +351,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector3 particlePosition = new Vector3(rawData.x, rawData.y, 0);
         Quaternion particleRotation = Quaternion.Euler(0, 0, rawData.z);
 
-        ParticleBehaviour newParticle = ParticlePool.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+        ParticleBehaviour newParticle = AutoPooledPool<ParticleBehaviour>.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
         PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ownerId);
 
         for (int i = 0; i < newParticle.ParticleSystems.Length; i++)
@@ -421,12 +420,12 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector3 particlePosition = new Vector3(rawData.x, rawData.y, 0);
         Quaternion particleRotation = Quaternion.Euler(0, 0, rawData.z);
 
-        ParticleBehaviour newParticle = ParticlePool.Spawn(GetBounceParticle(projectileType), particlePosition, particleRotation, null);
+        ParticleBehaviour newParticle = AutoPooledPool<ParticleBehaviour>.Spawn(GetBounceParticle(projectileType), particlePosition, particleRotation, null);
         PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ownerId);
 
         for (int i = 0; i < newParticle.ParticleSystems.Length; i++)
         {
-            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
+            shootingPlayer.PlayerColor.AssignMaterialToParticleRendererVariant2(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
         }
     }
 
@@ -508,56 +507,21 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     public void UpdateProjectile(ProjectileBehaviour instance)
     {
-
-        /*        Vector2 pos, vel;
-                float rot, ang;
-
-                pos = instance.rb.position;
-                vel = instance.rb.linearVelocity;
-                rot = instance.rb.rotation;
-                ang = instance.rb.angularVelocity;
-
-                byte[] compPos = MyExtentions.EncodePosition(pos.x + 64, pos.y + 64);
-                byte[] compVel = MyExtentions.EncodePosition(vel.x + 64, vel.y + 64);
-                byte[] compRot = MyExtentions.EncodeRotation(rot);
-                byte[] compRotVel = MyExtentions.EncodeFloat(ang);
-
-                byte[] data = new byte[14]
-                {
-                    compPos[0], compPos[1], compPos[2], compPos[3],
-                    compVel[0], compVel[1], compVel[2], compVel[3],
-                    compRot[0], compRot[1],
-                    compRotVel[0], compRotVel[1], compRotVel[2],
-                    (byte) NetworkManager.Singleton.LocalClientId
-                };*/
-
         byte[] data = MyExtentions.CompressRigidbody(instance.rb);
-
         NewUpdateProjectileRpc(data, instance.projectileID);
-
     }
 
     [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
     public void NewUpdateProjectileRpc(byte[] data, uint projectileId)
     {
-
         ProjectileBehaviour projectileToSync = GetProjectileByID(projectileId);
-
         if (!projectileToSync) return;
-
         MyExtentions.DecompressRigidbody(data, projectileToSync.rb, projectileToSync.data.syncSpeed);
-
     }
 
     public ProjectileBehaviour GetProjectileByID(uint projectileID)
     {
-        foreach (ProjectileBehaviour instance in projectiles)
-        {
-            if (instance.projectileID == projectileID)
-            {
-                return instance;
-            }
-        }
+        foreach (ProjectileBehaviour instance in projectiles) if (instance.projectileID == projectileID) return instance;
         return null;
     }
 

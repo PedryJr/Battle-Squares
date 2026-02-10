@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.SceneManagement;
@@ -20,12 +22,33 @@ public sealed partial class PlayerController : MonoBehaviour
     void UpdateDeviceList() => inputs.devices = internalAssignedDevices;
 
     private List<int> devicesInUse;
+    PlayerSynchronizer playerSynchronizer;
+    [SerializeField]
+    private bool isAI = false;
 
     public PlayerController SetTargetController(PlayerBehaviour playerBehaviour)
     {
+        
         this.playerBehaviour = playerBehaviour;
         controllerTarget = this.playerBehaviour.GetComponent<Rigidbody2D>();
         playerBehaviour.playerController = this;
+        zeroInput = false;
+        if (playerBehaviour.isAI)
+        {
+            isAI = true;
+
+            //Make sure we dont do anything with inputs, but leave avalible.
+            inputs.Disable();
+            inputs.Dispose();
+            inputs = new Inputs();
+            mlAgent = gameObject.GetComponent<PlayerMLAgent>();
+            mlAgent.playerController = this;
+            playerBehaviour.playerMLAgent = mlAgent; ;
+            mlAgent.enabled = true;
+            mlAgent.InitializeExtern();
+            return null;
+        }
+        Destroy(GetComponent<PlayerMLAgent>());
         return this;
     }
 
@@ -126,6 +149,7 @@ public sealed partial class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         DontDestroyOnLoad(this.gameObject);
 
         controllerManager = FindAnyObjectByType<PlayerControllerManager>();
@@ -326,8 +350,22 @@ public sealed partial class PlayerController
         shootSecondary = false;
     }
 
+    float aiUpdateTimer;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Update() => regs = uiRegs;
+    private void Update()
+    {
+        regs = uiRegs;
+        if (isAI)
+        {
+            aiUpdateTimer += Time.deltaTime * AI_UPDATE_RATE;
+            if(aiUpdateTimer > 1)
+            {
+                AIUpdate();
+            }
+        }
+
+    }
 
     void SetFinalInputDirection()
     {
@@ -445,4 +483,64 @@ public sealed partial class PlayerController
     {
         zeroInput = true;
     }
+}
+
+partial class PlayerController
+{
+    const float AI_UPDATE_RATE = 10f;
+
+    private PlayerMLAgent mlAgent;
+
+    void AIUpdate()
+    {
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void HandleUp(bool on)
+    {
+        upInputDirection = on ? Vector2.up : Vector2.zero;
+        SetFinalInputDirection();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void HandleDown(bool on)
+    {
+        downInputDirection = on ? Vector2.down : Vector2.zero;
+        SetFinalInputDirection();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void HandleLeft(bool on)
+    {
+        leftInputDirection = on ? Vector2.left : Vector2.zero;
+        SetFinalInputDirection();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void HandleRight(bool on)
+    {
+        rightInputDirection = on ? Vector2.right : Vector2.zero;
+        SetFinalInputDirection();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool OnJumpPerformed(bool on)
+    {
+        if (!on) return false;
+        if (playerBehaviour.hasJump)
+        {
+            inputJump = true;
+            playerBehaviour.hasJump = false;
+            SetFinalInputDirection();
+            return true;
+        }
+        SetFinalInputDirection();
+        return false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void OnPrimaryPerformed(bool on) => shootPrimary = on;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void OnSecondaryPerformed(bool on) => shootSecondary = on;
 }

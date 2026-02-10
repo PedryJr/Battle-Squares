@@ -178,7 +178,7 @@ MonoBehaviour:
   m_NormalMapDistance: 0
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
-  m_ShadowsEnabled: 1
+  m_ShadowsEnabled: 0
   m_ShadowIntensity: 1
   m_ShadowSoftness: 1
   m_ShadowSoftnessFalloffIntensity: 0.5
@@ -361,7 +361,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingOrder: 6
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1160,7 +1160,7 @@ MonoBehaviour:
   newDataAvalible: 0
   newColor: 1
   ready: 0
-  position: {x: 0, y: 0}
+  position: {x: 0, y: -2}
   rotation: 0
   nozzlePosition: {x: 0, y: 0}
   localNozzlePosition: {x: 0, y: 0}
@@ -1175,6 +1175,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   nozzleBehaviour: {fileID: 2067117489913102363}
   playerController: {fileID: 0}
+  playerMLAgent: {fileID: 0}
   pfp: {fileID: 0}
   chatBubbleBehaviour: {fileID: 0}
   playerSpawnEffectBehaviourRef: {fileID: -2567077957820087699, guid: bcfae4763fbea3f47bdf1d080e686df8, type: 3}
@@ -1215,9 +1216,10 @@ MonoBehaviour:
     Path: event:/PlayerSounds/PlayerStep
   spawnBuffer: 0
   newMods: 0
+  isAI: 0
   frameRate: 10
-  moveDirection: {x: 0, y: 0}
   jumpParticleRef: {fileID: 8567238288229006168, guid: 414f2ce96a088454aafac90bbb09133b, type: 3}
+  moveDirection: {x: 0, y: 0}
 --- !u!114 &2995831169349222189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1266,9 +1268,15 @@ MonoBehaviour:
     alpha: 1
   particleColor:
     colorCorrectionType: 0
-    hue: 0
-    saturation: 0.75
-    value: 0.75
+    hue: 0.32
+    saturation: 0.675
+    value: 0.761
+    alpha: 1
+  particleColorVariant2:
+    colorCorrectionType: 2
+    hue: 0.32
+    saturation: 0.74
+    value: 0.878
     alpha: 1
   chatBubbleColor:
     colorCorrectionType: 2

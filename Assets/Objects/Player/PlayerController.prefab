@@ -44,6 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae9c1901b646db0458f62f2439dfe37a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deadzoneRadius: 0.5
+  cornerBias: 0.3
+  isAI: 0
   playerBehaviour: {fileID: 0}
   upInputDirection: {x: 0, y: 0}
   downInputDirection: {x: 0, y: 0}
@@ -56,3 +59,4 @@ MonoBehaviour:
   inputJump: 0
   shootPrimary: 0
   shootSecondary: 0
+  zeroInput: 0

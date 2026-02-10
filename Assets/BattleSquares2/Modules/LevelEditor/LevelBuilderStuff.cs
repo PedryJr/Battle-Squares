@@ -1,6 +1,8 @@
+using NavMeshPlus.Components;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering.Universal;
 using static AnimationAnchor;
 using static ShapeMimicBehaviour;
@@ -12,6 +14,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
     [SerializeField] private Transform levelOutput;
 
     [Header("Prefabs")]
+    [SerializeField] private Transform boxObstacle;
     [SerializeField] private BuiltShapeBehaviour shapeRendererPrefab;
     [SerializeField] private GameObject shadowedColliderPrefab;
     [SerializeField] private Light2D lightPrefab;
@@ -35,8 +38,8 @@ public sealed class LevelBuilderStuff : MonoBehaviour
     private Transform animatedParent;
     private Transform lightsParent;
 
-    private readonly List<ShapeIsland> staticIslands = new List<ShapeIsland>();
-    private readonly Dictionary<int, AnimationGroup> animatedGroups = new Dictionary<int, AnimationGroup>();
+    private readonly List<ShapeIsland> staticIslands = new List<ShapeIsland>(128);
+    private readonly Dictionary<int, AnimationGroup> animatedGroups = new Dictionary<int, AnimationGroup>(32);
 
     private int currentStencilId = 1;
     public static float STENCIL_OFFSET = 0f;
@@ -46,6 +49,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         STENCIL_OFFSET = 0.1f;
         Initialize();
         BuildLevel();
+        FindAnyObjectByType<NavMeshBaker>().BakeArena();
     }
 
     private void OnDestroy()
@@ -342,6 +346,9 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
                 foreach (PolygonCollider2D island in islands)
                 {
+                    NavMeshModifier navMeshModifier = island.gameObject.GetComponent<NavMeshModifier>();
+                    if (navMeshModifier) Destroy(navMeshModifier);
+
                     var shadowController = island.gameObject.GetComponent<ShadowCaster2DController>();
                     if (shadowController != null)
                     {
@@ -439,8 +446,8 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         public Transform ColliderParent { get; set; }
         public int StencilId { get; set; }
 
-        private readonly List<BuiltShapeBehaviour> shapes = new List<BuiltShapeBehaviour>();
-        private readonly List<GameObject> colliderObjects = new List<GameObject>();
+        private readonly List<BuiltShapeBehaviour> shapes = new List<BuiltShapeBehaviour>(16);
+        private readonly List<GameObject> colliderObjects = new List<GameObject>(16);
 
         public void AddShape(BuiltShapeBehaviour shape)
         {
@@ -456,7 +463,55 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             polygonCollider.points = shape.GetShapePoints();
 
             colliderObjects.Add(colliderObj);
+
+            var ObstaclePiece = new GameObject($"ObstaclePiece_{shapes.Count}");
+            ObstaclePiece.transform.SetParent(ColliderParent);
+            ObstaclePiece.transform.position = colliderObj.transform.position;
+            ObstaclePiece.transform.rotation = Quaternion.Euler(0, 0, shape.shapeRotation);
+
+            var navMeshObstacle = ObstaclePiece.AddComponent<NavMeshObstacle>();
+            navMeshObstacle.carving = true;
+            navMeshObstacle.carveOnlyStationary = false;
+
+            // IMPORTANT: obstacle must be Box
+            navMeshObstacle.shape = NavMeshObstacleShape.Box;
+
+            // Use the polygon collider from earlier
+            ConfigureObstacleFromPolygon(polygonCollider, navMeshObstacle, shape.shapeRotation);
+
+            //Need to ensure position is 0 on the Z axis
+            ObstaclePiece.transform.SetParent(Root, true);
+            ObstaclePiece.transform.localPosition = new Vector3(ObstaclePiece.transform.localPosition.x, ObstaclePiece.transform.localPosition.y, 0f);
+
         }
+
+        private void ConfigureObstacleFromPolygon(
+    PolygonCollider2D polygon,
+    NavMeshObstacle obstacle,
+    float rotationZ)
+        {
+            Vector2[] points = polygon.points;
+
+            Quaternion rot = Quaternion.Euler(0f, 0f, -rotationZ);
+
+            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, 0f);
+            Vector3 max = new Vector3(float.MinValue, float.MinValue, 0f);
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                Vector3 rotated = rot * new Vector3(points[i].x, points[i].y, 0f);
+
+                min = Vector3.Min(min, rotated);
+                max = Vector3.Max(max, rotated);
+            }
+
+            Vector3 size = max - min;
+            Vector3 center = (min + max) * 0.5f;
+
+            obstacle.size = new Vector3(size.x, size.y, 1f);
+            obstacle.center = new Vector3(center.x, center.y, 0f);
+        }
+
 
         public PolygonCollider2D[] GetColliders()
         {

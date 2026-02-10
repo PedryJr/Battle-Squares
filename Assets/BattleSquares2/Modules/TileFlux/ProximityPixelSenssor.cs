@@ -24,8 +24,11 @@ public sealed class ProximityPixelSenssor : MonoBehaviour
     {
         anim = GetComponent<ProjectileForceAnimationBehaviour>();
         cachedTransform = transform;
-        proximityPixelSensor.FetchDataUpdate(ref gridSpaceSensor, ref gridSpaceColor, cachedTransform.position, cachedTransform.rotation.eulerAngles.z);
-        proximityPixelSensor.refreshAllActiveSensors += ProximityPixelSensor_refreshAllActiveSensors;
+        if (proximityPixelSensor)
+        {
+            proximityPixelSensor.FetchDataUpdate(ref gridSpaceSensor, ref gridSpaceColor, cachedTransform.position, cachedTransform.rotation.eulerAngles.z);
+            proximityPixelSensor.refreshAllActiveSensors += ProximityPixelSensor_refreshAllActiveSensors;
+        }
     }
 
     private void ProximityPixelSensor_refreshAllActiveSensors()
@@ -41,7 +44,7 @@ public sealed class ProximityPixelSenssor : MonoBehaviour
 
     private void OnDestroy()
     {
-        proximityPixelSensor.refreshAllActiveSensors -= ProximityPixelSensor_refreshAllActiveSensors;
+        if (proximityPixelSensor) proximityPixelSensor.refreshAllActiveSensors -= ProximityPixelSensor_refreshAllActiveSensors;
         if (gameObject.scene.name == "DontDestroyOnLoad") SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
     }
 

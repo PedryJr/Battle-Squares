@@ -27,6 +27,10 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     private bool isAnimated;
     private int shapeIndex;
 
+    public float shapeRotation;
+    public float shapeWidth;
+    public float shapeHeight;
+
     private const float OctagonCorner = 0.2071068f;
     private const float OctagonStraight = 0.5f;
 
@@ -137,6 +141,10 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         float length = param.y;
         float width = param.z;
         float scale = param.w;
+
+        shapeRotation = rotation;
+        shapeWidth = length;
+        shapeHeight = width;
 
         shapePoints = new Vector2[8];
 

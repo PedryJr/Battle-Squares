@@ -203,6 +203,7 @@ public class PlayerControllerManager : MonoBehaviour
 
     internal void SpawnController(PlayerController newController)
     {
+        if (!newController) return;
         // Register the new controller
         if (!playerControllers.Contains(newController))
         {

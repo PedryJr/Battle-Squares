@@ -12276,97 +12276,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1179425752}
   m_CullTransparentMesh: 1
---- !u!1 &1364909523
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1364909525}
-  - component: {fileID: 1364909524}
-  m_Layer: 0
-  m_Name: lmao
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!212 &1364909524
-SpriteRenderer:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364909523}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 5537b70c40c4fa14c98d62ed0b4dfd7e, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_Sprite: {fileID: 1483015926058420576, guid: 4c750b1ec477a444abbb1e9d38c98932, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
---- !u!4 &1364909525
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364909523}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1379969374
 GameObject:
   m_ObjectHideFlags: 0
@@ -12944,6 +12853,7 @@ GameObject:
   - component: {fileID: 7766882706945389872}
   - component: {fileID: 7766882706945389873}
   - component: {fileID: 7766882706945389874}
+  - component: {fileID: 7766882706945389875}
   m_Layer: 0
   m_Name: Synchronizer
   m_TagString: Sync
@@ -13088,9 +12998,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   inGame: 0
   scoreBoard: {fileID: 7960118414139934391, guid: 677884d92a334b44b8e6ee90e44ab35a, type: 3}
-  gameMode: 1
+  gameMode: 0
   startScore: 0
-  endScore: 10
+  endScore: 2147483647
 --- !u!114 &7766882706945389859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13314,6 +13224,8 @@ MonoBehaviour:
   playerIDIncrementor: 0
   skinFetchesPerSecond: 25
   controllerPrefab: {fileID: 2080445172016167828, guid: 1729d05473a2ade4e836740df6121660, type: 3}
+  AIControllerPrefab: {fileID: 2080445172016167828, guid: b63b1badffb1c5f4286b7eac7de0ae75, type: 3}
+  AmountOfAIToTrain: 2
 --- !u!114 &7766882706945389870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13386,6 +13298,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   scenesThatListenForDevices:
   - LobbyScene
+--- !u!114 &7766882706945389875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257987210301819839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7336af3c589b2f44e9cd97c1c473b32d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MLTrainingManager
+  spawnAreaSize: {x: 50, y: 50}
+  spawnAreaCenter: {x: 0, y: 0}
+  minSpawnDistance: 5
+  spawnPattern: 0
+  targetPrefab: {fileID: 0}
+  spawnTargetsForEachAgent: 0
+  targetDistanceFromAgent: 10
+  synchronizeEpisodes: 0
+  episodeDuration: 1
+  autoReset: 1
+  useFixedDecisionInterval: 1
+  decisionRequestsPerSecond: 10
+  showDebugInfo: 1
+  showGizmos: 1
+  debugFlags: -1
+  spawnInterval: 0.25
+  numberOfAgents: 4
+  isTraining: 1
+  weaponSelections:
+  - primary: {fileID: 11400000, guid: 4b5fa32268eef6a44883c5c794105a97, type: 2}
+    secondary: {fileID: 11400000, guid: 3800a94b811231645a0b3142764d594d, type: 2}
+  - primary: {fileID: 11400000, guid: 3800a94b811231645a0b3142764d594d, type: 2}
+    secondary: {fileID: 11400000, guid: 4b5fa32268eef6a44883c5c794105a97, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -13401,4 +13348,3 @@ SceneRoots:
   - {fileID: 58633463}
   - {fileID: 1072857243}
   - {fileID: 1027558394}
-  - {fileID: 1364909525}

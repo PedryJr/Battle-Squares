@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
+using static PlayerMLAgent;
 
 [Preserve]
 public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
@@ -95,15 +96,15 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public bool newColor = true;
     public bool ready = false;
 
-    public Vector2 position;
-    public float rotation;
+    public Vector2 position { get; private set; }
+    public float rotation { get; private set; }
+    public Vector2 velocity { get; private set; }
+    public float angularVelocity { get; private set; }
 
     public Vector2 nozzlePosition;
     public Vector2 localNozzlePosition;
     public float nozzleRotation;
 
-    public Vector2 velocity;
-    public float angularVelocity;
 
     [SerializeField]
     private float hp = 20f;
@@ -120,6 +121,11 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             float before = hp;
             float after = value;
             float delta = after - before;
+
+            if(isLocalPlayer && playerMLAgent != null && delta < 0)
+            {
+                if (playerMLAgent.isTraining) playerMLAgent.OnHpLoss(delta);
+            }
 
             hp = value;
         }
@@ -144,12 +150,14 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Transform nozzleTransform;
     public NozzleBehaviour nozzleBehaviour;
     public PlayerController playerController;
+    public PlayerMLAgent playerMLAgent;
     PlayerSynchronizer playerSynchronizer;
     SpriteRenderer spriteRenderer;
     public Sprite pfp;
     ScoreManager scoreManager;
     MapSynchronizer mapSynchronizer;
     public ChatBubbleBehaviour chatBubbleBehaviour = null;
+    ProjectileManager projectileManager = null;
 
     [SerializeField]
     PlayerSpawnEffectBehaviour playerSpawnEffectBehaviourRef;
@@ -234,8 +242,9 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public bool spawnBuffer = false;
     Color frozenColor = Color.white;
     public bool newMods;
+    public bool isAI;
 
-    private void Awake()
+    void Awake()
     {
         lastRBPosition = new Vector2();
         playerTransform = transform;
@@ -243,6 +252,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         scoreManager = FindAnyObjectByType<ScoreManager>();
         hunter = FindAnyObjectByType<Hunter>();
         mapSynchronizer = FindAnyObjectByType<MapSynchronizer>();
+        projectileManager = FindAnyObjectByType<ProjectileManager>();
         pfp = null;
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
@@ -256,7 +266,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         ApplyColors();
     }
-    private void Start()
+    void Start()
     {
         PlayerColor.SetColorHue(UnityEngine.Random.Range(0f, 1f));
         PlayerColor.AssignMaterialToPlayer(spriteRenderer);
@@ -308,7 +318,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         }
 
     }
-    private void Update()
+    void Update()
     {
 
         if (!steamDataApplied && steamDataAvalible) ApplySteamData();
@@ -361,7 +371,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     }
 
-    private void LateUpdate()
+    void LateUpdate()
     {
 
         if (isSpawning)
@@ -397,7 +407,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     }
 
-    private void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
+    void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
     {
         if (this)
         {
@@ -473,7 +483,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         void SetStats()
         {
 
-            if (isLocalPlayer) mapSynchronizer.SpawnDogTag((byte) gameID, rb.position, rb.rotation, rb.linearVelocity / 2);
+            //if (isLocalPlayer) mapSynchronizer.SpawnDogTag((byte) gameID, rb.position, rb.rotation, rb.linearVelocity / 2);
             healthPoints = maxHealthPoints;
             climax = 1;
             isDead = true;
@@ -502,6 +512,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
                 rb.rotation = 0;
                 deathTimer = 0;
                 isSpawning = false;
+                if (playerMLAgent) playerMLAgent.OnPlayerDeath();
             }
         }
         //Always Applied States
@@ -516,6 +527,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             if (nozzleBehaviour.spriteRenderer.enabled) nozzleBehaviour.spriteRenderer.enabled = false;
             if (col.enabled) col.enabled = false;
             if (rb.simulated) rb.simulated = false;
+            if (playerMLAgent) if (playerMLAgent.enabled) playerMLAgent.enabled = false;
         }
         else
         {
@@ -526,6 +538,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             if (!nozzleBehaviour.spriteRenderer.enabled) nozzleBehaviour.spriteRenderer.enabled = true;
             if (!col.enabled) col.enabled = true;
             if (!rb.simulated)  rb.simulated = true;
+            if (playerMLAgent) if (!playerMLAgent.enabled) playerMLAgent.enabled = true;
         }
 
         lastDeathState = isDead;
@@ -568,6 +581,31 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         rb.rotation = 0;
         playerTransform.position = spawnPosition;
     }
+
+    [ContextMenu("Verify WeaponStats")]
+    public void VRF()
+    {
+        WeaponStats weapon = GetWeaponStats(true);
+        Debug.Log($"{weapon.projectileSpeed} | {weapon.projectileAcceleration} | {weapon.isMelee} | {weapon.projectileGravity} | {weapon.maxAmmo} | {weapon.remainingAmmo} | ");
+    }
+
+    public WeaponStats GetWeaponStats(bool primary)
+    {
+        WeaponStats weaponStats = new WeaponStats();
+        WeaponBuilder.Weapon weapon;
+
+        if (primary) weapon = projectileManager.GetWeaponBuilderByTypeID(nozzleBehaviour.primary).weapon;
+        else weapon = projectileManager.GetWeaponBuilderByTypeID(nozzleBehaviour.secondary).weapon;
+
+        weaponStats.projectileSpeed = weapon.projectileSpeed;
+        weaponStats.projectileAcceleration = weapon.projectileAcceleration;
+        weaponStats.isMelee = weapon.melee;
+        weaponStats.projectileGravity = weapon.projectile.rb.gravityScale * (weapon.noGravity ? 0f : 1f);
+        weaponStats.maxAmmo = weapon.projectileAmmo;
+        weaponStats.remainingAmmo = nozzleBehaviour.primaryAmmo - nozzleBehaviour.primaryShots;
+        return weaponStats;
+    }
+
 }
 
 //Identity shit
@@ -658,7 +696,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         steamDataApplied = true;
     }
 
-    public async void GetImageData(SteamId steamId)
+    async void GetImageData(SteamId steamId)
     {
         Steamworks.Data.Image? image = await SteamFriends.GetLargeAvatarAsync(steamId);
 
@@ -684,111 +722,34 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 {
 
     float animationTimer;
+    //Skin animation framerate
     public float frameRate = 10;
     int animationIndex;
     int lastAnimationIndex;
-
-    float acceleration;
-    float maxSpeed;
-
-    Vector2 velParam;
-    float xLimiter;
-    float yLimiter;
-    Vector2 forceLimiter;
-    Vector2 jumpVelocity;
-    Vector2 jumpDirection;
-    float jumpLimiter;
-
-    const AimDirection startDirection = AimDirection.North;
-
-    private AimDirection internalAimDirectionEnum = startDirection;
-    private Vector2 cachedDirection = AimDirectionToVector(startDirection);
-    Vector3 nozzlePos = AimDirectionToVector(startDirection);
-
-    public AimDirection aimDirectionEnum
-    {
-        get { return internalAimDirectionEnum; } 
-        set 
-        { 
-            internalAimDirectionEnum = value;
-            cachedDirection = AimDirectionToVector(aimDirectionEnum);
-        }
-    }
-
-    public Vector2 aimDirection
-    {
-        get => cachedDirection;
-        set
-        {
-            AimDirection newDir = VectorToAimDirection(value);
-            if (newDir == aimDirectionEnum) return; 
-            aimDirectionEnum = newDir; 
-            if (isLocalPlayer) playerSynchronizer.UpdateNozzle(GetGameID());
-        }
-    }
-
-    public Vector2 moveDirection;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static Vector2 AimDirectionToVector(AimDirection dir)
-    {
-        return dir switch
-        {
-            AimDirection.East => Vector2.right,
-            AimDirection.NorthEast => new Vector2(1, 1).normalized * 1.145f,
-            AimDirection.North => Vector2.up,
-            AimDirection.NorthWest => new Vector2(-1, 1).normalized * 1.145f,
-            AimDirection.West => Vector2.left,
-            AimDirection.SouthWest => new Vector2(-1, -1).normalized * 1.145f,
-            AimDirection.South => Vector2.down,
-            AimDirection.SouthEast => new Vector2(1, -1).normalized * 1.145f,
-            _ => Vector2.zero
-        };
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private AimDirection VectorToAimDirection(Vector2 v)
-    {
-        if (Mathf.Approximately(v.magnitude, 0)) return aimDirectionEnum;
-        float angle = Mathf.Atan2(v.y, v.x);
-        if (angle < 0) angle += Mathf.PI * 2f;
-        int index = Mathf.RoundToInt(angle / (Mathf.PI / 4f)) % 8;
-        return (AimDirection)index;
-    }
-
-
-    public enum AimDirection : byte
-    {
-        East = 0,
-        NorthEast = 1,
-        North = 2,
-        NorthWest = 3,
-        West = 4, 
-        SouthWest = 5,
-        South = 6,
-        SouthEast = 7
-    }
 
 
     [SerializeField]
     public ParticleBehaviour jumpParticleRef;
 
-    private void FixedUpdate()
-    { 
+    void FixedUpdate()
+    {
+        
+        position = rb.position;
+        rotation = rb.rotation;
+        angularVelocity = rb.angularVelocity;
+        velocity = rb.linearVelocity;
+
         flipFlop = !flipFlop;
         if (flipFlop) return; 
         if (controlled)
         {
             ApplyTargetMovement();
             ReAdjustMovementValues();
-            if (!Mathf.Approximately(lastRBPosition.sqrMagnitude, rb.position.sqrMagnitude))
-            {
-                playerSynchronizer.UpdateRigidBody(GetGameID());
-                lastRBPosition = rb.position;
-            }
+            if (!Mathf.Approximately(lastRBPosition.sqrMagnitude, rb.position.sqrMagnitude)) UpdateNetworkRB();
         } 
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Environment") || collision.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -822,10 +783,79 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         }
     }
 
+    const AimDirection startDirection = AimDirection.North;
+    AimDirection internalAimDirectionEnum = startDirection;
+    Vector2 cachedDirection = AimDirectionToVector(startDirection);
+    Vector3 nozzlePos = AimDirectionToVector(startDirection);
+
+    public AimDirection aimDirectionEnum
+    {
+        get { return internalAimDirectionEnum; }
+        set
+        {
+            internalAimDirectionEnum = value;
+            cachedDirection = AimDirectionToVector(aimDirectionEnum);
+            UpdateNetworkRB();
+        }
+    }
+
+    public Vector2 aimDirection
+    {
+        get => cachedDirection;
+        set
+        {
+            AimDirection newDir = VectorToAimDirection(value);
+            if (newDir == aimDirectionEnum) return;
+            aimDirectionEnum = newDir;
+            if (isLocalPlayer) playerSynchronizer.UpdateNozzle(GetGameID());
+        }
+    }
+
+    public Vector2 moveDirection;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static Vector2 AimDirectionToVector(AimDirection dir)
+    {
+        return dir switch
+        {
+            AimDirection.East => Vector2.right,
+            AimDirection.NorthEast => new Vector2(1, 1).normalized * 1.145f,
+            AimDirection.North => Vector2.up,
+            AimDirection.NorthWest => new Vector2(-1, 1).normalized * 1.145f,
+            AimDirection.West => Vector2.left,
+            AimDirection.SouthWest => new Vector2(-1, -1).normalized * 1.145f,
+            AimDirection.South => Vector2.down,
+            AimDirection.SouthEast => new Vector2(1, -1).normalized * 1.145f,
+            _ => Vector2.zero
+        };
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    AimDirection VectorToAimDirection(Vector2 v)
+    {
+        if (Mathf.Approximately(v.magnitude, 0)) return aimDirectionEnum;
+        float angle = Mathf.Atan2(v.y, v.x);
+        if (angle < 0) angle += Mathf.PI * 2f;
+        int index = Mathf.RoundToInt(angle / (Mathf.PI / 4f)) % 8;
+        return (AimDirection)index;
+    }
+
+
+    public enum AimDirection : byte
+    {
+        East = 0,
+        NorthEast = 1,
+        North = 2,
+        NorthWest = 3,
+        West = 4,
+        SouthWest = 5,
+        South = 6,
+        SouthEast = 7
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void PlayNozzleRecoilAnimation() => nozzlePos = Vector3.LerpUnclamped(nozzlePos, Vector3.zero, 1.2f);
 
-    private void AnimateNozzleToAimDirection()
+    void AnimateNozzleToAimDirection()
     {
         float speed = 20f;
 
@@ -844,15 +874,24 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     }
 
 
+    //Used by the physically based 2D controller.
+    float acceleration;
+    public float maxSpeed { get; private set; }
+    Vector2 velParam;
+    float xLimiter;
+    float yLimiter;
+    Vector2 forceLimiter;
+    Vector2 jumpVelocity;
+    Vector2 jumpDirection;
+    float jumpLimiter;
     void SetMovementParameters(bool newMod)
     {
 
-        if (newMod)
-        {
-            acceleration = 130f * Mods.at[8];
-            maxSpeed = 23.5f * Mods.PlayerSpeed;
-            newMods = false;
-        }
+        //Advanced homebrew formula for 2D physically based controller.
+
+        acceleration = 130f * Mods.at[8];
+        maxSpeed = 23.5f * Mods.PlayerSpeed;
+        newMods = false;
 
         movementDirection = Vector2.Lerp(movementDirection, moveDirection, math.clamp(Time.deltaTime * 100, 0, 1));
 
@@ -871,10 +910,9 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             if (calculatedVelocity.y < 10f) calculatedVelocity.y = 10f;
             rb.linearVelocity = calculatedVelocity;
             Vector2 normalizedDirection = rb.linearVelocity.normalized;
-            playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
+            //playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID()); Disable jump particles during training for performance.
             playerController.inputJump = false;
-            //Cheat shoot an update so jump is more responsive
-            playerSynchronizer.UpdateRigidBody(GetGameID());
+            UpdateNetworkRB(); //We know body will move alot from this, send an update in advance instead of waiting for next step.
         }
     }
 
@@ -897,7 +935,6 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     void ApplyPlayerAnimation()
     {
-
         if (animationTimer > 0) animationTimer -= Time.deltaTime * (frameRate / nozzleFrames.Length);
         if (animationTimer < 0) animationTimer = 0;
         if (animationTimer == 0) animationIndex = 0;
@@ -909,6 +946,13 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             spriteRenderer.sprite = bodyFrames[animationIndex];
             lastAnimationIndex = animationIndex;
         }
+    }
+
+    void UpdateNetworkRB()
+    {
+        if (!isLocalPlayer) return; //Local players shall NOT  be able to use this function.
+        playerSynchronizer.UpdateRigidBody(GetGameID());
+        lastRBPosition = rb.position;
     }
 }
 //Id shit

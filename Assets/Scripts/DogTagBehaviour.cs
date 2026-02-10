@@ -138,7 +138,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
             Vector3 position = player.rb.position;
             position.z = transform.position.z;
 
-            ParticleBehaviour newParticle = ParticlePool.Spawn(collectParticles, position, transform.rotation, null);
+            ParticleBehaviour newParticle = AutoPooledPool<ParticleBehaviour>.Spawn(collectParticles, position, transform.rotation, null);
             ParticleSystem[] particleSystems = newParticle.ParticleSystems;
             ParticleSystemRenderer[] particleSystemRenderers = newParticle.ParticleSystemRenderers;
 

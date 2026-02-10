@@ -12,11 +12,17 @@ using static PlayerSynchronizer;
 using static UnityEngine.ParticleSystem;
 using Color = UnityEngine.Color;
 
+public static class PhysicsMasks
+{
+    public const Int32 ENVIRONTMENT_MASK = 0b00000000000000000000001000000000;
+    public const Int32 PLAYER_MASK = 0b00000000000000000000000001000000;
+    public const Int32 LOCAL_PROJECTILE_MASK = 0b00000000000000000000000010000000;
+    public const Int32 REMOTE_PROJECTILE_MASK = 0b00000000000000000000000100000000;
+    public const Int32 PROJECTILE_MASK = 0b00000000000000000000000100000000;
+}
+
 public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 {
-
-    public const Int32 ENVIRONTMENT_MASK = 0b00000000000000000000001000000000;
-
     public float initDamage;
 
     [SerializeField] Transform boom;
@@ -76,9 +82,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
     bool stuck;
     GameObject stuckTo;
-
-    [SerializeField]
-    public HitMarkBehaviour hitMark;
 
     [SerializeField]
     [HideInInspector]
@@ -412,7 +415,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
                 while (externalTrailSpawnTimer > externalTrailSpawnRate)
                 {
-                    ParticleBehaviour externalTrail = ParticlePool.Spawn(externalTrailRef, transform.position, transform.rotation, null);
+                    ParticleBehaviour externalTrail = AutoPooledPool<ParticleBehaviour>.Spawn(externalTrailRef, transform.position, transform.rotation, null);
                     int pLength = externalTrail.ParticleSystems.Length;
                     for (int i = 0; i < pLength; i++) owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(externalTrail.ParticleSystemRenderers[i], externalTrail.ParticleSystems[i]);
                     //if (externalTrail) externalTrail.Play(owningPlayer.PlayerColor.ParticleColor, owningPlayer.id, owningPlayer);
@@ -651,7 +654,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                 foreach (PlayerData player in projectileManager.playerSynchronizer.playerIdentities)
                 {
                     if (Vector2.Distance(rb.position, player.square.rb.position) > data.aoe) continue;
-                    if (Physics2D.Linecast(rb.position, player.square.rb.position, ENVIRONTMENT_MASK).collider) continue;
+                    if (Physics2D.Linecast(rb.position, player.square.rb.position, PhysicsMasks.ENVIRONTMENT_MASK).collider) continue;
                     if (playerHit && skipAoeOnHit && player.square == playerHit) continue;
 
                     Vector2 direction = (player.square.rb.position - rb.position).normalized;
@@ -1026,11 +1029,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
             RaycastHit2D point = GetClosestEnvironmentPoint(boom.position);
             float angle = math.degrees(math.atan2(-point.normal.y, -point.normal.x));
 
-            ParticleBehaviour impactParticles = ParticlePool.Spawn(data.impactParticle, boom.transform.position, Quaternion.Euler(0, 0, angle), null);
+            ParticleBehaviour impactParticles = AutoPooledPool<ParticleBehaviour>.Spawn(data.impactParticle, boom.transform.position, Quaternion.Euler(0, 0, angle), null);
 
             for (int i = 0; i < impactParticles.ParticleSystems.Length; i++)
             {
-                owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(impactParticles.ParticleSystemRenderers[i], impactParticles.ParticleSystems[i]);
+                owningPlayer.PlayerColor.AssignMaterialToParticleRendererVariant2(impactParticles.ParticleSystemRenderers[i], impactParticles.ParticleSystems[i]);
             }
 
             SpawnHitMark(aoe);
@@ -1046,7 +1049,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
     {
 
         if (!owningPlayer) return;
-        if (!hitMark) return;
         RaycastHit2D point;
         Transform toParent = null;
         if (boom) point = GetClosestEnvironmentPoint(boom.position, out toParent);
@@ -1099,7 +1101,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     RaycastHit2D GetClosestEnvironmentPointDown(Vector2 origin, float maxDistance = 100f, float floorRadius = 0.5f)
     {
-        return Physics2D.CircleCast(origin, floorRadius, new Vector2(0f, -1f), maxDistance, ENVIRONTMENT_MASK);
+        return Physics2D.CircleCast(origin, floorRadius, new Vector2(0f, -1f), maxDistance, PhysicsMasks.ENVIRONTMENT_MASK);
     }
 
     RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, float maxDistance = 100f)
@@ -1112,7 +1114,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
         for (int i = 0; i < DIRS_COUNT; i++)
         {
-            int hitCount = Physics2D.RaycastNonAlloc(origin, DIRS_8[i], hitBuffer, maxDistance, ENVIRONTMENT_MASK);
+            int hitCount = Physics2D.RaycastNonAlloc(origin, DIRS_8[i], hitBuffer, maxDistance, PhysicsMasks.ENVIRONTMENT_MASK);
             if (hitCount <= 0) continue;
             float dist = hitBuffer[0].distance;
             if (dist >= shortestDistance) continue;
@@ -1135,7 +1137,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
         for (int i = 0; i < DIRS_COUNT; i++)
         {
-            int hitCount = Physics2D.RaycastNonAlloc(origin, DIRS_8[i], hitBuffer, maxDistance, ENVIRONTMENT_MASK);
+            int hitCount = Physics2D.RaycastNonAlloc(origin, DIRS_8[i], hitBuffer, maxDistance, PhysicsMasks.ENVIRONTMENT_MASK);
             if (hitCount <= 0) continue;
             float dist = hitBuffer[0].distance;
             if (dist >= shortestDistance) continue;
@@ -1161,17 +1163,20 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
             eventInstance.release();
         }
 
-        ParticleBehaviour impactParticles = ParticlePool.Spawn(data.impactParticle, boom.transform.position, transform.rotation, null);
+        ParticleBehaviour impactParticles = AutoPooledPool<ParticleBehaviour>.Spawn(data.impactParticle, boom.transform.position, transform.rotation, null);
 
         for (int i = 0; i < impactParticles.ParticleSystems.Length; i++)
         {
-            owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(impactParticles.ParticleSystemRenderers[i], impactParticles.ParticleSystems[i]);
+            owningPlayer.PlayerColor.AssignMaterialToParticleRendererVariant2(impactParticles.ParticleSystemRenderers[i], impactParticles.ParticleSystems[i]);
         }
     }
 
 
     private void OnDestroy()
     {
+
+        if (playerHit) AIHitReward(true);
+        else AIHitReward(false);
 
         OnDestroyed?.Invoke(this);
 
@@ -1191,6 +1196,12 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                 aliveInstance.release();
             } 
         }
+    }
+
+    public void AIHitReward(bool hitPlayer)
+    {
+        if (!owningPlayer.isAI || !owningPlayer.isLocalPlayer) return;
+        owningPlayer.playerMLAgent.OnCombatHit(hitPlayer);
     }
 
     public void SetPosition(System.Numerics.Vector2 position)
