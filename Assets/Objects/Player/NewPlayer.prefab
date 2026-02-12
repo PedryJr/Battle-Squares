@@ -1160,13 +1160,9 @@ MonoBehaviour:
   newDataAvalible: 0
   newColor: 1
   ready: 0
-  position: {x: 0, y: -2}
-  rotation: 0
   nozzlePosition: {x: 0, y: 0}
   localNozzlePosition: {x: 0, y: 0}
   nozzleRotation: 0
-  velocity: {x: 0, y: 0}
-  angularVelocity: 0
   hp: 20
   maxHealthPoints: 20
   hpBarScale: {x: 0, y: 0, z: 0}

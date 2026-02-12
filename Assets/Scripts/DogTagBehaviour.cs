@@ -55,7 +55,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
 
     private void Update()
     {
-
+        if (isCollected) return;
         target = Vector2.zero;
 
         foreach (PlayerData pData in playerSynchronizer.playerIdentities)
@@ -63,21 +63,19 @@ public sealed class DogTagBehaviour : MonoBehaviour
             PlayerBehaviour player = pData.square;
             if (!player) continue;
             if (player.isDead) continue;
+            if (!player.isLocalPlayer) continue;
             Vector2 toTarget = player.rb.position - rb.position;
             if (toTarget.magnitude < 6f) target += toTarget;
 
-            if(player.GetGameID() == owningPlayer.GetGameID())
+            if(player.GetGameID() == owningPlayer.GetGameID()) UpdateSync();
+
+            if (toTarget.magnitude < 0.6f && !isCollected)
             {
-                if(player.isLocalPlayer) UpdateSync();
-                if (toTarget.magnitude < 0.6f && !isCollected)
-                {
-                    mapSynchronizer.CollectDogTag(dogTagId, (byte) player.GetGameID());
-                    isCollected = true;
-                }
+                mapSynchronizer.CollectDogTag(dogTagId, (byte)player.GetGameID());
+                isCollected = true;
+                return;
             }
-
         }
-
     }
 
     private void LateUpdate()

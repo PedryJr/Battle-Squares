@@ -11,7 +11,7 @@ public sealed class HitMarkBehaviour : AutoPooledBehaviour
         private const float FadeOutDuration = 0.15f;*/
 
     private const float FadeInDuration = 0.1f;
-    private const float StayDuration = 0.1f;
+    private const float StayDuration = 15f;
     private const float FadeOutDuration = 0.1f;
 
     public float zPos;
@@ -94,7 +94,7 @@ public sealed class HitMarkBehaviour : AutoPooledBehaviour
                 if (stateTimer >= FadeInDuration)
                 {
                     currentState = FadeState.Stay;
-                    //SpawnStayParticles(); disabled for training performance
+                    SpawnStayParticles();
                     stateTimer = 0f;
                     transform.localScale = targetScale;
                 }

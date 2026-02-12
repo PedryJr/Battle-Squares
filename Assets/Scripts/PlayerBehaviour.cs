@@ -483,7 +483,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         void SetStats()
         {
 
-            //if (isLocalPlayer) mapSynchronizer.SpawnDogTag((byte) gameID, rb.position, rb.rotation, rb.linearVelocity / 2);
+            if (isLocalPlayer) mapSynchronizer.SpawnDogTag(GetGameID(), rb.position, rb.rotation, rb.linearVelocity / 2);
             healthPoints = maxHealthPoints;
             climax = 1;
             isDead = true;
@@ -910,7 +910,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             if (calculatedVelocity.y < 10f) calculatedVelocity.y = 10f;
             rb.linearVelocity = calculatedVelocity;
             Vector2 normalizedDirection = rb.linearVelocity.normalized;
-            //playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID()); Disable jump particles during training for performance.
+            playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
             playerController.inputJump = false;
             UpdateNetworkRB(); //We know body will move alot from this, send an update in advance instead of waiting for next step.
         }

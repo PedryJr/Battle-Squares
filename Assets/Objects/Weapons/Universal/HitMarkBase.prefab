@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   supportObjectPooling: 1
-  variantID: 13788473042864762334
+  variantID: 5466896276457087937
   zPos: -4
   ownerId: 0
   particleBehaviour: {fileID: 5178203979086029436, guid: c75adc1b555b96241acea310fa92ed41, type: 3}

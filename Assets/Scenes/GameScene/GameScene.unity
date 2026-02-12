@@ -549,7 +549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   uiTimer: {fileID: 150681458}
-  matchDurationM: 500
+  matchDurationM: 3
   matchDurationS: 0
   tickAnimation:
     serializedVersion: 2

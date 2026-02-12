@@ -295,6 +295,7 @@ public class PlayerControllerManager : MonoBehaviour
 
         // Sort controllers by their registration order (assuming first in list is player 1)
         var sortedControllers = new List<PlayerController>(playerControllers);
+        sortedControllers.Reverse();
 
         // Get gamepads sorted by connection order (most recent first)
         var gamepads = availableDevices
@@ -329,8 +330,9 @@ public class PlayerControllerManager : MonoBehaviour
 
         // Assign remaining players to gamepads
         int gamepadIndex = 0;
-        for (int i = 1; i < sortedControllers.Count && gamepadIndex < gamepads.Count; i++)
+        for (int i = 1; gamepadIndex < gamepads.Count; i++)
         {
+            if (i >= sortedControllers.Count) i = 0;
             PlayerController player = sortedControllers[i];
             InputDevice gamepad = gamepads[gamepadIndex];
 
