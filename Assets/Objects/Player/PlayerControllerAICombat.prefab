@@ -87,7 +87,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 5022602860645237092, guid: d60bb747ff9dba04688022162c7b66b0, type: 3}
   m_InferenceDevice: 1
-  m_BehaviorType: 0
+  m_BehaviorType: 2
   m_BehaviorName: PlayerMLAgent
   TeamId: 0
   m_UseChildSensors: 0

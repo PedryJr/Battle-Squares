@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.MLAgents;
 using Unity.MLAgents.Policies;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static PlayerMLAgent;
 
 /// <summary>
@@ -239,6 +240,12 @@ public class MLTrainingManager : MonoBehaviour
     
     private void Update()
     {
+
+        if(Input.GetKeyDown(KeyCode.F6) && SceneManager.GetActiveScene().name == "GameScene")
+        {
+            SpawnAllAgents();
+        }
+
         UpdateAgents();
         while (decisionTimer > 1f) RequestAgentDecitions();
     }
