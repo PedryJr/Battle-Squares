@@ -662,7 +662,7 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
     private void LeftClickOn(CallbackContext obj)
     {
-        if (tabFlag) return;
+        if (tabFlag || PlayerController.uiRegs > 0) return;
         leftClick = true;
         switch (initializer.GetMode())
         {

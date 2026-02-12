@@ -276,7 +276,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
             for(int i = 0; i < playerIdentities.Count; i++)
             {
                 PlayerBehaviour player = playerIdentities[i].square;
-                if (!player.isLocalPlayer) return;
+                if (!player.isLocalPlayer) continue;
                 if (player.isLocalPlayer) PlayerFactory(currentGameState.selectedMap, player.GetNetworkID(), player.GetGameID(), player.SteamID, player.isAI);
             }
         }

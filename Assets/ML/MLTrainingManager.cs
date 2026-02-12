@@ -80,7 +80,7 @@ public class MLTrainingManager : MonoBehaviour
         {
             Camera.main.gameObject.GetComponent<CameraAnimator>().enabled = false;
             Camera.main.transform.position = new Vector3(0, 0, Camera.main.transform.position.z);
-            //Camera.main.cullingMask = 704;
+            Camera.main.cullingMask = 736;
             Camera.main.orthographicSize = 40f;
             playerSynchronizer.localSquare.gameObject.SetActive(false);
             playerSynchronizer.localSquare.transform.position = new Vector3(128, 128, 0);
@@ -330,6 +330,9 @@ public class MLTrainingManager : MonoBehaviour
         
         if (GUILayout.Button("Spawn Agents"))
         {
+            debugFlags = DebugVisualization.None;
+            showDebugInfo = false;
+            showGizmos = false;
             SpawnAllAgents();
         }
         

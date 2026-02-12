@@ -12894,7 +12894,7 @@ MonoBehaviour:
   playerIdentities: []
   square: {fileID: 955279136659326086, guid: 774907726eafbde40824f5a61de85cad, type: 3}
   localSquare: {fileID: 0}
-  deathParticles: {fileID: 7289681851009581468, guid: e8871a85f02e94e40b1af9470829ebcb, type: 3}
+  deathParticles: {fileID: 4313180367996257349, guid: e8871a85f02e94e40b1af9470829ebcb, type: 3}
   hostShutdown: 0
   defaultSkin: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   clrUpdate: 0
@@ -13000,7 +13000,7 @@ MonoBehaviour:
   scoreBoard: {fileID: 7960118414139934391, guid: 677884d92a334b44b8e6ee90e44ab35a, type: 3}
   gameMode: 0
   startScore: 0
-  endScore: 2147483647
+  endScore: 10
 --- !u!114 &7766882706945389859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13322,12 +13322,12 @@ MonoBehaviour:
   autoReset: 1
   useFixedDecisionInterval: 1
   decisionRequestsPerSecond: 10
-  showDebugInfo: 1
-  showGizmos: 1
-  debugFlags: -1
+  showDebugInfo: 0
+  showGizmos: 0
+  debugFlags: 0
   spawnInterval: 0.25
-  numberOfAgents: 4
-  isTraining: 1
+  numberOfAgents: 1
+  isTraining: 0
   weaponSelections:
   - primary: {fileID: 11400000, guid: 4b5fa32268eef6a44883c5c794105a97, type: 2}
     secondary: {fileID: 11400000, guid: 3800a94b811231645a0b3142764d594d, type: 2}

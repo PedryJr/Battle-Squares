@@ -1,14 +1,15 @@
+using System;
+using System.Runtime.CompilerServices;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+
 using UnityEngine;
-using System;
 using UnityEngine.AI;
-using System.Runtime.CompilerServices;
+using static UnityEngine.GraphicsBuffer;
 
 public sealed class PlayerMLAgent : Agent
 {
-    #region Enums
 
     [Serializable]
     public enum TrainingMode
@@ -45,10 +46,6 @@ public sealed class PlayerMLAgent : Agent
         SecondaryAttack
     }
 
-    #endregion
-
-    #region Structs
-
     public struct WeaponStats
     {
         public int remainingAmmo;
@@ -58,10 +55,6 @@ public sealed class PlayerMLAgent : Agent
         public float projectileAcceleration;
         public float projectileGravity;
     }
-
-    #endregion
-
-    #region Serialized Fields
 
     [Header("Core References")]
     [SerializeField] public PlayerController playerController;
@@ -78,7 +71,6 @@ public sealed class PlayerMLAgent : Agent
     [SerializeField] private bool trainPrimaryAttack = true;
     [SerializeField] private bool trainSecondaryAttack = true;
 
-    // Add to Reward Settings section
     [Header("Consistency Reward Settings")]
     [SerializeField] private float actionConsistencyReward = 0.01f;
     [SerializeField] private float actionChangeSpamPenalty = 0.02f;
@@ -132,10 +124,6 @@ public sealed class PlayerMLAgent : Agent
     [SerializeField] private int goalsReached = 0;
     [SerializeField] private int deaths = 0;
 
-    #endregion
-
-    #region Private Fields
-
     private PlayerSynchronizer playerSynchronizer;
     private Transform targetTransform;
     private Vector2 cachedTargetPosition = Vector2.zero;
@@ -164,9 +152,6 @@ public sealed class PlayerMLAgent : Agent
     private DebugVisualization debugFlags = DebugVisualization.None;
     private const float ActionFreq = 10f;
 
-    #endregion
-
-    #region Properties
 
     public Vector2 AimingDirection => playerController.playerBehaviour.aimDirection.normalized;
     public Vector2 AgentPosition
@@ -202,43 +187,6 @@ public sealed class PlayerMLAgent : Agent
         return true;
     }
 
-    private void UpdateNearestVisibleTarget()
-    {
-        if (playerSynchronizer == null || playerSynchronizer.playerIdentities == null || playerSynchronizer.playerIdentities.Count == 0)
-        {
-            targetTransform = null;
-            return;
-        }
-        Physics2D.queriesStartInColliders = false;
-        Vector2 playerPos = AgentPosition;
-        float closestDistance = raycastDistance;
-        targetTransform = null;
-        for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++)
-        {
-            PlayerSynchronizer.PlayerData item = playerSynchronizer.playerIdentities[i];
-            if (item.square == null) continue;
-            PlayerBehaviour otherPlayer = item.square;
-            if (otherPlayer == playerController.playerBehaviour || otherPlayer.isDead) continue;
-            Vector2 targetPos = otherPlayer.rb.position;
-            Vector2 direction = targetPos - playerPos;
-            float distance = direction.magnitude;
-            if (distance <= raycastDistance)
-            {
-                RaycastHit2D hit = Physics2D.Raycast(playerPos, direction.normalized, distance, PhysicsMasks.ENVIRONTMENT_MASK);
-                if (hit.collider == null && distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    targetTransform = otherPlayer.transform;
-                }
-            }
-        }
-        Physics2D.queriesStartInColliders = true;
-    }
-
-
-    #endregion
-
-    #region Unity ML-Agents Lifecycle
 
     public void InitializeExtern()
     {
@@ -307,17 +255,11 @@ public sealed class PlayerMLAgent : Agent
         for (int i = 0; i < 5; i++) previousActions[i] = currentActions[i];
     }
 
-    #endregion
-
-    #region Target Selection
-
     private void UpdateTargetSelection()
     {
-        // Only update if we don't have a valid target
         if (targetTransform != null)
         {
             var targetPb = targetTransform.GetComponent<PlayerBehaviour>();
-            // Keep current target if it's still alive
             if (targetPb != null && !targetPb.isDead)
             {
                 cachedTargetPosition = targetTransform.position;
@@ -326,8 +268,7 @@ public sealed class PlayerMLAgent : Agent
             }
         }
 
-        // Target is dead/null, find a new one
-        Transform livePlayer = FindNearestLivePlayer();
+        Transform livePlayer = FindFarthestLivePlayer();
         if (livePlayer != null)
         {
             targetTransform = livePlayer;
@@ -342,11 +283,11 @@ public sealed class PlayerMLAgent : Agent
         }
     }
 
-    private Transform FindNearestLivePlayer()
+    private Transform FindFarthestLivePlayer()
     {
         if (playerSynchronizer == null || playerSynchronizer.playerIdentities == null || playerSynchronizer.playerIdentities.Count == 0) return null;
         Vector2 playerPos = AgentPosition;
-        PlayerBehaviour playerBehaviour = playerSynchronizer.GetFurthestPlayer(AgentPosition, playerController.playerBehaviour.GetGameID(), false);
+        PlayerBehaviour playerBehaviour = playerSynchronizer.GetFarthestPlayer(AgentPosition, playerController.playerBehaviour.GetGameID(), false);
         if (playerBehaviour) return playerBehaviour.transform;
         return null;
     }
@@ -408,10 +349,6 @@ public sealed class PlayerMLAgent : Agent
         CollectVisibilityObservation(sensor);
         CollectProjectileObservations(sensor);
     }
-
-    #endregion
-
-    #region Observation Collection
 
     private void CollectSelfKinematicObservations(VectorSensor sensor)
     {
@@ -494,8 +431,6 @@ public sealed class PlayerMLAgent : Agent
 
     private void CollectOpponentObservations(VectorSensor sensor)
     {
-        UpdateNearestVisibleTarget();
-
         if (targetTransform != null)
         {
             Vector2 relativePos = (Vector2)targetTransform.position - AgentPosition;
@@ -525,8 +460,7 @@ public sealed class PlayerMLAgent : Agent
         for (int i = 0; i < numRaycastsProjectiles; i++)
         {
             float angle = i * angleStep;
-            Vector2 direction = Quaternion.Euler(0, 0, angle) * Vector2.right;
-
+            Vector2 direction = Quaternion.Euler(0, 0, angle) * Vector2.right; 
             RaycastHit2D hit = Physics2D.CircleCast(playerPos, radius, direction, projectileDetectionRadius, PhysicsMasks.PROJECTILE_MASK);
 
             if (hit.collider != null)
@@ -538,24 +472,12 @@ public sealed class PlayerMLAgent : Agent
                     int ownerId = projectile.owningPlayer.GetGameID();
                     int agentId = playerController.playerBehaviour.GetGameID();
 
-                    if (ownerId == agentId)
-                    {
-                        AddObservationSafe(sensor, 0f, projectileDetectionRadius, projectileDetectionRadius);
-                    }
-                    else
-                    {
-                        AddObservationSafe(sensor, 0f, projectileDetectionRadius, hit.distance);
-                    }
+                    if (ownerId == agentId) AddObservationSafe(sensor, 0f, projectileDetectionRadius, projectileDetectionRadius);
+                    else AddObservationSafe(sensor, 0f, projectileDetectionRadius, hit.distance);
                 }
-                else
-                {
-                    AddObservationSafe(sensor, 0f, projectileDetectionRadius, hit.distance);
-                }
+                else AddObservationSafe(sensor, 0f, projectileDetectionRadius, hit.distance);
             }
-            else
-            {
-                AddObservationSafe(sensor, 0f, projectileDetectionRadius, projectileDetectionRadius);
-            }
+            else AddObservationSafe(sensor, 0f, projectileDetectionRadius, projectileDetectionRadius);
         }
     }
 
@@ -572,10 +494,6 @@ public sealed class PlayerMLAgent : Agent
         if (float.IsNaN(normalizedValue) || float.IsInfinity(normalizedValue)) normalizedValue = defaultValue;
         sensor.AddObservation(normalizedValue);
     }
-
-    #endregion
-
-    #region Action Processing
 
     private int GetFilteredAction(int actionValue, TrainingCategory category)
     {
@@ -639,10 +557,6 @@ public sealed class PlayerMLAgent : Agent
         playerController.OnSecondaryPerformed(shotSecondary);
     }
 
-    #endregion
-
-    #region Reward Calculation
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void GiveReward(float reward)
     {
@@ -656,7 +570,7 @@ public sealed class PlayerMLAgent : Agent
 
         if (Vector2.Angle(rb.linearVelocity.normalized, Vector2.down) <= 45f)
         {
-            RaycastHit2D hit = Physics2D.CircleCast(AgentPosition, 0.3f, Vector2.down, 5f, PhysicsMasks.ENVIRONTMENT_MASK);
+            RaycastHit2D hit = Physics2D.CircleCast(AgentPosition, 0.5f, Vector2.down, 32f, PhysicsMasks.ENVIRONTMENT_MASK);
             if (hit.collider == null) GiveReward(-penaltyForFallingIntoVoid);
         }
     }
@@ -724,18 +638,10 @@ public sealed class PlayerMLAgent : Agent
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void CalculateScenarioRewards(Span<int> currentActions)
     {
-
-        //Situation 1. Void beneath and falling! AVOID IT...
         CalculateFallingIntoVoidPenalty();
-
-        //Situation 2. We have ammo! USE IT...
         CalculateAmmoNotUsedInCorrectSituationReward();
-
-        //Situation 3. Enemy projectiles nearby! DODGE THEM...
         CalculatePenaltyForBeingNearProjectiles();
-
         TrackActionConsistency(currentActions, 1f / ActionFreq);
-
     }
 
     private void TrackActionConsistency(Span<int> currentActions, float deltaTime)
@@ -746,7 +652,6 @@ public sealed class PlayerMLAgent : Agent
             {
                 actionChangeCount[i]++;
 
-                // Penalize if action wasn't held long enough
                 if (actionHeldDuration[i] < MIN_ACTION_HOLD_TIME && previousActions[i] != 0)
                 {
                     GiveReward(-actionChangeSpamPenalty);
@@ -756,7 +661,6 @@ public sealed class PlayerMLAgent : Agent
             }
             else
             {
-                // Reward for holding action consistently
                 actionHeldDuration[i] += deltaTime;
 
                 if (actionHeldDuration[i] >= MIN_ACTION_HOLD_TIME && currentActions[i] != 0)
@@ -767,10 +671,8 @@ public sealed class PlayerMLAgent : Agent
         }
     }
 
-    // Add new method
     private void PenalizeActionSpam(float deltaTime)
     {
-        // Calculate changes per second
         float totalChanges = 0;
         for (int i = 0; i < actionChangeCount.Length; i++)
         {
@@ -861,7 +763,7 @@ public sealed class PlayerMLAgent : Agent
     private void EvaluateShot(bool isPrimary)
     {
         shotDecay = 0f;
-        if (targetTransform == null)
+        if (targetTransform == null || !isTargetVisible)
         {
             GiveReward(-weaponBlindFirePenalty);
             lastShotWasAccurate = false;
@@ -872,6 +774,7 @@ public sealed class PlayerMLAgent : Agent
         if (targetPb == null || targetPb.isDead)
         {
             targetTransform = null;
+            lastShotWasAccurate = false;
             return;
         }
 
@@ -900,16 +803,15 @@ public sealed class PlayerMLAgent : Agent
 
         float finalAccuracyScore = Mathf.Clamp(scaledAccuracy, -1f, 1f);
 
+
         if (finalAccuracyScore > 0)
         {
-
             float totalReward = finalAccuracyScore * weaponLeadingMultiplier * currentBias;
             GiveReward(totalReward);
             lastShotWasAccurate = true;
         }
         else
         {
-
             GiveReward(Mathf.Abs(finalAccuracyScore) * -weaponBlindFirePenalty);
             lastShotWasAccurate = false;
         }
@@ -919,9 +821,6 @@ public sealed class PlayerMLAgent : Agent
         shouldDrawShotDebug = true;
     }
 
-    #endregion
-
-    #region Episode Management
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void CheckEpisodeEnd()
     {
@@ -961,9 +860,6 @@ public sealed class PlayerMLAgent : Agent
         GiveReward(damage * combatDamageReward);
     }
 
-    #endregion
-
-    #region External Updates
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void UpdateExtern(float elapsed, float elapsedScaled)
     {
@@ -990,20 +886,17 @@ public sealed class PlayerMLAgent : Agent
     {
         Vector2 playerPos = AgentPosition;
 
-        // Draw target direction
         if (HasDebugFlag(DebugVisualization.TargetDirection))
         {
             Debug.DrawRay(playerPos, toNextTarget, Color.yellow, elapsed);
         }
 
-        // Draw aim direction
         if (HasDebugFlag(DebugVisualization.AimDirection))
         {
             Color color = lastAimHitEnvironment ? Color.red : Color.cyan;
             Debug.DrawRay(playerPos, lastAimDirection * lastAimRaycastDistance, color, elapsed);
         }
 
-        // Draw shot evaluation
         if (shouldDrawShotDebug)
         {
             if (HasDebugFlag(DebugVisualization.ShotAccuracy))
@@ -1019,13 +912,11 @@ public sealed class PlayerMLAgent : Agent
             }
         }
 
-        // Draw punish zone
         if (HasDebugFlag(DebugVisualization.PunishZone))
         {
             DrawCircle(punishZone, 2f, Color.red, elapsed);
         }
 
-        // Draw NavMesh path
         if (HasDebugFlag(DebugVisualization.NavMeshPath))
         {
             NavMeshPath path = new NavMeshPath();
@@ -1050,15 +941,13 @@ public sealed class PlayerMLAgent : Agent
             DrawCircle(playerPos, raycastDistance, Color.blue, elapsed);
         }
     }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RequestDecisionExtern()
     {
         RequestDecision();
     }
 
-    #endregion
-
-    #region Debug Helpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetDebugFlag(DebugVisualization flag) => debugFlags = flag;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1081,6 +970,7 @@ public sealed class PlayerMLAgent : Agent
             Debug.DrawLine(p1, p2, color, duration);
         }
     }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void DrawCross(Vector2 center, float size, Color color, float duration)
     {
@@ -1092,6 +982,4 @@ public sealed class PlayerMLAgent : Agent
     {
         AddReward(delta * healthLossPenalty);
     }
-
-    #endregion
 }

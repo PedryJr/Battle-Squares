@@ -36,7 +36,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     float serverUpdateTimer;
 
     [SerializeField]
-    GameObject deathParticles;
+    ParticleBehaviour deathParticles;
 
     Hunter hunter;
 
@@ -668,7 +668,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         localSquare.deathSoundInstance.setVolume(MySettings.Volume);
         localSquare.deathSoundInstance.start();
 
-        GameObject newParticle = Instantiate(deathParticles, deadPlayer.rb.position, Quaternion.Euler(0, 0, 0), null);
+        ParticleBehaviour newParticle = AutoPooledPool<ParticleBehaviour>.Spawn(deathParticles, deadPlayer.rb.position, Quaternion.Euler(0, 0, 0), null);
 
         ParticleSystemRenderer[] particleSystemRenderers = newParticle.GetComponentsInChildren<ParticleSystemRenderer>();
         ParticleSystem[] particleSystems = newParticle.GetComponentsInChildren<ParticleSystem>();
@@ -849,7 +849,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         return playerPool[randomIndex];
     }
 
-    public PlayerBehaviour GetFurthestPlayer(Vector2 from, byte exclude, bool includeDead = true)
+    public PlayerBehaviour GetFarthestPlayer(Vector2 from, byte exclude, bool includeDead = true)
     {
         if (!mlTrainer) mlTrainer = GetComponent<MLTrainingManager>();
 

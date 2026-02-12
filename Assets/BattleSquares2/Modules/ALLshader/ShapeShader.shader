@@ -10,6 +10,7 @@ Shader "*MyShaders/Shape"
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
         [MaterialToggle] _ZWrite("ZWrite", Float) = 1
+        _ZPos("ZPos", Float) = 1
 
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
@@ -106,6 +107,8 @@ Shader "*MyShaders/Shape"
                 half4 _Color;
             CBUFFER_END
 
+            half _ZPos;
+
             UNITY_INSTANCING_BUFFER_START(Props)
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Pos0)
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Pos1)
@@ -141,7 +144,7 @@ Shader "*MyShaders/Shape"
                 if(v.vid == 6) localPos = UNITY_ACCESS_INSTANCED_PROP(Props, _Pos6);
                 if(v.vid == 7) localPos = UNITY_ACCESS_INSTANCED_PROP(Props, _Pos7);
 
-                localPos.z = -2.91;
+                localPos.z = _ZPos;
 
                 v.positionOS = localPos.xyz;
 
