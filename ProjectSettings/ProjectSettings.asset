@@ -59,7 +59,7 @@ PlayerSettings:
   mipStripping: 1
   numberOfMipsStripped: 0
   numberOfMipsStrippedPerMipmapLimitGroup: {}
-  m_StackTraceTypes: 000000000000000000000000000000000000000001000000
+  m_StackTraceTypes: 020000000200000002000000020000000200000001000000
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
   iosUseCustomAppBackgroundBehavior: 0
@@ -1292,8 +1292,8 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 3
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Battle Squares U6
-  metroPackageVersion: 
+  metroPackageName: BattleSquaresU6
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -1301,7 +1301,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Battle Squares U6
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Battle Squares
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
