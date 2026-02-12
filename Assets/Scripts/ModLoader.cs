@@ -6,7 +6,6 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Scripting;
 using static UnityVecToSystemVec;
