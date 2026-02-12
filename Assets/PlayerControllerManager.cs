@@ -295,7 +295,7 @@ public class PlayerControllerManager : MonoBehaviour
 
         // Sort controllers by their registration order (assuming first in list is player 1)
         var sortedControllers = new List<PlayerController>(playerControllers);
-        sortedControllers.Reverse();
+        //sortedControllers.Reverse();
 
         // Get gamepads sorted by connection order (most recent first)
         var gamepads = availableDevices

@@ -354,7 +354,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
             if (!playerSynchronizer.localSquare) playerSynchronizer.localSquare = newPlayer;
             PlayerController contrl = Instantiate<PlayerController>(playerData.isAI ? AIControllerPrefab : controllerPrefab);
             contrl.SetTargetController(newPlayer);
-            playerControllerManager.SpawnController(contrl);
+            if(!playerData.isAI) playerControllerManager.SpawnController(contrl);
         }
     }
 
