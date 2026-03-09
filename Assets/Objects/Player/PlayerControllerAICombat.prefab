@@ -85,9 +85,9 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 673d938edafa1fa4797257fe9bc0376d, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 47544c50981c0974b9f3db0891fb56c0, type: 3}
   m_InferenceDevice: 2
-  m_BehaviorType: 2
+  m_BehaviorType: 0
   m_BehaviorName: PlayerMLAgent
   TeamId: 0
   m_UseChildSensors: 0
@@ -112,6 +112,10 @@ MonoBehaviour:
   playerController: {fileID: 0}
   mLTrainingManager: {fileID: 0}
   isTraining: 1
+  models:
+  - {fileID: 5022602860645237092, guid: 55b9cadb14122c14499c4398fb72780b, type: 3}
+  - {fileID: 5022602860645237092, guid: 673d938edafa1fa4797257fe9bc0376d, type: 3}
+  - {fileID: 5022602860645237092, guid: d60bb747ff9dba04688022162c7b66b0, type: 3}
   currentTrainingMode: 5
   trainHorizontalMovement: 1
   trainVerticalMovement: 1
@@ -128,6 +132,9 @@ MonoBehaviour:
   openAreaRaycastCount: 16
   openAreaSearchRadius: 32
   minSafeDistanceFromWall: 2
+  targetMode: 0
+  targetJourneyRepetition: 5
+  targetRadius: 0
   alignmentRewardMultiplier: 0.02
   positioningMultiplier: 0.02
   punishZoneMultiplier: 0.1
@@ -140,7 +147,8 @@ MonoBehaviour:
   goalReward: 0
   combatHitReward: 0
   combatDamageReward: 0
-  environmentProximityReward: -0.005
+  optimizerReward: 0
+  environmentProximityReward: 0
   environmentProximityThreshold: 1.2
   positioningWeightWhenVisible: 5
   navigationWeightWhenOccluded: 5

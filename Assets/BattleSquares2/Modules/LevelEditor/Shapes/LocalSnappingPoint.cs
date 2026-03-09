@@ -8,7 +8,7 @@ public sealed class LocalSnappingPoint : MonoBehaviour
     float zRot;
 
     //float snapping;
-    Vector2 rawWorldPosition;
+    public Vector2 rawWorldPosition;
     LocalSnappingPoint otherLocal;
     bool start = false;
 

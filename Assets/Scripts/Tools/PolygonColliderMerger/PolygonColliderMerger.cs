@@ -1,7 +1,8 @@
-using UnityEngine;
+using Clipper2Lib;
 using System.Collections.Generic;
 using System.Linq;
-using Clipper2Lib;
+using System.Runtime.CompilerServices;
+using UnityEngine;
 
 /// <summary>
 /// OPTIMIZED and ROBUST Tooling class for merging 2D Polygon Colliders in Unity.
@@ -10,12 +11,18 @@ using Clipper2Lib;
 /// </summary>
 public static class PolygonColliderMerger
 {
+    /*    private const float EPSILON = 0.0001f;
+        private const float CONNECTION_THRESHOLD = 0.01f;
+        private const int SPATIAL_GRID_SIZE = 10;
+        private const int MIN_POLYGON_POINTS = 3;
+        private const float MIN_POLYGON_AREA = 0.0001f;
+        private const float DUPLICATE_VERTEX_THRESHOLD = 0.001f;*/
+
     private const float EPSILON = 0.0001f;
-    private const float CONNECTION_THRESHOLD = 0.01f;
-    private const int SPATIAL_GRID_SIZE = 10;
+    private const float CONNECTION_THRESHOLD = 0.0625f;
     private const int MIN_POLYGON_POINTS = 3;
     private const float MIN_POLYGON_AREA = 0.0001f;
-    private const float DUPLICATE_VERTEX_THRESHOLD = 0.001f;
+    private const float DUPLICATE_VERTEX_THRESHOLD = 0.06251f;
 
     // Clipper2 scaling factor for converting float to long (Clipper2 uses integer coordinates)
     private const double CLIPPER_SCALE = 100000.0;
@@ -25,12 +32,12 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Cached polygon data with bounds for fast spatial queries
     /// </summary>
-    private class PolygonData
+    private sealed class PolygonData
     {
         public Vector2[] Points;
         public Bounds Bounds;
         public int GroupId;
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public PolygonData(Vector2[] points)
         {
             Points = points;
@@ -38,6 +45,7 @@ public static class PolygonColliderMerger
             GroupId = -1;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Bounds CalculateBounds(Vector2[] points)
         {
             if (points.Length == 0)
@@ -63,16 +71,16 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Spatial grid for fast proximity queries
     /// </summary>
-    private class SpatialGrid
+    private sealed class SpatialGrid
     {
         private Dictionary<Vector2Int, List<int>> grid = new Dictionary<Vector2Int, List<int>>();
         private float cellSize;
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public SpatialGrid(float cellSize)
         {
             this.cellSize = cellSize;
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(int index, Bounds bounds)
         {
             Bounds expandedBounds = new Bounds(bounds.center, bounds.size + Vector3.one * CONNECTION_THRESHOLD * 2);
@@ -91,7 +99,7 @@ public static class PolygonColliderMerger
                 }
             }
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public HashSet<int> GetNearby(Bounds bounds)
         {
             HashSet<int> nearby = new HashSet<int>();
@@ -100,12 +108,13 @@ public static class PolygonColliderMerger
 
             Vector2Int minCell = GetCell(expandedBounds.min);
             Vector2Int maxCell = GetCell(expandedBounds.max);
+            Vector2Int cell = Vector2Int.zero;
 
             for (int x = minCell.x; x <= maxCell.x; x++)
             {
                 for (int y = minCell.y; y <= maxCell.y; y++)
                 {
-                    Vector2Int cell = new Vector2Int(x, y);
+                    cell = new Vector2Int(x, y);
                     if (grid.ContainsKey(cell))
                     {
                         foreach (int index in grid[cell])
@@ -116,7 +125,7 @@ public static class PolygonColliderMerger
 
             return nearby;
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Vector2Int GetCell(Vector2 position)
         {
             return new Vector2Int(
@@ -129,11 +138,11 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Union-Find structure for tracking connected components
     /// </summary>
-    private class UnionFind
+    private sealed class UnionFind
     {
         private int[] parent;
         private int[] rank;
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UnionFind(int size)
         {
             parent = new int[size];
@@ -144,26 +153,23 @@ public static class PolygonColliderMerger
                 rank[i] = 0;
             }
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int Find(int x)
         {
             if (parent[x] != x)
                 parent[x] = Find(parent[x]);
             return parent[x];
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Union(int x, int y)
         {
             int rootX = Find(x);
             int rootY = Find(y);
 
-            if (rootX == rootY)
-                return;
+            if (rootX == rootY) return;
 
-            if (rank[rootX] < rank[rootY])
-                parent[rootX] = rootY;
-            else if (rank[rootX] > rank[rootY])
-                parent[rootY] = rootX;
+            if (rank[rootX] < rank[rootY]) parent[rootX] = rootY;
+            else if (rank[rootX] > rank[rootY]) parent[rootY] = rootX;
             else
             {
                 parent[rootY] = rootX;
@@ -307,6 +313,7 @@ public static class PolygonColliderMerger
     /// Sorts polygons spatially for better locality when splitting clusters.
     /// Uses a simple sweep-line approach based on centroid positions.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static List<PolygonData> SortPolygonsSpatially(List<PolygonData> polygons)
     {
         // Calculate centroids and sort by position (left-to-right, then bottom-to-top)
@@ -391,6 +398,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Merges a single island into the cluster (legacy support)
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool MergeIslands(PolygonCollider2D islandCluster, PolygonCollider2D newIsland)
     {
         return MergeIslands(islandCluster, new PolygonCollider2D[] { newIsland });
@@ -458,23 +466,19 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Checks if a polygon is valid for Unity's PolygonCollider2D
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsValidPolygon(Vector2[] polygon)
     {
-        if (polygon == null || polygon.Length < MIN_POLYGON_POINTS)
-            return false;
+        if (polygon == null || polygon.Length < MIN_POLYGON_POINTS) return false;
 
         // Check for NaN or Infinity
         foreach (var point in polygon)
         {
-            if (float.IsNaN(point.x) || float.IsNaN(point.y) ||
-                float.IsInfinity(point.x) || float.IsInfinity(point.y))
-                return false;
+            if (float.IsNaN(point.x) || float.IsNaN(point.y) || float.IsInfinity(point.x) || float.IsInfinity(point.y)) return false;
         }
 
         // Check for minimum area
-        float area = CalculatePolygonArea(polygon);
-        if (Mathf.Abs(area) < MIN_POLYGON_AREA)
-            return false;
+        if (Mathf.Abs(CalculatePolygonArea(polygon)) < MIN_POLYGON_AREA) return false;
 
         return true;
     }
@@ -561,10 +565,10 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Calculates signed area of polygon (positive = counter-clockwise)
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static float CalculatePolygonArea(Vector2[] polygon)
     {
-        if (polygon.Length < 3)
-            return 0f;
+        if (polygon.Length < 3) return 0f;
 
         float area = 0f;
         for (int i = 0; i < polygon.Length; i++)
@@ -753,14 +757,12 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Converts a Unity Vector2 array to a Clipper2 PathD.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static PathD Vector2ArrayToClipperPath(Vector2[] polygon)
     {
         PathD path = new PathD(polygon.Length);
 
-        foreach (var point in polygon)
-        {
-            path.Add(new PointD(point.x, point.y));
-        }
+        foreach (var point in polygon) path.Add(new PointD(point.x, point.y));
 
         return path;
     }
@@ -768,17 +770,14 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Converts a Clipper2 PathD to a Unity Vector2 array.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static Vector2[] ClipperPathToVector2Array(PathD path)
     {
-        if (path == null || path.Count < MIN_POLYGON_POINTS)
-            return null;
+        if (path == null || path.Count < MIN_POLYGON_POINTS) return null;
 
         Vector2[] polygon = new Vector2[path.Count];
 
-        for (int i = 0; i < path.Count; i++)
-        {
-            polygon[i] = new Vector2((float)path[i].x, (float)path[i].y);
-        }
+        for (int i = 0; i < path.Count; i++) polygon[i] = new Vector2((float)path[i].x, (float)path[i].y);
 
         return polygon;
     }
@@ -786,6 +785,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Quick bounds overlap check with threshold
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool BoundsOverlapOrNear(Bounds b1, Bounds b2, float threshold)
     {
         Vector2 min1 = (Vector2)b1.min - Vector2.one * threshold;
@@ -832,6 +832,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Checks if a point is inside or near a polygon boundary.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsPointInOrNearPolygon(Vector2 point, Vector2[] polygon, float threshold)
     {
         if (IsPointInPolygon(point, polygon))
@@ -844,8 +845,7 @@ public static class PolygonColliderMerger
             Vector2 p2 = polygon[(i + 1) % polygon.Length];
 
             float distance = PointToLineSegmentDistance(point, p1, p2);
-            if (distance < threshold)
-                return true;
+            if (distance < threshold) return true;
         }
 
         return false;
@@ -854,6 +854,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Ray casting algorithm to check if point is inside polygon.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsPointInPolygon(Vector2 point, Vector2[] polygon)
     {
         bool inside = false;
@@ -875,6 +876,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Calculates the minimum distance from a point to a line segment.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static float PointToLineSegmentDistance(Vector2 point, Vector2 lineStart, Vector2 lineEnd)
     {
         Vector2 line = lineEnd - lineStart;
@@ -892,6 +894,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Checks if any edges of two polygons intersect.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool PolygonsIntersect(Vector2[] poly1, Vector2[] poly2)
     {
         for (int i = 0; i < poly1.Length; i++)
@@ -915,6 +918,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Checks if line segments intersect and returns intersection point.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool LineSegmentsIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, out Vector2 intersection)
     {
         intersection = Vector2.zero;
@@ -945,6 +949,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Transforms polygon points from local to world space.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static Vector2[] TransformPoints(Vector2[] points, Transform transform, Vector2 offset)
     {
         Vector2[] transformed = new Vector2[points.Length];
@@ -959,6 +964,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Applies merged paths to a polygon collider in local space.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void ApplyMergedPaths(PolygonCollider2D collider, List<Vector2[]> worldPaths)
     {
         collider.pathCount = worldPaths.Count;
@@ -978,6 +984,7 @@ public static class PolygonColliderMerger
     /// <summary>
     /// Simplifies a polygon by removing collinear points.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2[] SimplifyPolygon(Vector2[] polygon, float tolerance = EPSILON)
     {
         return RemoveCollinearPoints(polygon);

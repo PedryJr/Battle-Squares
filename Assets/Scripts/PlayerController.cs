@@ -37,7 +37,6 @@ public sealed partial class PlayerController : MonoBehaviour
         {
             isAI = true;
 
-            //Make sure we dont do anything with inputs, but leave avalible.
             inputs.Disable();
             inputs.Dispose();
             inputs = new Inputs();
@@ -61,13 +60,6 @@ public sealed partial class PlayerController : MonoBehaviour
         internalAssignedDevices = devices.ToArray();
 
         UpdateDeviceList();
-
-        /*        inputs.Disable();
-                user = InputUser.PerformPairingWithDevice(device, user, InputUserPairingOptions.None);
-                user.AssociateActionsWithUser(inputs);
-                inputs.Enable();
-
-                if (!devicesInUse.Contains(device.deviceId)) devicesInUse.Add(device.deviceId);*/
     }
 
     public void UnpairDevice(InputDevice device)
@@ -79,22 +71,6 @@ public sealed partial class PlayerController : MonoBehaviour
         internalAssignedDevices = devices.ToArray();
 
         UpdateDeviceList();
-/*        inputs.Disable();
-
-        List<InputDevice> alreadyPairedDevices = new List<InputDevice>();
-        foreach (InputDevice alreadyPaired in InputSystem.devices) if(devicesInUse.Contains(alreadyPaired.deviceId)) alreadyPairedDevices.Add(alreadyPaired);
-        devicesInUse.Clear();
-        
-        user = InputUser.CreateUserWithoutPairedDevices();
-
-        foreach (var item in alreadyPairedDevices)
-        {
-            if (item.deviceId == device.deviceId) continue;
-            user = InputUser.PerformPairingWithDevice(item, user, InputUserPairingOptions.None);
-            if (!devicesInUse.Contains(item.deviceId)) devicesInUse.Add(item.deviceId);
-        }
-        user.AssociateActionsWithUser(inputs);
-        inputs.Enable();*/
 
     }
 
@@ -130,22 +106,6 @@ public sealed partial class PlayerController : MonoBehaviour
         inputs.Enable();
     }
 
-    public void AssociateUserWithDevices(InputDevice[] userDevices)
-    {
-        inputs.Disable();
-        user = InputUser.CreateUserWithoutPairedDevices();
-        devicesInUse.Clear();
-
-        foreach (InputDevice device in userDevices)
-        {
-            user = InputUser.PerformPairingWithDevice(device, user, InputUserPairingOptions.None);
-            devicesInUse.Add(device.deviceId);
-        }
-
-        user.AssociateActionsWithUser(inputs);
-        inputs.Enable();
-    }
-
 
     private void Awake()
     {
@@ -177,18 +137,8 @@ public sealed partial class PlayerController : MonoBehaviour
         inputs.SquareController.Secondary.canceled += OnSecondaryCanceled;
 
         internalAssignedDevices = new InputDevice[0];
-/*
-        user = InputUser.CreateUserWithoutPairedDevices();
-        user.AssociateActionsWithUser(inputs);*/
 
         inputs.Enable();
-
-        SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
-    }
-
-    private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
-    {
-        if (arg1.name == "LobbyScene") EnableController();
     }
 
     private void OnDestroy()
@@ -381,91 +331,7 @@ public sealed partial class PlayerController
         float upScale = Mathf.Lerp(0.4f, 1f, mod);
         float downScale = Mathf.Lerp(0.3f, 1f, mod);
         playerBehaviour.moveDirection = up * upScale + down * downScale + left + right;
-
-        Vector2 accumInput = up + down + left + right;
-        float sqrMagnitude = accumInput.sqrMagnitude;
-        float deadzoneSqr = deadzoneRadius * deadzoneRadius;
-
-        if (sqrMagnitude <= deadzoneSqr)
-        {
-            playerBehaviour.aimDirection = Vector2.zero;
-            return;
-        }
-
-        const float SQRT_HALF = 0.70710678f;
-        const float ONE_OVER_PI_OVER_4 = 4f / Mathf.PI;
-
-        float magnitude = Mathf.Sqrt(sqrMagnitude);
-        Vector2 normalized = accumInput / magnitude;
-
-        float angle = Mathf.Atan2(normalized.y, normalized.x);
-        if (angle < 0f) angle += Mathf.PI * 2f;
-
-        float cornerBiasScaler = Mathf.Lerp(0.6f, 1.4f, cornerBias);
-        float straightHalfWidth = (Mathf.PI / 8f) * cornerBiasScaler;
-        float diagonalHalfWidth = (Mathf.PI / 8f) * (2f - cornerBiasScaler);
-
-        float sector = angle * ONE_OVER_PI_OVER_4;
-        int sectorIndex = (int)sector;
-        float sectorFrac = sector - sectorIndex;
-
-        int chosenIndex = -1;
-
-        if (sectorFrac <= 0.5f)
-        {
-            float halfWidth = (sectorIndex % 2 == 0) ? straightHalfWidth : diagonalHalfWidth;
-            float centerAngle = sectorIndex * (Mathf.PI / 4f);
-            float delta = angle - centerAngle;
-            if (delta < 0) delta = -delta;
-
-            if (delta <= halfWidth)
-            {
-                chosenIndex = sectorIndex;
-            }
-            else if (sectorIndex > 0)
-            {
-                halfWidth = ((sectorIndex - 1) % 2 == 0) ? straightHalfWidth : diagonalHalfWidth;
-                centerAngle = (sectorIndex - 1) * (Mathf.PI / 4f);
-                delta = angle - centerAngle;
-                if (delta < 0) delta = -delta;
-                if (delta <= halfWidth) chosenIndex = sectorIndex - 1;
-            }
-        }
-        else
-        {
-            int nextIndex = (sectorIndex + 1) % 8;
-            float halfWidth = (nextIndex % 2 == 0) ? straightHalfWidth : diagonalHalfWidth;
-            float centerAngle = nextIndex * (Mathf.PI / 4f);
-            float delta = angle - centerAngle;
-            if (delta < 0) delta = -delta;
-
-            if (delta <= halfWidth)
-            {
-                chosenIndex = nextIndex;
-            }
-            else
-            {
-                halfWidth = (sectorIndex % 2 == 0) ? straightHalfWidth : diagonalHalfWidth;
-                centerAngle = sectorIndex * (Mathf.PI / 4f);
-                delta = angle - centerAngle;
-                if (delta < 0) delta = -delta;
-                if (delta <= halfWidth) chosenIndex = sectorIndex;
-            }
-        }
-
-        float scaledMagnitude = (magnitude - deadzoneRadius) / (1f - deadzoneRadius);
-        switch (chosenIndex)
-        {
-            case 0: playerBehaviour.aimDirection = new Vector2(scaledMagnitude, 0f); break;
-            case 1: playerBehaviour.aimDirection = new Vector2(SQRT_HALF, SQRT_HALF) * scaledMagnitude; break;
-            case 2: playerBehaviour.aimDirection = new Vector2(0f, scaledMagnitude); break;
-            case 3: playerBehaviour.aimDirection = new Vector2(-SQRT_HALF, SQRT_HALF) * scaledMagnitude; break;
-            case 4: playerBehaviour.aimDirection = new Vector2(-scaledMagnitude, 0f); break;
-            case 5: playerBehaviour.aimDirection = new Vector2(-SQRT_HALF, -SQRT_HALF) * scaledMagnitude; break;
-            case 6: playerBehaviour.aimDirection = new Vector2(0f, -scaledMagnitude); break;
-            case 7: playerBehaviour.aimDirection = new Vector2(SQRT_HALF, -SQRT_HALF) * scaledMagnitude; break;
-            default: playerBehaviour.aimDirection = Vector2.zero; break;
-        }
+        playerBehaviour.aimDirection = (up + down + left + right).normalized;
     }
 
 

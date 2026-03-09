@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -33,6 +34,9 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
     private const float OctagonCorner = 0.2071068f;
     private const float OctagonStraight = 0.5f;
+    private SimplifiedShapeData shapeData;
+    /*    public float WIDTH_EPSILON = 0.006f;*/
+    public float WIDTH_EPSILON = 0;
 
     public static VertexAttributeDescriptor GetOctagonalAttribute => new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 2);
 
@@ -48,7 +52,6 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         0, 5, 6,
         0, 6, 7,
     };
-
 
     public static Vector3[] GetOctagonalVerticesVec3 => InternalOctagonalVerticesVec3;
     public static Vector2[] GetOctagonalVerticesVec2 => InternalOctagonalVerticesVec2;
@@ -78,7 +81,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     };
 
 
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static half2 Vec2ToHalf2(Vector2 vec) => new half2((half)vec.x, (half)vec.y);
 
 
@@ -128,18 +131,19 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
     {
         shapeIndex = index;
         isAnimated = animated;
+        this.shapeData = shapeData;
 
-        CalculateShapePoints(shapeData);
-        SetupRendering(shapeData);
-        PositionShape(shapeData);
+        CalculateShapePoints();
+        SetupRendering();
+        PositionShape();
     }
-
-    private void CalculateShapePoints(SimplifiedShapeData shapeData)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void CalculateShapePoints()
     {
         var param = shapeData.param.GetVec4();
         float rotation = param.x;
         float length = param.y;
-        float width = param.z;
+        float width = param.z + WIDTH_EPSILON;
         float scale = param.w;
 
         shapeRotation = rotation;
@@ -167,25 +171,24 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
             shapePoints[i] = RotatePoint(basePoint, rotation * Mathf.Deg2Rad);
         }
     }
-
-    private void SetupRendering(SimplifiedShapeData shapeData)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetSimplifiedShapeData(SimplifiedShapeData shapeData) => this.shapeData = shapeData;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetupRendering()
     {
         var propertyBlock = new MaterialPropertyBlock();
 
-        // Set vertex positions for shader
         for (int i = 0; i < shapePoints.Length; i++)
         {
-            propertyBlock.SetVector($"_Pos{i}",
-                new Vector4(shapePoints[i].x, shapePoints[i].y, 0f, 1f));
+            propertyBlock.SetVector($"_Pos{i}", new Vector4(shapePoints[i].x, shapePoints[i].y, 0f, 1f));
         }
 
-        // Set color based on animation state
         propertyBlock.SetColor("_MyColor", isAnimated ? animatedColor : staticColor);
 
         shapeRenderer.SetPropertyBlock(propertyBlock);
     }
-
-    private void PositionShape(SimplifiedShapeData shapeData)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void PositionShape()
     {
         transform.position = shapeData.coord.GetPosition();
 
@@ -213,13 +216,13 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
 
         stencilRenderer.SetPropertyBlock(stencilProperty);
     }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector2[] GetShapePoints() => shapePoints;
 
     public bool IsAnimated => isAnimated;
     public int ShapeIndex => shapeIndex;
-
-    private static void EnsureMeshesExist()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void EnsureMeshesExist()
     {
         CreateOctagonalMesh();
         CreateMinimalMesh();
@@ -241,7 +244,7 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         octagonalMesh.vertices = vertices;
         octagonalMesh.triangles = OctagonIndices;
         octagonalMesh.bounds = new Bounds(Vector3.zero, new Vector3(512, 512, 1));
-        octagonalMesh.UploadMeshData(true);
+        octagonalMesh.UploadMeshData(false);
     }
 
     private static void CreateMinimalMesh()
@@ -266,9 +269,10 @@ public sealed class BuiltShapeBehaviour : MonoBehaviour
         octagonalMinimalMesh.vertices = vertices;
         octagonalMinimalMesh.triangles = OctagonIndices;
         octagonalMinimalMesh.bounds = new Bounds(Vector3.zero, new Vector3(512, 512, 1));
-        octagonalMinimalMesh.UploadMeshData(true);
+        octagonalMinimalMesh.UploadMeshData(false);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static Vector2 RotatePoint(Vector2 point, float angle)
     {
         float cos = Mathf.Cos(angle);

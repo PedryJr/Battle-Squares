@@ -10,6 +10,7 @@ public class MatchTimerBehaviour : MonoBehaviour
     [SerializeField] float matchDurationS = 0f;
     [SerializeField] AnimationCurve tickAnimation;
     PlayerSynchronizer playerSynchronizer;
+    MLTrainingManager mLTrainingManager;
     ScoreManager scoreManager;
     RectTransform rectTransform;
 
@@ -88,6 +89,7 @@ public class MatchTimerBehaviour : MonoBehaviour
 
     private void Awake()
     {
+        mLTrainingManager = FindAnyObjectByType<MLTrainingManager>();
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         if (playerSynchronizer.playerIdentities.Count <= 1)
         {
@@ -106,7 +108,7 @@ public class MatchTimerBehaviour : MonoBehaviour
             UpdateTimerUI();
             return;
         }
-        else
+        else if(!mLTrainingManager.isTraining)
         {
             matchTimer -= Time.deltaTime;
             matchTimer = Mathf.Clamp(matchTimer, 0, matchDurationM * 60f + matchDurationS);

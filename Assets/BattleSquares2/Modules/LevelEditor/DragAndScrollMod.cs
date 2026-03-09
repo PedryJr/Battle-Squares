@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Scripting;
 using static ListPersistendLevels;
 using static UnityEngine.InputSystem.InputAction;
@@ -74,7 +75,9 @@ public sealed class DragAndScrollMod : MonoBehaviour
     Vector2 mousePos = new Vector2();
     Vector2 mouseDelta = new Vector2();
     Vector2 mousePosSS = new Vector2();
+
     bool isGenerating = false;
+
     LocalSnappingPoint startPoint;
     LocalSnappingPoint endPoint;
     ShapeContainer pivotResult;
@@ -89,12 +92,22 @@ public sealed class DragAndScrollMod : MonoBehaviour
     bool leftClick = false;
     bool tabFlag = false;
 
+    [ContextMenu("DoDeTing")]
+    private void DoDeTing()
+    {
+
+        Debug.Log($"{clickedContainer.name}");
+
+    }
+
+    ShapeContainer clickedContainer;
+
     private void Awake()
     {
         shapeSelector = Instantiate(shapeSelector);
         permaLight = FindAnyObjectByType<PermaLightBehvaiour>();
         activeLevelName = "New Level";
-        ShapeMimicBehaviour.sharedMesh = null;
+
         initializer = GetComponentInParent<LevelEditorInitializer>();
 
         animators = new List<AnimationAnchor>();
@@ -140,11 +153,6 @@ public sealed class DragAndScrollMod : MonoBehaviour
             tabFlag = !tabFlag;
             foreach (TabModeObject tabMode in tabModeObjects) tabMode.EnableTabMode();
         };
-/*        input.Mouse.TempSwapEdit.canceled += obj =>
-        {
-            tabFlag = false;
-            foreach (TabModeObject tabMode in tabModeObjects) tabMode.DisableDabMode();
-        };*/
 
         input.Mouse.G.performed += obj =>
         {
@@ -181,6 +189,9 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
         input.Mouse.RightClick.performed += RightClickOn;
         input.Mouse.RightClick.canceled += RightClickOff;
+
+        input.Mouse.LeftClick.performed += LeftClickOn;
+        input.Mouse.LeftClick.canceled += LeftClickOff;
 
         input.Mouse.MiddleClick.performed += obj =>
         {
@@ -281,9 +292,6 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
             }
         };
-
-        input.Mouse.LeftClick.performed += LeftClickOn;
-        input.Mouse.LeftClick.canceled += LeftClickOff;
 
         input.Mouse.Delta.performed += Delta_performed;
 
@@ -596,6 +604,12 @@ public sealed class DragAndScrollMod : MonoBehaviour
         return hit;
     }
 
+    void DeleteShape(ShapeContainer shape)
+    {
+        RegisterDestroy(shape);
+        EraseInvalidShape(shape);
+    }
+
     void DeleteShape(RaycastHit2D hit)
     {
 
@@ -639,7 +653,6 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
     void UpdateLiveGeneration(bool ignoreSnapping = false)
     {
-
         if (liveAnchor)
         {
             if(ShiftFlag || CtrlFlag) liveAnchor.MoveAll(ignoreSnapping ? mousePos : GetSnappedPosition(mousePos));
@@ -656,7 +669,11 @@ public sealed class DragAndScrollMod : MonoBehaviour
         {
             Vector2 endPosition = GetSnappedPosition(mousePos);
             if (ignoreSnapping) endPosition = mousePos;
-            endPoint.AssignrawWorldPositionPosition(endPosition);
+            endPoint.AssignrawWorldPositionPosition(clickedContainer ? endPoint.rawWorldPosition : endPosition);
+            if (clickedContainer)
+            {
+                clickedContainer.SetScale(clickedContainer.scale);
+            }
         }
     }
 
@@ -677,6 +694,28 @@ public sealed class DragAndScrollMod : MonoBehaviour
                 break;
             case EditorMode.Transforming:
                 StartSelectionGeneration();
+                break;
+        }
+    }
+
+    private void LeftClickOff(CallbackContext obj)
+    {
+
+        leftClick = false;
+        switch (initializer.GetMode())
+        {
+            case EditorMode.Shaping:
+                destroyStack.Clear();
+                if(!clickedContainer) EndShapeGeneration();
+                break;
+            case EditorMode.Animating:
+                EndSplineGeneration();
+                break;
+            case EditorMode.Lighting:
+                EndLightGeneration();
+                break;
+            case EditorMode.Transforming:
+                EndSelectionGeneration();
                 break;
         }
     }
@@ -814,15 +853,53 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
     }
 
-    private void StartShapeGeneration(bool ignoreSnapping = false)
+    private void StartShapeGeneration(bool ignoreSnapping = false, bool ignoreSelecting = false)
     {
-        Vector2 startPosition = GetSnappedPosition(mousePos);
-        //if (ignoreSnapping) startPosition = mousePos;
-        startPoint = Instantiate(point, mousePos, Quaternion.identity);
 
-        Vector2 endPosition = GetSnappedPosition(mousePos);
-        //if (ignoreSnapping) endPosition = mousePos;
-        endPoint = Instantiate(point, mousePos, Quaternion.identity);
+/*        if (!ignoreSelecting)
+        {
+            if (clickedContainer)
+            {
+                EndShapeGeneration(ScrewWithTheLocalPoints: true);
+                clickedContainer = null;
+                return;
+            }
+
+            RaycastHit2D[] hits = GetAllHit2D();
+            if (hits != null)
+            {
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    if (hits[i].transform.TryGetComponent(out ShapeMimicBehaviour mimic))
+                    {
+                        clickedContainer = mimic.GetShapeContainer();
+                        Debug.Log("Bruh");
+                        break;
+                    }
+
+                }
+            }
+        }*/
+
+        bool oldMirrorX = shapeContainerPrefab.mirrorX;
+        bool oldMirrorY = shapeContainerPrefab.mirrorY;
+
+        if (clickedContainer)
+        {
+            shapeContainerPrefab.mirrorX = clickedContainer.mirrorX;
+            shapeContainerPrefab.mirrorY = clickedContainer.mirrorY;
+        }
+
+        Vector2 clickedPosOnGen = clickedContainer ? clickedContainer.mousePosOnGenerate : mousePos;
+        Vector2 clickedPosOnRel = clickedContainer ? clickedContainer.mousePosOnRelease : mousePos;
+        float ShapeSnapping = clickedContainer ? clickedContainer.snappingOnGenerate : Snapping;
+
+        Vector2 startPosition = GetSnappedPosition(clickedPosOnGen);
+        startPoint = Instantiate(point, clickedPosOnGen, Quaternion.identity);
+
+        Vector2 endPosition = GetSnappedPosition(clickedPosOnRel);
+        endPoint = Instantiate(point, clickedPosOnRel, Quaternion.identity);
+
 
         Vector3 pivotPosition = (Vector3)startPosition;
         pivotPosition.z = 0;
@@ -830,20 +907,30 @@ public sealed class DragAndScrollMod : MonoBehaviour
         pivotResult.transform.position = pivotPosition;
         pivotResult.AssignSnappingPoints(startPoint, endPoint);
         pivotResult.AssignDragMod(this);
-        pivotResult.mousePosOnGenerate = this.mousePos;
-        pivotResult.snappingOnGenerate = Snapping;
+        pivotResult.mousePosOnGenerate = clickedPosOnGen;
+        pivotResult.mousePosOnRelease = clickedContainer ? clickedPosOnRel : pivotResult.mousePosOnRelease;
+        pivotResult.snappingOnGenerate = ShapeSnapping;
 
-        startPoint.AssignShapeContainer(pivotResult, Snapping);
+        startPoint.AssignShapeContainer(pivotResult, ShapeSnapping);
         startPoint.AssignLookatTarget(endPoint.transform);
         startPoint.AssignrawWorldPositionPosition(startPoint.transform.position);
-        //startPoint.AssignSnapping(snapping);
         startPoint.AssignStart(true);
 
-        endPoint.AssignShapeContainer(pivotResult, Snapping);
+        endPoint.AssignShapeContainer(pivotResult, ShapeSnapping);
         endPoint.AssignLookatTarget(startPoint.transform);
         endPoint.AssignrawWorldPositionPosition(endPoint.transform.position);
-        //endPoint.AssignSnapping(snapping);
         endPoint.AssignStart(false);
+
+        if (clickedContainer)
+        {
+            pivotResult.SetScale(clickedContainer.scale);
+            pivotResult.SetAllMimicOffsets(clickedContainer.GetAllMimicsOffsets().ToTuple());
+            DeleteShape(clickedContainer);
+            clickedContainer = pivotResult;
+        }
+
+        shapeContainerPrefab.mirrorX = oldMirrorX;
+        shapeContainerPrefab.mirrorY = oldMirrorY;
 
         isGenerating = true;
     }
@@ -855,28 +942,6 @@ public sealed class DragAndScrollMod : MonoBehaviour
         undoStack.Clear();
         for (int i = stackToList.Count - 1; i >= 0; i--) undoStack.Push(stackToList[i]);
         Destroy(invalidShape.gameObject);
-    }
-
-    private void LeftClickOff(CallbackContext obj)
-    {
-
-        leftClick = false;
-        switch (initializer.GetMode())
-        {
-            case EditorMode.Shaping:
-                destroyStack.Clear();
-                EndShapeGeneration();
-                break;
-            case EditorMode.Animating:
-                EndSplineGeneration();
-                break;
-            case EditorMode.Lighting:
-                EndLightGeneration();
-                break;
-            case EditorMode.Transforming:
-                EndSelectionGeneration();
-                break;
-        }
     }
 
     private void EndSelectionGeneration()
@@ -934,7 +999,7 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
     void RightClickOff(CallbackContext obj) => rightClick = false;
 
-    private void EndShapeGeneration(bool ignoreSnapping = false)
+    private void EndShapeGeneration(bool ignoreSnapping = false, bool ScrewWithTheLocalPoints = false)
     {
 
         if (!isGenerating)
@@ -950,7 +1015,13 @@ public sealed class DragAndScrollMod : MonoBehaviour
         endPoint.transform.SetParent(pivotResult.transform, true);
 
         pivotResult.OnRelease();
-        pivotResult.mousePosOnRelease = this.mousePos;
+        if (startPoint) pivotResult.mousePosOnGenerate = startPoint.rawWorldPosition;
+        if (endPoint) pivotResult.mousePosOnRelease = endPoint.rawWorldPosition;
+        /*        if(!ScrewWithTheLocalPoints)
+                {
+                    if (startPoint) pivotResult.mousePosOnGenerate = startPoint.rawWorldPosition;
+                    if (endPoint) pivotResult.mousePosOnRelease = endPoint.rawWorldPosition;
+                }*/
 
         undoStack.Push(pivotResult);
 
@@ -1133,10 +1204,25 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
         public void UseShapeStorage(DragAndScrollMod mod)
         {
-
+            //Load level from loaded/cached file
             EditorMode keepEditMode = mod.initializer.GetMode();
 
+            Dictionary<Light2D, bool> shadowMemory = new ();
+
             shapeMemories = shapeMemories.Reverse().ToArray();
+
+            mod.generators.Add(CollectSceneLightShadows);
+
+            void CollectSceneLightShadows()
+            {
+                Light2D[] sceneLights = FindObjectsByType<Light2D>(FindObjectsSortMode.None);
+
+                foreach (Light2D item in sceneLights)
+                {
+                    shadowMemory[item] = item.shadowsEnabled;
+                    item.shadowsEnabled = false;
+                }
+            }
 
             mod.generators.Add(() =>
             {
@@ -1185,7 +1271,7 @@ public sealed class DragAndScrollMod : MonoBehaviour
                     mod.mousePos = memory.StartPos;
                     mod.shapeContainerPrefab.mirrorX = memory.mirrorX;
                     mod.shapeContainerPrefab.mirrorY = memory.mirrorY;
-                    mod.StartShapeGeneration(false);
+                    mod.StartShapeGeneration(false, true);
                     mod.isGenerating = true;
                 });
 
@@ -1252,7 +1338,6 @@ public sealed class DragAndScrollMod : MonoBehaviour
 
             mod.generators.Add(() =>
             {
-
                 EditorSquareSpawn[] editorSquareSpawns = FindObjectsByType<EditorSquareSpawn>(FindObjectsSortMode.InstanceID);
                 ShapeMimicBehaviour.ShapeMimics.Clear();
                 AnimationAnchor.AnimationAnchors.Clear();
@@ -1313,6 +1398,14 @@ public sealed class DragAndScrollMod : MonoBehaviour
                 }
 
             });
+
+            mod.generators.Add(RemapScenelightShadows);
+
+            void RemapScenelightShadows()
+            {
+                foreach (var item in shadowMemory) if (item.Key) item.Key.shadowsEnabled = item.Value;
+                shadowMemory.Clear();
+            }
 
         }
 

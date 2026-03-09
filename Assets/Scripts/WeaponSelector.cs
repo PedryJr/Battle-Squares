@@ -49,11 +49,11 @@ public sealed class WeaponSelector : MonoBehaviour
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Sprite GetImage() => selectorImage.sprite;
-
+/*
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Update()
     {
         if(playerSynchronizer.localSquare) hoverAnimation.onHoveredColor = playerSynchronizer.localSquare.PlayerColor.HighlightedWeaponColor;
     }
-
+*/
 }

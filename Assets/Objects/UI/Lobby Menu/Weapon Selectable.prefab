@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4481505590576387873}
   - component: {fileID: 5401015615338677483}
   - component: {fileID: 2888640342682864554}
+  - component: {fileID: 6095397837963275465}
   m_Layer: 5
   m_Name: Weapon Selectable
   m_TagString: Untagged
@@ -119,17 +120,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0.415, g: 0.415, b: 0.415, a: 1}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   ignoreHoverColorOptions: 1
+  animateColor: 1
   hoverColorOptions: {fileID: 11400000, guid: 8cdb0d6a600ad7a47ad48df9045962d9, type: 2}
   overrideMaterial: {fileID: 0}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 1
   enterHoverTransitionTime: 0.13
   exitHoverTransitionTime: 0.17
   clickTransitionTime: 0.085
@@ -138,4 +139,15 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 1
   soundInteractionClickType: 1
-  unique: {fileID: 0}
+--- !u!114 &6095397837963275465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6081539523719924645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493cb79a6ce176a4ca2d07145112cd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'

@@ -24,7 +24,6 @@ float3 RGBtoHSV(in float3 RGB)
     return float3(HCV.x, S, HCV.z);
 }
 
-
 StructuredBuffer<float3> _ProximityColors;
 StructuredBuffer<float2> _ProximityPositions;
 StructuredBuffer<float> _ProximityRadiuses;
@@ -48,7 +47,6 @@ float3 SampleProximityColor(float3 opaqueFragmentColor, float2 fragmentPosition2
         float normalizedDistance = saturate(d / radius);
         float influence = pow(1.0 - normalizedDistance, _fallofExponential);
         
-        // Apply saturation boost to entity color
         float3 baseColor = _ProximityColors[i];
         float boost = _ProximitySaturationBoosts[i];
         float luminance = dot(baseColor, float3(0.2126, 0.7152, 0.0722));
@@ -57,14 +55,12 @@ float3 SampleProximityColor(float3 opaqueFragmentColor, float2 fragmentPosition2
         totalInfluence += influence * saturatedColor;
     }
 
-    // Combine base color with proximity influences
     float3 finalColor = lerp(
         opaqueFragmentColor, 
         opaqueFragmentColor + totalInfluence,
         _othersInfluenceOverMe
     );
 
-    // Apply intensity limiting
     float intensity = length(finalColor);
     intensity = min(intensity, _maxIntensity);
     finalColor = (intensity > 1e-5) ? normalize(finalColor) * intensity : 0;
