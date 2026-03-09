@@ -15,10 +15,12 @@ public sealed class Swapper : MonoBehaviour
         input.Enable();
 
         // Subscribe to the action
-        input.MousePos.SceneSwapTest.performed += SceneSwapTest_performed;
+        //input.MousePos.SceneSwapTest.performed += SceneSwapTest_performed;
     }
 
-    private void SceneSwapTest_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void SceneSwapTest_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => RunSwapper();
+
+    public void RunSwapper()
     {
         input.Dispose();
         SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Single);

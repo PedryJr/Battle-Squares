@@ -22,6 +22,7 @@ public sealed class ListPersistendLevels : MonoBehaviour
     EditorLevelListing prefabInstance;
 
     public static LevelPathPointer levelPathPointer;
+    public static ListPersistendLevels levelLister;
 
 
     private void Awake()
@@ -32,6 +33,39 @@ public sealed class ListPersistendLevels : MonoBehaviour
         listings = new List<EditorLevelListing>();
         levelPathPointer = new LevelPathPointer();
         levelPathPointer.LoadPaths();
+        levelLister = this;
+    }
+
+    private void OnDestroy()
+    {
+        levelLister = null;
+    }
+
+    public void ReRaster(string name)
+    {
+        bool nameExists = false;
+        foreach (var item in listings)
+        {
+            if (item.levelName == name)
+            {
+                nameExists = true;
+                break;
+            }
+        }
+        if (!nameExists)
+        {
+            Debug.Log("That level cant be rastered..");
+            return;
+        }
+            LevelFilePaths.StoreLevelIcon(name);
+        foreach (var item in listings)
+        {
+            if(item.levelName == name)
+            {
+                item.icon.sprite = LevelFilePaths.LoadLevelIcon(name);
+                return;
+            }
+        }
     }
 
     public void CustomEnable()
@@ -46,6 +80,20 @@ public sealed class ListPersistendLevels : MonoBehaviour
     {
         Debug.Log("Custom enable running delist!");
         Delist();
+    }
+
+    public void Delist(EditorLevelListing listing)
+    {
+        for (int i = 0; i < listings.Count; i++)
+        {
+            if (listings[i] == listing)
+            {
+                ShrinkAndDestroy instance = listings[i].gameObject.AddComponent<ShrinkAndDestroy>();
+                instance.timeToDestroy = destroyListedElementsInTime;
+                listings.RemoveAt(i);
+                break;
+            }
+        }
     }
 
     private void Delist()
@@ -69,7 +117,7 @@ public sealed class ListPersistendLevels : MonoBehaviour
     {
         EditorLevelListing levelListing = Instantiate(prefabInstance, levelListingParent);
         listings.Add(levelListing);
-        levelListing.LoadListing(index);
+        levelListing.LoadListing(index, this);
     }
 
     public class LevelPathPointer
@@ -101,6 +149,21 @@ public sealed class ListPersistendLevels : MonoBehaviour
                 indexes = pathsAsList.ToArray();
             }
         }
+
+        public bool RemovePath(string levelName)
+        {
+            if (indexes == null) CreatePathsPointer(levelName);
+            else
+            {
+                List<string> pathsAsList = indexes.ToList();
+                if (!pathsAsList.Contains(levelName)) return false;
+                pathsAsList.Remove(levelName);
+                indexes = pathsAsList.ToArray();
+            }
+            return true;
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void CreatePathsPointer(string firstPath) => indexes = new string[1] { firstPath };
     }
@@ -167,9 +230,9 @@ public static class LevelFilePaths
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetLevelsFolderPath() => Application.dataPath + "/Levels";
+    public static string GetLevelsFolderPath() => SaveManager.levelsPath;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetLevelNamedFolderPath(string levelName) => Application.dataPath + "/Levels/" + levelName;
+    public static string GetLevelNamedFolderPath(string levelName) => SaveManager.levelsPath + "/" + levelName;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string GetLevelsPointerFilePath() => GetLevelsFolderPath() + "/Index.bsl";
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -181,8 +244,27 @@ public static class LevelFilePaths
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string GetLevelCompiledJsonFilePath(string levelName) => GetLevelsFolderPath() + $"/{levelName}/compiled.bsl";
 
-    //Store icon function
-    //Load icon function
+    public static bool DeleteLevel(string levelName)
+    {
+        EnsureIndexDirectory();
+
+        bool deletedSomething = false;
+        string levelDir = GetLevelNamedFolderPath(levelName);
+
+        if (Directory.Exists(levelDir))
+        {
+            Directory.Delete(levelDir, true);
+            deletedSomething = true;
+        }
+
+        if (ListPersistendLevels.levelPathPointer.RemovePath(levelName))
+        {
+            ListPersistendLevels.levelPathPointer.SavePaths();
+            deletedSomething = true;
+        }
+
+        return deletedSomething;
+    }
 
     public static void StoreLevelIcon(string levelName)
     {

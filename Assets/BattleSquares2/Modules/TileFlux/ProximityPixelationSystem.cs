@@ -9,6 +9,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static ProximityPixelationSystem;
+using static UnityEngine.Mesh;
 
 [BurstCompile]
 public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
@@ -58,6 +59,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     [MethodImpl(512)]
     private void Awake()
     {
+
         sensorObjects = new List<ProximityPixelSenssor>();
         gridSpaceForceFieldSize = UnsafeUtility.SizeOf<GridSpaceForceField>();
         forceFieldBlockerSize = UnsafeUtility.SizeOf<ForceFieldBlockerData>();
@@ -163,16 +165,18 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     {
         spriteAsMesh = new Mesh();
 
+        Camera possibleInGameCamera = Camera.main;
+
         renderParams = new RenderParams(sharedSpriteMaterial);
         renderParams.instanceID = 0;
         renderParams.layer = 10;
-        renderParams.camera = Camera.main;
+        renderParams.camera = possibleInGameCamera;
         renderParams.lightProbeProxyVolume = null;
         renderParams.lightProbeUsage = LightProbeUsage.Off;
         renderParams.shadowCastingMode = ShadowCastingMode.Off;
-        renderParams.motionVectorMode = MotionVectorGenerationMode.Camera;
+        renderParams.motionVectorMode = MotionVectorGenerationMode.ForceNoMotion;
 
-        mainCamera = Camera.main;
+        mainCamera = possibleInGameCamera;
     }
 
     NativeArray<VertexAttributeDescriptor> layout;
@@ -184,11 +188,12 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         layout[1] = new VertexAttributeDescriptor(VertexAttribute.TexCoord2, VertexAttributeFormat.Float16, 2);
         layout[2] = new VertexAttributeDescriptor(VertexAttribute.TexCoord3, VertexAttributeFormat.Float16, 2);
 
-        CalculateProximityPixels();
-        spriteAsMesh.indexFormat = IndexFormat.UInt32;
-        spriteAsMesh.SetIndices(triangles.ToArray(), MeshTopology.Triangles, 0);
-        spriteAsMesh.bounds = new Bounds(Vector3.zero, Vector3.one * 2048);
+        spriteAsMesh.SetVertexBufferParams(iterations * 4, layout);
+        spriteAsMesh.SetIndexBufferParams(triangles.Length, IndexFormat.UInt32);
+        spriteAsMesh.SetIndices(triangles.ToArray(), MeshTopology.Triangles, 0, calculateBounds: false);
         spriteAsMesh.MarkDynamic();
+        spriteAsMesh.bounds = new Bounds(Vector3.zero, Vector3.one * 2048);
+        
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -208,26 +213,24 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
     }
 
     float registerDT = 0f;
-    float frameRate = 60f;
-    float frameTimer = 0f;
+    float accumulator = 0f;
+    const float updateRate = 60f;
+    const float fixedDT = 1f / updateRate;
 
     private void Update()
     {
-        frameTimer += Time.deltaTime;
-        if(frameTimer > 1f / frameRate)
+        accumulator += Time.deltaTime;
+
+        while (accumulator >= fixedDT)
         {
-            registerDT = Mathf.Max(frameTimer, Time.deltaTime);
-            foreach (var item in sensorObjects) if (item) item.CustomUpdate();
+            registerDT = fixedDT; 
+            foreach (var item in sensorObjects) item.CustomUpdate();
             CalculateProximityPixels();
-            frameTimer = 0f;
-        }/*
-        TryGetColor();*/
+            accumulator -= fixedDT;
+        }
     }
 
-/*    void TryGetColor()
-    {
-        if(WorldColors.Instance) renderParams.material.SetColor("_Color", WorldColors.GetPixelEffectColor());
-    }*/
+
 
     private void OnDestroy()
     {
@@ -276,14 +279,18 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         }
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void SafeComplete(in JobHandle jobHandle)
     {
         if (jobHandle.IsCompleted) return;
         jobHandle.Complete();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AddForceFieldBlocker(ForceFieldBlockerData forceFieldBlockerData) => nativeForceFieldBlockers.Add(forceFieldBlockerData);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AddProximitySensor(ref GridSpaceForceField newData) => nativeProximitySensors.Add(newData);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AssertMainCamera(Camera newMainCamera) => mainCamera = newMainCamera;
 
 
@@ -310,20 +317,17 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
             gameState = gameState,
         };
 
-        positionCompute = proximitySensorCalculation.Schedule(iterations, 64);
+        positionCompute = proximitySensorCalculation.ScheduleParallelByRef(iterations, 64, default);
 
         nativeProximitySensors.Clear();
         nativeForceFieldBlockers.Clear();
 
-        spriteAsMesh.SetVertexBufferParams(vertexDatas.Length, layout);
         spriteAsMesh.SetVertexBufferData(vertexDatas, 0, 0, vertexDatas.Length);
+        spriteAsMesh.UploadMeshData(false);
     }
 
-
-    private void LateUpdate()
-    {
-        Graphics.RenderMesh(renderParams, spriteAsMesh, 0, transform.localToWorldMatrix);
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void LateUpdate() => Graphics.RenderMesh(renderParams, spriteAsMesh, 0, transform.localToWorldMatrix);
 
     [BurstCompile(FloatPrecision = FloatPrecision.Low, FloatMode = FloatMode.Fast, DisableDirectCall = false, DisableSafetyChecks = false, OptimizeFor = OptimizeFor.Performance)]
     public struct ForceFieldBlockerData
@@ -441,7 +445,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
 }
 
 [BurstCompile(FloatPrecision = floatPrecision, FloatMode = floatMode, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, OptimizeFor = optimizeFor)]
-unsafe struct ProximitySensorCalculation : IJobParallelFor
+unsafe struct ProximitySensorCalculation : IJobFor
 {
     const FloatPrecision floatPrecision = FloatPrecision.Low;
     const FloatMode floatMode = FloatMode.Fast;

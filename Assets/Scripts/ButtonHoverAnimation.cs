@@ -1,116 +1,180 @@
 using System;
-using System.Runtime.CompilerServices;
 using TMPro;
-using Unity.Burst;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public sealed class ButtonHoverAnimation : MonoBehaviour
 {
+    public static bool NavigatingUI;
 
-    private int funcTracker = -1;
+    [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private UnityEvent clickEvent;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CallFromUpdateManager(in ButtonHoverAnimation obj) => obj.MyUpdate();
+    public bool isSelected = false;
+    public void CLICK_FROM_NAN()
+    {
+        if(isSelected) ButtonClick();
+    }
+    public void SELECT_FROM_NAV()
+    {
+        if(!isSelected)
+        {
+            OnHover();
+            isSelected = true;
+        }
+    }
 
-
-
-
-
-
-
-
-
-
-
-    [SerializeField]
-    private RectTransform rectTransform;
-
-    [SerializeField]
-    private UnityEvent clickEvent;
+    [SerializeField] bool enableSelectUp;
+    [SerializeField] Action selectUp;
+    void SelectUp()
+    {
+        if (!isSelected) return;
+        if (!NavigatingUI) return;
+        if (!enableSelectUp) return;
+        selectUp();
+        ExitHover();
+    }
 
     private TextMeshProUGUI tmp;
-
     private Button button;
-    public Inputs input;
     private ScrollRect scrollRect;
     private SpriteRenderer spriteRenderer;
-
-    [NonSerialized]
     public Image image;
 
     private UIAudio uIAudio;
+    public Inputs input;
 
+    private Vector2 initSize;
     private Vector2 offHoveredSize;
     private Vector2 onHoveredSize;
     private Vector2 onClickedSize;
-    private Vector2 currentSize;
-    private Vector2 offsetSizeStretch;
-    private Vector2 offsetSizeExpand;
-    private Vector2 offsetSizeClickedStretch;
-    private Vector2 offsetSizeClickedExpand;
+
     private Vector2 fromSize;
     private Vector2 toSize;
-    private Vector2 initSize;
+    private Vector2 currentSize;
+
     private Vector2 tmpPos;
     private Vector2 tmpSize;
 
     public Color offHoveredColor;
-    public Color currentColor;
-    public Color fromColor;
-    public Color toColor;
     public Color onHoveredColor;
+    public bool ignoreHoverColorOptions = false;
+    public bool animateColor;
+
+    public ButtonHoverAnimationColorSettings hoverColorOptions;
+    public Material overrideMaterial;
+
+    private Color fromColor;
+    public Color toColor;
 
     public bool isHovering;
-    public bool animateColor;
-    private bool animatingClick = false;
+    private bool animatingClick;
 
-    [SerializeField]
-    private float enterHoverTransitionTime;
+    [SerializeField] private float enterHoverTransitionTime = 0.1f;
+    [SerializeField] private float exitHoverTransitionTime = 0.1f;
+    [SerializeField] private float clickTransitionTime = 0.1f;
 
-    [SerializeField]
-    private float exitHoverTransitionTime;
-
-    [SerializeField]
-    private float clickTransitionTime;
-
-    [SerializeField]
-    private float multiplier = 1;
-
-    [SerializeField]
-    private bool inverseScroll;
+    [SerializeField] private float multiplier = 1f;
+    [SerializeField] private bool inverseScroll;
 
     private float animationTimer;
 
-    [SerializeField]
-    private AnimationType animationType;
+    [SerializeField] private AnimationType animationType;
+    [SerializeField] private SoundInteractionHoverType soundInteractionHoverType;
+    [SerializeField] private SoundInteractionClickType soundInteractionClickType;
 
-    [SerializeField]
-    private SoundInteractionHoverType soundInteractionHoverType;
+    private Material unique;
+    private bool uiRegClaimed;
 
-    [SerializeField]
-    private SoundInteractionClickType soundInteractionClickType;
+    private Action<InputAction.CallbackContext> scrollCallback;
+
+    #region Unity Lifecycle
 
     private void Awake()
     {
+        if (!rectTransform) rectTransform = GetComponent<RectTransform>();
+
+        image = GetComponent<Image>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        button = GetComponent<Button>();
+        tmp = GetComponentInChildren<TextMeshProUGUI>();
+        scrollRect = GetComponentInParent<ScrollRect>();
+
+        if (!hoverColorOptions)
+            hoverColorOptions = AssetResources.GetDefaultButtonHoverColorSettings;
+
         uIAudio = Resources.Load<UIAudio>("UIAudio");
 
-        if (animateColor)
+        SetupVisuals();
+        SetupSizes();
+        SetupInput();
+    }
+
+    private void OnEnable()
+    {
+        SetupEventTriggers();
+        ResetState();
+    }
+
+    private void Update()
+    {
+        UpdateColorsFromSettings();
+        SyncTargetColorIfNeeded();
+        Animate();
+        ApplyAnimation();
+    }
+
+    private void OnDisable()
+    {
+        RemoveEventTriggers();
+        ReleaseUIReg();
+        DisableInput();
+    }
+
+    private void OnDestroy()
+    {
+        ReleaseUIReg();
+        DisableInput();
+
+        if (unique)
+            Destroy(unique);
+    }
+
+    #endregion
+
+    #region Setup
+
+    private void SetupVisuals()
+    {
+        if (animateColor && !ignoreHoverColorOptions)
         {
-            image = GetComponent<Image>();
-            spriteRenderer = GetComponent<SpriteRenderer>();
-
-            if (spriteRenderer) offHoveredColor = spriteRenderer.color;
-            else if (image) offHoveredColor = image.color;
-
-            currentColor = offHoveredColor;
-            fromColor = offHoveredColor;
-            toColor = offHoveredColor;
+            onHoveredColor = hoverColorOptions.onHoveredColor;
+            offHoveredColor = hoverColorOptions.offHoveredColor;
         }
 
-        tmp = GetComponentInChildren<TextMeshProUGUI>();
+        if (!ignoreHoverColorOptions)
+        {
+            if (!unique)
+            {
+                unique = Instantiate(overrideMaterial
+                    ? overrideMaterial
+                    : AssetResources.GetDefaultButtonMaterial);
+            }
+
+            if (image)
+            {
+                image.material = unique;
+                image.color = Color.white;
+            }
+            else if (spriteRenderer)
+            {
+                spriteRenderer.material = unique;
+                spriteRenderer.color = Color.white;
+            }
+        }
 
         if (tmp)
         {
@@ -118,280 +182,303 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
             tmpSize = tmp.rectTransform.sizeDelta;
         }
 
-        scrollRect = GetComponentInParent<ScrollRect>();
+        toColor = offHoveredColor;
+    }
 
-        input = new Inputs();
-
-        input.GameUI.ScrollUI.performed += (context) =>
-        {
-            if (!scrollRect) return;
-            if (!isHovering) return;
-            float scroll = inverseScroll ? -context.ReadValue<float>() : context.ReadValue<float>();
-
-            Vector2 capturedVelocity = scrollRect.velocity;
-            Vector2 addedVelocity = new Vector2(scroll, scroll) * 100;
-
-            if (!scrollRect.vertical) addedVelocity.y = 0;
-            if (!scrollRect.horizontal) addedVelocity.x = 0;
-
-            capturedVelocity = Vector2.ClampMagnitude(capturedVelocity + addedVelocity, 1000);
-
-            scrollRect.velocity = capturedVelocity;
-        };
-
-        if (!rectTransform) rectTransform = GetComponent<RectTransform>();
-        button = GetComponent<Button>();
-
+    private void SetupSizes()
+    {
         initSize = rectTransform.sizeDelta;
 
         offHoveredSize = initSize;
         onHoveredSize = initSize;
         onClickedSize = initSize;
 
-        currentSize = initSize;
-        fromSize = initSize;
-        toSize = initSize;
+        Vector2 stretch = new Vector2(initSize.x * 0.05f, 0f) * multiplier;
+        Vector2 expand = initSize * 0.03f * multiplier;
+        Vector2 clickStretch = new Vector2(initSize.x * 0.02f, 0f) * multiplier;
+        Vector2 clickExpand = initSize * 0.016f * multiplier;
 
-        offsetSizeStretch = new Vector2(initSize.x * 0.05f, 0) * multiplier;
-        offsetSizeExpand = new Vector2(initSize.x * 0.03f, initSize.y * 0.03f) * multiplier;
-        offsetSizeClickedStretch = new Vector2(initSize.x * 0.02f, 0) * multiplier;
-        offsetSizeClickedExpand = new Vector2(initSize.x * 0.016f, initSize.y * 0.016f) * multiplier;
+        onHoveredSize += animationType == AnimationType.Expand ? expand : stretch;
+        onClickedSize -= animationType == AnimationType.Expand ? clickExpand : clickStretch;
 
-        onHoveredSize += animationType == AnimationType.Expand ? offsetSizeExpand : offsetSizeStretch;
-        onClickedSize -= animationType == AnimationType.Expand ? offsetSizeClickedExpand : offsetSizeClickedStretch;
+        currentSize = fromSize = toSize = initSize;
     }
 
-    private unsafe void OnEnable()
+    private void SetupInput()
     {
+        input = new Inputs();
 
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<ButtonHoverAnimation>.Instance.Register(&CallFromUpdateManager, this, trackerPtr);
+        scrollCallback = ctx =>
+        {
+            if (!scrollRect || !isHovering)
+                return;
 
-        SetupEventTriggers();
+            float scroll = inverseScroll ? -ctx.ReadValue<float>() : ctx.ReadValue<float>();
+
+            Vector2 added = new Vector2(
+                scrollRect.horizontal ? scroll : 0f,
+                scrollRect.vertical ? scroll : 0f
+            ) * 100f;
+
+            scrollRect.velocity = Vector2.ClampMagnitude(scrollRect.velocity + added, 1000f);
+        };
+
+        input.GameUI.ScrollUI.performed += scrollCallback;
+    }
+
+    private void DisableInput()
+    {
+        if (input != null)
+        {
+            input.GameUI.ScrollUI.performed -= scrollCallback;
+            input.Disable();
+        }
+    }
+
+    private void ResetState()
+    {
+        isHovering = false;
+        animatingClick = false;
+        animationTimer = 0f;
 
         rectTransform.sizeDelta = offHoveredSize;
+
         if (tmp)
         {
             tmp.rectTransform.localPosition = tmpPos;
             tmp.rectTransform.sizeDelta = tmpSize;
         }
-
-        ExitHover();
-        MyUpdate();
+        SetRenderColor(offHoveredColor);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void MyUpdate()
-    {
-        Animate();
-        ApplyAnimation();
-    }
+    #endregion
 
-    #region Setup
+    #region Hover / Click
 
     private void OnHover()
     {
-        if (soundInteractionHoverType == SoundInteractionHoverType.Normal && isHovering == false) uIAudio.PlayHover(1f);
-        if (soundInteractionHoverType == SoundInteractionHoverType.HighPitch && isHovering == false) uIAudio.PlayHover(1.2f);
-        if (soundInteractionHoverType == SoundInteractionHoverType.LowPitch && isHovering == false) uIAudio.PlayHover(0.8f);
+        if (isHovering) return;
 
-        input.Enable();
+        PlayHoverSound();
+        ClaimUIReg();
 
         isHovering = true;
-
-        PlayerController.uiRegs += 1;
-
-        if (animatingClick) return;
-
-        animationTimer = 0;
+        animationTimer = 0f;
         fromSize = rectTransform.sizeDelta;
         toSize = onHoveredSize;
 
         if (animateColor)
         {
+            fromColor = GetCurrentColor();
             toColor = onHoveredColor;
-
-            if (spriteRenderer)
-            {
-                fromColor = spriteRenderer.color;
-            }
-            else
-            {
-                fromColor = image.color;
-            }
         }
+
+        input.Enable();
     }
 
-    public void ExitHover()
+    private void ExitHover()
     {
-        input.Disable();
+        if (!isHovering) return;
 
         isHovering = false;
+        ReleaseUIReg();
 
-        PlayerController.uiRegs -= 1;
-        if (PlayerController.uiRegs < 0) PlayerController.uiRegs = 0;
-
-        animationTimer = 0;
+        animationTimer = 0f;
         fromSize = rectTransform.sizeDelta;
         toSize = offHoveredSize;
 
         if (animateColor)
         {
+            fromColor = GetCurrentColor();
             toColor = offHoveredColor;
-
-            if (spriteRenderer)
-            {
-                fromColor = spriteRenderer.color;
-            }
-            else
-            {
-                fromColor = image.color;
-            }
         }
 
-        if (animatingClick) RunClickEvent();
+        input.Disable();
     }
 
-    public void ButtonClick()
+    private void ButtonClick()
     {
         if (animatingClick) return;
 
-        if (soundInteractionClickType == SoundInteractionClickType.Normal) uIAudio.PlayClick(1f);
-        if (soundInteractionClickType == SoundInteractionClickType.HighPitch) uIAudio.PlayClick(1.2f);
-        if (soundInteractionClickType == SoundInteractionClickType.LowPitch) uIAudio.PlayClick(0.8f);
+        PlayClickSound();
 
         animatingClick = true;
-        animationTimer = 0;
+        animationTimer = 0f;
         fromSize = rectTransform.sizeDelta;
         toSize = onClickedSize;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    #endregion
+
+    #region Animation
+
     private void Animate()
     {
-        animationTimer =
+        float duration =
+            animatingClick ? clickTransitionTime :
+            isHovering ? enterHoverTransitionTime :
+            exitHoverTransitionTime;
 
-            animatingClick ?
-                animationTimer < 1 ? animationTimer + (Time.deltaTime / clickTransitionTime) : 1
-                :
-                isHovering ? animationTimer < 1 ? animationTimer + (Time.deltaTime / enterHoverTransitionTime) : 1
-                :
-                animationTimer < 1 ? animationTimer + (Time.deltaTime / exitHoverTransitionTime) : 1;
-    }
-
-    private void SetupEventTriggers()
-    {
-        EventTrigger eventTrigger = GetComponent<EventTrigger>();
-
-        if (!eventTrigger) eventTrigger = gameObject.AddComponent<EventTrigger>();
-
-        EventTrigger.Entry pointerEnterEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
-        EventTrigger.Entry pointerExitEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
-        EventTrigger.Entry pointerClickEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
-
-        pointerEnterEntry.callback.AddListener((eventData) => { OnHover(); });
-        pointerExitEntry.callback.AddListener((eventData) => { ExitHover(); });
-        pointerClickEntry.callback.AddListener((eventData) => { ButtonClick(); });
-
-        eventTrigger.triggers.Add(pointerEnterEntry);
-        eventTrigger.triggers.Add(pointerExitEntry);
-        eventTrigger.triggers.Add(pointerClickEntry);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RemoveTriggers()
-    {
-        EventTrigger eventTrigger = gameObject.GetComponent<EventTrigger>();
-        if (eventTrigger) Destroy(gameObject.GetComponent<EventTrigger>());
-    }
-
-    private void OnDestroy()
-    {
-        if (isHovering)
+        if (duration <= 0f)
         {
-            PlayerController.uiRegs -= 1;
-            if (PlayerController.uiRegs < 0) PlayerController.uiRegs = 0;
+            animationTimer = 1f;
+            return;
         }
 
-        if (input != null)
-        {
-            input.Disable();
-            input.Dispose();
-        }
-
-        clickEvent.RemoveAllListeners();
+        animationTimer = Mathf.Min(1f, animationTimer + Time.deltaTime / duration);
     }
-
-    private unsafe void OnDisable()
-    {
-
-        fixed (int* trackerPtr = &funcTracker) MyUpdateManager<ButtonHoverAnimation>.Instance.Unregister(trackerPtr);
-
-        clickEvent.RemoveAllListeners();
-
-        EventTrigger eventTrigger = GetComponent<EventTrigger>();
-
-        if (eventTrigger) Destroy(eventTrigger);
-    }
-
-    #endregion Setup
 
     private void ApplyAnimation()
     {
-        if (animatingClick)
-        {
-            float lerp;
+        float t = animatingClick
+            ? MyExtentions.EaseOnClick(animationTimer)
+            : isHovering
+                ? MyExtentions.EaseOnHover(animationTimer)
+                : MyExtentions.EaseOutQuad(animationTimer);
 
-            lerp = MyExtentions.EaseOnClick(animationTimer);
-            currentSize = Vector2.LerpUnclamped(fromSize, toSize, lerp);
-
-            if (animationTimer > 1) RunClickEvent();
-        }
-        else
-        {
-            float lerp;
-            lerp = isHovering ? MyExtentions.EaseOnHover(animationTimer) : MyExtentions.EaseOutQuad(animationTimer);
-            currentSize = Vector2.LerpUnclamped(fromSize, toSize, lerp);
-
-            if (animateColor)
-            {
-                if (spriteRenderer) spriteRenderer.color = Color.Lerp(fromColor, toColor, lerp);
-                else image.color = Color.Lerp(fromColor, toColor, lerp);
-            }
-        }
-
+        currentSize = Vector2.LerpUnclamped(fromSize, toSize, t);
         rectTransform.sizeDelta = currentSize;
+
+        if (animateColor)
+            SetRenderColor(Color.Lerp(fromColor, toColor, t));
+
+        if (animatingClick && animationTimer >= 1f)
+            FinishClick();
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RunClickEvent()
+    private void FinishClick()
     {
+        animatingClick = false;
+        animationTimer = 0f;
+
         fromSize = rectTransform.sizeDelta;
         toSize = isHovering ? onHoveredSize : offHoveredSize;
-        animationTimer = 0;
-        animatingClick = false;
 
         clickEvent?.Invoke();
+        if (this && !gameObject.activeInHierarchy)
+        {
+            ResetState();
+            SetupSizes();
+        }
     }
 
-    private enum AnimationType
+    #endregion
+
+    #region Helpers
+
+    private void SetupEventTriggers()
     {
-        Stretch,
-        Expand
+        EventTrigger trigger = GetComponent<EventTrigger>();
+        if (!trigger)
+            trigger = gameObject.AddComponent<EventTrigger>();
+
+        trigger.triggers.Clear();
+
+        AddTrigger(trigger, EventTriggerType.PointerEnter, _ => OnHover());
+        AddTrigger(trigger, EventTriggerType.PointerExit, _ => ExitHover());
+        AddTrigger(trigger, EventTriggerType.PointerClick, _ => ButtonClick());
     }
 
-    private enum SoundInteractionHoverType
+    private void RemoveEventTriggers()
     {
-        Normal,
-        HighPitch,
-        LowPitch,
-        None
+        EventTrigger trigger = GetComponent<EventTrigger>();
+        if (trigger)
+            trigger.triggers.Clear();
     }
 
-    private enum SoundInteractionClickType
+    private static void AddTrigger(EventTrigger trigger, EventTriggerType type, Action<BaseEventData> action)
     {
-        Normal,
-        HighPitch,
-        LowPitch,
-        None
+        EventTrigger.Entry entry = new EventTrigger.Entry { eventID = type };
+        entry.callback.AddListener(data => action(data));
+        trigger.triggers.Add(entry);
     }
+
+    private void ClaimUIReg()
+    {
+        if (uiRegClaimed) return;
+        uiRegClaimed = true;
+        PlayerController.uiRegs++;
+    }
+
+    private void ReleaseUIReg()
+    {
+        if (!uiRegClaimed) return;
+        uiRegClaimed = false;
+        PlayerController.uiRegs = Mathf.Max(0, PlayerController.uiRegs - 1);
+    }
+
+    private void PlayHoverSound()
+    {
+        if (!uIAudio) return;
+
+        if (soundInteractionHoverType == SoundInteractionHoverType.Normal) uIAudio.PlayHover(1f);
+        if (soundInteractionHoverType == SoundInteractionHoverType.HighPitch) uIAudio.PlayHover(1.2f);
+        if (soundInteractionHoverType == SoundInteractionHoverType.LowPitch) uIAudio.PlayHover(0.8f);
+    }
+
+    private void PlayClickSound()
+    {
+        if (!uIAudio) return;
+
+        if (soundInteractionClickType == SoundInteractionClickType.Normal) uIAudio.PlayClick(1f);
+        if (soundInteractionClickType == SoundInteractionClickType.HighPitch) uIAudio.PlayClick(1.2f);
+        if (soundInteractionClickType == SoundInteractionClickType.LowPitch) uIAudio.PlayClick(0.8f);
+    }
+
+    private void SyncTargetColorIfNeeded()
+    {
+        if (!animateColor)
+            return;
+
+        Color desired =
+            animatingClick ? toColor :
+            isHovering ? onHoveredColor :
+            offHoveredColor;
+
+        if (toColor != desired)
+        {
+            fromColor = GetCurrentColor();
+            toColor = desired;
+            animationTimer = 0f;
+        }
+    }
+
+
+    private void UpdateColorsFromSettings()
+    {
+        if (ignoreHoverColorOptions || !hoverColorOptions) return;
+
+        onHoveredColor = hoverColorOptions.onHoveredColor;
+        offHoveredColor = hoverColorOptions.offHoveredColor;
+    }
+
+    public Color GetCurrentColor()
+    {
+        if (unique)
+            return unique.GetColor("_Color");
+
+        if (image)
+            return image.color;
+
+        if (spriteRenderer)
+            return spriteRenderer.color;
+
+        return Color.white;
+    }
+
+    public void SetRenderColor(Color color)
+    {
+        if (unique)
+            unique.SetColor("_Color", color);
+        else if (image)
+            image.color = color;
+        else if (spriteRenderer)
+            spriteRenderer.color = color;
+    }
+
+    #endregion
+
+    private enum AnimationType { Stretch, Expand }
+    private enum SoundInteractionHoverType { Normal, HighPitch, LowPitch, None }
+    private enum SoundInteractionClickType { Normal, HighPitch, LowPitch, None }
 }

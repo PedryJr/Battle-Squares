@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2397475073208021736}
   - component: {fileID: 5863728435777763825}
   - component: {fileID: 7240799358741266290}
-  - component: {fileID: 1421401743784381101}
   - component: {fileID: 1462027230021753929}
   m_Layer: 16
   m_Name: PowerDot
@@ -91,28 +90,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1421401743784381101
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5133191968781100481}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &1462027230021753929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,3 +136,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   lifeTime: 0.15
+  begone: 0

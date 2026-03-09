@@ -47,7 +47,7 @@ public sealed class ObjectivesBehaviour : MonoBehaviour
         {
             for (int j = 0; j < sortedPlayers.Length - 1 - i; j++)
             {
-                if (sortedPlayers[j].id > sortedPlayers[j + 1].id)
+                if (sortedPlayers[j].square.GetGameID() > sortedPlayers[j + 1].square.GetGameID())
                 {
                     PlayerData temp = sortedPlayers[j];
                     sortedPlayers[j] = sortedPlayers[j + 1];

@@ -16,11 +16,13 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
     Image image;
 
     PlayerSynchronizer playerSynchronizer;
+    ProjectileManager projectileManager;
 
-    public ProjectileType weaponType;
+    public ushort previewing = 0;
 
     private void Awake()
     {
+        projectileManager = FindAnyObjectByType<ProjectileManager>();
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         image = GetComponent<Image>();
         weapons = weaponSelectorContent.GetComponentsInChildren<WeaponSelector>(true);
@@ -33,25 +35,19 @@ public sealed class WeaponPreviewBehaviour : MonoBehaviour
         if (!playerSynchronizer.localSquare) return;
         if (!playerSynchronizer.localSquare.nozzleBehaviour) return;
 
+        PlayerBehaviour localPlayer = playerSynchronizer.localSquare;
+
         if (previewType == WeaponPreviewType.Primary)
         {
-            foreach (WeaponSelector weaponSelector in weapons)
-            {
-                if (weaponSelector.weaponType == playerSynchronizer.localSquare.nozzleBehaviour.primary)
-                {
-                    weaponType = weaponSelector.weaponType;
-                }
-            }
+            previewing = localPlayer.nozzleBehaviour.primary;
+            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeID(previewing);
+            image.sprite = weapon.GetSprite;
         }
         else
         {
-            foreach (WeaponSelector weaponSelector in weapons)
-            {
-                if (weaponSelector.weaponType == playerSynchronizer.localSquare.nozzleBehaviour.secondary)
-                {
-                    weaponType = weaponSelector.weaponType;
-                }
-            }
+            previewing = localPlayer.nozzleBehaviour.secondary;
+            WeaponBuilder weapon = projectileManager.GetWeaponBuilderByTypeID(previewing);
+            image.sprite = weapon.GetSprite;
         }
 
         Color colorReference = playerSynchronizer.localSquare.PlayerColor.SelectedWeaponColor;

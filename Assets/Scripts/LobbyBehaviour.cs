@@ -1,7 +1,5 @@
 using Steamworks;
 using Steamworks.Data;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -9,8 +7,8 @@ using UnityEngine;
 public sealed class LobbyBehaviour : MonoBehaviour
 {
 
-    private int funcTracker = -1;
-
+    [SerializeField] ulong lobbyIdSHOW;
+    [SerializeField] ulong ownerIdSHOW;
 
     [SerializeField]
     public TextMeshProUGUI lobbyName;
@@ -20,10 +18,8 @@ public sealed class LobbyBehaviour : MonoBehaviour
 
     public LobbyLoader lobbyLoader;
 
-    public SteamId lobbyId = new SteamId();
-    public SteamId ownerId = new SteamId();
-
-    public Lobby lobby;
+    public ManagedLobby lobby;
+    public ref Lobby GetLobby => ref lobby.GetLobby;
 
     public int lobbyCapacity;
     public int lobbyPopulation;
@@ -35,45 +31,38 @@ public sealed class LobbyBehaviour : MonoBehaviour
 
     bool doDestroy = false;
 
-    [SerializeField]
-    UnityEngine.UI.Image borderImage;
-
     bool firstLoad;
     private void Awake()
     {
         firstLoad = true;
+        lobby = new ManagedLobby();
+        lobbyLoader = FindAnyObjectByType<LobbyLoader>();
     }
 
-    public LobbyBehaviour Initialize(Lobby lobby, LobbyLoader lobbyLoader)
+    public LobbyBehaviour Initialize(Lobby lobbyToInitialize)
     {
-
         activated = true;
 
-        this.lobby = lobby;
+        this.lobby = new ManagedLobby(lobbyToInitialize);
 
         string steamIdAsString = string.Empty;
         string lobbyName = string.Empty;
         string invalidChars = @"@% ^|\<> ~`";
 
-        IEnumerator<KeyValuePair<string, string>> enumerableData = lobby.Data.GetEnumerator();
-
         StringBuilder sb = new StringBuilder();
 
-        lobbyName = lobby.GetData("Name");
-        ownerId.Value = ulong.Parse(lobby.GetData("OwnerId").ToString());
-        GetImageData(ownerId);
-        lobbyId = lobby.Id;
+        lobbyName = lobby.OwnerName;
+        GetImageData(lobby.OwnerId);
 
-        lobbyCapacity = lobby.MaxMembers;
-        lobbyPopulation = lobby.MemberCount;
+        lobbyCapacity = lobbyToInitialize.MaxMembers;
+        lobbyPopulation = lobbyToInitialize.MemberCount;
 
         if(lobbyName == string.Empty) doDestroy = true;
 
-        if (doDestroy)
+        if (doDestroy || !lobbyToInitialize.Id.IsValid)
         {
-
-            lobbyLoader.failedLobbies.Add(this);
-
+            lobbyLoader.failedLobbies.Add(lobby.Id);
+            Debug.Log("UhhhhhhhhhhWTF");
         }
         else
         {
@@ -91,10 +80,10 @@ public sealed class LobbyBehaviour : MonoBehaviour
             }
 
             this.lobbyName.text = sb.ToString();
-            this.lobbyLoader = lobbyLoader;
-
         }
 
+        lobbyIdSHOW = lobby.Id;
+        ownerIdSHOW = lobby.OwnerId;
         UpdateAvalible();
 
         return this;
@@ -129,8 +118,7 @@ public sealed class LobbyBehaviour : MonoBehaviour
 
         LobbyBehaviour preview = lobbyLoader.lobbyPreview.GetComponent<LobbyBehaviour>();
 
-        preview.lobbyId = lobbyId;
-        preview.ownerId = ownerId;
+        preview.lobby = lobby;
 
         preview.lobbyCapacity = lobbyCapacity;
         preview.lobbyPopulation = lobbyPopulation;
@@ -149,44 +137,127 @@ public sealed class LobbyBehaviour : MonoBehaviour
 
     private void Update()
     {
+        if(isPreview) PreviewUpdate();
+        else ListingUpdate();
+    }
 
+    void PreviewUpdate()
+    {
+        if (lobby.OwnerId == 0) TryLoadOwnLobby();
+        else if (!lobby.IsAvalible && !lobby.OwnedBySelf) TryLoadOwnLobby();
+
+        void TryLoadOwnLobby()
+        {
+            LobbyBehaviour ownLobby = lobbyLoader.GetOwnLobby();
+            if(ownLobby) ownLobby.OnClicked();
+        }
+    }
+
+    
+
+    void ListingUpdate()
+    {
         avalibilityUpdateTime += Time.deltaTime;
-
-        if (avalibilityUpdateTime > 0.5f) UpdateAvalible();
-
+        if (avalibilityUpdateTime > 0.05f) UpdateAvalible();
     }
 
     public void UpdateAvalible()
     {
-
+        
         avalibilityUpdateTime = 0;
 
-        if (isPreview) return;
+        lobby.TryRefresh();
 
-        lobby.Refresh();
-
-        if(ownerId.Value == SteamClient.SteamId.Value)
+        if (!lobby.IsAvalible && lobby.OwnerId != SteamClient.SteamId.Value)
         {
-
-            //borderImage.color = new UnityEngine.Color(0.4627451f, 0.4627451f, 0.4627451f, 1f);
-
-            if (firstLoad && !lobbyLoader.lobbyPreview.GetComponent<LobbyBehaviour>().activated)
-            {
-                OnClicked();
-                firstLoad = false;
-            }
-
-        }else if (lobby.GetData("Avalible").Equals("true"))
-        {
-
-            //borderImage.color = new UnityEngine.Color(0.213937f, 0.349f, 0.2229412f, 1f);
+            lobbyLoader.LobbiesV2.Remove(lobby.Id);
+            Destroy(gameObject);
         }
-        else
-        {
-
-            //borderImage.color = new UnityEngine.Color(0.3490196f, 0.2156863f, 0.2156863f, 1f);
-
-        }
-
     }
+}
+
+public class ManagedSteamId
+{
+    private SteamId steamId;
+
+    public ulong Id
+    {
+        get { return steamId.Value; }
+        set { steamId.Value = value; }
+    }
+}
+
+public class ManagedLobby
+{
+    bool _empty = default;
+    private Lobby lobby;
+    public ManagedLobby()
+    {
+        _empty = true;
+        lobby = new Lobby();
+    }
+
+    public ManagedLobby(Lobby lobby)
+    {
+        _empty = false;
+        this.lobby = lobby;
+        TryRefresh();
+    }
+
+    public ulong Id => lobby.Id;
+
+    public string OwnerName
+    {
+        get
+        {
+            if (_empty) return "NaL";
+            TryRefresh();
+            return lobby.GetData("Name");
+        }
+    }
+    public ulong OwnerId
+    {
+        get
+        {
+            if (_empty) return 0;
+            TryRefresh();
+            return ulong.Parse(lobby.GetData("OwnerId"));
+        }
+    }
+
+    public bool IsAvalible
+    {
+        get
+        {
+            if (_empty) return false;
+            TryRefresh();
+            return bool.Parse(this.lobby.GetData("Avalible"));
+        }
+    }
+
+    public bool OwnedBySelf
+    {
+        get
+        {
+            if (_empty) return false;
+            TryRefresh();
+            return OwnerId == SteamClient.SteamId.Value;
+        }
+    }
+    public bool IsValid 
+    {
+        get
+        {
+            return lobby.Id.IsValid;
+        }
+    }
+
+
+    public void TryRefresh()
+    {
+        if (!IsCurrentLobby) lobby.Refresh();
+    }
+    public bool IsCurrentLobby => SteamNetwork.currentLobby?.Id == lobby.Id;
+    public ref Lobby GetLobby => ref lobby;
+
 }

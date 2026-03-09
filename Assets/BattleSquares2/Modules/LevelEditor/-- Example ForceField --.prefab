@@ -46,40 +46,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
   gridSpaceColor:
     color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0.00001
+    radius: 5
     saturationBoost: 0
-  sensorData:
+  gridSpaceSensor:
     colorValue:
       x: 0
       y: 0
       z: 0
-    colorRadius: 0.00001
+    colorRadius: 0
     origin:
-      x: -21.365788
-      y: 14.011736
-    rotation: 270.07635
-    warpSpeed: 1
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 5
     chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
+    blockerFalloff: 0
     enablePositionWarp: 1
-    positionWarpStrength: 0.48
-    positionWarpFallof: 4.34
-    positionWarpRadius: 1.46
-    enableScaleWarp: 1
-    scaleWarpStrength: -1.38
-    scaleWarpFalloff: 4.96
-    scaleWarpRadius: 5
+    positionWarpStrength: 1
+    positionWarpFallof: 1
+    positionWarpRadius: 5
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 2.01
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
-    enableSwirl: 1
-    swirlStrength: 1.51
-    swirlFalloff: 6.51
-    swirlRadius: 2.17
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
+    enableSwirl: 0
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
     enablePulsation: 0
     pulsationFrequency: 0
-    pulsationAmplitude: 1
-    pulsationFallof: 1
-    pulsationRadius: 5
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0

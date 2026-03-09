@@ -2,11 +2,17 @@ using System;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public sealed class NewLevelCreator : MonoBehaviour
 {
 
+    [SerializeField]
+    TMP_InputField inputField;
     DragAndScrollMod _dragMod;
+    Action<string> beforeClearFunc = (levelName) => { };
+    Action<string> afterClearFunc = (levelName) => { };
+
     private void Awake()
     {
         _dragMod = FindAnyObjectByType<DragAndScrollMod>();
@@ -14,11 +20,17 @@ public sealed class NewLevelCreator : MonoBehaviour
         _dragMod.SetTabFlag(false);
     }
 
-    [SerializeField]
-    TMP_InputField inputField;
+    private void Start()
+    {
+        ActivateInput();
+    }
 
-    Action<string> beforeClearFunc = (levelName) => { };
-    Action<string> afterClearFunc = (levelName) => { };
+    private void ActivateInput()
+    {
+        EventSystem.current.SetSelectedGameObject(inputField.gameObject);
+        inputField.ActivateInputField();
+    }
+
 
     public void BeforeClearFunc(Action<string> func) => beforeClearFunc = func;
     public void AfterClearFunc(Action<string> func) => afterClearFunc = func;

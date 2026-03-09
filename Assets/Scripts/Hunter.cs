@@ -38,7 +38,7 @@ public sealed class Hunter : NetworkBehaviour
         SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
 
 /*        MySettings.Init();*/
-        wins = MySettings.wins;
+        wins = UserStatsManager.wins;
 
     }
 
@@ -49,9 +49,9 @@ public sealed class Hunter : NetworkBehaviour
         if (arg0.name.Equals(lobbySceneName))
         {
 
-            if(lobbyKills > MySettings.maxLobbyKills)
+            if(lobbyKills > UserStatsManager.maxLobbyKills)
             {
-                MySettings.maxLobbyKills = lobbyKills;
+                UserStatsManager.maxLobbyKills = lobbyKills;
                 SteamUserStats.SetStat("cws", Mathf.Clamp(lobbyKills, 0, 40));
             }
 
@@ -72,7 +72,7 @@ public sealed class Hunter : NetworkBehaviour
 
             }
 
-            MySettings.SaveStats();
+            UserStatsManager.SaveStats();
 
         }
 
@@ -80,7 +80,7 @@ public sealed class Hunter : NetworkBehaviour
         {
 
             SteamUserStats.StoreStats();
-            MySettings.SaveStats();
+            UserStatsManager.SaveStats();
 
         }
 
@@ -129,9 +129,9 @@ public sealed class Hunter : NetworkBehaviour
     public void Kill(byte deadId, byte killerId)
     {
 
-        if ((byte)playerSynchronizer.localSquare.id != killerId) return;
+        if ((byte)playerSynchronizer.localSquare.GetGameID() != killerId) return;
 
-        MySettings.kills++;
+        UserStatsManager.kills++;
 
         if (scoreManager.inGame)
         {
@@ -159,8 +159,8 @@ public sealed class Hunter : NetworkBehaviour
             foreach(PlayerData player in playerSynchronizer.playerIdentities)
             {
 
-                if ((byte)player.id == deadId) deadPlayer = player.square;
-                if ((byte)player.id == killerId) killerPlayer = player.square;
+                if ((byte)player.square.GetGameID() == deadId) deadPlayer = player.square;
+                if ((byte)player.square.GetGameID() == killerId) killerPlayer = player.square;
 
             }
 
@@ -183,9 +183,9 @@ public sealed class Hunter : NetworkBehaviour
     public void Die(byte deadId)
     {
 
-        if ((byte)playerSynchronizer.localSquare.id != deadId) return;
+        if ((byte)playerSynchronizer.localSquare.GetGameID() != deadId) return;
 
-        MySettings.deaths++;
+        UserStatsManager.deaths++;
 
         if (dieTime < 0.5f)
         {
@@ -202,7 +202,7 @@ public sealed class Hunter : NetworkBehaviour
         if (!playerSynchronizer) return;
         if (!playerSynchronizer.localSquare) return;
 
-        if ((byte)playerSynchronizer.localSquare.id != spawnId) return;
+        if ((byte)playerSynchronizer.localSquare.GetGameID() != spawnId) return;
 
         dieTime = 0;
 
@@ -246,23 +246,23 @@ public sealed class Hunter : NetworkBehaviour
 
         }
 
-        SteamUserStats.SetStat("wmi", Mathf.Clamp(MySettings.maxWinStreak, 0, 10));
+        SteamUserStats.SetStat("wmi", Mathf.Clamp(UserStatsManager.maxWinStreak, 0, 10));
 
     }
 
     public void Win()
     {
 
-        MySettings.wins++;
+        UserStatsManager.wins++;
 
 
-        SteamUserStats.SetStat("Wins", MySettings.wins);
+        SteamUserStats.SetStat("Wins", UserStatsManager.wins);
 
-        this.wins = MySettings.wins;
+        this.wins = UserStatsManager.wins;
 
 
         winStreak++;
-        MySettings.maxWinStreak = winStreak > MySettings.maxWinStreak ? winStreak : MySettings.maxWinStreak;
+        UserStatsManager.maxWinStreak = winStreak > UserStatsManager.maxWinStreak ? winStreak : UserStatsManager.maxWinStreak;
 
         if(gameKills == 0)
         {
@@ -275,7 +275,7 @@ public sealed class Hunter : NetworkBehaviour
     public void Lose()
     {
 
-        MySettings.maxWinStreak = winStreak > MySettings.maxWinStreak ? winStreak : MySettings.maxWinStreak;
+        UserStatsManager.maxWinStreak = winStreak > UserStatsManager.maxWinStreak ? winStreak : UserStatsManager.maxWinStreak;
         winStreak = 0;
 
     }

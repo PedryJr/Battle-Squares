@@ -4,280 +4,448 @@ using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 
-[BurstCompile]
+[BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+    DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+    FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
 public unsafe static class BinaryTool
 {
+    public const float inv255 = 0.0039215686274509803921568627f;
+    public const float inv65535 = 0.0000152587890625f;
+    public const float inv16777215 = 0.000000059604644775390625f;
+    public const bool compileSynchronously = true;
+    public const bool debug = false;
+    public const bool disableDirectCall = false;
+    public const bool disableSafetyChecks = true;
+    public const FloatMode floatMode = FloatMode.Fast;
+    public const FloatPrecision floatPrecision = FloatPrecision.Low;
+    public const OptimizeFor optimizeFor = OptimizeFor.Performance;
+    public const MethodImplOptions impl = MethodImplOptions.AggressiveInlining;
 
-    //Burst code settings
-    const bool compileSynchronously = false;
-    const bool debug = false;
-    const bool disableDirectCall = false;
-    const bool disableSafetyChecks = true;
-    const FloatMode floatMode = FloatMode.Fast;
-    const FloatPrecision floatPrecision = FloatPrecision.Low;
-    const OptimizeFor optimizeFor = OptimizeFor.Performance;
+    private static byte[][] cache = new byte[17][]
+    {
+        new byte[1], new byte[1], new byte[2], new byte[3],
+        new byte[4], new byte[5], new byte[6], new byte[7],
+        new byte[8], new byte[9], new byte[10], new byte[11],
+        new byte[12], new byte[13], new byte[14], new byte[15],
+        new byte[16]
+    };
 
-
-
-    //Generic float compression
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(impl)]
     public static float DecompressFloat(byte[] buffer, float min, float max)
     {
-        fixed (byte* ptr = buffer) return DecompressFloat(ptr, min, max, buffer.Length);
+        fixed (byte* ptr = buffer) return DecompressFloatCore(ptr, min, max, buffer.Length);
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] CompressFloat(float value, int bytes, float min, float max)
+    [MethodImpl(impl)]
+    public static byte[] CompressFloatAlloc(float value, int bytes, float min, float max)
     {
-        Span<byte> result = stackalloc byte[bytes];
-        fixed (byte* ptr = result) CompressFloat(value, min, max, ptr, bytes);
-        return result.ToArray();
+        byte[] ret = new byte[bytes];
+        fixed (byte* ptr = ret) CompressFloatCore(value, min, max, ptr, bytes);
+        return ret;
     }
-
-
-
-    //Vector2 compression/decompression
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 DecompressVector2(byte[] buffer, int xBytes, int yBytes, in Vector2 min, in Vector2 max)
+    [MethodImpl(impl)]
+    public static byte[] CompressFloatCache(float value, int bytes, float min, float max)
     {
-        float2 decom = new float2();
-        fixed (byte* ptr = buffer) DecompressVector2(ptr, xBytes, yBytes, min, max, ref decom);
-        return decom;
+        fixed (byte* ptr = cache[bytes]) CompressFloatCore(value, min, max, ptr, bytes);
+        return cache[bytes];
     }
-    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
-    private static void DecompressVector2(byte* ptr, int xBytes, int yBytes, in float2 min, in float2 max, ref float2 decom)
+    [MethodImpl(impl)]
+    public static void CompressFloatPreAlloc(ref byte[] buffer, float value, int bytes, float min, float max)
     {
-        decom.x = DecompressFloat(ptr, min.x, max.x, xBytes);
-        decom.y = DecompressFloat(ptr + xBytes, min.y, max.y, yBytes);
+        fixed (byte* ptr = buffer) CompressFloatCore(value, min, max, ptr, bytes);
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] CompressVector2(in float2 value, int xBytes, int yBytes, in float2 min, in float2 max)
+    [MethodImpl(impl)]
+    public static float2 DecompressVector2(byte[] buffer, int xBytes, int yBytes, float2 min, float2 max)
     {
-        byte[] buffer = new byte[xBytes + yBytes];
-        CompressVector2(ref buffer, value, xBytes, yBytes, min, max);
+        float2 result = default;
+        fixed (byte* ptr = buffer) DecompressVector2Core(ptr, xBytes, yBytes, in min, in max, ref result);
+        return result;
+    }
+    [MethodImpl(impl)]
+    public static byte[] CompressVector2Cached(float2 value, int xBytes, int yBytes, float2 min, float2 max)
+    {
+        byte[] buffer = cache[xBytes + yBytes];
+        fixed (byte* ptr = buffer) CompressVector2Core(ptr, in value, xBytes, yBytes, in min, in max);
         return buffer;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CompressVector2(ref byte[] buffer, in float2 value, int xBytes, int yBytes, in float2 min, in float2 max)
+    [MethodImpl(impl)]
+    public static byte[] CompressVector2Alloc(float2 value, int xBytes, int yBytes, float2 min, float2 max)
+    {
+        byte[] ret = new byte[xBytes + yBytes];
+        fixed (byte* ptr = ret) CompressVector2Core(ptr, in value, xBytes, yBytes, in min, in max);
+        return ret;
+    }
+    [MethodImpl(impl)]
+    public static void CompressVector2PreAlloc(ref byte[] buffer, float2 value, int xBytes, int yBytes, float2 min, float2 max)
     {
         int bufferSize = xBytes + yBytes;
-        if(!ValidateBuffer(buffer, bufferSize)) buffer = new byte[bufferSize];
-        fixed (byte* ptr = buffer) CompressVector2(ptr, value, xBytes, yBytes, min, max);
+        if (buffer == null || buffer.Length != bufferSize) buffer = new byte[bufferSize];
+        fixed (byte* ptr = buffer) CompressVector2Core(ptr, in value, xBytes, yBytes, in min, in max);
     }
-    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
-    private static void CompressVector2(byte* ptr, in float2 value, int xBytes, int yBytes, in float2 min, in float2 max)
+    [MethodImpl(impl)]
+    public static float3 DecompressVector3(byte[] buffer, int xBytes, int yBytes, int zBytes, float3 min, float3 max)
     {
-        Span<byte> compressedX = stackalloc byte[xBytes];
-        Span<byte> compressedY = stackalloc byte[yBytes];
-
-        fixed (byte* ptrX = compressedX)
-        fixed (byte* ptrY = compressedY)
-        {
-            CompressFloat(value.x, min.x, max.x, ptrX, xBytes);
-            CompressFloat(value.y, min.y, max.y, ptrY, yBytes);
-        }
-
-        int xStart = 0;
-        int yStart = xBytes;
-
-        for (int x = 0; x < xBytes; x++) ptr[xStart + x] = compressedX[x];
-        for (int y = 0; y < yBytes; y++) ptr[yStart + y] = compressedY[y];
+        float3 result = default;
+        fixed (byte* ptr = buffer) DecompressVector3Core(ptr, xBytes, yBytes, zBytes, in min, in max, ref result);
+        return result;
     }
-
-
-
-    //Vector3 compression/decompression
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float3 DecompressVector3(byte[] buffer, int xBytes, int yBytes, int zBytes, in float3 min, in float3 max)
+    [MethodImpl(impl)]
+    public static byte[] CompressVector3Cached(float3 value, int xBytes, int yBytes, int zBytes, float3 min, float3 max)
     {
-        float3 decom = new float3();
-        fixed (byte* ptr = buffer) DecompressVector3(ptr, xBytes, yBytes, zBytes, min, max, ref decom);
-        return decom;
-    }
-
-    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
-    private static void DecompressVector3(byte* ptr, int xBytes, int yBytes, int zBytes, in float3 min, in float3 max, ref float3 decom)
-    {
-        decom.x = DecompressFloat(ptr, min.x, max.x, xBytes);
-        decom.y = DecompressFloat(ptr + xBytes, min.y, max.y, yBytes);
-        decom.z = DecompressFloat(ptr + xBytes + yBytes, min.z, max.z, zBytes);
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] CompressVector3(in float3 value, int xBytes, int yBytes, int zBytes, in float3 min, in float3 max)
-    {
-        byte[] buffer = new byte[xBytes + yBytes + zBytes];
-        CompressVector3(ref buffer, value, xBytes, yBytes, zBytes, min, max);
+        byte[] buffer = cache[xBytes + yBytes + zBytes];
+        fixed (byte* ptr = buffer) CompressVector3Core(ptr, in value, xBytes, yBytes, zBytes, in min, in max);
         return buffer;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CompressVector3(ref byte[] buffer, in float3 value, int xBytes, int yBytes, int zBytes, in float3 min, in float3 max)
+    [MethodImpl(impl)]
+    public static byte[] CompressVector3Alloc(float3 value, int xBytes, int yBytes, int zBytes, float3 min, float3 max)
+    {
+        byte[] ret = new byte[xBytes + yBytes + zBytes];
+        fixed (byte* ptr = ret) CompressVector3Core(ptr, in value, xBytes, yBytes, zBytes, in min, in max);
+        return ret;
+    }
+    [MethodImpl(impl)]
+    public static void CompressVector3PreAlloc(ref byte[] buffer, float3 value, int xBytes, int yBytes, int zBytes, float3 min, float3 max)
     {
         int bufferSize = xBytes + yBytes + zBytes;
-        if (!ValidateBuffer(buffer, bufferSize)) buffer = new byte[bufferSize];
-        fixed (byte* ptr = buffer) CompressVector3(ptr, value, xBytes, yBytes, zBytes, min, max);
+        if (buffer == null || buffer.Length != bufferSize) buffer = new byte[bufferSize];
+        fixed (byte* ptr = buffer) CompressVector3Core(ptr, in value, xBytes, yBytes, zBytes, in min, in max);
     }
-    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
-    private static void CompressVector3(byte* ptr, in float3 value, int xBytes, int yBytes, int zBytes, in float3 min, in float3 max)
+    [MethodImpl(impl)]
+    public static float4 DecompressVector4(byte[] buffer, int xBytes, int yBytes, int zBytes, int wBytes, float4 min, float4 max)
     {
-        Span<byte> compressedX = stackalloc byte[xBytes];
-        Span<byte> compressedY = stackalloc byte[yBytes];
-        Span<byte> compressedZ = stackalloc byte[zBytes];
-
-        fixed (byte* ptrX = compressedX)
-        fixed (byte* ptrY = compressedY)
-        fixed (byte* ptrZ = compressedZ)
-        {
-            CompressFloat(value.x, min.x, max.x, ptrX, xBytes);
-            CompressFloat(value.y, min.y, max.y, ptrY, yBytes);
-            CompressFloat(value.z, min.z, max.z, ptrZ, zBytes);
-        }
-
-        int xStart = 0;
-        int yStart = xBytes;
-        int zStart = xBytes + yBytes;
-
-        for (int x = 0; x < xBytes; x++) ptr[xStart + x] = compressedX[x];
-        for (int y = 0; y < yBytes; y++) ptr[yStart + y] = compressedY[y];
-        for (int z = 0; z < zBytes; z++) ptr[zStart + z] = compressedZ[z];
+        float4 result = default;
+        fixed (byte* ptr = buffer) DecompressVector4Core(ptr, xBytes, yBytes, zBytes, wBytes, in min, in max, ref result);
+        return result;
     }
-
-
-
-    //Vector4 compression/decompression
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float4 DecompressVector4(byte[] buffer, int xBytes, int yBytes, int zBytes, int wBytes, in float4 min, in float4 max)
+    [MethodImpl(impl)]
+    public static byte[] CompressVector4Cached(float4 value, int xBytes, int yBytes, int zBytes, int wBytes, float4 min, float4 max)
     {
-        float4 decom = new float4();
-        fixed (byte* ptr = buffer) DecompressVector4(ptr, xBytes, yBytes, zBytes, wBytes, min, max, ref decom);
-        return decom;
-    }
-    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
-    private static void DecompressVector4(byte* ptr, int xBytes, int yBytes, int zBytes, int wBytes, in float4 min, in float4 max, ref float4 decom)
-    {
-        decom.x = DecompressFloat(ptr, min.x, max.x, xBytes);
-        decom.y = DecompressFloat(ptr + xBytes, min.y, max.y, yBytes);
-        decom.z = DecompressFloat(ptr + xBytes + yBytes, min.z, max.z, zBytes);
-        decom.w = DecompressFloat(ptr + xBytes + yBytes + zBytes, min.w, max.w, wBytes);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] CompressVector4(in float4 value, int xBytes, int yBytes, int zBytes, int wBytes, in float4 min, in float4 max)
-    {
-        byte[] buffer = new byte[xBytes + yBytes + zBytes + wBytes];
-        CompressVector4(ref buffer, value, xBytes, yBytes, zBytes, wBytes, min, max);
+        byte[] buffer = cache[xBytes + yBytes + zBytes + wBytes];
+        fixed (byte* ptr = buffer) CompressVector4Core(ptr, in value, xBytes, yBytes, zBytes, wBytes, in min, in max);
         return buffer;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CompressVector4(ref byte[] buffer, float4 value, int xBytes, int yBytes, int zBytes, int wBytes, in float4 min, Vector4 max)
+    [MethodImpl(impl)]
+    public static byte[] CompressVector4Alloc(float4 value, int xBytes, int yBytes, int zBytes, int wBytes, float4 min, float4 max)
+    {
+        byte[] ret = new byte[xBytes + yBytes + zBytes + wBytes];
+        fixed (byte* ptr = ret) CompressVector4Core(ptr, in value, xBytes, yBytes, zBytes, wBytes, in min, in max);
+        return ret;
+    }
+    [MethodImpl(impl)]
+    public static void CompressVector4PreAlloc(ref byte[] buffer, float4 value, int xBytes, int yBytes, int zBytes, int wBytes, float4 min, float4 max)
     {
         int bufferSize = xBytes + yBytes + zBytes + wBytes;
-        if (!ValidateBuffer(buffer, bufferSize)) buffer = new byte[bufferSize];
-        fixed (byte* ptr = buffer) CompressVector4(ptr, value, xBytes, yBytes, zBytes, wBytes, min, max);
+        if (buffer == null || buffer.Length != bufferSize) buffer = new byte[bufferSize];
+        fixed (byte* ptr = buffer) CompressVector4Core(ptr, in value, xBytes, yBytes, zBytes, wBytes, in min, in max);
     }
 
-    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
-    private static void CompressVector4(byte* ptr, in float4 value, int xBytes, int yBytes, int zBytes, int wBytes, in float4 min, in float4 max)
-    {
-        Span<byte> compressedX = stackalloc byte[xBytes];
-        Span<byte> compressedY = stackalloc byte[yBytes];
-        Span<byte> compressedZ = stackalloc byte[zBytes];
-        Span<byte> compressedW = stackalloc byte[wBytes];
 
-        fixed (byte* ptrX = compressedX)
-        fixed (byte* ptrY = compressedY)
-        fixed (byte* ptrZ = compressedZ)
-        fixed (byte* ptrW = compressedW)
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    private static void CompressFloatCore(float value, float min, float max, byte* buffer, int length)
+    {
+        float range = max - min;
+        float norm = math.saturate((value - min) / range);
+        uint scaled = (uint)(norm * ((1u << (length << 3)) - 1) + 0.5f);
+        int shift = (length - 1) << 3;
+        if (length == 4)
         {
-            CompressFloat(value.x, min.x, max.x, ptrX, xBytes);
-            CompressFloat(value.y, min.y, max.y, ptrY, yBytes);
-            CompressFloat(value.z, min.z, max.z, ptrZ, zBytes);
-            CompressFloat(value.z, min.z, max.z, ptrW, wBytes);
+            *(uint*)buffer = *(uint*)&value;
+            return;
         }
-
-        int xStart = 0;
-        int yStart = xBytes;
-        int zStart = xBytes + yBytes;
-        int wStart = xBytes + yBytes + zBytes;
-
-        for (int x = 0; x < xBytes; x++) ptr[xStart + x] = compressedX[x];
-        for (int y = 0; y < yBytes; y++) ptr[yStart + y] = compressedY[y];
-        for (int z = 0; z < zBytes; z++) ptr[zStart + z] = compressedZ[z];
-        for (int w = 0; w < wBytes; w++) ptr[wStart + w] = compressedW[w];
+        buffer[0] = (byte)(scaled >> shift);
+        if (length > 1) *(ushort*)(buffer + length - 2) = (ushort)scaled;
     }
-
-
-
-    //Internal float compression
-    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
-    private static void CompressFloat(float value, float min, float max, byte* buffer, int length)
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    private static float DecompressFloatCore(byte* buffer, float min, float max, int length)
     {
-        float normalized = math.clamp((value - min) / (max - min), 0f, 1f);
-
-        switch (length)
+        if (length == 4) return *(float*)buffer;
+        uint value1 = ((uint)buffer[0] << 16) | *(ushort*)(buffer + 1);
+        uint value2 = *(ushort*)buffer;
+        uint value3 = buffer[0];
+        uint value = length == 3 ? value1 : (length == 2 ? value2 : value3);
+        float inv = length == 3 ? inv16777215 : (length == 2 ? inv65535 : inv255);
+        return min + value * inv * (max - min);
+    }
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    private static void CompressVector2Core(byte* p, in float2 value, int xBytes, int yBytes, in float2 min, in float2 max)
+    {
+        float2 range = max - min;
+        float2 norm = math.saturate((value - min) / range);
+        uint scaledX = (uint)(norm.x * ((1u << (xBytes << 3)) - 1) + 0.5f);
+        int shiftX = (xBytes - 1) << 3;
+        if (xBytes == 4)
         {
-            case 4:
-                {
-                    uint asInt = math.asuint(value);
-                    byte* bytes = (byte*)&asInt;
-                    for (int i = 0; i < 4; i++) buffer[i] = bytes[i];
-                    break;
-                }
-            case 3:
-                {
-                    uint quant24 = (uint)math.round(normalized * 16777215f);
-                    buffer[0] = (byte)((quant24 >> 16) & 0xFF);
-                    buffer[1] = (byte)((quant24 >> 8) & 0xFF);
-                    buffer[2] = (byte)(quant24 & 0xFF);
-                    break;
-                }
-            case 2:
-                {
-                    ushort quant16 = (ushort)math.round(normalized * 65535f);
-                    buffer[0] = (byte)((quant16 >> 8) & 0xFF);
-                    buffer[1] = (byte)(quant16 & 0xFF);
-                    break;
-                }
-            case 1:
-                buffer[0] = (byte)math.round(normalized * 255f);
-                break;
+            float tempX = value.x;
+            *(uint*)p = *(uint*)&tempX;
+        }
+        else
+        {
+            p[0] = (byte)(scaledX >> shiftX);
+            if (xBytes > 1) *(ushort*)(p + xBytes - 2) = (ushort)scaledX;
+        }
+        p += xBytes;
+        uint scaledY = (uint)(norm.y * ((1u << (yBytes << 3)) - 1) + 0.5f);
+        int shiftY = (yBytes - 1) << 3;
+        if (yBytes == 4)
+        {
+            float tempY = value.y;
+            *(uint*)p = *(uint*)&tempY;
+        }
+        else
+        {
+            p[0] = (byte)(scaledY >> shiftY);
+            if (yBytes > 1) *(ushort*)(p + yBytes - 2) = (ushort)scaledY;
         }
     }
-
-    //Internal float decompression
-    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall, DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode, FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
-    private static float DecompressFloat(byte* buffer, float min, float max, int length)
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    private static void DecompressVector2Core(byte* ptr, int xBytes, int yBytes, in float2 min, in float2 max, ref float2 result)
     {
-        float normalized = 0f;
-
-        switch (length)
+        if (xBytes == 4)
         {
-            case 4:
-                uint asInt = *(uint*)buffer;
-                float value = math.asfloat(asInt);
-                return value;
-
-            case 3:
-                uint quant24 = ((uint)buffer[0] << 16) | ((uint)buffer[1] << 8) | buffer[2];
-                normalized = quant24 / 16777215f;
-                break;
-
-            case 2:
-                ushort quant16 = (ushort)((buffer[0] << 8) | buffer[1]);
-                normalized = quant16 / 65535f;
-                break;
-
-            case 1:
-                byte quant8 = buffer[0];
-                normalized = quant8 / 255f;
-                break;
+            result.x = *(float*)ptr;
         }
-        return normalized * (max - min) + min;
+        else
+        {
+            uint valueX1 = ((uint)ptr[0] << 16) | *(ushort*)(ptr + 1);
+            uint valueX2 = *(ushort*)ptr;
+            uint valueX3 = ptr[0];
+            uint valueX = xBytes == 3 ? valueX1 : (xBytes == 2 ? valueX2 : valueX3);
+            float invX = xBytes == 3 ? inv16777215 : (xBytes == 2 ? inv65535 : inv255);
+            result.x = min.x + valueX * invX * (max.x - min.x);
+        }
+        ptr += xBytes;
+        if (yBytes == 4)
+        {
+            result.y = *(float*)ptr;
+        }
+        else
+        {
+            uint valueY1 = ((uint)ptr[0] << 16) | *(ushort*)(ptr + 1);
+            uint valueY2 = *(ushort*)ptr;
+            uint valueY3 = ptr[0];
+            uint valueY = yBytes == 3 ? valueY1 : (yBytes == 2 ? valueY2 : valueY3);
+            float invY = yBytes == 3 ? inv16777215 : (yBytes == 2 ? inv65535 : inv255);
+            result.y = min.y + valueY * invY * (max.y - min.y);
+        }
     }
-
-    //Internal buffer validation
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool ValidateBuffer(byte[] buffer, int validationSize) => (buffer != null && buffer.Length == validationSize);
-
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    private static void CompressVector3Core(byte* p, in float3 value, int xBytes, int yBytes, int zBytes, in float3 min, in float3 max)
+    {
+        float3 range = max - min;
+        float3 norm = math.saturate((value - min) / range);
+        uint scaledX = (uint)(norm.x * ((1u << (xBytes << 3)) - 1) + 0.5f);
+        int shiftX = (xBytes - 1) << 3;
+        if (xBytes == 4)
+        {
+            float tempX = value.x;
+            *(uint*)p = *(uint*)&tempX;
+        }
+        else
+        {
+            p[0] = (byte)(scaledX >> shiftX);
+            if (xBytes > 1) *(ushort*)(p + xBytes - 2) = (ushort)scaledX;
+        }
+        p += xBytes;
+        uint scaledY = (uint)(norm.y * ((1u << (yBytes << 3)) - 1) + 0.5f);
+        int shiftY = (yBytes - 1) << 3;
+        if (yBytes == 4)
+        {
+            float tempY = value.y;
+            *(uint*)p = *(uint*)&tempY;
+        }
+        else
+        {
+            p[0] = (byte)(scaledY >> shiftY);
+            if (yBytes > 1) *(ushort*)(p + yBytes - 2) = (ushort)scaledY;
+        }
+        p += yBytes;
+        uint scaledZ = (uint)(norm.z * ((1u << (zBytes << 3)) - 1) + 0.5f);
+        int shiftZ = (zBytes - 1) << 3;
+        if (zBytes == 4)
+        {
+            float tempZ = value.z;
+            *(uint*)p = *(uint*)&tempZ;
+        }
+        else
+        {
+            p[0] = (byte)(scaledZ >> shiftZ);
+            if (zBytes > 1) *(ushort*)(p + zBytes - 2) = (ushort)scaledZ;
+        }
+    }
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    private static void DecompressVector3Core(byte* ptr, int xBytes, int yBytes, int zBytes, in float3 min, in float3 max, ref float3 result)
+    {
+        if (xBytes == 4)
+        {
+            result.x = *(float*)ptr;
+        }
+        else
+        {
+            uint valueX1 = ((uint)ptr[0] << 16) | *(ushort*)(ptr + 1);
+            uint valueX2 = *(ushort*)ptr;
+            uint valueX3 = ptr[0];
+            uint valueX = xBytes == 3 ? valueX1 : (xBytes == 2 ? valueX2 : valueX3);
+            float invX = xBytes == 3 ? inv16777215 : (xBytes == 2 ? inv65535 : inv255);
+            result.x = min.x + valueX * invX * (max.x - min.x);
+        }
+        ptr += xBytes;
+        if (yBytes == 4)
+        {
+            result.y = *(float*)ptr;
+        }
+        else
+        {
+            uint valueY1 = ((uint)ptr[0] << 16) | *(ushort*)(ptr + 1);
+            uint valueY2 = *(ushort*)ptr;
+            uint valueY3 = ptr[0];
+            uint valueY = yBytes == 3 ? valueY1 : (yBytes == 2 ? valueY2 : valueY3);
+            float invY = yBytes == 3 ? inv16777215 : (yBytes == 2 ? inv65535 : inv255);
+            result.y = min.y + valueY * invY * (max.y - min.y);
+        }
+        ptr += yBytes;
+        if (zBytes == 4)
+        {
+            result.z = *(float*)ptr;
+        }
+        else
+        {
+            uint valueZ1 = ((uint)ptr[0] << 16) | *(ushort*)(ptr + 1);
+            uint valueZ2 = *(ushort*)ptr;
+            uint valueZ3 = ptr[0];
+            uint valueZ = zBytes == 3 ? valueZ1 : (zBytes == 2 ? valueZ2 : valueZ3);
+            float invZ = zBytes == 3 ? inv16777215 : (zBytes == 2 ? inv65535 : inv255);
+            result.z = min.z + valueZ * invZ * (max.z - min.z);
+        }
+    }
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    private static void CompressVector4Core(byte* p, in float4 value, int xBytes, int yBytes, int zBytes, int wBytes, in float4 min, in float4 max)
+    {
+        float4 range = max - min;
+        float4 norm = math.saturate((value - min) / range);
+        uint scaledX = (uint)(norm.x * ((1u << (xBytes << 3)) - 1) + 0.5f);
+        int shiftX = (xBytes - 1) << 3;
+        if (xBytes == 4)
+        {
+            float tempX = value.x;
+            *(uint*)p = *(uint*)&tempX;
+        }
+        else
+        {
+            p[0] = (byte)(scaledX >> shiftX);
+            if (xBytes > 1) *(ushort*)(p + xBytes - 2) = (ushort)scaledX;
+        }
+        p += xBytes;
+        uint scaledY = (uint)(norm.y * ((1u << (yBytes << 3)) - 1) + 0.5f);
+        int shiftY = (yBytes - 1) << 3;
+        if (yBytes == 4)
+        {
+            float tempY = value.y;
+            *(uint*)p = *(uint*)&tempY;
+        }
+        else
+        {
+            p[0] = (byte)(scaledY >> shiftY);
+            if (yBytes > 1) *(ushort*)(p + yBytes - 2) = (ushort)scaledY;
+        }
+        p += yBytes;
+        uint scaledZ = (uint)(norm.z * ((1u << (zBytes << 3)) - 1) + 0.5f);
+        int shiftZ = (zBytes - 1) << 3;
+        if (zBytes == 4)
+        {
+            float tempZ = value.z;
+            *(uint*)p = *(uint*)&tempZ;
+        }
+        else
+        {
+            p[0] = (byte)(scaledZ >> shiftZ);
+            if (zBytes > 1) *(ushort*)(p + zBytes - 2) = (ushort)scaledZ;
+        }
+        p += zBytes;
+        uint scaledW = (uint)(norm.w * ((1u << (wBytes << 3)) - 1) + 0.5f);
+        int shiftW = (wBytes - 1) << 3;
+        if (wBytes == 4)
+        {
+            float tempW = value.w;
+            *(uint*)p = *(uint*)&tempW;
+        }
+        else
+        {
+            p[0] = (byte)(scaledW >> shiftW);
+            if (wBytes > 1) *(ushort*)(p + wBytes - 2) = (ushort)scaledW;
+        }
+    }
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    private static void DecompressVector4Core(byte* ptr, int xBytes, int yBytes, int zBytes, int wBytes, in float4 min, in float4 max, ref float4 result)
+    {
+        if (xBytes == 4)
+        {
+            result.x = *(float*)ptr;
+        }
+        else
+        {
+            uint valueX1 = ((uint)ptr[0] << 16) | *(ushort*)(ptr + 1);
+            uint valueX2 = *(ushort*)ptr;
+            uint valueX3 = ptr[0];
+            uint valueX = xBytes == 3 ? valueX1 : (xBytes == 2 ? valueX2 : valueX3);
+            float invX = xBytes == 3 ? inv16777215 : (xBytes == 2 ? inv65535 : inv255);
+            result.x = min.x + valueX * invX * (max.x - min.x);
+        }
+        ptr += xBytes;
+        if (yBytes == 4)
+        {
+            result.y = *(float*)ptr;
+        }
+        else
+        {
+            uint valueY1 = ((uint)ptr[0] << 16) | *(ushort*)(ptr + 1);
+            uint valueY2 = *(ushort*)ptr;
+            uint valueY3 = ptr[0];
+            uint valueY = yBytes == 3 ? valueY1 : (yBytes == 2 ? valueY2 : valueY3);
+            float invY = yBytes == 3 ? inv16777215 : (yBytes == 2 ? inv65535 : inv255);
+            result.y = min.y + valueY * invY * (max.y - min.y);
+        }
+        ptr += yBytes;
+        if (zBytes == 4)
+        {
+            result.z = *(float*)ptr;
+        }
+        else
+        {
+            uint valueZ1 = ((uint)ptr[0] << 16) | *(ushort*)(ptr + 1);
+            uint valueZ2 = *(ushort*)ptr;
+            uint valueZ3 = ptr[0];
+            uint valueZ = zBytes == 3 ? valueZ1 : (zBytes == 2 ? valueZ2 : valueZ3);
+            float invZ = zBytes == 3 ? inv16777215 : (zBytes == 2 ? inv65535 : inv255);
+            result.z = min.z + valueZ * invZ * (max.z - min.z);
+        }
+        ptr += zBytes;
+        if (wBytes == 4)
+        {
+            result.w = *(float*)ptr;
+        }
+        else
+        {
+            uint valueW1 = ((uint)ptr[0] << 16) | *(ushort*)(ptr + 1);
+            uint valueW2 = *(ushort*)ptr;
+            uint valueW3 = ptr[0];
+            uint valueW = wBytes == 3 ? valueW1 : (wBytes == 2 ? valueW2 : valueW3);
+            float invW = wBytes == 3 ? inv16777215 : (wBytes == 2 ? inv65535 : inv255);
+            result.w = min.w + valueW * invW * (max.w - min.w);
+        }
+    }
 }

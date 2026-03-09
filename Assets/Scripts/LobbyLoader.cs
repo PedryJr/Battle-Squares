@@ -20,8 +20,8 @@ public sealed class LobbyLoader : MonoBehaviour
     VerticalLayoutGroup layoutGroup;
 
     List<LobbyBehaviour> Lobbies;
-    Dictionary<ulong, LobbyBehaviour> LobbiesV2;
-    public List<LobbyBehaviour> failedLobbies;
+    public Dictionary<ulong, LobbyBehaviour> LobbiesV2;
+    public List<ulong> failedLobbies;
     float lobbyUpdateTime = 0;
 
     async void Awake()
@@ -29,18 +29,15 @@ public sealed class LobbyLoader : MonoBehaviour
 
         Lobbies = new List<LobbyBehaviour>();
         LobbiesV2 = new Dictionary<ulong, LobbyBehaviour>();
-        failedLobbies = new List<LobbyBehaviour>();
+        failedLobbies = new List<ulong>();
         await LoadLobbiesV2();
-        LoadFirstLobbyV2();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
         UpdateLobbies();
-
     }
 
     public async void UpdateLobbies()
@@ -53,35 +50,69 @@ public sealed class LobbyLoader : MonoBehaviour
 
             lobbyUpdateTime = 0;
             await LoadLobbiesV2();
+            RefreshLobbies();
 
         }
 
     }
 
+    void RefreshLobbies()
+    {
+        foreach (var item in LobbiesV2)
+        {
+            LobbyBehaviour lobby = item.Value;
+
+            lobby.lobby.TryRefresh();
+        }
+    }
+
+    public LobbyBehaviour GetOwnLobby()
+    {
+        if (SteamNetwork.currentLobby == null) return null;
+        ulong key = SteamNetwork.currentLobby.Value.Id.Value;
+        if (!LobbiesV2.ContainsKey(SteamNetwork.currentLobby.Value.Id.Value)) return null;
+        return LobbiesV2[key];
+    }
 
     async Task LoadLobbiesV2()
     {
 
         LobbyQuery lobbyQuery1 = SteamMatchmaking.LobbyList;
+        lobbyQuery1.WithMaxResults(50);
         lobbyQuery1.FilterDistanceWorldwide();
         lobbyQuery1.WithKeyValue("Variant", "BattleSquares");
-
-        List<Lobby> manuallyFiltered = new List<Lobby>();
-
-        List<ulong> keysToRemove = new List<ulong>();
-
         Lobby[] fetchedLobbies = await lobbyQuery1.RequestAsync();
 
+
+
+        List<Lobby> manuallyFiltered = new List<Lobby>();
+        List<ulong> keysToRemove = new List<ulong>();
         if (fetchedLobbies == null) return;
 
-        manuallyFiltered.AddRange(fetchedLobbies);
+        //manuallyFiltered.AddRange(fetchedLobbies);
 
-        RemoveOfflineLobbies(ref fetchedLobbies, ref keysToRemove);
+        //RemoveOfflineLobbies(ref fetchedLobbies, ref keysToRemove);
+
+        for (int i = LobbiesV2.Count - 1; i >= 0; i--)
+        {
+            LobbyBehaviour listedLobby = LobbiesV2.ElementAt(i).Value;
+            bool exists = false;
+            foreach (Lobby lobby in fetchedLobbies)
+            {
+                if(lobby.Id == listedLobby.GetLobby.Id) exists = true;
+                if (exists) break;
+            }
+            if(!exists)
+            {
+                LobbiesV2.Remove(listedLobby.GetLobby.Id);
+                Destroy(listedLobby.gameObject);
+            }
+        }
 
         foreach (Lobby lobby in fetchedLobbies)
         {
 
-            if (!LobbiesV2.ContainsKey(lobby.Owner.Id))
+            if (!LobbiesV2.ContainsKey(lobby.Id))
             {
                 AddOnlineLobby(lobby);
             }
@@ -172,7 +203,9 @@ public sealed class LobbyLoader : MonoBehaviour
 
     void CreateNewLobby(Lobby source)
     {
-        LobbiesV2.Add(source.Owner.Id.Value, Instantiate(lobbyTemplate, transform).Initialize(source, this));
+        LobbyBehaviour newLobby = Instantiate(lobbyTemplate, transform).Initialize(source);
+        //if(!failedLobbies.Contains(newLobby.lobbyId.Value)) LobbiesV2.Add(source.Id, newLobby);
+        LobbiesV2.Add(source.Id, newLobby);
     }
 
     bool IsLobbyValid(Lobby lobbyToCheck)
@@ -183,9 +216,9 @@ public sealed class LobbyLoader : MonoBehaviour
         {
             lobbyIsValid = true;
         }
-        else if (Filter(lobbyToCheck, "OwnerId", SteamClient.SteamId.Value.ToString()))
+        else if (Filter(lobbyToCheck, "OwnerId", SteamClient.SteamId.Value))
         {
-            lobbyIsValid = true;
+            lobbyIsValid = SafeFilterNewOwnedLobbyOnly(lobbyToCheck);
         }
         return lobbyIsValid;
     }
@@ -193,6 +226,17 @@ public sealed class LobbyLoader : MonoBehaviour
     bool Filter(Lobby toFilter, string key, string value)
     {
         return toFilter.GetData(key) == value;
+    }
+
+    bool Filter(Lobby toFilter, string key, ulong value)
+    {
+        return ulong.Parse(toFilter.GetData(key)) == value;
+    }
+
+    bool SafeFilterNewOwnedLobbyOnly(Lobby lobbyToCheck)
+    {
+        if(SteamNetwork.currentLobby != null) return lobbyToCheck.Id == SteamNetwork.currentLobby?.Id;
+        else return false;
     }
 
     void RemoveOfflineLobbies(ref Lobby[] manuallyFiltered, ref List<ulong> keysToRemove)
@@ -233,7 +277,7 @@ public sealed class LobbyLoader : MonoBehaviour
         }
     }
 
-    async Task LoadLobbies()
+/*    async Task LoadLobbies()
     {
 
         List<LobbyBehaviour> lobbiesToRemove = new List<LobbyBehaviour>();
@@ -344,8 +388,8 @@ public sealed class LobbyLoader : MonoBehaviour
 
         }
 
-    }
-
+    }*/
+/*
     async Task LoadOwn()
     {
 
@@ -438,15 +482,15 @@ public sealed class LobbyLoader : MonoBehaviour
             }
         }
 
-    }
+    }*/
 
-    void LoadFirstLobbyV2()
+/*    void LoadFirstLobbyV2()
     {
 
         foreach (LobbyBehaviour lobby in LobbiesV2.Values)
         {
 
-            if (lobby.lobbyId == SteamNetwork.currentLobby?.Id.Value)
+            if (lobby.lobby.Id == SteamNetwork.currentLobby?.Id.Value)
             {
 
                 lobby.OnClicked();
@@ -455,9 +499,9 @@ public sealed class LobbyLoader : MonoBehaviour
 
         }
 
-    }
+    }*/
 
-    void LoadFirstLobby()
+/*    void LoadFirstLobby()
     {
 
         foreach (LobbyBehaviour lobby in Lobbies)
@@ -472,6 +516,6 @@ public sealed class LobbyLoader : MonoBehaviour
 
         }
 
-    }
+    }*/
 
 }

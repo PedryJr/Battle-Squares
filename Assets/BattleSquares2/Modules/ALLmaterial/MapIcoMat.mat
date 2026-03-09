@@ -67,7 +67,7 @@ Material:
     - _BlendSrc: 5
     - _Color: 0
     - _ColorDstBlend: 8
-    - _ColorMask: 0.7
+    - _ColorMask: 255
     - _ColorSrcBlend: 3
     - _DstBlend: 10
     - _EnableExternalAlpha: 0
@@ -85,7 +85,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BlendMode: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
+    - _Color: {r: 0.9622642, g: 0.9622642, b: 0.9622642, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

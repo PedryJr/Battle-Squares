@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 3230000773134604271}
   - component: {fileID: -3438963122069973725}
   - component: {fileID: -3148651319717881892}
-  - component: {fileID: 6323191303417382328}
   m_Layer: 7
   m_Name: Charge
   m_TagString: Untagged
@@ -71,6 +70,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1625723881570478094
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -116,6 +116,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 4
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -125,7 +126,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &3230000773134604271
 MonoBehaviour:
@@ -139,7 +139,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834e424b774252c409e40ae9d752e5b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loopreferencedTail: {fileID: 0}
   initDamage: 8
   boom: {fileID: 5503486941279643142}
   damageScaleOverTime: 0
@@ -152,6 +151,7 @@ MonoBehaviour:
   rb: {fileID: -3438963122069973725}
   owningPlayer: {fileID: 0}
   timeAlive: 0
+  morhpTime: 0
   fullTimeAlive: 0
   projectileManager: {fileID: 0}
   holdable: 0
@@ -167,8 +167,8 @@ MonoBehaviour:
   hit: 0
   sync: 0
   flipFlop: 0
-  impactParticle: {fileID: 7289681851009581468, guid: 270cdce96f1445d4b896d3355042f4e8, type: 3}
-  hitMark: {fileID: 0}
+  builtIndAudio: 1
+  hitMark: {fileID: 8294959907817521048, guid: df4cd096815f24d49bebb2d776023e24, type: 3}
   trailParticles: {fileID: 227063848627397678}
   trailParticleSystem: {fileID: 8440552164618030048}
   spriteRenderer: {fileID: 1625723881570478094}
@@ -196,84 +196,95 @@ MonoBehaviour:
     Path: event:/VFX/Base/Gun Hit
   projectileCollider: {fileID: -3148651319717881892}
   data:
-    original: {fileID: 0}
-    projectileType: 0
     projectileManager: {fileID: 0}
     owningPlayer: {fileID: 0}
-    position: {x: 0, y: 0}
-    direction: {x: 0, y: 0}
-    projectileColor: {r: 0, g: 0, b: 0, a: 0}
-    projectileDarkerColor: {r: 0, g: 0, b: 0, a: 0}
-    id: 0
-    IsLocalProjectile: 0
-    acceleration: 0
-    speed: 0
-    burst: 0
-    lifeTime: 0
-    fluctuation: []
-    noGravity: 0
-    dieOnImpact: 0
-    damageOnImpact: 0
-    sticky: 0
-    skipAoeOnTargetHit: 0
-    aoe: 0
-    knockback: 0
-    speedLimit: 0
-    minSpeed: 0
-    aoeDamage: 0
-    baseDamage: 0
-    damageTimeScale: 0
-    burstData: []
-    retornToSender: 0
-    stickToSender: 0
-    melee: 0
-    meleeRange: 0
-    swingDegrees: 0
+    impactParticle: {fileID: 0}
+    bounceParticle: {fileID: 0}
     meleePosAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    oneTimeHit: 0
-    meleeRotation: 0
     meleeRotAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    enableMorph: 0
-    targetMorph: {x: 0, y: 0, z: 0}
-    timeToMorph: 0
     morhpAnimation:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    homing: 0
+    fluctuation: []
+    burstData: []
+    projectileSpawnEvents: []
+    projectileColor: {r: 0, g: 0, b: 0, a: 0}
+    projectileDarkerColor: {r: 0, g: 0, b: 0, a: 0}
+    targetMorph: {x: 0, y: 0, z: 0}
+    position: {x: 0, y: 0}
+    direction: {x: 0, y: 0}
+    acceleration: 0
+    speed: 0
+    speedLimit: 0
+    minSpeed: 0
+    lifeTime: 0
+    damageTimeScale: 0
+    baseDamage: 0
+    aoeDamage: 0
+    aoe: 0
+    knockback: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
     homingStrength: 0
     homingDistance: 0
     spinSpeed: 0
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 0
-    dontBlockProjectiles: 0
-    bounceOfPlayers: 0
-    sync: 0
     syncSpeed: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
     lingeringDamage: 0
     lingeringFrequency: 0
+    bounceSpeedLoss: 0
+    bounceAngleTilt: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    timeToMorph: 0
+    morphTimeOnBounce: 0
+    id: 0
+    typeID: 0
+    bounces: 0
+    IsLocalProjectile: 0
+    noGravity: 0
+    dieOnImpact: 0
+    damageOnImpact: 0
+    sticky: 0
+    skipAoeOnTargetHit: 0
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    enableMorph: 0
+    setMorphOnBounce: 0
+    homing: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    sync: 0
     alignDirection: 0
+    clampMorph: 0
+    hover: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0
   lifeTimeMultiplier: 0
   externalTrailSpawnRate: 0
-  spawnId: 0
-  projectileType: 0
+  playShootSound: 0
 --- !u!50 &-3438963122069973725
 Rigidbody2D:
   serializedVersion: 5
@@ -345,59 +356,8 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
---- !u!114 &6323191303417382328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3066612454653962984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridSpaceColor:
-    color: {r: 0, g: 0, b: 0, a: 0}
-    radius: 0
-    saturationBoost: 0
-  sensorData:
-    colorValue:
-      x: 0
-      y: 0
-      z: 0
-    colorRadius: 0
-    origin:
-      x: 0
-      y: 0
-    rotation: 0
-    warpSpeed: 3
-    chroma: 0
-    enableBlockerInfluence: 0
-    blockerFalloff: 0
-    enablePositionWarp: 1
-    positionWarpStrength: 3
-    positionWarpFallof: 1
-    positionWarpRadius: 2
-    enableScaleWarp: 1
-    scaleWarpStrength: -2
-    scaleWarpFalloff: 1
-    scaleWarpRadius: 2
-    enableRotationWarp: 1
-    rotationWarpStrength: 10
-    rotationWarpFalloff: 2.63
-    rotationWarpRadius: 2
-    enableSwirl: 0
-    swirlStrength: 5
-    swirlFalloff: 1
-    swirlRadius: 2
-    enablePulsation: 0
-    pulsationFrequency: 0
-    pulsationAmplitude: 0
-    pulsationFallof: 0
-    pulsationRadius: 0
 --- !u!1 &8047464109496563407
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,11 +404,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce85ea8a00e1774c886e8a79cdd39f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localRotation: {x: 0, y: 0, z: 0, w: 0}
-  localPosition: {x: 0, y: 0, z: 0}
-  localScale: {x: 0, y: 0, z: 0}
-  enableCheckOnParent: 0
-  allowDisableEnableFromRemote: 0
   target: {fileID: 5893324798774376400}
   attatchedParticles: {fileID: 8440552164618030048}
 --- !u!198 &8440552164618030048
@@ -5203,7 +5158,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &227063848627397678
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5249,6 +5204,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5280,4 +5236,3 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0

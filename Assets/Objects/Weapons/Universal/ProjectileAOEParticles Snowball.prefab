@@ -4952,3 +4952,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e715116cddfc282488fa6dc4d84ac7dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particleSystems:
+  - {fileID: 3819964968668371686}
+  particleSystemsRenderers:
+  - {fileID: 7985869621744959770}
+  supportObjectPooling: 1
+  variantID: 9009803205723905658
+  lifeTime: 1.4

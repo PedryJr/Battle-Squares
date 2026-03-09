@@ -6,6 +6,7 @@ using static ScoreManager;
 public sealed class MapInitiator : MonoBehaviour
 {
 
+
     [SerializeField]
     GameObject legacyLight;
 
@@ -23,10 +24,15 @@ public sealed class MapInitiator : MonoBehaviour
 
     public void InitPresetMap(int index, Mode activeMode)
     {
-
+        AssetResources.GetHitmarkMaterial.SetFloat("_ForceAboveZeroStencil", 0);
         if (index < 0) InitMap();
         else InitLegacyMap(index, activeMode);
 
+    }
+
+    private void OnDestroy()
+    {
+        AssetResources.GetHitmarkMaterial.SetFloat("_ForceAboveZeroStencil", 1);
     }
 
     void InitMap()

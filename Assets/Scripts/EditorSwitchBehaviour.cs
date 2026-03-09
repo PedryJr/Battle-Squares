@@ -8,6 +8,7 @@ public sealed class EditorSwitchBehaviour : MonoBehaviour
     string LevelEditorSceneName;
 
     bool editorCanvasOn = false;
+    bool workshopCanvasOn = false;
 
     [SerializeField]
     Canvas mainCanvas;
@@ -16,6 +17,7 @@ public sealed class EditorSwitchBehaviour : MonoBehaviour
     Canvas editorCanvas;
 
     [SerializeField]
+    Canvas workshopCanvas;
 
     public void TOGGLEEDITOR(Variant variant)
     {
@@ -36,6 +38,23 @@ public sealed class EditorSwitchBehaviour : MonoBehaviour
         }
         else SceneManager.LoadScene(LevelEditorSceneName);
 
+    }
+
+    public void TOGGLEWORKSHOP()
+    {
+        workshopCanvasOn = !workshopCanvasOn;
+
+        if (workshopCanvasOn)
+        {
+            workshopCanvas.gameObject.SetActive(true);
+            mainCanvas.gameObject.SetActive(false);
+        }
+        else
+        {
+            workshopCanvas.GetComponentInChildren<WorkshopLoader>().DelistItems();
+            workshopCanvas.gameObject.SetActive(false);
+            mainCanvas.gameObject.SetActive(true);
+        }
     }
 
     [Serializable]

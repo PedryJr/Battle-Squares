@@ -243,6 +243,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-7427525724821163657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/ModdedSound/New Event
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/ModdedSound/New Event
+  Guid:
+    Data1: -167374656
+    Data2: 1330467589
+    Data3: 1179419320
+    Data4: -1982377855
+  Banks:
+  - {fileID: 6039893232511996249}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2000
 --- !u!114 &-7173248621442632171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -900,13 +927,14 @@ MonoBehaviour:
   - {fileID: -5927783735478366923}
   - {fileID: 3357521485346860567}
   - {fileID: -7901384290879884358}
+  - {fileID: -7427525724821163657}
   EditorParameters:
   - {fileID: -7173248621442632171}
   MasterBanks:
   - {fileID: 7905597030366597611}
   StringsBanks:
   - {fileID: 5974331575488483072}
-  cacheTime: 638929413822148350
+  cacheTime: 639036814205139691
   cacheVersion: 131843
 --- !u!114 &197478428860747775
 MonoBehaviour:
@@ -923,10 +951,10 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Themes.bank
   Name: Themes
   StudioPath: bank:/Themes
-  lastModified: 638929413822123767
+  lastModified: 639009063805734352
   FileSizes:
   - Name: Desktop
-    Value: 15394176
+    Value: 15393984
   Exists: 1
 --- !u!114 &609275364110211903
 MonoBehaviour:
@@ -1067,10 +1095,10 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/VFX.bank
   Name: VFX
   StudioPath: bank:/VFX
-  lastModified: 638929413822148350
+  lastModified: 639009063806244788
   FileSizes:
   - Name: Desktop
-    Value: 116128
+    Value: 116160
   Exists: 1
 --- !u!114 &2429569352991552797
 MonoBehaviour:
@@ -1345,10 +1373,10 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638929413821597049
+  lastModified: 639036814204087649
   FileSizes:
   - Name: Desktop
-    Value: 2412
+    Value: 2464
   Exists: 1
 --- !u!114 &6039893232511996249
 MonoBehaviour:
@@ -1365,10 +1393,10 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Player.bank
   Name: Player
   StudioPath: bank:/Player
-  lastModified: 638929413821607054
+  lastModified: 639036814205139691
   FileSizes:
   - Name: Desktop
-    Value: 13280
+    Value: 14016
   Exists: 1
 --- !u!114 &6085071104067398111
 MonoBehaviour:
@@ -1461,7 +1489,7 @@ MonoBehaviour:
   Path: Assets/Audio Engine/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638929413821577120
+  lastModified: 639036814204066941
   FileSizes:
   - Name: Desktop
     Value: 3878

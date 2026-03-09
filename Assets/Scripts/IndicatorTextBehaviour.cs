@@ -11,7 +11,7 @@ public class IndicatorTextBehaviour : MonoBehaviour
         text = GetComponent<TMP_Text>();
     }
 
-    float timer = 1;
+    float timer = 1f;
 
     Color clear = Color.clear;
     Color visiable = Color.white;
@@ -27,6 +27,12 @@ public class IndicatorTextBehaviour : MonoBehaviour
 
     }
 
-    public void INDICATE() => timer = 0;
+    public void INDICATE() => timer = 0f;
+    public void INDICATE(string textChange)
+    {
+        timer = 0f;
+        text.color = clear;
+        text.text = textChange;
+    }
 
 }

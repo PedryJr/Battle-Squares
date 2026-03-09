@@ -8,39 +8,39 @@
             "actions": [
                 {
                     "name": "Up",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "56a1be27-a9bb-4af8-81f4-c12c03f1a8db",
-                    "expectedControlType": "",
+                    "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Down",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "3ef32b23-7d33-470a-8289-d06f41b86f3e",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Left",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "0fe7e5c9-cc68-4d7f-835c-db0f28d08dc7",
-                    "expectedControlType": "",
+                    "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Right",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "421e1a7c-9aaa-4fe8-8238-3c26ccd2fa8c",
-                    "expectedControlType": "",
+                    "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Jump",
@@ -82,6 +82,24 @@
                     "name": "SecondaryConst",
                     "type": "Button",
                     "id": "dc975ee8-50cf-4fd3-a93c-70c0d896f7ee",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleMousePosession",
+                    "type": "Button",
+                    "id": "5b0c23bf-72f8-4429-9788-3399ffc8db83",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Start",
+                    "type": "Button",
+                    "id": "40becfdb-132b-4d37-ac1e-1704a690c61b",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -328,6 +346,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "SecondaryConst",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d0ffef57-9d43-4b37-993d-923352471cc1",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleMousePosession",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e389d874-4ab9-4902-a6d1-71cb943f4040",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Start",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

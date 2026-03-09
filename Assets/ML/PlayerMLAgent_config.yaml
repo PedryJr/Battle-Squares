@@ -1,0 +1,90 @@
+# ML-Agents Training Configuration for PlayerMLAgent
+# Place this in your mlagents config folder
+
+behaviors:
+  PlayerMLAgent:
+    trainer_type: ppo
+    
+    hyperparameters:
+      # Learning rate
+      learning_rate: 3.0e-4
+      learning_rate_schedule: linear
+      
+      # PPO-specific
+      batch_size: 1024
+      buffer_size: 10240
+      beta: 5.0e-3        # Entropy coefficient
+      epsilon: 0.2        # Clipping parameter
+      lambd: 0.95         # GAE lambda
+      num_epoch: 3
+      
+    # Network architecture
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 2
+      vis_encode_type: simple
+      
+    # Reward signals
+    reward_signals:
+      extrinsic:
+        gamma: 0.99       # Discount factor
+        strength: 1.0
+      
+      # Optional: Curiosity-driven learning (can help exploration)
+      curiosity:
+        gamma: 0.99
+        strength: 0.01
+        encoding_size: 256
+        learning_rate: 3.0e-4
+    
+    # Keep some checkpoints
+    keep_checkpoints: 5
+    max_steps: 5.0e6      # Total training steps
+    time_horizon: 1000    # Steps before updating
+    summary_freq: 10000   # TensorBoard update frequency
+    
+    # Self-play settings (optional, for competitive scenarios)
+    # self_play:
+    #   save_steps: 50000
+    #   team_change: 200000
+    #   swap_steps: 50000
+    #   window: 10
+    #   play_against_latest_model_ratio: 0.5
+    #   initial_elo: 1200.0
+
+# Environment settings
+env_settings:
+  env_path: null        # Path to built game (null for editor)
+  env_args: null
+  base_port: 5005
+  num_envs: 1           # Number of parallel environments
+  num_areas: 1
+  seed: -1
+  max_lifetime_restarts: 10
+  restarts_rate_limit_n: 1
+  restarts_rate_limit_period_s: 60
+
+# Engine settings
+engine_settings:
+  width: 84
+  height: 84
+  quality_level: 5
+  time_scale: 20        # Speed up training
+  target_frame_rate: -1
+  capture_frame_rate: 60
+
+# Checkpoint settings  
+checkpoint_settings:
+  run_id: PlayerML_Training
+  initialize_from: null
+  load_model: false
+  resume: false
+  force: false
+  train_model: false
+  inference: false
+  results_dir: results
+
+# Torch settings
+torch_settings:
+  device: null          # Will auto-detect CUDA if available

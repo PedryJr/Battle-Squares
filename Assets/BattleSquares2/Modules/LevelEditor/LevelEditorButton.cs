@@ -14,6 +14,8 @@ public sealed class LevelEditorButton : MonoBehaviour
 
     [SerializeField]
     private UnityEvent clickEvent;
+    [SerializeField]
+    private UnityEvent deleteEvent;
 
     private TextMeshProUGUI tmp;
 
@@ -43,6 +45,9 @@ public sealed class LevelEditorButton : MonoBehaviour
     public Color fromColor;
     public Color toColor;
     public Color onHoveredColor;
+    public Color onHoveredColorDELETE_FLAG;
+    public Color offHoveredColorDELETE_FLAG;
+    public Color toColorDELETE_FLAG;
 
     public bool isHovering;
     public bool animateColor;
@@ -63,6 +68,9 @@ public sealed class LevelEditorButton : MonoBehaviour
     [SerializeField]
     private bool inverseScroll;
 
+    [SerializeField]
+    private bool initializeOffHoverColor = true;
+
     private float animationTimer;
 
     [SerializeField]
@@ -71,13 +79,23 @@ public sealed class LevelEditorButton : MonoBehaviour
     private void Awake()
     {
 
+        if (!rectTransform) rectTransform = GetComponent<RectTransform>();
+        button = GetComponent<Button>();
+
         if (animateColor)
         {
-            image = GetComponent<Image>();
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            image = rectTransform.GetComponent<Image>();
+            spriteRenderer = rectTransform.GetComponent<SpriteRenderer>();
 
-            if (spriteRenderer) offHoveredColor = spriteRenderer.color;
-            else if (image) offHoveredColor = image.color;
+            if (initializeOffHoverColor)
+            {
+                if (spriteRenderer)
+                {
+                    offHoveredColor = spriteRenderer.color;
+                }
+                else if (image) offHoveredColor = image.color;
+                offHoveredColorDELETE_FLAG = offHoveredColor;
+            }
 
             currentColor = offHoveredColor;
             fromColor = offHoveredColor;
@@ -94,8 +112,6 @@ public sealed class LevelEditorButton : MonoBehaviour
 
         scrollRect = GetComponentInParent<ScrollRect>();
 
-        if (!rectTransform) rectTransform = GetComponent<RectTransform>();
-        button = GetComponent<Button>();
 
         initSize = rectTransform.sizeDelta;
 
@@ -130,7 +146,7 @@ public sealed class LevelEditorButton : MonoBehaviour
         ExitHover();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         Animate();
 
@@ -153,6 +169,7 @@ public sealed class LevelEditorButton : MonoBehaviour
         if (animateColor)
         {
             toColor = onHoveredColor;
+            toColorDELETE_FLAG = onHoveredColorDELETE_FLAG;
 
             if (spriteRenderer)
             {
@@ -165,6 +182,8 @@ public sealed class LevelEditorButton : MonoBehaviour
         }
     }
 
+    bool GetDeleteFlag() => deleteEvent.GetPersistentEventCount() != 0 && DeleteLevelListing.isDeleting;
+
     public void ExitHover()
     {
 
@@ -176,7 +195,9 @@ public sealed class LevelEditorButton : MonoBehaviour
 
         if (animateColor)
         {
+
             toColor = offHoveredColor;
+            toColorDELETE_FLAG = offHoveredColorDELETE_FLAG;
 
             if (spriteRenderer)
             {
@@ -274,8 +295,8 @@ public sealed class LevelEditorButton : MonoBehaviour
 
             if (animateColor)
             {
-                if (spriteRenderer) spriteRenderer.color = Color.Lerp(fromColor, toColor, lerp);
-                else image.color = Color.Lerp(fromColor, toColor, lerp);
+                if (spriteRenderer) spriteRenderer.color = Color.Lerp(fromColor, GetDeleteFlag() ? toColorDELETE_FLAG : toColor, lerp);
+                else image.color = Color.Lerp(fromColor, GetDeleteFlag() ? toColorDELETE_FLAG : toColor, lerp);
             }
         }
 
@@ -289,7 +310,18 @@ public sealed class LevelEditorButton : MonoBehaviour
         animationTimer = 0;
         animatingClick = false;
 
-        clickEvent?.Invoke();
+        if(deleteEvent.GetPersistentEventCount() == 0) clickEvent?.Invoke();
+        else
+        {
+            if (DeleteLevelListing.isDeleting)
+            {
+                deleteEvent?.Invoke();
+            }
+            else
+            {
+                clickEvent?.Invoke();
+            }
+        }
     }
 
     private enum AnimationType

@@ -10,6 +10,7 @@ using static DragAndScrollMod;
 public sealed class ShapeContainer : MonoBehaviour
 {
 
+    public float snappingOnGenerate = 1f;
     public Vector2 mousePosOnGenerate = Vector2.zero;
     public Vector2 mousePosOnRelease = Vector2.zero;
 
@@ -368,7 +369,11 @@ public sealed class ShapeContainer : MonoBehaviour
         return combined;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Triangulate(Vector3[] points, out Vector3[] vertices, out int[] triangles) => PolygonTriangulator.Triangulate8(points, out vertices, out triangles);
+    private void Triangulate(Vector3[] points, out Vector3[] vertices, out int[] triangles)
+    {
+        PolygonTriangulator.Triangulate8(points, out vertices, out triangles);
+        //for (int i = 0; i < vertices.Length; i++) vertices[i] *= snappingOnGenerate;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void InitializeMimicVertices()
@@ -540,7 +545,7 @@ public sealed class ShapeContainer : MonoBehaviour
         if (mirrorX && mirrorY) ReleaseMimimc(_mimicMirrorXY);
     }
 
-    void ReleaseMimimc(Transform _mimic) => _mimic.GetComponent<ShapeMimicBehaviour>().RegisterRelease(_triangleIndices, _dragMod);
+    void ReleaseMimimc(Transform _mimic) => _mimic.GetComponent<ShapeMimicBehaviour>().RegisterRelease(_triangleIndices, _dragMod, snappingOnGenerate);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void DisableForcefieldsOnMimics()

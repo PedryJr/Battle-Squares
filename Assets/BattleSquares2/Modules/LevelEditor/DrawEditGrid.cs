@@ -6,9 +6,7 @@ using UnityEngine;
 public sealed class DrawEditGrid : MonoBehaviour
 {
     Mesh mesh;
-
-    [SerializeField]
-    float gridSnappingStep = 1.0f;
+    DragAndScrollMod dragAndScrollMod;
 
     [SerializeField]
     Material levelEditorGridMaterial;
@@ -25,6 +23,7 @@ public sealed class DrawEditGrid : MonoBehaviour
 
     private void Awake()
     {
+        dragAndScrollMod = FindAnyObjectByType<DragAndScrollMod>();
         previewBehaviour = GetComponent<LevelEditorPreviewBehaviour>();
         mesh = new Mesh();
         mainCamera = Camera.main;
@@ -42,8 +41,8 @@ public sealed class DrawEditGrid : MonoBehaviour
 
         float orthoSize = mainCamera.orthographicSize;
         float aspect = mainCamera.aspect;
-        float width = Mathf.Ceil((orthoSize * aspect * 2) / gridSnappingStep) * gridSnappingStep;
-        float height = Mathf.Ceil((orthoSize * 2) / gridSnappingStep) * gridSnappingStep;
+        float width = Mathf.Ceil((orthoSize * aspect * 2) / dragAndScrollMod.Snapping) * dragAndScrollMod.Snapping;
+        float height = Mathf.Ceil((orthoSize * 2) / dragAndScrollMod.Snapping) * dragAndScrollMod.Snapping;
 
         int lineCount = gridSize * 2 + 1;
         int totalLines = lineCount * 2; // Horizontal + Vertical
@@ -56,7 +55,7 @@ public sealed class DrawEditGrid : MonoBehaviour
         {
             width = width,
             height = height,
-            gridSnappingStep = gridSnappingStep,
+            gridSnappingStep = dragAndScrollMod.Snapping,
             gridSize = gridSize,
             vertices = vertices,
             indices = indices
@@ -80,8 +79,8 @@ public sealed class DrawEditGrid : MonoBehaviour
     {
 
         transform.position = new Vector3(
-            Mathf.Round(mainCamera.transform.position.x / gridSnappingStep) * gridSnappingStep,
-            Mathf.Round(mainCamera.transform.position.y / gridSnappingStep) * gridSnappingStep,
+            Mathf.Round(mainCamera.transform.position.x / dragAndScrollMod.Snapping) * dragAndScrollMod.Snapping,
+            Mathf.Round(mainCamera.transform.position.y / dragAndScrollMod.Snapping) * dragAndScrollMod.Snapping,
             gridDepth
         );
 

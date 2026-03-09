@@ -1,20 +1,29 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using static PlayerSynchronizer;
 
 public sealed class BuiltMapSpawns : MonoBehaviour
 {
 
     PlayerSynchronizer playerSynchronizer;
 
+    public static BuiltMapSpawns instance;
+
     private void Awake()
     {
+        instance = this;
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
     }
 
     private void Start()
     {
-        transform.position = GetSpawn(playerSynchronizer.localSquare.GetID());
+        transform.position = GetSpawn(playerSynchronizer.localSquare.GetGameID());
     }
 
     float spawnCycle = 0f;
@@ -26,27 +35,26 @@ public sealed class BuiltMapSpawns : MonoBehaviour
         
         spawns = GetComponentsInChildren<Transform>().Where(t => t != transform).ToArray();
         foreach (var item in spawns) item.SetParent(transform.parent, true);
-        /*
-                foreach (var item in playerSynchronizer.playerIdentities)
-                {
-                    Vector3 spawnPos = GetSpawn(item.square.GetID());
-                    spawnPos.z = item.square.spawnPosition.z;
-                    item.square.spawnPosition = spawnPos;
-
-                    spawnPos.z = item.square.transform.position.z;
-                    item.square.transform.position = spawnPos;
-                }*/
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Vector2 GetSpawn(byte playerId) => spawns[(int)(spawnCycle * 2 + playerId) % spawns.Length].position;
+    public Vector2 GetSpawn(byte playerId) => spawns[(int)((spawnCycle * 2) + PlayerIdToListIndex(playerId)) % spawns.Length].position;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Update()
     {
         spawnCycle += Time.deltaTime;
-        if (!playerSynchronizer.localSquare.isDead && !playerSynchronizer.localSquare.spawnBuffer)
+        for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++)
         {
-            transform.position = GetSpawn(playerSynchronizer.localSquare.GetID());
+            PlayerBehaviour player = playerSynchronizer.playerIdentities[i].square;
+            if (!player.isLocalPlayer) continue;
+            if (!(!player.isDead && !player.spawnBuffer)) continue;
+            transform.position = GetSpawn(player.GetGameID());
         }
+    }
+
+    int PlayerIdToListIndex(byte playerId)
+    {
+        for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++) if (playerSynchronizer.playerIdentities[i].square.GetGameID() == playerId) return i;
+        return playerId;
     }
 
 }

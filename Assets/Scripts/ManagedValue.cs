@@ -1,0 +1,1 @@
+﻿internal class ManagedValue<T> where T : unmanaged { public T Value; }

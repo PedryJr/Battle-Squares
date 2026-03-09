@@ -61,6 +61,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -82,6 +84,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -135,7 +138,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arenaColor: {r: 0.41568628, g: 0.43529412, b: 0.4509804, a: 1}
   animatedColor: {r: 0.41568628, g: 0.43529412, b: 0.4509804, a: 1}
+  shapeRenderer: {fileID: -5702159191623403983}
+  renderMesh: {fileID: -8808780069209393818}
   stencilRenderer: {fileID: 6819917693913872202}
+  stencilMesh: {fileID: 8102726563713640308}
+  correctedPoints: []
 --- !u!33 &-8808780069209393818
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -164,6 +171,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -185,6 +194,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0

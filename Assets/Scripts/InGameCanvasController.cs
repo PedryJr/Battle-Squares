@@ -30,7 +30,7 @@ public sealed class InGameCanvasController : MonoBehaviour
     private void Awake()
     {
 
-        playerController = FindAnyObjectByType<PlayerController>();
+        //playerController = FindAnyObjectByType<PlayerController>();
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
 
         pauseCanvasOn = false;
@@ -124,8 +124,8 @@ public sealed class InGameCanvasController : MonoBehaviour
     void SetPlayerControllable()
     {
 
-        if(pauseCanvasOn || chatCanvasOn) playerController.DisableController();
-        else playerController.EnableController();
+        if(pauseCanvasOn || chatCanvasOn) playerSynchronizer.localSquare.playerController.DisableController();
+        else playerSynchronizer.localSquare.playerController.EnableController();
 
     }
 

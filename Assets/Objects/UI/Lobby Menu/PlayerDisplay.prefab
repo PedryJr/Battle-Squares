@@ -92,8 +92,8 @@ MonoBehaviour:
   assignedPlayer: {fileID: 0}
   border: {fileID: 6982744319546336873}
   pfp: {fileID: 4225676235290848294}
-  unreadyColor: {r: 0.105882354, g: 0.105882354, b: 0.105882354, a: 1}
-  readyColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  unreadyColor: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
+  readyColor: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
   previewMode: 0
 --- !u!1 &2433863435470301017
 GameObject:
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: b96931f4d2e9af74596b1617823b38ad, type: 2}
+  m_Material: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   m_Color: {r: 0.23899364, g: 0.23899364, b: 0.23899364, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -200,13 +200,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
+  onHoveredColor: {r: 0, g: 0, b: 0, a: 0}
+  ignoreHoverColorOptions: 1
+  animateColor: 0
+  hoverColorOptions: {fileID: 0}
+  overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
-  onHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 0
   enterHoverTransitionTime: 0.15
   exitHoverTransitionTime: 0.15
   clickTransitionTime: 0.05

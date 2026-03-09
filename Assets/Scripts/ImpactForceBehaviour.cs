@@ -37,10 +37,10 @@ public class ImpactForceBehaviour : MonoBehaviour
 
         transform.localScale = Vector3.one * strengthResult;
 
-        sensorUp.sensorData.positionWarpStrength = sensorStrength;
-        sensorUp.sensorData.positionWarpRadius = sensorRadius;
-        sensorDown.sensorData.positionWarpStrength = sensorStrength;
-        sensorDown.sensorData.positionWarpRadius = sensorRadius;
+        sensorUp.gridSpaceSensor.positionWarpStrength = sensorStrength;
+        sensorUp.gridSpaceSensor.positionWarpRadius = sensorRadius;
+        sensorDown.gridSpaceSensor.positionWarpStrength = sensorStrength;
+        sensorDown.gridSpaceSensor.positionWarpRadius = sensorRadius;
 
         if (timer >= 1) Destroy(gameObject);
     }

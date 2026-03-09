@@ -14,6 +14,7 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
     public static int ShapeIDCounter = 0;
 
     private int shapeID;
+    float snappingOnGenerate = 1f;
 
     [SerializeField]
     Color mimicColor = Color.white;
@@ -83,8 +84,9 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         return sucess;
     }
 
-    public void RegisterRelease(int[] triangles, DragAndScrollMod dragmod)
+    public void RegisterRelease(int[] triangles, DragAndScrollMod dragmod, float snappingOnGenerate)
     {
+        this.snappingOnGenerate = snappingOnGenerate;
         _dragMod = dragmod;
         shapeID = ShapeIDCounter;
         if(ShapeMimics.ContainsKey(shapeID)) ShapeMimics[shapeID] = this;
@@ -188,7 +190,7 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    Vector2 GetSnappedPosition(Vector2 rawPosition) => new Vector2(Mathf.Round(rawPosition.x / _dragMod.Snapping) * _dragMod.Snapping, Mathf.Round(rawPosition.y / _dragMod.Snapping) * _dragMod.Snapping);
+    Vector2 GetSnappedPosition(Vector2 rawPosition) => new Vector2(Mathf.Round(rawPosition.x / snappingOnGenerate) * snappingOnGenerate, Mathf.Round(rawPosition.y / snappingOnGenerate) * snappingOnGenerate);
 
     public void ValidateShadow()
     {
@@ -343,16 +345,35 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
 
     public const float GetMinRot = -180f;
     public const float GetMaxRot = 180f;
-    public const float GetMinLength = 0f;
+    public const float GetMinLength = -360.62445f;
     public const float GetMaxLength = 360.62445f;
-    public const float GetMinWidth = 0f;
+    public const float GetMinWidth = -32f;
     public const float GetMaxWidth = 32f;
+    public const float GetMinSnapping = 0f;
+    public const float GetMaxSnapping = 1f;
     public const byte GetRotBytes = 2;
     public const byte GetLenBytes = 2;
     public const byte GetWidBytes = 2;
+    public const byte GetSnaBytes = 1;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static SByte4 GetShapeCompressor() => GetShapeCompressor(GetEmptyByte4());
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static SByte4 GetShapeCompressor(Byte4 predefinedData) => new SByte4()
+    {
+        min = new Vector4(GetMinRot, GetMinLength, GetMinWidth, GetMinSnapping),
+        max = new Vector4(GetMaxRot, GetMaxLength, GetMaxWidth, GetMaxSnapping),
+        xBytes = GetRotBytes,
+        yBytes = GetLenBytes,
+        zBytes = GetWidBytes,
+        wBytes = GetSnaBytes,
+        byteVec = predefinedData
+    };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Byte3 GetEmptyByte3() => new Byte3();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Byte4 GetEmptyByte4() => new Byte4() { data = new byte[GetRotBytes + GetLenBytes + GetWidBytes + GetSnaBytes] };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static SimplifiedShapeData ConvertFromUSimplifiedShapeData(USimplifiedShapeData uSimplifiedShapeData)
@@ -361,17 +382,8 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         return new SimplifiedShapeData
         {
             coord = uSimplifiedShapeData.coord,
-            param = new SByte3()
-            {
-                min = new Vector3(GetMinRot, GetMinLength, GetMinWidth),
-                max = new Vector3(GetMaxRot, GetMaxLength, GetMaxWidth),
-                xBytes = GetRotBytes,
-                yBytes = GetLenBytes,
-                zBytes = GetWidBytes,
-                byteVec = uSimplifiedShapeData.param
-            }
+            param = GetShapeCompressor(uSimplifiedShapeData.param)
         };
-
     }
 
     public static USimplifiedShapeData ConvertFromSimplifiedShapeData(SimplifiedShapeData uSimplifiedShapeData)
@@ -396,86 +408,44 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         Vector2 ignoreH = Vector2.zero;
         Vector2 ignoreV = Vector2.zero;
 
-        shapeH = points[7] - points[0];
-        shapeV = points[2] - points[1];
-        ignoreH = (shapeAsOctagon[7] - shapeAsOctagon[0]);
-        ignoreV = (shapeAsOctagon[2] - shapeAsOctagon[1]);
+        //THOUGHTS
+        //Points are malformed from the snapping grid, we need to restore them to the octagonal shape first
+        //Then store the snapping as a separate parameter for rebuilding the shape later
+        //Perhaps the shapeAsOctagon can be resized to the snapped size, then the difference between the two shapes can be stored as the length and width parameters
+        //That difference can then be reapplied to the octagonal shape when reconstructing it later after applying space size to the octagonal shape
 
-        float rot, len, wid;
+        shapeH = points[7] - points[0];
+        shapeV = points[2] - points[1] ;
+/*        ignoreH = (shapeAsOctagon[7] - shapeAsOctagon[0]);
+        ignoreV = (shapeAsOctagon[2] - shapeAsOctagon[1]);*/
+
+        ignoreH = ((shapeAsOctagon[7] * snappingOnGenerate) - (shapeAsOctagon[0] * snappingOnGenerate));
+        ignoreV = ((shapeAsOctagon[2] * snappingOnGenerate) - (shapeAsOctagon[1] * snappingOnGenerate));
+
+        float rot, len, wid, sna;
         rot = Mathf.Atan2(shapeH.y, shapeH.x) * Mathf.Rad2Deg;
         len = shapeH.magnitude - ignoreH.magnitude;
         wid = shapeV.magnitude - ignoreV.magnitude;
-        byte xBytes = GetRotBytes;
-        byte yBytes = GetLenBytes;
-        byte zBytes = GetWidBytes;
+        sna = snappingOnGenerate;
 
-        Vector3 paramMin = new Vector3(GetMinRot, GetMinLength, GetMinWidth);
-        Vector3 paramMax = new Vector3(GetMaxRot, GetMaxLength, GetMaxWidth);
-        SByte3 compressed = new SByte3()
-        {
-            min = paramMin,
-            max = paramMax,
-            xBytes = xBytes,
-            yBytes = yBytes,
-            zBytes = zBytes,
-            byteVec = GetEmptyByte3()
-        };
 
-        compressed.SetFromVec3(new Vector3(rot, len, wid));
+        //SByte4 compressed = GetShapeCompressor();
+
+        //compressed.SetFromVec4(new Vector4(rot, len, wid, sna));
 
         simplifiedShapeData.coord.SetPosition(transform.position);
-        simplifiedShapeData.param = compressed;
 
+        simplifiedShapeData.param = GetShapeCompressor();
+        simplifiedShapeData.param.SetFromVec4(new Vector4(rot, len, wid, sna));
+        Debug.Log("SNAPPING RAW: " + sna);
+        Debug.Log("SNAPPING STORED: " + simplifiedShapeData.param.GetVec4().w);
         return simplifiedShapeData;
     }
 
     [SerializeField]
     bool reset;
 
-    [ContextMenu("CorrentShapeRotTest")]
-    void CSRT()
-    {
 
-        if (reset)
-        {
-            polygonCollider2D.points = shapeAsOctagon;
-            return;
-        }
-
-        SimplifiedShapeData simplifiedShapeData = GetSimplifiedShapeData();
-        inside = simplifiedShapeData;
-
-        Vector3 param = simplifiedShapeData.param.GetVec3();
-        float rot, len, wid;
-        rot = param.x;
-        len = param.y;
-        wid = param.z;
-
-        Vector2[] correctedPoints = new Vector2[points.Length];
-        for (int i = 0; i < correctedPoints.Length; i++)
-        {
-            
-            float yToAdd = 0;
-            float xToAdd = 0;
-
-            if (i == 0 || i == 1 || i == 6 || i == 7) yToAdd = wid / 2f;
-            if (i == 2 || i == 3 || i == 4 || i == 5) yToAdd = -wid / 2f;
-            if (i == 4 || i == 5 || i == 6 || i == 7) xToAdd = len;
-
-            Vector2 pointNoRotation = (Vector2)BuiltShapeBehaviour.GetOctagonalVerticesVec3[i] + new Vector2(xToAdd, yToAdd);
-            float pointBaseRotation = Mathf.Atan2(pointNoRotation.y, pointNoRotation.x) * Mathf.Rad2Deg;
-
-            float rotationAccum = pointBaseRotation + rot;
-            Vector2 pointAsRotated = new Vector2(Mathf.Cos(rotationAccum), Mathf.Sin(rotationAccum)).normalized;
-
-            //No pos offset since transform is used for collider
-            correctedPoints[i] = rotate(pointNoRotation, rot * Mathf.Deg2Rad) + (Vector2)(simplifiedShapeData.coord.GetPosition() - transform.position);
-
-        }
-
-        polygonCollider2D.points = correctedPoints;
-
-    }
 
     public Vector2[] GetMimicPoints()
     {
@@ -492,14 +462,14 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         [SerializeField]
         public ByteCoord coord;
         [SerializeField]
-        public SByte3 param;
+        public SByte4 param;
 
         public int GetSize() => param.xBytes + param.yBytes + param.zBytes + 2;
 
         public Mesh GenerateWorldspaceMesh()
         {
             Mesh mesh = new Mesh();
-            Vector3 paramC = param.GetVec3();
+            Vector4 paramC = param.GetVec4();
 
             Vector3[] correctedPoints = new Vector3[8];
             for (int i = 0; i < correctedPoints.Length; i++)
@@ -512,7 +482,7 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
                 if (i == 2 || i == 3 || i == 4 || i == 5) yToAdd = -paramC.z / 2f;
                 if (i == 4 || i == 5 || i == 6 || i == 7) xToAdd = paramC.y;
 
-                Vector2 pointNoRotation = (Vector2)BuiltShapeBehaviour.GetOctagonalVerticesVec3[i] + new Vector2(xToAdd, yToAdd);
+                Vector2 pointNoRotation = ((Vector2)BuiltShapeBehaviour.GetOctagonalVerticesVec3[i] * paramC.w) + new Vector2(xToAdd, yToAdd);
                 float pointBaseRotation = Mathf.Atan2(pointNoRotation.y, pointNoRotation.x) * Mathf.Rad2Deg;
 
                 float rotationAccum = pointBaseRotation + paramC.x;
@@ -531,7 +501,7 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         [SerializeField]
         public ByteCoord coord;
         [SerializeField]
-        public Byte3 param;
+        public Byte4 param;
         public int GetSize() => (param.data != null ? param.data.Length : 0) + 2;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -544,38 +514,77 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         public Mesh GenerateWorldspaceMesh() => ShapeMimicBehaviour.ConvertFromUSimplifiedShapeData(this).GenerateWorldspaceMesh();
     }
 
+    const byte testB = 2;
+    const float testMin = 0;
+    const float testMax = 255;
+
     [Serializable]
     public struct ByteCoord : INetworkSerializable
     {
         public byte[] data;
 
         [JsonIgnore]
-        public byte x 
+        public float x 
         {
             get
             {
-                if(data == null) data = new byte[2];
-                return data[0];
+                if (data == null) data = new byte[testB * 2];
+
+                SByte2 temp = new SByte2();
+                temp.SetXBytes(testB);
+                temp.SetYBytes(testB);
+                temp.SetMin(testMin);
+                temp.SetMax(testMax);
+                temp.byteVec = new Byte2() { data = data };
+
+                return temp.GetVec2().x;
             }
             set
             {
-                if(data == null) data = new byte[2];
-                data[0] = value;
+                if (data == null) data = new byte[testB * 2];
+
+                SByte2 temp = new SByte2();
+                temp.SetXBytes(testB);
+                temp.SetYBytes(testB);
+                temp.SetMin(testMin);
+                temp.SetMax(testMax);
+                temp.byteVec = new Byte2() { data = data };
+                temp.SetFromfloat2(new Vector2(value, temp.GetVec2().y));
+
+                //data = temp.byteVec.data;
+                //data[0] = (byte) value;
             }
         }
 
         [JsonIgnore]
-        public byte y 
+        public float y 
         {
             get
             {
-                if (data == null) data = new byte[2];
-                return data[1];
+                if (data == null) data = new byte[testB * 2];
+                SByte2 temp = new SByte2();
+                temp.SetXBytes(testB);
+                temp.SetYBytes(testB);
+                temp.SetMin(testMin);
+                temp.SetMax(testMax);
+                temp.byteVec = new Byte2() { data = data };
+
+                return temp.GetVec2().y;
             }
             set
             {
-                if (data == null) data = new byte[2];
-                data[1] = value;
+                if (data == null) data = new byte[testB * 2];
+
+                SByte2 temp = new SByte2();
+                temp.SetXBytes(testB);
+                temp.SetYBytes(testB);
+                temp.SetMin(testMin);
+                temp.SetMax(testMax);
+                temp.byteVec = new Byte2() { data = data };
+                temp.SetFromfloat2(new Vector2(temp.GetVec2().x, value));
+
+                //data = temp.byteVec.data;
+
             }
         }
 
@@ -589,7 +598,7 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetPosition(Vector3 position) => (x, y) = ((byte)Mathf.RoundToInt(position.x + 128f), (byte)Mathf.RoundToInt(position.y + 128f));
+        public void SetPosition(Vector3 position) => (x, y) = (position.x + 128f, position.y + 128f);
         public static int GetSize() => 2;
     }
 

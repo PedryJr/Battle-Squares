@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 1cfe9117bff4bac43a588eedf190e752, type: 2}
+  m_Material: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -352,11 +352,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 0}
+  overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -367,6 +371,7 @@ MonoBehaviour:
   animationType: 0
   soundInteractionHoverType: 2
   soundInteractionClickType: 2
+  unique: {fileID: 0}
 --- !u!1 &2465978575730133853
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,11 +448,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0, g: 0, b: 0, a: 0}
+  ignoreHoverColorOptions: 1
+  hoverColorOptions: {fileID: 0}
+  overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   isHovering: 0
   animateColor: 0
   enterHoverTransitionTime: 0.13
@@ -458,6 +467,7 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 0
   soundInteractionClickType: 0
+  unique: {fileID: 0}
 --- !u!114 &5976841115024129343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,7 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 1cfe9117bff4bac43a588eedf190e752, type: 2}
+  m_Material: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -865,11 +875,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 0}
+  overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -880,6 +894,7 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 1
   soundInteractionClickType: 1
+  unique: {fileID: 0}
 --- !u!1 &4142831415834890126
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,11 +1136,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   fromColor: {r: 0, g: 0, b: 0, a: 0}
   toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
+  ignoreHoverColorOptions: 0
+  hoverColorOptions: {fileID: 0}
+  overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   isHovering: 0
   animateColor: 1
   enterHoverTransitionTime: 0.13
@@ -1136,6 +1155,7 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 1
   soundInteractionClickType: 1
+  unique: {fileID: 0}
 --- !u!1 &7406288861777217911
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,7 +1213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 1cfe9117bff4bac43a588eedf190e752, type: 2}
+  m_Material: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

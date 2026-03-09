@@ -1,4 +1,5 @@
 using ProximityChat;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -46,7 +47,7 @@ public sealed class VoiceHandle : NetworkBehaviour
         if (IsOwner)
         {
 
-            selfMute = MySettings.muted;
+            selfMute = MySettings.Muted;
 
             ApplySelfMute();
 
@@ -69,7 +70,7 @@ public sealed class VoiceHandle : NetworkBehaviour
 
     private void Update()
     {
-
+        return;
         if (!attatchedPlayer)
         {
 
@@ -77,7 +78,7 @@ public sealed class VoiceHandle : NetworkBehaviour
             {
 
                 PlayerBehaviour player = null;
-                player = playerSynchronizer.GetPlayerById(OwnerClientId);
+                player = playerSynchronizer.playerIdentities.Where(x => x.square.GetNetworkID() == OwnerClientId).First().square;
                 if (player)
                 {
                     attatchedPlayer = player;
@@ -108,7 +109,7 @@ public sealed class VoiceHandle : NetworkBehaviour
         if (attatchedPlayer)
         {
 
-            settingsVolume = MySettings.volume;
+            settingsVolume = MySettings.Volume;
             volume = attatchedPlayer.voiceVolume;
             muted = attatchedPlayer.voiceMute;
 
@@ -128,7 +129,7 @@ public sealed class VoiceHandle : NetworkBehaviour
 
             if (IsOwner)
             {
-                selfMute = MySettings.muted;
+                selfMute = MySettings.Muted;
 
                 if(selfMute != lastSelfMute) ApplySelfMute();
 

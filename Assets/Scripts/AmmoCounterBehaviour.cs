@@ -3,7 +3,6 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-[BurstCompile]
 public sealed class AmmoCounterBehaviour : MonoBehaviour
 {
     [SerializeField]
@@ -11,6 +10,9 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
 
     [SerializeField]
     private Image ammoVisualizer;
+
+    [SerializeField]
+    private Image ammoContainer;
 
     private int primaryRemaining;
     private int recordPrimaryRemaining;
@@ -25,15 +27,15 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
 
     private Color emptyColor;
 
-    [BurstCompile]
     public void UnitHUD()
     {
+        
         emptyColor = GetComponent<Image>().color;
 
         PlayerSynchronizer playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         nozzleBehaviour = playerSynchronizer.localSquare.nozzleBehaviour;
         playerColoringBehaviour = playerSynchronizer.localSquare.PlayerColor;
-
+        
         if (primary)
         {
             ammoVisualizers = new VisualElement[nozzleBehaviour.primaryAmmo];
@@ -52,14 +54,19 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         }
     }
 
-    [BurstCompile]
     private void Update()
     {
+        UpdateContainer();
         if (primary) UpdatePrimary();
         else UpdateSecondary();
     }
 
-    [BurstCompile]
+    void UpdateContainer()
+    {
+        if (!playerColoringBehaviour) return;
+        ammoContainer.color = playerColoringBehaviour.AmmoContainerColor;
+    }
+
     public void UpdatePrimary()
     {
         if (!nozzleBehaviour) return;
@@ -103,7 +110,6 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         }
     }
 
-    [BurstCompile]
     public void UpdateSecondary()
     {
         if (!nozzleBehaviour) return;
@@ -146,7 +152,6 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         }
     }
 
-    [BurstCompile]
     public void UpdateWeaponType()
     {
 
@@ -186,7 +191,6 @@ public sealed class AmmoCounterBehaviour : MonoBehaviour
         UpdateWeaponType();
     }
 
-    [BurstCompile]
     private struct VisualElement
     {
         public Image image;

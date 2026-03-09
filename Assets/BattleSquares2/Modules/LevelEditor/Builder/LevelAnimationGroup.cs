@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Mathematics;
@@ -15,10 +16,21 @@ public sealed class LevelAnimationGroup : MonoBehaviour
     public float animationOffset;
 
     Transform cachedTransform;
+    Rigidbody2D rb;
+
+    List<PlayerBehaviour> playersOnShape;
 
     private void Awake()
     {
+        playersOnShape = new List<PlayerBehaviour>();
+        rb = GetComponent<Rigidbody2D>();
         cachedTransform = transform;
+    }
+
+    void Start()
+    {
+        Rigidbody2D[] childBodies = GetComponentsInChildren<Rigidbody2D>();
+        for (int i = 0; i < childBodies.Length; i++) if (childBodies[i] != rb) Destroy(childBodies[i]);
     }
 
     public void ConstructComplex(ComplexAnimationData data)
@@ -33,20 +45,46 @@ public sealed class LevelAnimationGroup : MonoBehaviour
         constructed = true;
     }
 
-    [MethodImpl(512)]
-    private void Update()
+    void FixedUpdate()
     {
         if (!constructed) return;
+        float splineTravel;
+        splineTravel = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
+        splineTravel = Mathf.Repeat(splineTravel, 1f);
 
-        animationTimer = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
-        float eval = Mathf.Repeat(animationTimer + animationOffset, 1f);
-        Vector2 evalPosition = animationPath.Evaluate(eval);
-        float keepZ = cachedTransform.position.z;
-        Vector3 animatedPosition = evalPosition;
-        animatedPosition.z = keepZ;
-        cachedTransform.position = animatedPosition;
+        float withOffset = Mathf.Repeat(splineTravel + animationOffset, 1f);
+
+        Vector2 targetPosition = animationPath.Evaluate(withOffset);
+        MoveToward(targetPosition);
     }
 
+/*    private void Update()
+    {
+        if (!constructed) return;
+        animationTimer = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
+        Vector2 targetPosition = animationPath.Evaluate(Mathf.Repeat(animationTimer + animationOffset, 1f));
+    }*/
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!collision.gameObject.TryGetComponent(out PlayerBehaviour playerBehaviour)) return;
+        if (!playersOnShape.Contains(playerBehaviour)) playersOnShape.Add(playerBehaviour);
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (!collision.gameObject.TryGetComponent(out PlayerBehaviour playerBehaviour)) return;
+        if (playersOnShape.Contains(playerBehaviour)) playersOnShape.Remove(playerBehaviour);
+    }
+
+    void MoveToward(Vector2 targetPosition)
+    {
+        Vector2 delta = targetPosition - rb.position;
+        rb.linearVelocity = delta / Time.fixedDeltaTime / 2f;
+        rb.position = targetPosition;
+        transform.position = targetPosition;
+        foreach (PlayerBehaviour player in playersOnShape) player.rb.position = player.rb.position + delta;
+    }
 }
 
 [BurstCompile]
@@ -70,20 +108,13 @@ public struct Spline2D
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float2 Evaluate(float t)
         {
-            EvaluateBursted(ref _unused, t, P0, P1, P2, P3);
-            return _unused;
-        }
-
-        [BurstCompile]
-        private static void EvaluateBursted(ref float2 cache, in float t, in float2 P0, in float2 P1, in float2 P2, in float2 P3)
-        {
             float u = 1f - t;
             float tt = t * t;
             float uu = u * u;
             float uuu = uu * u;
             float ttt = tt * t;
 
-            cache = (uuu * P0) +
+            return (uuu * P0) +
                    (3f * uu * t * P1) +
                    (3f * u * tt * P2) +
                    (ttt * P3);
@@ -94,10 +125,6 @@ public struct Spline2D
     private float _cachedLength;
     private float[] _arcLengths;
 
-    /// <summary>
-    /// Creates a spline from a linked array of control points.
-    /// Valid counts: 4, 7, 10, 13... (4 + 3*(n-1)).
-    /// </summary>
     public Spline2D(Vector2[] controlPoints)
     {
         if (controlPoints == null || controlPoints.Length < 4)
@@ -108,7 +135,6 @@ public struct Spline2D
             return;
         }
 
-        // each extra segment contributes 3 points
         int segCount = 1 + (controlPoints.Length - 4) / 3;
         _segments = new BezierSegment[segCount];
 
@@ -121,7 +147,7 @@ public struct Spline2D
                 controlPoints[idx + 2],
                 controlPoints[idx + 3]
             );
-            idx += 3; // advance by 3 to reuse the shared endpoint
+            idx += 3;
         }
 
         _cachedLength = 0f;

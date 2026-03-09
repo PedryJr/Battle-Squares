@@ -167,7 +167,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
 
         foreach (FlagPost post in flagPosts)
         {
-            if (post.ownerId == playerBehaviour.id)
+            if (post.ownerId == playerBehaviour.GetGameID())
             {
 
                 Vector3 toPost = post.transform.position - transform.position;
@@ -306,7 +306,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         activityState = FlagActivityState.FollowTarget;
 
         if (remote) return;
-        mapSync.FlagStateChange(FlagActivityState.FollowTarget, id, playerBehaviour.id, false);
+        mapSync.FlagStateChange(FlagActivityState.FollowTarget, id, playerBehaviour.GetGameID(), false);
 
     }
     [BurstCompile]
@@ -407,7 +407,7 @@ public sealed class FlagBehaviour : MonoBehaviour, ISync
         foreach (PlayerData playerData in mapSync.GetComponent<PlayerSynchronizer>().playerIdentities)
         {
 
-            if (playerData.id == projectileBehaviour.ownerId) SetToFollowTarget(playerData.square, false);
+            if (playerData.square.GetGameID() == projectileBehaviour.ownerId) SetToFollowTarget(playerData.square, false);
 
         }
     }

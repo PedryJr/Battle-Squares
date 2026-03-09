@@ -33,10 +33,14 @@ public sealed class PlayerSettingsBehaviour : MonoBehaviour
     PlayerSynchronizer playerSynchronizer;
     PlayerBehaviour selectedPlayer;
 
-    Color lastPlayerColor;
+    Color fromImageColor;
+    Color fromImageDarkerColor;
+    Color fromTextColor;
+    Color[] fromNormColors;
+
 
     bool lastVisible;
-
+    bool lastMuteState;
     float visibilityTimer;
 
     private void Awake()
@@ -46,160 +50,150 @@ public sealed class PlayerSettingsBehaviour : MonoBehaviour
 
         imagesWithNormColors = new Color[imagesWithNorm.Length];
         for (int i = 0; i < imagesWithNorm.Length; i++) imagesWithNormColors[i] = imagesWithNorm[i].color;
+        fromNormColors = new Color[imagesWithNorm.Length];
 
     }
 
     private void LateUpdate()
     {
-
-        UpdateVisibility(selectedPlayer ? true : false);
-
+        UpdateVisibility(selectedPlayer != null);
+        if (selectedPlayer)
+        {
+            if (selectedPlayer.voiceMute != lastMuteState)
+            {
+                lastMuteState = selectedPlayer.voiceMute;
+                ApplyMuteIcons(lastMuteState);
+            }
+        }
     }
+
 
     void UpdateVisibility(bool visibility)
     {
-
-        if (visibility != lastVisible) visibilityTimer = 0;
-
-        foreach (GameObject gameObject in settings)
+        if (visibility != lastVisible)
         {
+            visibilityTimer = Mathf.Clamp01(visibilityTimer);
+            CaptureCurrentColors();
 
-            if(gameObject.activeSelf != visibility) gameObject.SetActive(visibility);
-
+            if (visibility)
+            {
+                foreach (GameObject go in settings)
+                    if (!go.activeSelf)
+                        go.SetActive(true);
+            }
         }
 
-        if (visibility) ShowElementsWithHue();
+        float dir = visibility ? 1f : -1f;
+        visibilityTimer = Mathf.Clamp01(
+            visibilityTimer + dir * (Time.deltaTime / timeToShow)
+        );
+
+        ApplyVisibilityLerp(MyExtentions.EaseInExpo(visibilityTimer), visibility);
+
+        if (!visibility && visibilityTimer <= 0f)
+        {
+            foreach (GameObject go in settings)
+                if (go.activeSelf)
+                    go.SetActive(false);
+        }
 
         lastVisible = visibility;
-
     }
 
-    void ShowElementsWithHue()
+
+    void CaptureCurrentColors()
     {
+        fromImageColor = imagesWithHue.Length > 0 ? imagesWithHue[0].color : Color.clear;
+        fromImageDarkerColor = imagesWithNorm.Length > 0 ? imagesWithNorm[0].color : Color.clear;
+        fromTextColor = icons.Length > 0 ? icons[0].color : Color.clear;
 
-        float h, s, v, lerp;
-        Color targetColor, targetDarkerColor, finalImageColor, finalImageDarkerColor, finalTextColor, initButtonColor;
+        for (int i = 0; i < imagesWithNorm.Length; i++)
+            fromNormColors[i] = imagesWithNorm[i].color;
+    }
 
-        targetColor = selectedPlayer.PlayerColor.PrimaryColor;
-        targetDarkerColor = selectedPlayer.PlayerColor.SecondaryColor;
-        visibilityTimer = Mathf.Clamp01(visibilityTimer + (Time.deltaTime / timeToShow));
 
-        targetColor *= 0.8f;
-        targetColor.a = 1;
 
-        targetDarkerColor *= 0.8f;
-        targetDarkerColor.a = 1;
+    void ApplyVisibilityLerp(float lerp, bool visibility)
+    {
+        Color targetColor = visibility && selectedPlayer
+            ? selectedPlayer.PlayerColor.UiButtonColorHighlighted
+            : Color.clear;
 
-        Color.RGBToHSV(targetColor, out h, out s, out v);
-        targetColor = Color.HSVToRGB(h, s, v);
+        Color targetDarkerColor = visibility && selectedPlayer
+            ? selectedPlayer.PlayerColor.UiButtonColorNormal
+            : Color.clear;
 
-        lerp = MyExtentions.EaseInExpo(visibilityTimer);
+        Color targetTextColor = visibility ? Color.white : Color.clear;
 
-        finalImageColor = Color.Lerp(Color.clear, targetColor, lerp);
-        finalImageDarkerColor = Color.Lerp(Color.clear, targetDarkerColor, lerp);
-        finalTextColor = Color.Lerp(Color.clear, Color.white, lerp);
+        Color finalImageColor = Color.Lerp(fromImageColor, targetColor, lerp);
+        Color finalImageDarkerColor = Color.Lerp(fromImageDarkerColor, targetDarkerColor, lerp);
+        Color finalTextColor = Color.Lerp(fromTextColor, targetTextColor, lerp);
 
         foreach (Image img in imagesWithHue) img.color = finalImageColor;
+
         foreach (TMP_Text ico in icons) ico.color = finalTextColor;
-        for (int i = 0; i < imagesWithNorm.Length; i++)
-        {
 
-            imagesWithNorm[i].color = Color.Lerp(Color.clear, imagesWithNormColors[i], lerp);
+        for (int i = 0; i < imagesWithNorm.Length; i++) imagesWithNorm[i].color = Color.Lerp(fromNormColors[i], visibility ? imagesWithNormColors[i] : Color.clear, lerp);
 
-        }
         for (int i = 0; i < buttons.Length; i++)
         {
-
             buttons[i].onHoveredColor = finalImageColor;
             buttons[i].offHoveredColor = finalImageDarkerColor;
-            initButtonColor = buttons[i].isHovering ? finalImageColor : finalImageDarkerColor;
-
-
-            if (visibilityTimer >= 1)
-            {
-
-                if(lastPlayerColor != selectedPlayer.PlayerColor.PrimaryColor)
-                {
-
-                    buttons[i].toColor = initButtonColor;
-
-                }
-
-            }
-            else
-            {
-
-                buttons[i].image.color = initButtonColor;
-                buttons[i].currentColor = initButtonColor;
-                buttons[i].toColor = initButtonColor;
-
-            }
-
         }
-
-        if (selectedPlayer.voiceMute)
-        {
-            if (unMutedLogo.activeSelf != false) unMutedLogo.SetActive(false);
-            if (mutedLogo.activeSelf != true) mutedLogo.SetActive(true);
-        }
-        else
-        {
-            if (unMutedLogo.activeSelf != true) unMutedLogo.SetActive(true);
-            if (mutedLogo.activeSelf != false) mutedLogo.SetActive(false);
-        }
-
-        lastPlayerColor = selectedPlayer.PlayerColor.PrimaryColor;
-
     }
 
-    public void SHOW(PlayerBehaviour selectedPlayer) 
+    void ApplyMuteIcons(bool muted)
     {
+        unMutedLogo.SetActive(!muted);
+        mutedLogo.SetActive(muted);
+    }
 
-        if (this.selectedPlayer == selectedPlayer) { this.selectedPlayer = null; return; }
+    public void SHOW(PlayerBehaviour selectedPlayer)
+    {
+        if (this.selectedPlayer == selectedPlayer)
+        {
+            this.selectedPlayer = null;
+            return;
+        }
 
-        if (selectedPlayer == playerSynchronizer.localSquare) selectedPlayer.voiceMute = MySettings.muted;
+        if (selectedPlayer == playerSynchronizer.localSquare)
+            selectedPlayer.voiceMute = MySettings.Muted;
 
         this.selectedPlayer = selectedPlayer;
-        visibilityTimer = 0;
-        volumeSlider.value = (selectedPlayer.voiceVolume);
+        volumeSlider.value = selectedPlayer.voiceVolume;
 
+        // Cache mute state once
+        lastMuteState = selectedPlayer.voiceMute;
+        ApplyMuteIcons(lastMuteState);
     }
+
 
     public void TOGGLEMUTE()
     {
-
-
         selectedPlayer.voiceMute = !selectedPlayer.voiceMute;
 
         if (selectedPlayer == playerSynchronizer.localSquare)
-        {
-            MySettings.muted = selectedPlayer.voiceMute;
-            MySettings.SaveSettings();
-        }
+            MySettings.SetMuted(selectedPlayer.voiceMute);
 
+        lastMuteState = selectedPlayer.voiceMute;
+        ApplyMuteIcons(lastMuteState);
     }
+
 
     public void VOLUME(float volume)
     {
-
         selectedPlayer.voiceVolume = volume;
-
     }
 
     public void KICK()
     {
-
-        playerSynchronizer.KickPlayerClientRpc((byte)selectedPlayer.id);
-
+        playerSynchronizer.KickPlayerClientRpc((byte)selectedPlayer.GetNetworkID());
     }
 
     public async void PROFILE()
     {
-
         await selectedPlayer.friend.RequestInfoAsync();
-
         SteamFriends.OpenUserOverlay(selectedPlayer.friend.Id, "steamid");
-
     }
 
 }

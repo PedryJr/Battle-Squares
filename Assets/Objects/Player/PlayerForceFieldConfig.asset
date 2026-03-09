@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77195e97f54716a4db76e428b51c5470, type: 3}
+  m_Name: PlayerForceFieldConfig
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSensorConfig
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 1}
+    radius: 10
+    saturationBoost: 1
+  gridSpaceSensor:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
+    origin:
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 5
+    chroma: 0.1
+    enableBlockerInfluence: 0
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 33.75
+    positionWarpRadius: 10
+    enableScaleWarp: 1
+    scaleWarpStrength: -0.01
+    scaleWarpFalloff: 15
+    scaleWarpRadius: 5
+    enableRotationWarp: 0
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
+    enableSwirl: 0
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0

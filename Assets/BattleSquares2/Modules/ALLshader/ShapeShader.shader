@@ -10,6 +10,7 @@ Shader "*MyShaders/Shape"
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
         [MaterialToggle] _ZWrite("ZWrite", Float) = 1
+        _ZPos("ZPos", Float) = 1
 
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
@@ -88,7 +89,7 @@ Shader "*MyShaders/Shape"
                 half4 myStencil        : SV_Target1;
             };
 
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
+            //#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DebugMipmapStreamingMacros.hlsl"
 
             TEXTURE2D(_StencilGroup);
@@ -106,6 +107,8 @@ Shader "*MyShaders/Shape"
                 half4 _Color;
             CBUFFER_END
 
+            half _ZPos;
+
             UNITY_INSTANCING_BUFFER_START(Props)
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Pos0)
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Pos1)
@@ -117,22 +120,6 @@ Shader "*MyShaders/Shape"
                 UNITY_DEFINE_INSTANCED_PROP(float4, _Pos7)
                 UNITY_DEFINE_INSTANCED_PROP(float4, _MyColor)
             UNITY_INSTANCING_BUFFER_END(Props)
-
-            #if USE_SHAPE_LIGHT_TYPE_0
-            SHAPE_LIGHT(0)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_1
-            SHAPE_LIGHT(1)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_2
-            SHAPE_LIGHT(2)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_3
-            SHAPE_LIGHT(3)
-            #endif
 
             TEXTURE2D(_CameraDepthTexture);
             SAMPLER(sampler_CameraDepthTexture);
@@ -157,7 +144,7 @@ Shader "*MyShaders/Shape"
                 if(v.vid == 6) localPos = UNITY_ACCESS_INSTANCED_PROP(Props, _Pos6);
                 if(v.vid == 7) localPos = UNITY_ACCESS_INSTANCED_PROP(Props, _Pos7);
 
-                localPos.z = -2.91;
+                localPos.z = _ZPos;
 
                 v.positionOS = localPos.xyz;
 
@@ -196,7 +183,7 @@ Shader "*MyShaders/Shape"
                 InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
                 InitializeInputData(i.uv, i.lightingUV, inputData);
 
-                SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
+                //SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
 
                 o.myOut = CombinedShapeLightShared(surfaceData, inputData);
 

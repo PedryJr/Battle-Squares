@@ -52,12 +52,12 @@ Shader "*MyShaders/Default"
             #pragma vertex CombinedShapeLightVertex
             #pragma fragment CombinedShapeLightFragment
 
-            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/ShapeLightShared.hlsl"
 
             // GPU Instancing
             #pragma multi_compile_instancing
             #pragma multi_compile _ DEBUG_DISPLAY SKINNED_SPRITE
 
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/ShapeLightShared.hlsl"
 
             struct Attributes
             {
@@ -78,7 +78,7 @@ Shader "*MyShaders/Default"
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
+            //#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DebugMipmapStreamingMacros.hlsl"
 
             TEXTURE2D(_MainTex);
@@ -92,22 +92,6 @@ Shader "*MyShaders/Default"
             CBUFFER_START(UnityPerMaterial)
                 half4 _Color;
             CBUFFER_END
-
-            #if USE_SHAPE_LIGHT_TYPE_0
-            SHAPE_LIGHT(0)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_1
-            SHAPE_LIGHT(1)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_2
-            SHAPE_LIGHT(2)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_3
-            SHAPE_LIGHT(3)
-            #endif
 
             Varyings CombinedShapeLightVertex(Attributes v)
             {

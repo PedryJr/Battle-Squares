@@ -4907,6 +4907,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4928,6 +4930,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
@@ -9870,6 +9873,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9891,6 +9896,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
@@ -9935,7 +9941,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4321279244713780001}
-  - component: {fileID: 4519005768283276661}
+  - component: {fileID: -7123815112141286210}
   m_Layer: 0
   m_Name: ExternalTrail
   m_TagString: Untagged
@@ -9960,7 +9966,7 @@ Transform:
   - {fileID: 7592338242714940822}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4519005768283276661
+--- !u!114 &-7123815112141286210
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9969,12 +9975,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8176140768580813388}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 545bb4470dcdcdf40aa25bb7a47db098, type: 3}
+  m_Script: {fileID: 11500000, guid: e715116cddfc282488fa6dc4d84ac7dd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  particles:
+  m_EditorClassIdentifier: Assembly-CSharp::ParticleBehaviour
+  particleSystems:
   - {fileID: 1479406140531874857}
   - {fileID: 2392407180200382736}
-  renderers:
+  particleSystemsRenderers:
   - {fileID: 208414896359977825}
   - {fileID: 2851971080541807223}
+  supportObjectPooling: 1
+  variantID: 14534988097726323483
+  lifeTime: 0.4
+  attatchmentLifeTime: 0.4
+  attatchment: {fileID: 0}

@@ -58,13 +58,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _ArtificialLight: 0.005
     - _ColorStrength: 1
     - _ColorToEffect: 0.5
     - _EnableExternalAlpha: 0
     - _ExponentialNoise: -0.19
     - _Tiling: 0.82978123
     - _ZWrite: 1
-    - _fallofExponential: 1
+    - _fallofExponential: 5
     - _maxIntensity: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

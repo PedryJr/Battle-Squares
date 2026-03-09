@@ -1,16 +1,41 @@
-using Unity.Mathematics;
-using UnityEngine;
-using static ProximityPixelationSystem;
 using System;
-using Unity.Collections;
-using UnityEngine.SceneManagement;
 using System.Runtime.CompilerServices;
-
+using Unity.Collections;
+using Unity.Mathematics;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
+using static ProximityPixelationSystem;
+using static ProximityPixelSenssor;
 
 public sealed class ProximityPixelSenssor : MonoBehaviour
 {
+    IProximityPixelAnimation anim;
+    [SerializeField]
+    public ProximityPixelSensorConfig proximityPixelSensor;
+    [HideInInspector]
+    public GridSpaceColorGradient gridSpaceColor;
+    [HideInInspector]
+    public GridSpaceForceField gridSpaceSensor;
+
     Transform cachedTransform;
-    private void Awake() => cachedTransform = transform;
+    private void Awake()
+    {
+        anim = GetComponent<ProjectileForceAnimationBehaviour>();
+        cachedTransform = transform;
+        if (proximityPixelSensor)
+        {
+            proximityPixelSensor.FetchDataUpdate(ref gridSpaceSensor, ref gridSpaceColor, cachedTransform.position, cachedTransform.rotation.eulerAngles.z);
+            proximityPixelSensor.refreshAllActiveSensors += ProximityPixelSensor_refreshAllActiveSensors;
+        }
+    }
+
+    private void ProximityPixelSensor_refreshAllActiveSensors()
+    {
+        proximityPixelSensor.FetchDataUpdate(ref gridSpaceSensor, ref gridSpaceColor, cachedTransform.position, cachedTransform.rotation.eulerAngles.z);
+        if (anim != null) anim.RegenerateGroundTruth();
+    }
 
     private void Start()
     {
@@ -19,6 +44,7 @@ public sealed class ProximityPixelSenssor : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (proximityPixelSensor) proximityPixelSensor.refreshAllActiveSensors -= ProximityPixelSensor_refreshAllActiveSensors;
         if (gameObject.scene.name == "DontDestroyOnLoad") SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
     }
 
@@ -37,32 +63,19 @@ public sealed class ProximityPixelSenssor : MonoBehaviour
         if (Singleton) Singleton.sensorObjects.Add(this);
     }
 
-    [SerializeField]
-    public GridSpaceColorGradient gridSpaceColor;
-
-
-    [SerializeField]
-    public GridSpaceForceField sensorData;
-
     private void Update()
     {
-        if(BackdropBehaviour.Singleton) BackdropBehaviour.Singleton.AddProximityColor(gridSpaceColor.color, sensorData.origin, gridSpaceColor.radius, gridSpaceColor.saturationBoost);
+        if (!proximityPixelSensor) return;
+        if (BackdropBehaviour.Singleton) BackdropBehaviour.Singleton.AddProximityColor(gridSpaceColor.color, gridSpaceSensor.origin, gridSpaceColor.radius, gridSpaceColor.saturationBoost);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CustomUpdate()
     {
         if (!Singleton) return;
-        Vector3 position = cachedTransform.position;
-
-/*        sensorData.forceCoordinate = new float2(position.x, position.y);
-        sensorData.forceZRotation = cachedTransform.rotation.z;*/
-
-        sensorData.origin = new float2(position.x, position.y);
-        sensorData.rotation = cachedTransform.rotation.eulerAngles.z;
-        sensorData.colorValue = (Vector3)(Vector4)gridSpaceColor.color;
-        sensorData.colorRadius = gridSpaceColor.radius;
-
-        Singleton.AddProximitySensor(ref sensorData);
+        if (!proximityPixelSensor) return;
+        proximityPixelSensor.RefetchPerInstanceData(ref gridSpaceSensor, ref gridSpaceColor, cachedTransform.position, cachedTransform.rotation.eulerAngles.z);
+        Singleton.AddProximitySensor(ref gridSpaceSensor);
     }
 
 

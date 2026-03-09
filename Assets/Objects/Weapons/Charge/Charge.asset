@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60741558de6f8f74eb2886d48c299bc8, type: 3}
+  m_Name: Charge
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
+  specs:
+    icon: {fileID: 21300000, guid: 27a961c4a606b7f4a97ffbb59187029a, type: 3}
+    projectile: {fileID: 3230000773134604271, guid: 069c25ee8449356448d40969e5a37f42, type: 3}
+    launchParticle: {fileID: 4313180367996257349, guid: 88f1cfe0c09d9fc4a8f356131abb5b7d, type: 3}
+    bounceParticle: {fileID: 0}
+    impactParticle: {fileID: 4313180367996257349, guid: 270cdce96f1445d4b896d3355042f4e8, type: 3}
+    morphAnimation:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.25
+        value: 0.45
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.73
+        value: 0.45
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.85
+        value: 0.65
+        inSlope: 0.009557946
+        outSlope: 0.009557946
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: -12.12372
+        outSlope: -12.12372
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    projectileSpawnEvents: []
+    weaponName: Charge
+    targetMorph: {x: 1.3, y: 1.3, z: 1}
+    reloadTime: 2.5
+    shootingInterval: 0.04
+    projectileSpeed: 4
+    projectileAcceleration: 7.5
+    lifeTime: 0.5
+    burstSpread: 0
+    fluctuation: 0
+    aoe: 0
+    knockback: 15
+    speedLimit: 28.5
+    minSpeed: 0
+    aoeDamage: 0
+    baseDamage: 10
+    damageTimeScale: 0
+    recoil: 0
+    timeToMorph: 0.45
+    syncSpeed: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    slowDownAmount: 0
+    senderSpeedOnDeath: 15
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    bounceSpeedLoss: 0
+    bounceAngleTilt: 0
+    spawnOffsetPadding: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    morphTimeOnBounce: 0
+    projectileAmmo: 1
+    burst: 0
+    typeID: 56289
+    bounces: 0
+    holdable: 0
+    noGravity: 1
+    dieOnImpact: 1
+    damageOnImpact: 1
+    sticky: 0
+    skipAoeOnTargetHit: 0
+    enableMorph: 1
+    setMorphOnBounce: 0
+    sync: 0
+    stickToSender: 1
+    melee: 0
+    oneTimeHit: 0
+    flipFlop: 0
+    homing: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    alignDirection: 0
+    clampMorph: 1
+    hover: 0
+    delistWeapon: 0
+    hitMarkSize: 0

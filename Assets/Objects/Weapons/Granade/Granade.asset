@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60741558de6f8f74eb2886d48c299bc8, type: 3}
+  m_Name: Granade
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
+  specs:
+    icon: {fileID: 21300000, guid: 4712771f384f8914d9835a532ec39907, type: 3}
+    projectile: {fileID: 3230000773134604271, guid: cad4485b5d1f23a40a2d262d07303006, type: 3}
+    launchParticle: {fileID: 4313180367996257349, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
+    bounceParticle: {fileID: 0}
+    impactParticle: {fileID: 4313180367996257349, guid: 583089f6a9f1798448c0057490bd76a0, type: 3}
+    morphAnimation:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.65829957
+        value: -0.0021423697
+        inSlope: -0.71079266
+        outSlope: -0.71079266
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.7994638
+        value: -0.05974119
+        inSlope: -2.525735
+        outSlope: -2.525735
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.9807109
+        value: -0.30530506
+        inSlope: -3.1031842
+        outSlope: -3.1031842
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.10323884
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 16.016237
+        outSlope: 16.016237
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.018468559
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleePosAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    meleeRotAnimation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    projectileSpawnEvents: []
+    weaponName: Granade
+    targetMorph: {x: 0, y: 0, z: 0}
+    reloadTime: 3
+    shootingInterval: 0.04
+    projectileSpeed: 20
+    projectileAcceleration: 0
+    lifeTime: 1.5
+    burstSpread: 0
+    fluctuation: 0
+    aoe: 5
+    knockback: 13
+    speedLimit: 100
+    minSpeed: 0
+    aoeDamage: 8
+    baseDamage: 0
+    damageTimeScale: 0
+    recoil: 6
+    timeToMorph: 1.5
+    syncSpeed: 20
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
+    homingStrength: 0
+    homingDistance: 0
+    spinSpeed: 0
+    slowDownAmount: 0
+    senderSpeedOnDeath: 0
+    lingeringDamage: 0
+    lingeringFrequency: 0
+    bounceSpeedLoss: 0
+    bounceAngleTilt: 0
+    spawnOffsetPadding: 0
+    hoverDistance: 0
+    hoverStrength: 0
+    hoverFloorRadius: 0
+    hoverDistanceAttenuation: 0
+    timeForFullHoverEffect: 0
+    morphTimeOnBounce: 0
+    projectileAmmo: 3
+    burst: 0
+    typeID: 28538
+    bounces: 0
+    holdable: 0
+    noGravity: 0
+    dieOnImpact: 0
+    damageOnImpact: 0
+    sticky: 0
+    skipAoeOnTargetHit: 0
+    enableMorph: 1
+    setMorphOnBounce: 0
+    sync: 1
+    stickToSender: 0
+    melee: 0
+    oneTimeHit: 0
+    flipFlop: 0
+    homing: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 0
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    alignDirection: 0
+    clampMorph: 0
+    hover: 0
+    delistWeapon: 0
+    hitMarkSize: 3

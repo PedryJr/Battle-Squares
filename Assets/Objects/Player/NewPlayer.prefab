@@ -1,141 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1600467511054662324
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3463848574280940094}
-  - component: {fileID: 3987879740079875578}
-  - component: {fileID: 1350298402045223581}
-  m_Layer: 5
-  m_Name: Text (TMP)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &3463848574280940094
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600467511054662324}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9006164281684853435}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 7}
-  m_SizeDelta: {x: 10, y: 10}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &3987879740079875578
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600467511054662324}
-  m_CullTransparentMesh: 1
---- !u!114 &1350298402045223581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600467511054662324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: -= Debug Stats =-
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
-  m_sharedMaterial: {fileID: -607137550700216403, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 0.4
-  m_fontSizeBase: 0.4
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 2
-  m_VerticalAlignment: 1024
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_EmojiFallbackSupport: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &3439870151094839706
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3439870151094839706}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -171,6 +35,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &9003449554754366807
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -215,7 +80,8 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
-  m_SortingOrder: 4
+  m_SortingOrder: 6
+  m_MaskInteraction: 1
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -225,7 +91,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 1
   m_SpriteSortPoint: 0
 --- !u!114 &2469646295513191688
 MonoBehaviour:
@@ -299,10 +164,10 @@ MonoBehaviour:
   m_ComponentVersion: 2
   m_LightType: 3
   m_BlendStyleIndex: 1
-  m_FalloffIntensity: 1
-  m_Color: {r: 1, g: 0, b: 0.72098255, a: 0.414}
+  m_FalloffIntensity: 0.55
+  m_Color: {r: 0.223, g: 0.036795005, b: 0.11535024, a: 0.759}
   m_Intensity: 0.1
-  m_LightVolumeIntensity: 1
+  m_LightVolumeIntensity: 0.1
   m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}
@@ -310,10 +175,10 @@ MonoBehaviour:
   m_LightOrder: 0
   m_AlphaBlendOnOverlap: 0
   m_OverlapOperation: 1
-  m_NormalMapDistance: 13.99
+  m_NormalMapDistance: 0
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
-  m_ShadowsEnabled: 1
+  m_ShadowsEnabled: 0
   m_ShadowIntensity: 1
   m_ShadowSoftness: 1
   m_ShadowSoftnessFalloffIntensity: 0.5
@@ -325,151 +190,13 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.5
-  m_PointLightOuterRadius: 25.25
+  m_PointLightOuterRadius: 7
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
   m_ShapeLightFalloffSize: 0.5
   m_ShapeLightFalloffOffset: {x: 0, y: 0}
   m_ShapePath: []
---- !u!1 &5101290373004564243
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5158194309585456039}
-  - component: {fileID: 3240910558483692152}
-  - component: {fileID: 3528053283162708238}
-  - component: {fileID: 4585036440962844591}
-  - component: {fileID: 4068546361030543218}
-  m_Layer: 16
-  m_Name: Quad
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &5158194309585456039
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5101290373004564243}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.92387956, w: 0.38268346}
-  m_LocalPosition: {x: 2.7150667, y: -7.988003, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 4479520223757404588}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3240910558483692152
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5101290373004564243}
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &3528053283162708238
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5101290373004564243}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 5af300153de92ba40950acbb59aa83e5, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4585036440962844591
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5101290373004564243}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &4068546361030543218
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5101290373004564243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e018c976c9195d449a22a21e43a6c585, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TransformLockBehaviour
-  transformLock:
-    positionLocks: 7
-    positionValueX: 0
-    positionValueY: 0
-    positionValueZ: 0
-    rotationLocks: 12
-    rotationValueX: 0
-    rotationValueY: 0
-    rotationValueZ: -135
-    scaleLocks: 0
-    scaleValueX: 0
-    scaleValueY: 0
-    scaleValueZ: 0
 --- !u!1 &5854793105914161478
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,147 +241,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  proximityPixelSensor: {fileID: 11400000, guid: 064515fa5e654ae4cb4a3c18dd23ca81, type: 2}
   gridSpaceColor:
     color: {r: 0.554, g: 0.5160676, b: 0.09141002, a: 1}
-    radius: 7.8
-    saturationBoost: 27.85
-  sensorData:
+    radius: 10
+    saturationBoost: 1
+  gridSpaceSensor:
     colorValue:
-      x: 0.554
-      y: 0.5160676
-      z: 0.09141002
-    colorRadius: 7.8
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
     origin:
-      x: -0.6528262
-      y: -7.992456
-    rotation: 90.09174
-    warpSpeed: 2
-    chroma: -2
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 0
+    chroma: 0
     enableBlockerInfluence: 0
-    blockerFalloff: 2
-    enablePositionWarp: 1
-    positionWarpStrength: 2.6
-    positionWarpFallof: 10
-    positionWarpRadius: 2
-    enableScaleWarp: 1
-    scaleWarpStrength: -0.125
-    scaleWarpFalloff: 10
-    scaleWarpRadius: 2
+    blockerFalloff: 0
+    enablePositionWarp: 0
+    positionWarpStrength: 0
+    positionWarpFallof: 0
+    positionWarpRadius: 0
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
     enableRotationWarp: 0
-    rotationWarpStrength: 1
-    rotationWarpFalloff: 1
-    rotationWarpRadius: 5
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
     enableSwirl: 0
-    swirlStrength: 0.01
-    swirlFalloff: 4.46
-    swirlRadius: 6
-    enablePulsation: 1
-    pulsationFrequency: 10
-    pulsationAmplitude: 0.15
-    pulsationFallof: 4
-    pulsationRadius: 3
---- !u!1 &6314275036410009976
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9006164281684853435}
-  - component: {fileID: 6894872010513452292}
-  - component: {fileID: 2152545638664667}
-  - component: {fileID: 3866192456636783123}
-  m_Layer: 5
-  m_Name: Canvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &9006164281684853435
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6314275036410009976}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3463848574280940094}
-  m_Father: {fileID: 3506166878856948221}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 1}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &6894872010513452292
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6314275036410009976}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: -1
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!114 &2152545638664667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6314275036410009976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
---- !u!114 &3866192456636783123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6314275036410009976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0
 --- !u!1 &6913139940880432840
 GameObject:
   m_ObjectHideFlags: 0
@@ -690,6 +316,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6551420707577298823
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -734,7 +361,8 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingOrder: 6
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -744,7 +372,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &2067117489913102363
 MonoBehaviour:
@@ -768,90 +395,11 @@ MonoBehaviour:
   secondaryAmmo: 0
   primaryShots: 0
   secondaryShots: 0
-  primaryTimeSinceShot: 0
-  primaryFireTime: 0
-  secondaryTimeSinceShot: 0
-  secondaryFireTime: 0
-  primaryTimeSinceEmpty: 0
   primaryReloadTime: 0
-  secondaryTimeSinceEmpty: 0
   secondaryReloadTime: 0
   primaryHoldable: 0
   secondaryHoldable: 0
   flipFlop: 0
---- !u!1 &7669726998555235280
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3506166878856948221}
-  - component: {fileID: 4745188774566871796}
-  - component: {fileID: 8102162791250064821}
-  m_Layer: 6
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &3506166878856948221
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7669726998555235280}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 9006164281684853435}
-  m_Father: {fileID: 4479520223757404588}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4745188774566871796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7669726998555235280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e018c976c9195d449a22a21e43a6c585, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  transformLock:
-    positionLocks: 7
-    positionValueX: 0
-    positionValueY: 0
-    positionValueZ: 0
-    rotationLocks: 255
-    rotationValueX: 0
-    rotationValueY: 0
-    rotationValueZ: 0
-    scaleLocks: 255
-    scaleValueX: 1
-    scaleValueY: 1
-    scaleValueZ: 1
---- !u!114 &8102162791250064821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7669726998555235280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f242c29fcbffb04a971780189b361ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  playerBehaviour: {fileID: 955279136659326086}
-  textField: {fileID: 1350298402045223581}
 --- !u!1 &9203004307750521883
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,16 +436,15 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5158194309585456039}
   - {fileID: 1861820195661065170}
   - {fileID: 4518612954886327583}
   - {fileID: 6766273076154194077}
   - {fileID: 6567031847889476956}
-  - {fileID: 3506166878856948221}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4023225474620334197
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -921,7 +468,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e1f3c24498569e54abd2775d059d5855, type: 2}
+  - {fileID: 2100000, guid: fe1e5febeafd983459fc4f6d2ad3b3cf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -943,6 +490,7 @@ SpriteRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 3
+  m_MaskInteraction: 1
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -952,7 +500,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 1
   m_SpriteSortPoint: 0
 --- !u!50 &4599508856865403600
 Rigidbody2D:
@@ -1569,6 +1116,7 @@ SpriteMask:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 0}
   m_MaskAlphaCutoff: 0.2
   m_FrontSortingLayerID: 0
@@ -1592,12 +1140,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e8715782671e842b02add1aaa05c1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideMMR: 1432.36886156104
+  neighbours: {fileID: 0}
   playerLight: {fileID: 3159344491717468697}
   sensor: {fileID: 4821608779394464332}
   coloringComponent: {fileID: 2995831169349222189}
   selectedLegacyMap: 1
   selectedMap: 0
-  id: 0
   hasJump: 0
   fps: 6000
   oneFifthFps: 0
@@ -1611,14 +1160,10 @@ MonoBehaviour:
   newDataAvalible: 0
   newColor: 1
   ready: 0
-  position: {x: 0, y: 0}
-  rotation: 0
   nozzlePosition: {x: 0, y: 0}
   localNozzlePosition: {x: 0, y: 0}
   nozzleRotation: 0
-  velocity: {x: 0, y: 0}
-  angularVelocity: 0
-  healthPoints: 20
+  hp: 20
   maxHealthPoints: 20
   hpBarScale: {x: 0, y: 0, z: 0}
   score: 0
@@ -1626,6 +1171,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   nozzleBehaviour: {fileID: 2067117489913102363}
   playerController: {fileID: 0}
+  playerMLAgent: {fileID: 0}
   pfp: {fileID: 0}
   chatBubbleBehaviour: {fileID: 0}
   playerSpawnEffectBehaviourRef: {fileID: -2567077957820087699, guid: bcfae4763fbea3f47bdf1d080e686df8, type: 3}
@@ -1643,6 +1189,7 @@ MonoBehaviour:
       Data4: 26429710
     Path: event:/VFX/Player/Death/BasicDeath
   spawnPosition: {x: 0, y: 0, z: 0}
+  deathPosition: {x: 0, y: 0, z: 0}
   playerName: 
   isDead: 1
   kills: 0
@@ -1650,9 +1197,9 @@ MonoBehaviour:
   scoreDeducted: 0
   steamDataAvalible: 0
   steamDataApplied: 0
+  toPos: {x: 0, y: 0}
   newNozzleLerp: 0
   fromPos: {x: 0, y: 0}
-  toPos: {x: 0, y: 0}
   nozzlePosOffset: {x: 0, y: 0}
   speedParticles:
   - {fileID: 0}
@@ -1663,14 +1210,12 @@ MonoBehaviour:
       Data3: -414281587
       Data4: 1289083007
     Path: event:/PlayerSounds/PlayerStep
-  frameRate: 10
-  darkenSaturation: 1
-  darkenValue: 0.59
-  Saturation: 0.6
-  Value: 0.81
-  h: 0
   spawnBuffer: 0
   newMods: 0
+  isAI: 0
+  frameRate: 10
+  jumpParticleRef: {fileID: 8567238288229006168, guid: 414f2ce96a088454aafac90bbb09133b, type: 3}
+  moveDirection: {x: 0, y: 0}
 --- !u!114 &2995831169349222189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1683,103 +1228,151 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e4e1d37174382b41a08597c29fd31b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hue: 0
-  EvenColorSpace: 0
+  hue: 0.5264285
   playerMaterial: {fileID: -876546973899608171, guid: a1488dad8c03ba443a818f6b8ce37a0f, type: 3}
-  projectileMaterial: {fileID: -876546973899608171, guid: fbed87eedacfac4429ace8489234b829, type: 3}
-  particleMaterial: {fileID: -876546973899608171, guid: dad808b10b3ac2044a76c5ed232a1e80, type: 3}
+  projectileMaterial: {fileID: 2100000, guid: b5bd41709d0b55f46a4764b38241f02c, type: 2}
+  particleMaterial: {fileID: 2100000, guid: 36373f57203063e4dae15c1bb968807f, type: 2}
   primaryColor:
-    convertToLinear: 0
-    saturation: 0.835
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.8
     value: 0.554
     alpha: 1
   secondaryColor:
-    convertToLinear: 0
-    saturation: 0.835
-    value: 0
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 1
+    value: 1
     alpha: 1
   exposedHealthColor:
-    convertToLinear: 0
+    colorCorrectionType: 0
+    hue: 0
     saturation: 0.835
     value: 0.2
     alpha: 1
   nozzleColor:
-    convertToLinear: 0
-    saturation: 0.614
-    value: 1
+    colorCorrectionType: 0
+    hue: 0.77734375
+    saturation: 0.464
+    value: 0.862
     alpha: 1
   projectileColor:
-    convertToLinear: 0
-    saturation: 0.329
+    colorCorrectionType: 2
+    hue: 0
+    saturation: 0.392
     value: 1
     alpha: 1
   particleColor:
-    convertToLinear: 0
-    saturation: 0.835
-    value: 0.75
+    colorCorrectionType: 0
+    hue: 0.32
+    saturation: 0.675
+    value: 0.761
+    alpha: 1
+  particleColorVariant2:
+    colorCorrectionType: 2
+    hue: 0.32
+    saturation: 0.74
+    value: 0.878
     alpha: 1
   chatBubbleColor:
-    convertToLinear: 0
-    saturation: 0.835
-    value: 0.75
+    colorCorrectionType: 2
+    hue: 0
+    saturation: 0.781
+    value: 1
     alpha: 1
   dogTagColor:
-    convertToLinear: 0
-    saturation: 0.835
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.75
     value: 0.75
     alpha: 1
   hitMarkColor:
-    convertToLinear: 0
+    colorCorrectionType: 0
+    hue: 0
     saturation: 0.5
     value: 1
     alpha: 0
   hitMarkFadeColor:
-    convertToLinear: 0
-    saturation: 0.835
-    value: 0.376
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.495
+    value: 0.725
     alpha: 1
   pfpBorderNotReadyColor:
-    convertToLinear: 0
-    saturation: 0.835
-    value: 0.188
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.588
+    value: 0.342
     alpha: 1
   pfpBorderIsReadyColor:
-    convertToLinear: 0
-    saturation: 0.835
-    value: 0.473
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.588
+    value: 0.753
     alpha: 1
   cursorColorOnHover:
-    convertToLinear: 0
+    colorCorrectionType: 0
+    hue: 0
     saturation: 0.835
     value: 0.75
     alpha: 1
   cursorColorOffHover:
-    convertToLinear: 0
+    colorCorrectionType: 0
+    hue: 0
     saturation: 0.835
     value: 0.75
     alpha: 1
   selectedWeaponColor:
-    convertToLinear: 0
+    colorCorrectionType: 0
+    hue: 0
     saturation: 0.755
     value: 1
     alpha: 1
   highlightedWeaponColor:
-    convertToLinear: 0
+    colorCorrectionType: 0
+    hue: 0
     saturation: 0.595
     value: 1
     alpha: 1
   uiKnobColor:
-    convertToLinear: 0
-    saturation: 0.835
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.462
     value: 0.75
+    alpha: 1
+  uiButtonColorNormal:
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.835
+    value: 0.602
+    alpha: 1
+  uiButtonColorHighlighted:
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.544
+    value: 0.684
     alpha: 1
   ammoColor:
-    convertToLinear: 0
-    saturation: 0.835
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.571
     value: 0.75
     alpha: 1
+  ammoContainerColor:
+    colorCorrectionType: 1
+    hue: 0
+    saturation: 0.11
+    value: 0.316
+    alpha: 0.502
   lightColor:
-    convertToLinear: 0
+    colorCorrectionType: 0
+    hue: 0
     saturation: 0.835
     value: 0.223
     alpha: 0.759
+  projectileLightColor:
+    colorCorrectionType: 0
+    hue: 0
+    saturation: 0.835
+    value: 0.628
+    alpha: 0.314

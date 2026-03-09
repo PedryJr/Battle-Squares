@@ -67,7 +67,6 @@ public class SkinFrameBehaviour : MonoBehaviour
             if(frameIndex == 0)
             {
 
-                deleteButton.RemoveTriggers();
                 deleteButton.enabled = false;
                 deleteButtonImage.sprite = baseFrameDeleteSprite;
                 deleteButtonText.text = baseText;

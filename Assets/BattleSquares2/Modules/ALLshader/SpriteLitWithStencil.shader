@@ -3,6 +3,10 @@ Shader "*MyShaders/SpriteLitStencil"
     Properties
     {
 
+
+        [MaterialToggle] _ForceAboveZeroStencil("Force Above 0 Stencil", Float) = 0
+        _AlphaGrow("AlphaTex", 2D) = "white" {}
+        _GrowAmount("Grow Amount", Float) = 0.0
         _SpriteTex("Sprite", 2D) = "white" {}
         _StencilGroup("Stencil", 2D) = "white" {}
         _MainTex("Diffuse", 2D) = "white" {}
@@ -37,7 +41,7 @@ Shader "*MyShaders/SpriteLitStencil"
             #pragma vertex CombinedShapeLightVertex
             #pragma fragment CombinedShapeLightFragment
 
-            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/ShapeLightShared.hlsl"
+            //#include_with_pragmas "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/ShapeLightShared.hlsl"
 
             // GPU Instancing
             #pragma multi_compile_instancing
@@ -69,6 +73,8 @@ Shader "*MyShaders/SpriteLitStencil"
 
             sampler2D _StencilGroup;
 
+            TEXTURE2D(_AlphaGrow);
+            SAMPLER(sampler_AlphaGrow);
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
@@ -89,23 +95,10 @@ Shader "*MyShaders/SpriteLitStencil"
                 UNITY_DEFINE_INSTANCED_PROP(float4, _HitMarkStencil)
             UNITY_INSTANCING_BUFFER_END(Props)
 
-            #if USE_SHAPE_LIGHT_TYPE_0
-            SHAPE_LIGHT(0)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_1
-            SHAPE_LIGHT(1)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_2
-            SHAPE_LIGHT(2)
-            #endif
-
-            #if USE_SHAPE_LIGHT_TYPE_3
-            SHAPE_LIGHT(3)
-            #endif
             #define UnityObjectToClipPos(v) mul(UNITY_MATRIX_MVP, v)
 
+            float _ForceAboveZeroStencil;
+            float _GrowAmount;
 
             Varyings CombinedShapeLightVertex(Attributes v)
             {
@@ -133,7 +126,7 @@ Shader "*MyShaders/SpriteLitStencil"
                 return o;
             }
 
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
+            //#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
 
             #define DecodeFloatToUint(f) (asuint(f) & 0xBFFFFFFF)
 
@@ -141,28 +134,51 @@ Shader "*MyShaders/SpriteLitStencil"
             {
                 const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
-                SurfaceData2D surfaceData;
-                InputData2D inputData;
-
-                InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
-                InitializeInputData(i.uv, i.lightingUV, inputData);
+                //SurfaceData2D surfaceData;
+                //InputData2D inputData;
+                //
+                //InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
+                //InitializeInputData(i.uv, i.lightingUV, inputData);
 
                 float _hitMarkStencil = i.stencilOut.x * 2048.0;
                 float sampleStencil = tex2D(_StencilGroup, i.lightingUV).x * 2048.0;
 
+                //============================ Will become hit grow effect ============================
+                //float2 centeredUV = (i.uv - 0.5) * _GrowAmount + 0.5;
+                //centeredUV = clamp(centeredUV, 0 ,1);
+                //float alphaMultiplier = SAMPLE_TEXTURE2D(_AlphaGrow, sampler_AlphaGrow, centeredUV).r;
+                //return alphaMultiplier;
+                //============================================================================
 
-                float compA, compB;
-                compA = _hitMarkStencil;
-                compB = sampleStencil;
 
-                float diff = abs(compB - compA);
 
-                if((uint) compB == (uint) compA)
-                {
-                    half4 outputcolor = i.color;
-                    outputcolor.w = SAMPLE_TEXTURE2D(_SpriteTex, sampler_SpriteTex, i.uv).w;
-                    return outputcolor;
-                    //return CombinedShapeLightShared(surfaceData, inputData);
+                if (_ForceAboveZeroStencil == 0) 
+                { 
+                 
+                    float compA, compB;
+                    compA = _hitMarkStencil;
+                    compB = sampleStencil;
+
+                    float diff = abs(compB - compA);
+
+                    if((uint) compB == (uint) compA)
+                    {
+                        half4 outputcolor = i.color;
+                        outputcolor.w = SAMPLE_TEXTURE2D(_SpriteTex, sampler_SpriteTex, i.uv).w;
+                        return outputcolor;
+                        //return CombinedShapeLightShared(surfaceData, inputData);
+                    }
+                 
+                }
+
+                if (_ForceAboveZeroStencil > 0) 
+                { 
+                    if (sampleStencil > 0)                  
+                    { 
+                        half4 outputcolor = i.color;
+                        outputcolor.w = SAMPLE_TEXTURE2D(_SpriteTex, sampler_SpriteTex, i.uv).w;
+                        return outputcolor;
+                    }
                 }
 
                 return half4(0, 0, 0, 0);

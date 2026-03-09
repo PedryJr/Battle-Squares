@@ -44,13 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3938c734266a1945878676ffdb4b355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightStrength: 0.87
-  mapSpawns: {fileID: 4535757479683771385, guid: 8b477556397d89b4fad181a255aead00, type: 3}
-  aMapSpawn: {fileID: 5549121867906140843, guid: 880e6b62950242c4c9e481a38c9ebef1, type: 3}
-  animationGroup: {fileID: 4585592504556234382, guid: 787d9432786ee5045ab1a8a68e1c7aa5, type: 3}
-  gameLight: {fileID: 12423000886993399, guid: 8ad9f7ab980015448abefb5b7af596e0, type: 3}
-  staticParent: {fileID: 3808558879538828391, guid: 22637f60e6345e549bb30e18d1fe0691, type: 3}
-  builtShapeStaticTemplate: {fileID: 1592273718196173774, guid: 64473335a97d7e741ac90b0be86bf1a2, type: 3}
-  builtShapeDynamicTemplate: {fileID: 1592273718196173774, guid: 4385bbeff0093744a9bf677163571d19, type: 3}
-  builtShapes: []
+  lightStrength: 1
   levelOutput: {fileID: 0}
+  shapeRendererPrefab: {fileID: 1592273718196173774, guid: 9f981a8498915ca4e93b59b5915a50fb, type: 3}
+  shapeColliderPrefab: {fileID: 3756016577374031736, guid: a2c551643d4c5064ba67ef31044fc96f, type: 3}
+  lightPrefab: {fileID: 12423000886993399, guid: 8599eadbda08a024b97db71bea79c5fe, type: 3}
+  spawnPointPrefab: {fileID: 5549121867906140843, guid: 0a976a73d3ecc9f4da33a7190facd433, type: 3}
+  mapSpawnsPrefab: {fileID: 0}
+  animationGroupPrefab: {fileID: 4585592504556234382, guid: fd07bea315ac5cb41b846d0b3f21ca3d, type: 3}
+  maxStaticIslandsPerCluster: 2

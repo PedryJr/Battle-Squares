@@ -1,7 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
-using static ProjectileManager;
+using static WeaponBuilder;
 
 public sealed class WeaponTextBehaviour : MonoBehaviour
 {
@@ -9,6 +9,7 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
     TMP_Text equippedClassesField;
 
     PlayerSynchronizer playerSynchronizer;
+    ProjectileManager projectileManager;
 
     string output = string.Empty;
 
@@ -21,17 +22,20 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
     WeaponDescription[] weaponDescriptions;
 
     [SerializeField]
-    ButtonHoverAnimation[] weaponPreviews;
-
+    GameObject previewParent;
     [SerializeField]
+    GameObject selectorParent;
+
+    ButtonHoverAnimation[] weaponPreviews;
     ButtonHoverAnimation[] weaponSelectors;
 
     private void Start()
     {
-
+        projectileManager = FindAnyObjectByType<ProjectileManager>();
         equippedClassesField = GetComponent<TMP_Text>();
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
-
+        weaponSelectors = selectorParent.GetComponentsInChildren<ButtonHoverAnimation>();
+        weaponPreviews = previewParent.GetComponentsInChildren<ButtonHoverAnimation>();
     }
 
     private void Update()
@@ -46,57 +50,42 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
 
         string output = string.Empty;
 
+        ushort typeId1, typeId2;
+        typeId1 = playerSynchronizer.localSquare.nozzleBehaviour.primary;
+        typeId2 = playerSynchronizer.localSquare.nozzleBehaviour.secondary;
         string weapon1, weapon2;
-        weapon1 = playerSynchronizer.localSquare.nozzleBehaviour.primary.ToString();
-        weapon2 = playerSynchronizer.localSquare.nozzleBehaviour.secondary.ToString();
+        weapon1 = projectileManager.GetWeaponName(typeId1);
+        weapon2 = projectileManager.GetWeaponName(typeId2);
 
         weapon1 = weapon1.Substring(0, 1).ToUpper() + weapon1.Substring(1, weapon1.Length - 1);
         weapon2 = weapon2.Substring(0, 1).ToUpper() + weapon2.Substring(1, weapon2.Length - 1);
 
         output = weapon1 + " - " + weapon2;
 
-        foreach (ButtonHoverAnimation weapon in weaponPreviews)
+        for (int i = 0; i < weaponPreviews.Length; i++)
         {
-
-            if (weapon.isHovering)
+            ButtonHoverAnimation button = weaponPreviews[i];
+            if (button.isHovering)
             {
-
-                foreach (WeaponDescription description in weaponDescriptions)
-                {
-
-                    if (weapon.GetComponent<WeaponPreviewBehaviour>().weaponType == description.weaponType)
-                    {
-                        output = string.Empty;
-                        if (!description.row1.Equals("")) output += description.row1;
-                        if (!description.row2.Equals("")) output += "\n" + description.row2;
-                        if (!description.row3.Equals("")) output += "\n" + description.row3;
-                        if (!description.row4.Equals("")) output += "\n" + description.row4;
-                    }
-
-                }
-
+                output = projectileManager.GetWeaponName(button.GetComponent<WeaponPreviewBehaviour>().previewing);
+                break;
             }
-
         }
 
-        foreach (ButtonHoverAnimation selector in weaponSelectors)
+        for (int i = 0; i < weaponSelectors.Length; i++)
         {
-
-            if (selector.isHovering)
+            ButtonHoverAnimation button = weaponSelectors[i];
+            if (button.isHovering)
             {
-
-                output = selector.GetComponent<WeaponSelector>().weaponType.ToString();
-
+                output = projectileManager.GetWeaponName(button.GetComponent<WeaponSelector>().weaponType);
+                break;
             }
-
         }
 
         if (!this.output.Equals(output))
         {
-
             this.output = output;
             fadeTimer = 0;
-
         }
 
         equippedClassesField.text = this.output;
@@ -107,11 +96,10 @@ public sealed class WeaponTextBehaviour : MonoBehaviour
     [Serializable]
     public struct WeaponDescription
     {
-        public ProjectileType weaponType;
+        public ushort weaponType;
         public string row1;
         public string row2;
         public string row3;
         public string row4;
     }
-
 }

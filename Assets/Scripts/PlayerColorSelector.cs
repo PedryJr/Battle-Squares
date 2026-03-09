@@ -47,35 +47,22 @@ public sealed class PlayerColorSelector : MonoBehaviour
             animating = false;
         }
 
-        UpdateHueKnob(Mathf.Lerp(0, playerSynchronizer.localSquare.PlayerColor.ReadColorHue, timer));
 
+        UpdateHueKnob(Mathf.Lerp(0, playerSynchronizer.localSquare.PlayerColor.ReadColorHue, timer));
+        sliderKnob.color = playerSynchronizer.localSquare.PlayerColor.UIKnobColor;
+        CursorBehaviour.SetColor(
+            playerSynchronizer.localSquare.PlayerColor.CursorDefaultColor,
+            playerSynchronizer.localSquare.PlayerColor.CursorHoverColor);
     }
 
     public void UpdateHueKnobPlayer(float hue)
     {
-
         if (animating) return;
-
         selectedColor = playerSynchronizer.UpdatePlayerColor(hue);
-
-        Color baseColor = selectedColor;
-        Vector3 baseNormalized = new Vector3(baseColor.r, baseColor.g, baseColor.b).normalized;
-        Color normalColor = new Color(baseNormalized.x, baseNormalized.y, baseNormalized.z);
-
-        Color cursorColor = normalColor * 0.6f;
-        Color cursorDarkerColor = normalColor * 0.38f;
-
+        sliderKnob.color = playerSynchronizer.localSquare.PlayerColor.UIKnobColor;
         CursorBehaviour.SetColor(
             playerSynchronizer.localSquare.PlayerColor.CursorDefaultColor,
             playerSynchronizer.localSquare.PlayerColor.CursorHoverColor);
-
-        selectedColor.r *= 0.8f;
-        selectedColor.g *= 0.8f;
-        selectedColor.b *= 0.8f;
-        selectedColor.a = 1;
-
-        sliderKnob.color = selectedColor;
-
     }
 
     public void UpdateHueKnob(float hue)
@@ -88,10 +75,6 @@ public sealed class PlayerColorSelector : MonoBehaviour
         Color baseColor = selectedColor;
         Vector3 baseNormalized = new Vector3(baseColor.r, baseColor.g, baseColor.b).normalized;
         Color normalColor = new Color(baseNormalized.x, baseNormalized.y, baseNormalized.z);
-
-        CursorBehaviour.SetColor(
-            playerSynchronizer.localSquare.PlayerColor.CursorDefaultColor,
-            playerSynchronizer.localSquare.PlayerColor.CursorHoverColor);
 
         selectedColor.r *= 0.8f;
         selectedColor.g *= 0.8f;
