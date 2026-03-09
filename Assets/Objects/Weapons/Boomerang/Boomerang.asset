@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Boomerang
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: 0699c7598d7cb224fab6f7d3e84f56c2, type: 3}
+    icon: {fileID: 21300000, guid: fd09ee3b2af551d43ba703bfc8b10729, type: 3}
     projectile: {fileID: 3230000773134604271, guid: 232b889b82dd47146853b21ab9905dfb, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: 085cf986ebf02ba4e9d2be6607b3df70, type: 3}
     bounceParticle: {fileID: 0}

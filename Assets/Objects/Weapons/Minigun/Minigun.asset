@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Minigun
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: 9a8a19788be8d2848977b48f8aeaeffc, type: 3}
+    icon: {fileID: 21300000, guid: b6291f8e8aa326542875b33f69e8bacb, type: 3}
     projectile: {fileID: 3230000773134604271, guid: 0e5e809c41fa5344a9148b72c5826481, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: c2f50d2d9a5df5f4b9f0d3e1477fc04a, type: 3}
     bounceParticle: {fileID: 0}

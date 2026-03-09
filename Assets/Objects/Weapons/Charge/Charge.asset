@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Charge
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: 27a961c4a606b7f4a97ffbb59187029a, type: 3}
+    icon: {fileID: 21300000, guid: 34693b834af2a574b9ad361ece056074, type: 3}
     projectile: {fileID: 3230000773134604271, guid: 069c25ee8449356448d40969e5a37f42, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: 88f1cfe0c09d9fc4a8f356131abb5b7d, type: 3}
     bounceParticle: {fileID: 0}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sniper
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: 733829b74ba3d6f4a8ccf195e4ed9dc0, type: 3}
+    icon: {fileID: 21300000, guid: 1510a67d2e6b55c4e920e99bddb13d53, type: 3}
     projectile: {fileID: 3230000773134604271, guid: e996855feaaebdd44a38ac085247b5c3, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: d5708c37ce8342349a0ef39281023399, type: 3}
     bounceParticle: {fileID: 0}

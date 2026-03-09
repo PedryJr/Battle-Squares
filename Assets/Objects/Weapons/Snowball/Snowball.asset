@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Snowball
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: 1171c9acbd4def3498ea0e39bbc56a77, type: 3}
+    icon: {fileID: 21300000, guid: c922925aaea8f724e95866f99def5b14, type: 3}
     projectile: {fileID: 3230000773134604271, guid: 27550b43085a7de4882ac02cc56e7667, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: 3e9891dbda702e74cb3db4f47b80481a, type: 3}
     bounceParticle: {fileID: 0}
