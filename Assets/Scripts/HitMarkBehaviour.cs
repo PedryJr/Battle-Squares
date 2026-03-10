@@ -94,7 +94,7 @@ public sealed class HitMarkBehaviour : AutoPooledBehaviour
                 if (stateTimer >= FadeInDuration)
                 {
                     currentState = FadeState.Stay;
-                    SpawnStayParticles();
+                    //SpawnStayParticles();
                     stateTimer = 0f;
                     transform.localScale = targetScale;
                 }

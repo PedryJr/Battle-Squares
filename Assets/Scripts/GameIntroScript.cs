@@ -45,8 +45,6 @@ public sealed class GameIntroScript : MonoBehaviour
         time = 0;
         fadeImage.color = start;
 
-        FindAnyObjectByType<PlayerController>().DisableController();
-
     }
 
     private void OnEnable()
@@ -100,12 +98,6 @@ public sealed class GameIntroScript : MonoBehaviour
             else stop = true;
         }
 
-    }
-
-    private void OnDestroy()
-    {
-        PlayerController controller = FindAnyObjectByType<PlayerController>();
-        if (controller) controller.EnableController();
     }
 
 }

@@ -259,5 +259,4 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
     {
         frameCountIndicator.text = $"Total Frames - {skinFrames.Count}";
     }
-
 }

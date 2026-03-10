@@ -23,6 +23,44 @@ Shader "*MyShaders/BackdropShader"
         [HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
         [HideInInspector] _AlphaTex("External Alpha", 2D) = "white" {}
         [HideInInspector] _EnableExternalAlpha("Enable External Alpha", Float) = 0
+
+        _Sample1Mul("Sample1Mul", Float) = 1
+        _Sample2Mul("Sample2Mul", Float) = 1
+
+        _DistortionNoise("Distortion Noise", 2D) = "white" {}
+        _DistortionStrength("Distortion Strength", Float) = 1
+
+
+
+
+
+
+
+
+
+
+                [Header(Fractal Settings)]
+        _Octaves ("Octaves", Integer) = 4
+        _Lacunarity ("Lacunarity", Float) = 2.0
+        _Persistence ("Persistence", Float) = 0.5
+
+        [Header(Caustic Settings)]
+        _CausticSharpness ("Caustic Sharpness", Float) = 3.0
+        _DomainWarpStrength ("Domain Warp Strength", Float) = 0.3
+        [Toggle] _UseF2MinusF1 ("Use F2 Minus F1", Float) = 0
+
+        [Header(Animation)]
+        _AnimationSpeed ("Animation Speed", Float) = 1.0
+        _AnimationSpeedLacunarity ("Animation Speed Lacunarity", Float) = 1.0
+
+        [Header(Output)]
+        _Contrast ("Contrast", Float) = 1.0
+        _Brightness ("Brightness", Float) = 1.0
+        [Toggle] _Invert ("Invert", Float) = 0
+
+        [Header(Feature Points)]
+        _FeaturePointsTex ("Feature Points Texture", 2D) = "white" {}
+        _FracTiling("Fractal Tiling amount", Float) = 1
     }
 
     SubShader
@@ -78,6 +116,9 @@ Shader "*MyShaders/BackdropShader"
             TEXTURE2D(_EnergyTexture);
             SAMPLER(sampler_EnergyTexture);
 
+            TEXTURE2D(_DistortionNoise);
+            SAMPLER(sampler_DistortionNoise);
+
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             UNITY_TEXTURE_STREAMING_DEBUG_VARS_FOR_TEX(_MainTex);
@@ -88,6 +129,7 @@ Shader "*MyShaders/BackdropShader"
             // NOTE: Do not ifdef the properties here as SRP batcher can not handle different layouts.
             CBUFFER_START(UnityPerMaterial)
                 float4 _Color;
+                float4 _DistortionNoise_ST;
             CBUFFER_END
 
             float _Tiling;
@@ -95,6 +137,10 @@ Shader "*MyShaders/BackdropShader"
             float _ColorStrength;
             float _ExponentialNoise;
             float _ArtificialLight;
+
+            float _Sample1Mul;
+            float _Sample2Mul;
+            float _DistortionStrength;
 
             Varyings CombinedShapeLightVertex(Attributes v)
             {
@@ -114,15 +160,107 @@ Shader "*MyShaders/BackdropShader"
                 return o;
             }
 
-            //#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
+            int _Octaves;
+            float _Lacunarity;
+            float _Persistence;
+            float _CausticSharpness;
+            float _DomainWarpStrength;
+            float _UseF2MinusF1;
+            float _AnimationSpeed;
+            float _AnimationSpeedLacunarity;
+            float _Contrast;
+            float _Brightness;
+            float _Invert;
+            sampler2D _FeaturePointsTex;
+            float _FracTiling = 0.0;
+
+            float FractalCaustic(float2 uv)
+            {
+                float t = _Time.y * _AnimationSpeed;
+
+                float amplitude = 1.0;
+                float frequency = 1.0;
+                float sum = 0.0;
+                float maxSum = 0.0;
+                float animSpeed = _AnimationSpeed;
+
+                for (int i = 0; i < _Octaves; i++)
+                {
+
+                    float t = _Time.y * animSpeed;
+
+                    float uf = uv.x * frequency;
+                    float vf = uv.y * frequency;
+                    float warp = sin((uf + t) * 3.14159265 * 2.0) * cos((vf + t) * 3.14159265 * 2.0);
+
+                    float warpedU = frac(uf + warp * _DomainWarpStrength);
+                    float warpedV = frac(vf + warp * _DomainWarpStrength);
+
+                    float min1 = 1e38;
+                    float min2 = 1e38;
+
+                    int cellCount = 1;
+
+                    float scaledU = warpedU * cellCount;
+                    float scaledV = warpedV * cellCount;
+
+                    for (int iy = 0; iy < cellCount; iy++)
+                    {
+                        for (int ix = 0; ix < cellCount; ix++)
+                        {
+                            float2 p = tex2D(_FeaturePointsTex, float2(
+                                (ix + 0.5) / cellCount,
+                                (iy + 0.5) / cellCount)).rg;
+
+                            float dx = abs(scaledU - p.x * cellCount);
+                            float dy = abs(scaledV - p.y * cellCount);
+
+                            dx = min(dx, cellCount - dx);
+                            dy = min(dy, cellCount - dy);
+
+                            float dist = dx * dx + dy * dy;
+
+                            if (dist < min1)
+                            {
+                                min2 = min1;
+                                min1 = dist;
+                            }
+                            else if (dist < min2)
+                            {
+                                min2 = dist;
+                            }
+                        }
+                    }
+
+                    float value = _UseF2MinusF1 ? sqrt(min2) - sqrt(min1) : sqrt(min1);
+                    value = exp(-value * _CausticSharpness);
+                    sum += value * amplitude;
+                    maxSum += amplitude;
+
+                    amplitude *= _Persistence;
+                    frequency *= _Lacunarity;
+                    animSpeed *= _AnimationSpeedLacunarity;
+                }
+
+                float pixel = pow(sum / maxSum, _Contrast) * _Brightness;
+                pixel = saturate(pixel);
+
+                if (_Invert) pixel = 1.0 - pixel;
+
+                return pixel;
+            }
+
+
             #include "Assets/BattleSquares2/Scripts/ProximityPixelationSystem/SampleProximityColorBuffer.hlsl"
 
             float4 SampleFromEnergy(float2 uv)
             {
+                uv += SAMPLE_TEXTURE2D(_DistortionNoise, sampler_DistortionNoise, TRANSFORM_TEX(uv + float2(_SinTime.x, -_CosTime.x),_DistortionNoise)) * _DistortionStrength;
+                uv += SAMPLE_TEXTURE2D(_DistortionNoise, sampler_DistortionNoise, TRANSFORM_TEX(uv,_DistortionNoise)) * _DistortionStrength;
                 return 
                 (
-                    pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.x + 0.1, _CosTime.x) / 7), _ExponentialNoise) * 
-                    pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.y, _CosTime.y  + 0.1) / 7), _ExponentialNoise)  * 
+                    pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.x + 0.1, _CosTime.x) / 7 * _Sample1Mul), _ExponentialNoise) * 
+                    pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.y, _CosTime.y  + 0.1) / 7 * _Sample2Mul), _ExponentialNoise)  * 
                     pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.z  + 0.1, _CosTime.z) / 7), _ExponentialNoise)  * 
                     pow(SAMPLE_TEXTURE2D(_EnergyTexture, sampler_EnergyTexture, uv + float2(_SinTime.w, _CosTime.w  + 0.1) / 7), _ExponentialNoise) 
                 );
@@ -135,21 +273,19 @@ Shader "*MyShaders/BackdropShader"
                 float colorWeight = _ColorToEffect;
                 float effectWeight = 1 - colorWeight;
 
-                const float4 energyColor1 = SampleFromEnergy(i.uv);
+                float4 energyColor1 = SampleFromEnergy(i.uv);
+
+                const float test = FractalCaustic(i.uv * _FracTiling);
+
+                energyColor1 = float4(test,test,test, 1.0);
+
                 const float4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 const float4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
-                //SurfaceData2D surfaceData;
-                //InputData2D inputData;
 
-                //InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
-                //InitializeInputData(i.uv, i.lightingUV, inputData);
-
-                //float4 spriteColor = CombinedShapeLightShared(surfaceData, inputData);
-                //float4 spriteColor = CombinedShapeLightShared(surfaceData, inputData);
                 float4 spriteColor = float4(_ArtificialLight, _ArtificialLight, _ArtificialLight, 1);
-                //return energyColor1 * spriteColor;
+
                 spriteColor.xyz = SampleProximityColor(spriteColor.xyz, i.positionWS.xy);
-                //spriteColor.w = 1;
+
 
                 return (spriteColor * colorWeight * _ColorStrength) + (spriteColor * energyColor1 * effectWeight);
             }

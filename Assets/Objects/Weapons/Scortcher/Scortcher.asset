@@ -82,8 +82,8 @@ MonoBehaviour:
     spinSpeed: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
-    lingeringDamage: 2.5
-    lingeringFrequency: 2
+    lingeringDamage: 1
+    lingeringFrequency: 5
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
     spawnOffsetPadding: 0.5

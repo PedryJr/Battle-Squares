@@ -23,7 +23,7 @@ MonoBehaviour:
   m_DefaultRendererIndex: 0
   m_RequireDepthTexture: 0
   m_RequireOpaqueTexture: 0
-  m_OpaqueDownsampling: 3
+  m_OpaqueDownsampling: 0
   m_SupportsTerrainHoles: 0
   m_SupportsHDR: 1
   m_HDRColorBufferPrecision: 1
@@ -82,7 +82,7 @@ MonoBehaviour:
   m_ColorGradingMode: 1
   m_ColorGradingLutSize: 65
   m_AllowPostProcessAlphaOutput: 0
-  m_UseFastSRGBLinearConversion: 0
+  m_UseFastSRGBLinearConversion: 1
   m_SupportDataDrivenLensFlare: 0
   m_SupportScreenSpaceLensFlare: 0
   m_GPUResidentDrawerMode: 0

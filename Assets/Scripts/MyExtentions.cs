@@ -334,7 +334,7 @@ public static class MyExtentions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] CompressRigidbody(Rigidbody2D rb)
+    public static byte[] CompressPlayerRigidbody(Rigidbody2D rb)
     {
         byte[] buffer = new byte[TotalBytes];
         Span<byte> span = buffer.AsSpan();

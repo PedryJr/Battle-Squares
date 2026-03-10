@@ -68,7 +68,7 @@ MonoBehaviour:
     lingeringFrequency: 0
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
-    spawnOffsetPadding: 0
+    spawnOffsetPadding: 0.25
     hoverDistance: 0
     hoverStrength: 0
     hoverFloorRadius: 0

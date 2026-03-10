@@ -124,8 +124,8 @@ public sealed class InGameCanvasController : MonoBehaviour
     void SetPlayerControllable()
     {
 
-        if(pauseCanvasOn || chatCanvasOn) playerSynchronizer.localSquare.playerController.DisableController();
-        else playerSynchronizer.localSquare.playerController.EnableController();
+/*        if(pauseCanvasOn || chatCanvasOn) playerSynchronizer.localSquare.playerController.DisableController();
+        else playerSynchronizer.localSquare.playerController.EnableController();*/
 
     }
 

@@ -17,7 +17,6 @@ public class RectTransformFollowStates : MonoBehaviour
     private int fromState = 0;
     private float transitionProgress = 1.0f;
 
-    // Cached transform data
     private Vector3 fromPosition;
 
     private RectTransform rectTransform;
@@ -71,10 +70,8 @@ public class RectTransformFollowStates : MonoBehaviour
             return;
         }
 
-        // Cache current state as "from"
         CacheCurrentTransform();
 
-        // Set new target
         fromState = targetState;
         targetState = newState;
         transitionProgress = 0.0f;
@@ -108,7 +105,6 @@ public class RectTransformFollowStates : MonoBehaviour
         RectTransform target = targets[targetState];
         float t = MyExtentions.EaseOutQuad(transitionProgress);
 
-        // Interpolate all RectTransform properties
         Vector3 position = Vector2.Lerp(fromPosition, target.position, t);
         rectTransform.position = position;
         Vector3 localPosition = rectTransform.localPosition;
@@ -119,7 +115,6 @@ public class RectTransformFollowStates : MonoBehaviour
 
     void CopyFromTarget(RectTransform target) => rectTransform.position = target.position;
 
-    // Editor helper to visualize states
     void OnDrawGizmosSelected()
     {
         if (targets == null) return;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class EdgeLinesRenderer : MonoBehaviour
 {
@@ -13,14 +14,11 @@ public class EdgeLinesRenderer : MonoBehaviour
     [SerializeField]
     float patternWidth = 10f;
 
-    [SerializeField]
-    float patternHeight = 10f;
-
-    [SerializeField]
-    float segmentsPerUnit = 0.1f; // How many segments per unit of distance
-
     private List<Mesh> edgeMeshes = new List<Mesh>();
     private List<Matrix4x4> edgeMatrices = new List<Matrix4x4>();
+
+    [SerializeField]
+    ButtonHoverAnimation HUD_buttons;
 
     [SerializeField]
     ButtonHoverAnimation animationMode;
@@ -29,7 +27,6 @@ public class EdgeLinesRenderer : MonoBehaviour
 
     DragAndScrollMod dragAndScrollMod;
 
-    //layt
     [ContextMenu("TestStateChange1")]
     void TSC1()
     {
@@ -37,7 +34,6 @@ public class EdgeLinesRenderer : MonoBehaviour
         foreach (var item in rectTransformFollowStates) item.SetTargetState(1);
     }
 
-    //anim
     [ContextMenu("TestStateChange0")]
     void TSC0()
     {
@@ -65,10 +61,21 @@ public class EdgeLinesRenderer : MonoBehaviour
         editorState = mode;
     }
 
-    void LateUpdate()
+    void OnEnable()
     {
+        RenderPipelineManager.beginCameraRendering += DrawLiveUIContainer;
+    }
 
-        if(animationMode.isHovering || layoutMode.isHovering)
+    void OnDisable()
+    {
+        RenderPipelineManager.beginCameraRendering -= DrawLiveUIContainer;
+    }
+
+    void DrawLiveUIContainer(ScriptableRenderContext arg1, Camera cam)
+    {
+        Debug.Log("aa");
+        if (cam != Camera.main) return;
+        if (animationMode.isHovering || layoutMode.isHovering)
         {
             if (animationMode.isHovering) currentAnimationState = 0;
             else currentAnimationState = 1;
@@ -131,54 +138,46 @@ public class EdgeLinesRenderer : MonoBehaviour
 
         Vector2 startPos = edge.a.position;
         Vector2 endPos = edge.b.position;
-        Vector3 direction = (endPos - startPos).normalized;
-        float distance = Vector3.Distance(startPos, endPos);
 
-        // Calculate number of segments based on distance
-        int segments = Mathf.Max(1, Mathf.RoundToInt(distance * segmentsPerUnit));
+        Vector2 direction = (endPos - startPos).normalized;
+        float distance = Vector2.Distance(startPos, endPos);
 
-        float computeMul = Camera.main.orthographicSize / 100;
-        float computeHeight = computeMul * patternHeight;
+        float computeMul = Camera.main.orthographicSize / 100f;
         float computeWidth = computeMul * patternWidth;
 
-        Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0) * (computeHeight * 0.5f);
-        Vector3 forward = direction * (computeWidth * 0.5f);
+        Vector3 extendedStart = startPos - direction * computeWidth;
+        Vector3 extendedEnd = endPos + direction * computeWidth;
+
+        Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0f) * computeWidth;
 
         List<Vector3> vertices = new List<Vector3>();
         List<Vector2> uvs = new List<Vector2>();
         List<int> triangles = new List<int>();
 
-        for (int i = 0; i < segments; i++)
-        {
-            float t = (float)i / Mathf.Max(1, segments - 1);
-            if (segments == 1) t = 0.5f;
+        vertices.Add(extendedStart - perpendicular);
+        vertices.Add(extendedStart + perpendicular);
+        vertices.Add(extendedEnd + perpendicular);
+        vertices.Add(extendedEnd - perpendicular);
+         
+        float uvLength = (distance + computeWidth) / computeWidth;
 
-            Vector3 center = Vector3.Lerp(startPos, endPos, t);
+        uvs.Add(new Vector2(0, 0));
+        uvs.Add(new Vector2(0, 1));
+        uvs.Add(new Vector2(uvLength, 1));
+        uvs.Add(new Vector2(uvLength, 0));
 
-            int vertexOffset = i * 4;
+        triangles.Add(0);
+        triangles.Add(1);
+        triangles.Add(2);
 
-            vertices.Add(center - forward - perpendicular);
-            vertices.Add(center - forward + perpendicular);
-            vertices.Add(center + forward + perpendicular);
-            vertices.Add(center + forward - perpendicular); 
-
-            uvs.Add(new Vector2(0, 0));
-            uvs.Add(new Vector2(0, 1));
-            uvs.Add(new Vector2(1, 1));
-            uvs.Add(new Vector2(1, 0));
-
-            triangles.Add(vertexOffset + 0);
-            triangles.Add(vertexOffset + 1);
-            triangles.Add(vertexOffset + 2);
-
-            triangles.Add(vertexOffset + 0);
-            triangles.Add(vertexOffset + 2);
-            triangles.Add(vertexOffset + 3);
-        }
+        triangles.Add(0);
+        triangles.Add(2);
+        triangles.Add(3);
 
         mesh.SetVertices(vertices);
         mesh.SetUVs(0, uvs);
         mesh.SetTriangles(triangles, 0);
+
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
 

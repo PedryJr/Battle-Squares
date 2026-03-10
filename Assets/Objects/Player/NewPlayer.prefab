@@ -310,7 +310,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4479520223757404588}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1213,6 +1213,7 @@ MonoBehaviour:
   spawnBuffer: 0
   newMods: 0
   isAI: 0
+  inGamePrepareTimer: 0
   frameRate: 10
   jumpParticleRef: {fileID: 8567238288229006168, guid: 414f2ce96a088454aafac90bbb09133b, type: 3}
   moveDirection: {x: 0, y: 0}
@@ -1281,10 +1282,10 @@ MonoBehaviour:
     value: 1
     alpha: 1
   dogTagColor:
-    colorCorrectionType: 0
-    hue: 0
-    saturation: 0.75
-    value: 0.75
+    colorCorrectionType: 2
+    hue: 0.378
+    saturation: 0.819
+    value: 1
     alpha: 1
   hitMarkColor:
     colorCorrectionType: 0

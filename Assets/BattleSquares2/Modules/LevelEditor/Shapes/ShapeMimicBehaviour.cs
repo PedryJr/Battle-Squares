@@ -9,7 +9,7 @@ using static BinaryVectors;
 
 public sealed class ShapeMimicBehaviour : MonoBehaviour
 {
-    public static Mesh sharedMesh = null;
+    //public static Mesh sharedMesh = null;
     public static Dictionary<int, ShapeMimicBehaviour> ShapeMimics = new Dictionary<int, ShapeMimicBehaviour>(2048);
     public static int ShapeIDCounter = 0;
 
@@ -105,18 +105,12 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
 
         shadowCasterController.UpdateShadowFromPoints(points);
 
-        if (!sharedMesh)
-        {
-            sharedMesh = new Mesh();
-            sharedMesh.vertices = scam;
-            sharedMesh.triangles = triangles;
-            sharedMesh.bounds = new Bounds(Vector3.zero, Vector3.one * 1000);
-        }
+        BuiltShapeBehaviour.EnsureMeshesExist();
 
         meshIndices = new ushort[triangles.Length];
         for (int i = 0; i < meshIndices.Length; i++) meshIndices[i] = (ushort) triangles[i];
 
-        meshFilter.sharedMesh = sharedMesh;
+        meshFilter.sharedMesh = BuiltShapeBehaviour.octagonalMinimalMesh;
 
         reorderedVerts = new ReorderedVerts[8]
         {
@@ -143,7 +137,7 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AssignShapeContainer(ShapeContainer shapeContainer) => this.shapeContainer = shapeContainer;
+    public void AssignShapeContainer(ShapeContainer shapeContainer, bool xMirror = false, bool yMirror = false) => (this.shapeContainer, this.yMirror, this.xMirror) = (shapeContainer, yMirror, xMirror);
     public void AssignAnimationAnchor(AnimationAnchor animationAnchor) => this.animationAnchor = animationAnchor;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -192,11 +186,6 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     Vector2 GetSnappedPosition(Vector2 rawPosition) => new Vector2(Mathf.Round(rawPosition.x / snappingOnGenerate) * snappingOnGenerate, Mathf.Round(rawPosition.y / snappingOnGenerate) * snappingOnGenerate);
 
-    public void ValidateShadow()
-    {
-
-    }
-
     void UpdateStaticState()
     {
         staticShape = animationAnchor == null;
@@ -213,82 +202,13 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         cachedTransform.position = keepSpace;
     }
 
-    public void SetStatic()
-    {
-        cachedTransform.SetParent(LevelEditorInitializer.StaticShapeParent, true);
-        ValidateShadow();
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetStatic() => cachedTransform.SetParent(LevelEditorInitializer.StaticShapeParent, true);
 
-    Vector2[] GetValidShadowPoints()
-    {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetDynamic() => cachedTransform.SetParent(null, true);
 
-        float resolution = 10;
-
-        List<Vector2> validShadowPoints = new List<Vector2>();
-        Vector2 a, b;
-
-        for (int i = 1; i < points.Length; i++)
-        {
-            a = points[i - 1];
-            b = points[i];
-            if (!ArePointsOccluded(a, b))
-            {
-                if(!validShadowPoints.Contains(a)) validShadowPoints.Add(a);
-                if(!validShadowPoints.Contains(b)) validShadowPoints.Add(b);
-            }
-        }
-
-        a = points[points.Length - 1];
-        b = points[0];
-        if (!ArePointsOccluded(a, b))
-        {
-            if (!validShadowPoints.Contains(a)) validShadowPoints.Add(a);
-            if (!validShadowPoints.Contains(b)) validShadowPoints.Add(b);
-        }
-
-        bool ArePointsOccluded(Vector2 a, Vector2 b)
-        {
-
-            int tempResolution = Mathf.FloorToInt(Vector2.Distance(a, b) * resolution);
-
-            for(float step = 0; step < 1f; step += 1f / tempResolution)
-            {
-
-                Vector2 testPoint = Vector2.Lerp(a, b, step) + (Vector2)transform.position;
-                Vector2 toLight1 = new Vector2(0f, 10f) - testPoint;
-                Vector2 toLight2 = new Vector2(14f, 10f) - testPoint;
-                Vector2 toLight3 = new Vector2(-14f, 10f) - testPoint;
-
-                RaycastHit2D[] hits1 = Physics2D.RaycastAll(testPoint, toLight1, toLight1.magnitude, worldLayer);
-                RaycastHit2D[] hits2 = Physics2D.RaycastAll(testPoint, toLight2, toLight2.magnitude, worldLayer);
-                RaycastHit2D[] hits3 = Physics2D.RaycastAll(testPoint, toLight3, toLight3.magnitude, worldLayer);
-
-                if (!(DidHitOtherMimic(hits1) && DidHitOtherMimic(hits2) && DidHitOtherMimic(hits3))) return false;
-            }
-
-            bool DidHitOtherMimic(RaycastHit2D[] hits)
-            {
-                if(hits == null) { return false; };
-                if(hits.Length == 0) { return false; };
-                foreach (var item in hits) if (item.transform != transform) if (item.transform.TryGetComponent(out ShapeMimicBehaviour foundMimic)) if(foundMimic.staticShape) return true;
-                return false;
-
-            }
-
-            return true;
-
-        }
-
-        return validShadowPoints.ToArray();
-
-    }
-
-    public void SetDynamic()
-    {
-        cachedTransform.SetParent(null, true);
-        ValidateShadow();
-    }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void UpdateColor()
     {
         if (oldColor != mimicColor) meshRenderer.SetPropertyBlock(propertyBlock);
@@ -315,6 +235,7 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void ApplyMimicColor() => propertyBlock.SetColor("_MyColor", mimicColor);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EnsureNoAnimation()
     {
         if (!animationAnchor) return;
@@ -335,7 +256,8 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         for (int i = 0; i < worldspaceVertices.Length; i++) worldspaceVertices[i] = (Vector2)reorderedVerts[i].pos + (Vector2)transform.position;
 
         mesh.SetVertices(worldspaceVertices);
-        mesh.SetTriangles(sharedMesh.triangles, 0);
+        BuiltShapeBehaviour.EnsureMeshesExist();
+        mesh.SetTriangles(BuiltShapeBehaviour.octagonalMinimalMesh.triangles, 0);
 
         return mesh;
 
@@ -345,15 +267,16 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
 
     public const float GetMinRot = -180f;
     public const float GetMaxRot = 180f;
-    public const float GetMinLength = -360.62445f;
+    public const float GetMinLength = 0;
     public const float GetMaxLength = 360.62445f;
-    public const float GetMinWidth = -32f;
+    public const float GetMinWidth = 0f;
     public const float GetMaxWidth = 32f;
-    public const float GetMinSnapping = 0f;
+    public const float GetMinSnapping = 0.5f;
     public const float GetMaxSnapping = 1f;
-    public const byte GetRotBytes = 2;
-    public const byte GetLenBytes = 2;
-    public const byte GetWidBytes = 2;
+
+    public const byte GetRotBytes = 3;
+    public const byte GetLenBytes = 3;
+    public const byte GetWidBytes = 3;
     public const byte GetSnaBytes = 1;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -408,16 +331,8 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         Vector2 ignoreH = Vector2.zero;
         Vector2 ignoreV = Vector2.zero;
 
-        //THOUGHTS
-        //Points are malformed from the snapping grid, we need to restore them to the octagonal shape first
-        //Then store the snapping as a separate parameter for rebuilding the shape later
-        //Perhaps the shapeAsOctagon can be resized to the snapped size, then the difference between the two shapes can be stored as the length and width parameters
-        //That difference can then be reapplied to the octagonal shape when reconstructing it later after applying space size to the octagonal shape
-
         shapeH = points[7] - points[0];
-        shapeV = points[2] - points[1] ;
-/*        ignoreH = (shapeAsOctagon[7] - shapeAsOctagon[0]);
-        ignoreV = (shapeAsOctagon[2] - shapeAsOctagon[1]);*/
+        shapeV = points[2] - points[1];
 
         ignoreH = ((shapeAsOctagon[7] * snappingOnGenerate) - (shapeAsOctagon[0] * snappingOnGenerate));
         ignoreV = ((shapeAsOctagon[2] * snappingOnGenerate) - (shapeAsOctagon[1] * snappingOnGenerate));
@@ -428,11 +343,10 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         wid = shapeV.magnitude - ignoreV.magnitude;
         sna = snappingOnGenerate;
 
+        Vector2 mirroredGenPosMul = new Vector2(xMirror ? -1f : 1f, yMirror ? -1f : 1f);
+        Vector2 mirroredGenPos = mirroredGenPosMul * shapeContainer.mousePosOnGenerate;
 
-        //SByte4 compressed = GetShapeCompressor();
-
-        //compressed.SetFromVec4(new Vector4(rot, len, wid, sna));
-
+        simplifiedShapeData.coord.SetPosition(GetSnappedPosition(mirroredGenPos + (Vector2)offsetPosition));
         simplifiedShapeData.coord.SetPosition(transform.position);
 
         simplifiedShapeData.param = GetShapeCompressor();
@@ -447,6 +361,7 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
 
 
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector2[] GetMimicPoints()
     {
         Vector2[] duplicate = new Vector2[points.Length];
@@ -455,6 +370,8 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
     }
 
     [SerializeField] SimplifiedShapeData inside;
+    private bool yMirror;
+    private bool xMirror;
 
     [Serializable]
     public struct SimplifiedShapeData
@@ -464,6 +381,7 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         [SerializeField]
         public SByte4 param;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetSize() => param.xBytes + param.yBytes + param.zBytes + 2;
 
         public Mesh GenerateWorldspaceMesh()
@@ -502,8 +420,9 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         public ByteCoord coord;
         [SerializeField]
         public Byte4 param;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetSize() => (param.data != null ? param.data.Length : 0) + 2;
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref coord);
@@ -550,9 +469,6 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
                 temp.SetMax(testMax);
                 temp.byteVec = new Byte2() { data = data };
                 temp.SetFromfloat2(new Vector2(value, temp.GetVec2().y));
-
-                //data = temp.byteVec.data;
-                //data[0] = (byte) value;
             }
         }
 
@@ -582,16 +498,13 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
                 temp.SetMax(testMax);
                 temp.byteVec = new Byte2() { data = data };
                 temp.SetFromfloat2(new Vector2(temp.GetVec2().x, value));
-
-                //data = temp.byteVec.data;
-
             }
         }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector3 GetPosition() => new Vector3(x - 128, y - 128);
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref data);
@@ -599,9 +512,10 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPosition(Vector3 position) => (x, y) = (position.x + 128f, position.y + 128f);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetSize() => 2;
     }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 rotate(Vector2 v, float delta)
     {
         return new Vector2(
@@ -610,6 +524,8 @@ public sealed class ShapeMimicBehaviour : MonoBehaviour
         );
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void LockInOffset(Vector3 offsetPosition) => this.offsetPosition = GetSnappedPosition(offsetPosition);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LockInOffset() => offsetPosition = GetSnappedPosition(offsetPosition);
 }

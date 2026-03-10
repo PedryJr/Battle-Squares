@@ -1,15 +1,27 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.Barracuda;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Policies;
 using Unity.MLAgents.Sensors;
 
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
+using static PlayerMLAgent;
 
 public sealed class PlayerMLAgent : Agent
 {
+
+    [Serializable]
+    public enum TargetMode
+    {
+        Furthest,
+        Nearest,
+        Center,
+        TargetJourney,
+    }
 
     [Serializable]
     public enum TrainingMode
@@ -46,6 +58,12 @@ public sealed class PlayerMLAgent : Agent
         SecondaryAttack
     }
 
+    public struct TargetInJourney
+    {
+        public Vector2 position;
+        public int reachCounter;
+    }
+
     public struct WeaponStats
     {
         public int remainingAmmo;
@@ -60,6 +78,8 @@ public sealed class PlayerMLAgent : Agent
     [SerializeField] public PlayerController playerController;
     public MLTrainingManager mLTrainingManager;
     public bool isTraining;
+    [SerializeField]
+    NNModel[] models;
 
     [Header("Training Mode")]
     [SerializeField] public TrainingMode currentTrainingMode = TrainingMode.FullControl;
@@ -86,6 +106,9 @@ public sealed class PlayerMLAgent : Agent
     [SerializeField] private int openAreaRaycastCount = 16;
     [SerializeField] private float openAreaSearchRadius = 15f;
     [SerializeField] private float minSafeDistanceFromWall = 2f;
+    [SerializeField] private TargetMode targetMode = TargetMode.Furthest;
+    [SerializeField] private int targetJourneyRepetition = 5;
+    [SerializeField] public float targetRadius;
 
     [Header("Reward Settings")]
     [SerializeField] private float alignmentRewardMultiplier = 0.01f;
@@ -100,6 +123,7 @@ public sealed class PlayerMLAgent : Agent
     [SerializeField] private float goalReward = 10f;
     [SerializeField] private float combatHitReward = 0.5f;
     [SerializeField] private float combatDamageReward = 0.1f;
+    [SerializeField] private float optimizerReward = 0.001f;
 
     [Header("New Reward Settings")]
     [SerializeField] private float environmentProximityReward = 0.005f;
@@ -124,9 +148,56 @@ public sealed class PlayerMLAgent : Agent
     [SerializeField] private int goalsReached = 0;
     [SerializeField] private int deaths = 0;
 
+
+    private Dictionary<int, TargetInJourney> targetsInJourney = new Dictionary<int, TargetInJourney>();
+    int currentTargetInJourney;
+    private int GetClosestTargetInJourney()
+    {
+        int bestKey = -1;
+        float bestDistance = float.MaxValue;
+
+        foreach (var item in targetsInJourney)
+        {
+            float distance = Vector2.Distance(item.Value.position, AgentPosition);
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                bestKey = item.Key;
+            }
+        }
+        return bestKey;
+    }
+
+    public void PopulateTargetsForJourney(Vector2[] targets)
+    {
+        if (targetsInJourney == null) targetsInJourney = new Dictionary<int, TargetInJourney>();
+        targetsInJourney.Clear();
+
+        if(targets == null)
+        {
+            //default values work as "center" targetting behaviour
+            targetsInJourney[-1] = new TargetInJourney();
+            return;
+        }
+        else if(targets.Length == 0)
+        {
+            targetsInJourney[-1] = new TargetInJourney();
+            return;
+        }
+
+        for (int i = 0; i < targets.Length; i++)
+        {
+            TargetInJourney targetInJourney = new TargetInJourney();
+            targetInJourney.position = targets[i];
+            targetInJourney.reachCounter = 0;
+            targetsInJourney[i] = targetInJourney;
+        }
+    }
+
     private PlayerSynchronizer playerSynchronizer;
     private Transform targetTransform;
     private Vector2 cachedTargetPosition = Vector2.zero;
+    private Vector2[] previousPositions = new Vector2[10];
     private bool hasPlayerTarget;
     private bool isTargetVisible = false;
     private Vector2 punishZone;
@@ -199,6 +270,18 @@ public sealed class PlayerMLAgent : Agent
 
     public override void OnEpisodeBegin()
     {
+
+
+        if (!mLTrainingManager) mLTrainingManager = FindAnyObjectByType<MLTrainingManager>();
+
+        if (mLTrainingManager.isTraining)
+        {
+            int weaponSelectionIndex = playerController.playerBehaviour.GetGameID() % mLTrainingManager.weaponSelections.Length;
+
+            playerController.playerBehaviour.nozzleBehaviour.UpdateWeaponTypes(mLTrainingManager.weaponSelections[weaponSelectionIndex].primary.typeID);
+            playerController.playerBehaviour.nozzleBehaviour.UpdateWeaponTypes(mLTrainingManager.weaponSelections[weaponSelectionIndex].secondary.typeID);
+        }
+
         episodeCount++;
         episodeTimer = 0f;
         shouldDrawShotDebug = false;
@@ -218,6 +301,20 @@ public sealed class PlayerMLAgent : Agent
 
         punishZone = AgentPosition;
         cachedTargetPosition = AgentPosition;
+        if(targetMode == TargetMode.TargetJourney) currentTargetInJourney = GetClosestTargetInJourney();
+
+        //smooth position buffer
+        previousPositions[9] = AgentPosition;
+        previousPositions[8] = AgentPosition;
+        previousPositions[7] = AgentPosition;
+        previousPositions[6] = AgentPosition;
+        previousPositions[5] = AgentPosition;
+        previousPositions[4] = AgentPosition;
+        previousPositions[3] = AgentPosition;
+        previousPositions[2] = AgentPosition;
+        previousPositions[1] = AgentPosition;
+        previousPositions[0] = AgentPosition;
+
 
         if (playerController != null)
         {
@@ -257,9 +354,24 @@ public sealed class PlayerMLAgent : Agent
 
     private void UpdateTargetSelection()
     {
+        if(targetMode == TargetMode.Center)
+        {
+            targetTransform = null;
+            hasPlayerTarget = false;
+            cachedTargetPosition = Vector2.zero;
+            return;
+        }else if(targetMode == TargetMode.TargetJourney)
+        {
+            targetTransform= null;
+            hasPlayerTarget= false;
+            if(currentTargetInJourney == -1) cachedTargetPosition = Vector2.zero;
+            else if (targetsInJourney.ContainsKey(currentTargetInJourney)) cachedTargetPosition = targetsInJourney[currentTargetInJourney].position;
+            else currentTargetInJourney = -1;
+            return;
+        }
         if (targetTransform != null)
         {
-            var targetPb = targetTransform.GetComponent<PlayerBehaviour>();
+            PlayerBehaviour targetPb = targetTransform.GetComponent<PlayerBehaviour>();
             if (targetPb != null && !targetPb.isDead)
             {
                 cachedTargetPosition = targetTransform.position;
@@ -287,7 +399,9 @@ public sealed class PlayerMLAgent : Agent
     {
         if (playerSynchronizer == null || playerSynchronizer.playerIdentities == null || playerSynchronizer.playerIdentities.Count == 0) return null;
         Vector2 playerPos = AgentPosition;
-        PlayerBehaviour playerBehaviour = playerSynchronizer.GetFarthestPlayer(AgentPosition, playerController.playerBehaviour.GetGameID(), false);
+        PlayerBehaviour playerBehaviour;
+        if(targetMode == TargetMode.Furthest) playerBehaviour = playerSynchronizer.GetFarthestPlayer(AgentPosition, playerController.playerBehaviour.GetGameID(), false);
+        else playerBehaviour = playerSynchronizer.GetClosestPlayer(AgentPosition, playerController.playerBehaviour.GetGameID(), false);
         if (playerBehaviour) return playerBehaviour.transform;
         return null;
     }
@@ -691,6 +805,51 @@ public sealed class PlayerMLAgent : Agent
 
     private void CalculateMovementRewards()
     {
+
+
+        Vector2 oldPositioAccum = Vector2.zero;
+        oldPositioAccum += previousPositions[0];
+        oldPositioAccum += previousPositions[1];
+        oldPositioAccum += previousPositions[2];
+        oldPositioAccum += previousPositions[3];
+        oldPositioAccum += previousPositions[4];
+        oldPositioAccum += previousPositions[5];
+        oldPositioAccum += previousPositions[6];
+        oldPositioAccum += previousPositions[7];
+        oldPositioAccum += previousPositions[8];
+        oldPositioAccum += previousPositions[9];
+        oldPositioAccum /= 10f;
+
+        previousPositions[9] = previousPositions[8];
+        previousPositions[8] = previousPositions[7];
+        previousPositions[7] = previousPositions[6];
+        previousPositions[6] = previousPositions[5];
+        previousPositions[5] = previousPositions[4];
+        previousPositions[4] = previousPositions[3];
+        previousPositions[3] = previousPositions[2];
+        previousPositions[2] = previousPositions[1];
+        previousPositions[1] = previousPositions[0];
+        previousPositions[0] = AgentPosition;
+
+        Vector2 newPositionAccum = Vector2.zero;
+        newPositionAccum += previousPositions[0];
+        newPositionAccum += previousPositions[1];
+        newPositionAccum += previousPositions[2];
+        newPositionAccum += previousPositions[3];
+        newPositionAccum += previousPositions[4];
+        newPositionAccum += previousPositions[5];
+        newPositionAccum += previousPositions[6];
+        newPositionAccum += previousPositions[7];
+        newPositionAccum += previousPositions[8];
+        newPositionAccum += previousPositions[9];
+        newPositionAccum /= 10f;
+
+        Vector2 moveDistance = newPositionAccum - oldPositioAccum;
+        GiveReward(moveDistance.magnitude * 0.005f * jumpExpense);
+
+
+
+
         Vector2 velocity = playerController.playerBehaviour.rb.linearVelocity;
         Vector2 currentAgentPos = AgentPosition;
 
@@ -716,7 +875,7 @@ public sealed class PlayerMLAgent : Agent
             GiveReward(positioningScore * positioningMultiplier);
         }
 
-        if (!hasPlayerTarget && Vector2.Distance(currentAgentPos, TargetPosition) < 2f)
+        if (!hasPlayerTarget && Vector2.Distance(currentAgentPos, TargetPosition) < targetRadius)
             OnGoalReached();
     }
 
@@ -843,6 +1002,18 @@ public sealed class PlayerMLAgent : Agent
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void OnGoalReached()
     {
+        if(targetMode == TargetMode.TargetJourney)
+        {
+            TargetInJourney modify = targetsInJourney[currentTargetInJourney];
+            modify.reachCounter++;
+            targetsInJourney[currentTargetInJourney] = modify;
+            if (modify.reachCounter >= targetJourneyRepetition && targetsInJourney.Count > 1)
+            {
+                targetsInJourney.Remove(currentTargetInJourney);
+                currentTargetInJourney = -1;
+            }
+
+        }
         goalsReached++;
         GiveReward(goalReward);
         EndEpisode();
@@ -868,6 +1039,26 @@ public sealed class PlayerMLAgent : Agent
         shotDecay = Mathf.Lerp(shotDecay, 1f, elapsedScaled);
         UpdatePunishZone(elapsedScaled);
         DrawDebugVisualizations(elapsed);
+
+        GiveReward(optimizerReward * (episodeTimer / maxEpisodeTime));
+
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            BehaviorParameters behaviorParameters = GetComponent<BehaviorParameters>();
+            behaviorParameters.Model = models[0];
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            BehaviorParameters behaviorParameters = GetComponent<BehaviorParameters>();
+            behaviorParameters.Model = models[1];
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            BehaviorParameters behaviorParameters = GetComponent<BehaviorParameters>();
+            behaviorParameters.Model = models[2];
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -933,7 +1124,7 @@ public sealed class PlayerMLAgent : Agent
 
         if (HasDebugFlag(DebugVisualization.TargetRadius))
         {
-            DrawCircle(TargetPosition, 2f, Color.green, elapsed);
+            DrawCircle(TargetPosition, targetRadius, Color.green, elapsed);
         }
 
         if (HasDebugFlag(DebugVisualization.RaycastRange))

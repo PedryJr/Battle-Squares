@@ -319,6 +319,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lightStrength: 1
   levelOutput: {fileID: 6590266317702339221}
+  boxObstacle: {fileID: 0}
   shapeRendererPrefab: {fileID: 1592273718196173774, guid: 9f981a8498915ca4e93b59b5915a50fb, type: 3}
   shadowedColliderPrefab: {fileID: 3756016577374031736, guid: a2c551643d4c5064ba67ef31044fc96f, type: 3}
   lightPrefab: {fileID: 12423000886993399, guid: 8599eadbda08a024b97db71bea79c5fe, type: 3}
@@ -433,8 +434,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackdropBehaviour
   _fallofExponential: 5
-  _othersInfluenceOverMe: 1
-  _maxIntensity: 1
+  _othersInfluenceOverMe: 5
+  _maxIntensity: 3
   backdropMaterial: {fileID: 2100000, guid: 63fb528208bc3f34d872981ac46d1253, type: 2}
 --- !u!1 &6801532356897613291
 GameObject:

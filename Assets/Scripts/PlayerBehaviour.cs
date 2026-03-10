@@ -28,6 +28,8 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     public PlayerNeighbours neighbours;
 
+    MLTrainingManager mlTrainingManager;
+
     [SerializeField]
     Light2D playerLight;
     public const string MMRlocation = "SkillIssue";
@@ -96,8 +98,8 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public bool newColor = true;
     public bool ready = false;
 
-    public Vector2 position { get; private set; }
-    public float rotation { get; private set; }
+    public Vector2 RBPosition { get; private set; }
+    public float RBRotation { get; private set; }
     public Vector2 velocity { get; private set; }
     public float angularVelocity { get; private set; }
 
@@ -188,13 +190,13 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Vector2 nozzleInputDirection;
 
     Vector2 lastRBPosition;
+    float lastRBRotation;
 
     float newNozzlePositionTime;
     Vector2 nozzleReferencePosition;
 
     public Vector3 spawnPosition;
     public Vector3 deathPosition;
-
 
     public string playerName;
 
@@ -243,9 +245,11 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Color frozenColor = Color.white;
     public bool newMods;
     public bool isAI;
+    public float inGamePrepareTimer;
 
     void Awake()
     {
+        mlTrainingManager = FindAnyObjectByType<MLTrainingManager>();
         lastRBPosition = new Vector2();
         playerTransform = transform;
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
@@ -341,6 +345,9 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         if (timeSinceHit < 1) timeSinceHit += Time.deltaTime * 3.5f;
         else if (timeSinceHit > 1) timeSinceHit = 1;
 
+        inGamePrepareTimer -= Time.deltaTime;
+        inGamePrepareTimer = Mathf.Max(0f, inGamePrepareTimer);
+
         if (oneSecondTimer >= 1f)
         {
 
@@ -418,6 +425,8 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
                 if (arg0.name == "GameScene")
                 {
                     score = scoreManager.startScore;
+                    RespawnPlayer();
+                    inGamePrepareTimer = 3f;
                 }
 
                 playerSynchronizer.UpdateHealth();
@@ -541,6 +550,18 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             if (playerMLAgent) if (!playerMLAgent.enabled) playerMLAgent.enabled = true;
         }
 
+        if (isLocalPlayer && inGamePrepareTimer > 0.01f)
+        {
+            float z = transform.position.z;
+            Vector3 spawnPos = spawnPosition;
+            spawnPos.z = z;
+            transform.position = spawnPos;
+            rb.position = spawnPos;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = 0f;
+            rb.rotation = 0f;
+        }
+
         lastDeathState = isDead;
     }
 
@@ -618,7 +639,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     }
     public void CreateTextureFromBoolArray10BY10(bool[] boolArray, int frameIndex)
     {
-
+        if (mlTrainingManager.isTraining) return;
         Span<bool> rotatedArray = stackalloc bool[100];
         for (int i = 0; i < 100; i++) rotatedArray[i] = boolArray[99 - i];
         Texture2D texture = new Texture2D(10, 10, UnityEngine.TextureFormat.RGBA32, false);
@@ -640,7 +661,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     public void CreateTextureFromBoolArray4BY4(bool[] boolArray, int frameIndex)
     {
-
+        if (mlTrainingManager.isTraining) return;
         Span<bool> rotatedArray = stackalloc bool[16];
 
         rotatedArray[0] = boolArray[3];
@@ -726,28 +747,46 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public float frameRate = 10;
     int animationIndex;
     int lastAnimationIndex;
-
+    const float rbBaseUpdateFrequence = 24f;
+    float rbUpdateTimer = 0f;
 
     [SerializeField]
     public ParticleBehaviour jumpParticleRef;
 
     void FixedUpdate()
     {
-        
-        position = rb.position;
-        rotation = rb.rotation;
+        FixedMovementUpdate();
+        FixedSyncronizeUpdate();
+    }
+
+    void FixedSyncronizeUpdate()
+    {
+        rbUpdateTimer = Time.deltaTime * rbBaseUpdateFrequence;
+        if (!controlled) return;
+
+        bool updateFlag = false;
+
+        updateFlag |= rbUpdateTimer > 1f;
+        updateFlag |= !Mathf.Approximately(lastRBPosition.sqrMagnitude, RBPosition.sqrMagnitude);
+        updateFlag |= !Mathf.Approximately(lastRBRotation, RBRotation);
+
+        if (updateFlag) UpdateNetworkRB();
+    }
+
+    void FixedMovementUpdate() //Legacy artifact for smooth player controller =/
+    {
+        RBPosition = rb.position;
+        RBRotation = rb.rotation;
         angularVelocity = rb.angularVelocity;
         velocity = rb.linearVelocity;
 
         flipFlop = !flipFlop;
-        if (flipFlop) return; 
-        if (controlled)
-        {
-            ApplyTargetMovement();
-            ReAdjustMovementValues();
-            if (!Mathf.Approximately(lastRBPosition.sqrMagnitude, rb.position.sqrMagnitude)) UpdateNetworkRB();
-        } 
+        if (flipFlop || !controlled) return;
+
+        ApplyTargetMovement();
+        ReAdjustMovementValues();
     }
+
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -868,7 +907,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         nozzleBehaviour.transform.position = transform.position + nozzlePos;
 
-        Vector2 delta = transform.position - nozzleBehaviour.transform.position;
+        Vector2 delta = nozzleBehaviour.transform.position - transform.position;
         float rot = MyExtentions.Vector2ToDegrees(delta);
         nozzleBehaviour.transform.rotation = Quaternion.Euler(0f, 0f, rot);
     }
@@ -889,6 +928,12 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         //Advanced homebrew formula for 2D physically based controller.
 
+        if (isDead || inGamePrepareTimer > 0.01f)
+        {
+            playerController.inputJump = false;
+            return;
+        }
+
         acceleration = 130f * Mods.at[8];
         maxSpeed = 23.5f * Mods.PlayerSpeed;
         newMods = false;
@@ -899,20 +944,37 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         (xLimiter, yLimiter) = (math.clamp(math.abs(movementDirection.x - (velParam.x / maxSpeed)), 0, 1), math.clamp(math.abs(movementDirection.y - (velParam.y / maxSpeed)), 0, 1));
         forceLimiter = new Vector2(xLimiter, yLimiter);
 
-        jumpLimiter = 17.5f - math.clamp(rb.linearVelocityY / 2, -5, 10);
-        jumpDirection = (Vector2.up + (movementDirection * 0.2f)).normalized;
-        jumpVelocity = (jumpDirection * jumpLimiter) * Mods.JumpForce;
-
-        MyExtentions.GetClosestEnvironmentPoint(rb.position);
         if (playerController.inputJump)
         {
+            jumpLimiter = 17.5f - math.clamp(rb.linearVelocityY / 2, -5, 10);
+            jumpDirection = (Vector2.up + (movementDirection * 0.2f)).normalized;
+
+
+            RaycastHit2D closestEnvironmentPoint = MyExtentions.GetClosestEnvironmentPoint(rb.position, 1f);
+            if (closestEnvironmentPoint.transform)
+            {
+
+                float xDiff = math.abs(math.abs(closestEnvironmentPoint.point.x) - math.abs(rb.position.x));
+                Vector2 toClosestPoint = closestEnvironmentPoint.point - rb.position;
+                if(xDiff > 0.1f)
+                {
+                    //xDiff = math.clamp(xDiff * 4, 0, 1);
+                    jumpDirection = Vector2.Lerp(-toClosestPoint.normalized, jumpDirection, 1 - 0.25f).normalized;
+                }
+            }
+
+            jumpVelocity = (jumpDirection * jumpLimiter) * Mods.JumpForce;
+
             Vector2 calculatedVelocity = rb.linearVelocity + jumpVelocity;
-            if (calculatedVelocity.y < 10f) calculatedVelocity.y = 10f;
+            if (calculatedVelocity.y < 10f) calculatedVelocity.y = 12f;
             rb.linearVelocity = calculatedVelocity;
             Vector2 normalizedDirection = rb.linearVelocity.normalized;
-            playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
             playerController.inputJump = false;
-            UpdateNetworkRB(); //We know body will move alot from this, send an update in advance instead of waiting for next step.
+            if (!mlTrainingManager.isTraining)
+            {
+                playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
+            }
+            UpdateNetworkRB();
         }
     }
 
@@ -935,6 +997,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     void ApplyPlayerAnimation()
     {
+        if (mlTrainingManager.isTraining) return;
         if (animationTimer > 0) animationTimer -= Time.deltaTime * (frameRate / nozzleFrames.Length);
         if (animationTimer < 0) animationTimer = 0;
         if (animationTimer == 0) animationIndex = 0;
@@ -950,9 +1013,11 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     void UpdateNetworkRB()
     {
-        if (!isLocalPlayer) return; //Local players shall NOT  be able to use this function.
-        playerSynchronizer.UpdateRigidBody(GetGameID());
+        if (!isLocalPlayer) return;
+        rbUpdateTimer = 0f;
         lastRBPosition = rb.position;
+        lastRBRotation = rb.rotation;
+        playerSynchronizer.UpdateRigidBody(GetGameID());
     }
 }
 //Id shit

@@ -121,6 +121,8 @@ public sealed class NozzleBehaviour : MonoBehaviour
             secondaryTimeSinceEmpty = secondaryReloadTime;
         }
 
+        if (playerBehaviour.isDead) return;
+        if (playerBehaviour.inGamePrepareTimer > 0.01f) return;
         if (!playerController.shootPrimary && !playerController.shootSecondary) return;
         
         relativePositionToPlayer = playerBehaviour.toPos;

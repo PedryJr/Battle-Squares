@@ -68,54 +68,54 @@ public sealed class MySettings
 
     public static void ApplyHighestResolutionAndRefreshRate()
     {
-        Resolution bestResolution = new Resolution();
-        RefreshRate highestRefreshRate = new RefreshRate();
+        /*        Resolution bestResolution = new Resolution();
+                RefreshRate highestRefreshRate = new RefreshRate();
 
-        // Get all available resolutions
-        Resolution[] resolutions = Screen.resolutions;
+                // Get all available resolutions
+                Resolution[] resolutions = Screen.resolutions;
 
-        // Find the resolution with the highest width, height, and refresh rate
-        foreach (Resolution resolution in resolutions)
-        {
-            // Calculate actual refresh rate values for comparison
-            double currentRefreshRate = (double)resolution.refreshRateRatio.numerator / resolution.refreshRateRatio.denominator;
-            double bestRefreshRate = highestRefreshRate.denominator > 0
-                ? (double)highestRefreshRate.numerator / highestRefreshRate.denominator
-                : 0;
+                // Find the resolution with the highest width, height, and refresh rate
+                foreach (Resolution resolution in resolutions)
+                {
+                    // Calculate actual refresh rate values for comparison
+                    double currentRefreshRate = (double)resolution.refreshRateRatio.numerator / resolution.refreshRateRatio.denominator;
+                    double bestRefreshRate = highestRefreshRate.denominator > 0
+                        ? (double)highestRefreshRate.numerator / highestRefreshRate.denominator
+                        : 0;
 
-            // Check if this resolution is better than our current best
-            if (resolution.width > bestResolution.width ||
-                (resolution.width == bestResolution.width && resolution.height > bestResolution.height) ||
-                (resolution.width == bestResolution.width && resolution.height == bestResolution.height && currentRefreshRate > bestRefreshRate))
-            {
-                bestResolution = resolution;
-                highestRefreshRate = resolution.refreshRateRatio;
-            }
-        }
+                    // Check if this resolution is better than our current best
+                    if (resolution.width > bestResolution.width ||
+                        (resolution.width == bestResolution.width && resolution.height > bestResolution.height) ||
+                        (resolution.width == bestResolution.width && resolution.height == bestResolution.height && currentRefreshRate > bestRefreshRate))
+                    {
+                        bestResolution = resolution;
+                        highestRefreshRate = resolution.refreshRateRatio;
+                    }
+                }*/
 
-        // Apply the best resolution found
-        Screen.SetResolution(bestResolution.width, bestResolution.height, FullScreenMode.FullScreenWindow, highestRefreshRate);
+        /*        // Apply the best resolution found
+                Screen.SetResolution(bestResolution.width, bestResolution.height, FullScreenMode.FullScreenWindow);
 
-        double finalRefreshRate = (double)highestRefreshRate.numerator / highestRefreshRate.denominator;
-        Debug.Log($"Applied resolution: {bestResolution.width}x{bestResolution.height} @ {finalRefreshRate:F2}Hz");
+                double finalRefreshRate = (double)highestRefreshRate.numerator / highestRefreshRate.denominator;
+                Debug.Log($"Applied resolution: {bestResolution.width}x{bestResolution.height} @ {finalRefreshRate:F2}Hz");*/
+
+        Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
     }
 
     private static void ApplySettings(bool forceApply = false)
     { 
         switch (FullscreenMode)
         {
-/*            case 0: WindowManager.Instance.SetState(WindowManager.WindowState.Fullscreen); break;
-            case 1: WindowManager.Instance.SetState(WindowManager.WindowState.Windowed); break;*/
             case 0:
-                {
-                    if (Screen.fullScreenMode != FullScreenMode.ExclusiveFullScreen) ApplyHighestResolutionAndRefreshRate();
-
+            {
+                    ApplyHighestResolutionAndRefreshRate();
                     break;
-                }
-                case 1:
-                {
-                    if (Screen.fullScreenMode != FullScreenMode.Windowed) Screen.fullScreenMode = FullScreenMode.Windowed; break;
-                }
+            }
+            case 1:
+            {
+                    Screen.fullScreenMode = FullScreenMode.Windowed; 
+                    break;
+            }
         }
          
         QualitySettings.vSyncCount = Vsync;
