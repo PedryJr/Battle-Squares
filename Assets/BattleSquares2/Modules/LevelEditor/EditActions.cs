@@ -424,6 +424,17 @@ public partial class @EditActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""f9450230-432a-4fba-9806-bfd3a8f682f7"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TempSwapEdit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d99d888a-248e-409f-9f25-56bf9bebf511"",
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
