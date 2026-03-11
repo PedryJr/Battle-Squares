@@ -43,11 +43,9 @@ public sealed class DogTagBehaviour : MonoBehaviour
             if (  player.square.GetGameID() == playerId) owningPlayer = player.square;
         }
 
-        spriteRenderer.color = owningPlayer.PlayerColor.DogTagColor;
 
-        Material particleMaterial = dogTagParticles.material;
-        dogTagParticles.material = particleMaterial;
-        dogTagParticles.material.color = owningPlayer.PlayerColor.ParticleColor;
+        owningPlayer.AssignMaterialToParticleRenderer(dogTagParticles, dogTagParticles.GetComponent<ParticleSystem>());
+        spriteRenderer.color = owningPlayer.PlayerColor.DogTagColor;
 
         rb.linearVelocity = startVelocity;
 
@@ -56,6 +54,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
     private void Update()
     {
 
+        if (isCollected) return;
         target = Vector2.zero;
 
         foreach (PlayerData pData in playerSynchronizer.playerIdentities)
@@ -63,21 +62,19 @@ public sealed class DogTagBehaviour : MonoBehaviour
             PlayerBehaviour player = pData.square;
             if (!player) continue;
             if (player.isDead) continue;
+            if (!player.isLocalPlayer) continue;
             Vector2 toTarget = player.rb.position - rb.position;
             if (toTarget.magnitude < 6f) target += toTarget;
 
-            if(player.GetGameID() == owningPlayer.GetGameID())
+            if(player.GetGameID() == owningPlayer.GetGameID()) UpdateSync();
+
+            if (toTarget.magnitude < 0.6f && !isCollected)
             {
-                if(player.isLocalPlayer) UpdateSync();
-                if (toTarget.magnitude < 0.6f && !isCollected)
-                {
-                    mapSynchronizer.CollectDogTag(dogTagId, (byte) player.GetGameID());
-                    isCollected = true;
-                }
+                mapSynchronizer.CollectDogTag(dogTagId, (byte)player.GetGameID());
+                isCollected = true;
+                return;
             }
-
         }
-
     }
 
     private void LateUpdate()
@@ -138,7 +135,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
             Vector3 position = player.rb.position;
             position.z = transform.position.z;
 
-            ParticleBehaviour newParticle = ParticlePool.Spawn(collectParticles, position, transform.rotation, null);
+            ParticleBehaviour newParticle = AutoPooledPool<ParticleBehaviour>.Spawn(collectParticles, position, transform.rotation, null);
             ParticleSystem[] particleSystems = newParticle.ParticleSystems;
             ParticleSystemRenderer[] particleSystemRenderers = newParticle.ParticleSystemRenderers;
 

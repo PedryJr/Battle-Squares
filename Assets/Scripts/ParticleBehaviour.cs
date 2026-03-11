@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-
+using static UnityEngine.Rendering.SplashScreen;
+/*
 
 public static class ParticlePool
 {
@@ -70,8 +71,8 @@ public static class ParticlePool
         particle.enabled = false;
     }
 }
-
-public sealed class ParticleBehaviour : MonoBehaviour
+*/
+public sealed class ParticleBehaviour : AutoPooledBehaviour
 {
     [SerializeField] ParticleSystem[] particleSystems;
     public ParticleSystem[] ParticleSystems => particleSystems;
@@ -79,16 +80,13 @@ public sealed class ParticleBehaviour : MonoBehaviour
     [SerializeField] ParticleSystemRenderer[] particleSystemsRenderers;
     public ParticleSystemRenderer[] ParticleSystemRenderers => particleSystemsRenderers;
 
-    [SerializeField] public bool supportObjectPooling = false;
-
-    [SerializeField] public ulong variantID = 0;
-
-    [SerializeField] float lifeTime = 1.4f;
+    [SerializeField] ParticleSystemStopBehavior stopBehaviour = ParticleSystemStopBehavior.StopEmittingAndClear;
+    [SerializeField] public float lifeTime = 1.4f;
+    [SerializeField] private float emissionStopTimePadding = 1f;
     [SerializeField] float attatchmentLifeTime = 1.4f;
     [SerializeField] GameObject attatchment;
     private float timer = 0;
-
-    private bool initialized = false;
+    bool stopPadding = true;
 
     private void CacheParticleComponents()
     {
@@ -112,29 +110,18 @@ public sealed class ParticleBehaviour : MonoBehaviour
 
 
 
-    private void OnValidate() => RefreshComp();
+    public override void OnValidate()
+    {
+        base.OnValidate();
+        CacheParticleComponents();
+    }
 
-    public void RefreshComp()
+    public void Refresh()
     {
         CacheParticleComponents();
-
-        if (supportObjectPooling)
-        {
-            System.Random random = new System.Random();
-            byte[] buf = new byte[8];
-            random.NextBytes(buf);
-
-            variantID =
-                ((ulong)buf[0]) |
-                ((ulong)buf[1] << 8) |
-                ((ulong)buf[2] << 16) |
-                ((ulong)buf[3] << 24) |
-                ((ulong)buf[4] << 32) |
-                ((ulong)buf[5] << 40) |
-                ((ulong)buf[6] << 48) |
-                ((ulong)buf[7] << 56);
-        }
+        RefreshComp();
     }
+
 
     private void OnEnable() => timer = 0;
 
@@ -145,31 +132,33 @@ public sealed class ParticleBehaviour : MonoBehaviour
         if (attatchment && attatchment.activeSelf && timer > attatchmentLifeTime) attatchment.SetActive(false);
         if (timer > lifeTime)
         {
-            if (supportObjectPooling) ParticlePool.ReturnToPool(this);
-            else Destroy(gameObject);
+            if (particleSystems != null && stopPadding) foreach (var ps in particleSystems) ps.Stop(true, stopBehaviour);
+            stopPadding = false;
         }
-    }
-
-    public void InitializeForPooling()
-    {
-        if (initialized) return;
-        initialized = true;
-
-        if (particleSystems != null)
+        if (timer > lifeTime + emissionStopTimePadding)
         {
-            foreach (var ps in particleSystems)
-            {
-                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            }
+            if (base.supportObjectPooling) AutoPooledPool<ParticleBehaviour>.ReturnToPool(this);
+            else Destroy(gameObject);
         }
     }
 
     public void ResetParticle()
     {
+        stopPadding = true;
         timer = 0;
         //Added self activation if necessary
         if (!gameObject.activeSelf) gameObject.SetActive(true);
         foreach (var ps in particleSystems) ps.Play();
         if (attatchment) attatchment.SetActive(true);
+    }
+
+    protected override void OnSpawned()
+    {
+        ResetParticle();
+    }
+
+    protected override void OnReturnedToPool()
+    {
+
     }
 }

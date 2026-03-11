@@ -368,14 +368,12 @@ PlayerSettings:
   - {fileID: 3761956243672518087, guid: 55cb2228b91179f498a22fa424608996, type: 3}
   - {fileID: 11400000, guid: 8da943103c78dee4dbf7da5386f409a8, type: 2}
   - {fileID: 3066612454653962984, guid: 8c4d73be3b4340d41b470d8f5d631063, type: 3}
-  - {fileID: 6372967502296238417, guid: 054306d741d92904eba1f64da4c8f6a4, type: 3}
   - {fileID: 7289681851009581468, guid: b845ab410c1de9444b840d541ecd1401, type: 3}
   - {fileID: 7289681851009581468, guid: d3c40f3e5137be4448ec2be14d61baac, type: 3}
   - {fileID: 11400000, guid: d2fef6b6e8a898748b8e37984187e12e, type: 2}
   - {fileID: 11400000, guid: 14525fc19d6d9af458bd1c0f3ccdcd42, type: 2}
   - {fileID: 3066612454653962984, guid: 232b889b82dd47146853b21ab9905dfb, type: 3}
   - {fileID: 8176140768580813388, guid: 523bc30e379c2c14ca135b3e7ce48ab5, type: 3}
-  - {fileID: 6372967502296238417, guid: a1be8ca50524944469fb519e82fae55f, type: 3}
   - {fileID: 7289681851009581468, guid: 085cf986ebf02ba4e9d2be6607b3df70, type: 3}
   - {fileID: 7289681851009581468, guid: b2a48de864b3698409c05db869923d0a, type: 3}
   - {fileID: 11400000, guid: 4036694bc2d8c494c9fdaf28a0c0cbcc, type: 2}
@@ -385,17 +383,14 @@ PlayerSettings:
   - {fileID: 7229645929853847128, guid: d3a1e3d5c46b27d4c99818795d9a873f, type: 3}
   - {fileID: 11400000, guid: b7a258d2d28c8e44abfb20151a2ad4ef, type: 2}
   - {fileID: 3066612454653962984, guid: c734cba96a2141e4e99a908216f67e67, type: 3}
-  - {fileID: 6372967502296238417, guid: fe9cabf943573c74ca25e1c19ae8f5f2, type: 3}
   - {fileID: 7289681851009581468, guid: 843a75b13e37fa34f876d5748dacfefd, type: 3}
   - {fileID: 7229645929853847128, guid: 23d53aae62ae58a4bb8757589135dcdb, type: 3}
   - {fileID: 11400000, guid: e910dac985d2feb4f9c6e3d18fc63691, type: 2}
   - {fileID: 3066612454653962984, guid: cad4485b5d1f23a40a2d262d07303006, type: 3}
-  - {fileID: 6372967502296238417, guid: db1fac817b12bcc4eac9cf90dd30d019, type: 3}
   - {fileID: 7289681851009581468, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
   - {fileID: 5353389494767546828, guid: b7309d4061fd2d24595d018c9d96d408, type: 3}
   - {fileID: 11400000, guid: 8f4767123c05db743b8ab8ae656757eb, type: 2}
   - {fileID: 3066612454653962984, guid: 84a724dfa7aa2e1418b752caf7241c5a, type: 3}
-  - {fileID: 6372967502296238417, guid: 37355a4853eb6da44a3b58497bc7e425, type: 3}
   - {fileID: 7289681851009581468, guid: f6535d4c1c04976418fdf3b57c915dfb, type: 3}
   - {fileID: 7289681851009581468, guid: 83e84455d9b7f5d42a66ef25458f72ca, type: 3}
   - {fileID: 11400000, guid: 4aa84fe78efb74b4091a3522f5e24cef, type: 2}
@@ -403,52 +398,43 @@ PlayerSettings:
   - {fileID: 7289681851009581468, guid: 10af522d604c7374a8a7d24e280de81d, type: 3}
   - {fileID: 7289681851009581468, guid: c78d43acd23136a4fa0d89eb96c4c4ec, type: 3}
   - {fileID: 7229645929853847128, guid: eb3d2c1a405c94345998712ea3a6d0da, type: 3}
-  - {fileID: 6372967502296238417, guid: 4881170d60918d54e9aff5bb4332aff9, type: 3}
   - {fileID: 11400000, guid: 8743f2cea4820a442bd71a5300fb5167, type: 2}
   - {fileID: 3066612454653962984, guid: 0e5e809c41fa5344a9148b72c5826481, type: 3}
   - {fileID: 7289681851009581468, guid: c2f50d2d9a5df5f4b9f0d3e1477fc04a, type: 3}
   - {fileID: 7289681851009581468, guid: b29b397a02cadfe46adaf535059a9ac4, type: 3}
   - {fileID: 7229645929853847128, guid: 3827f8c3d17bec44284cfbca4c6f37dc, type: 3}
-  - {fileID: 6372967502296238417, guid: b69d48afc63464d4da29f850eb7b34ee, type: 3}
   - {fileID: 7289681851009581468, guid: f314d24c6dc858544a9523786afd9469, type: 3}
   - {fileID: 7289681851009581468, guid: 52b0182cb799a844ea1507d42f4dc90a, type: 3}
   - {fileID: 11400000, guid: ecd937b78bf62a348bb18999e7b4f83e, type: 2}
   - {fileID: 3066612454653962984, guid: 76131a323adaf2140bfedbbaaf9b4913, type: 3}
-  - {fileID: 6372967502296238417, guid: 8cec5e615eff25d4783f982df3926e9f, type: 3}
   - {fileID: 7289681851009581468, guid: 6784c58aca5da3644917ab374eec1c9d, type: 3}
   - {fileID: 7289681851009581468, guid: 69d34a0ca2a5b48489453ceacfcccbd1, type: 3}
   - {fileID: 11400000, guid: 4b5fa32268eef6a44883c5c794105a97, type: 2}
   - {fileID: 3066612454653962984, guid: 1484733a76041e247bad07d9e0c99dcc, type: 3}
   - {fileID: 7289681851009581468, guid: 8bf3cf56e93dd0747893f356c7b8c4eb, type: 3}
-  - {fileID: 6372967502296238417, guid: deb570f81c351b040b1db6562dfa91fe, type: 3}
   - {fileID: 7289681851009581468, guid: c1aadf80cfcfef94189ba6eb4428c9e6, type: 3}
   - {fileID: 7289681851009581468, guid: 37cb9d9a0a972eb4aaf3b03bb455f6ae, type: 3}
   - {fileID: 11400000, guid: 08084139298ccb04491265d45c7c935c, type: 2}
   - {fileID: 3066612454653962984, guid: 00650469aa02ad9489e3ad7d2be1886a, type: 3}
   - {fileID: 7229645929853847128, guid: bedac6c3353bf6041a3d3ec4137e34ee, type: 3}
-  - {fileID: 6372967502296238417, guid: 74bba82f2db5ad547879bdc78ddd8ac3, type: 3}
   - {fileID: 7289681851009581468, guid: 407e4aa50b4ac3246ae54abf626c8b81, type: 3}
   - {fileID: 11400000, guid: 1de822b34a39f6f4fa9a783fc07b9b89, type: 2}
   - {fileID: 3066612454653962984, guid: df99116d93bd6da419c716dbcedd5e0b, type: 3}
   - {fileID: 5353389494767546828, guid: 147091b030c1eb643b5f27bf276d093a, type: 3}
-  - {fileID: 6372967502296238417, guid: aa8e51fb99dd4914a914a2faf592cb68, type: 3}
   - {fileID: 7289681851009581468, guid: 752d8ec26064b1e47892dcc12571f6c3, type: 3}
   - {fileID: 7289681851009581468, guid: e79b53b365ec9594c8c88aaeb2891729, type: 3}
   - {fileID: 11400000, guid: 7919e7cddf516674f85f572c71476ab3, type: 2}
   - {fileID: 3066612454653962984, guid: 7a460261f861aa64c82e30c947c476e1, type: 3}
   - {fileID: 7229645929853847128, guid: 110fe1270e3ebae46b46b847a887b9bc, type: 3}
-  - {fileID: 6372967502296238417, guid: 869fbb138c650cb48a0b354f79013de4, type: 3}
   - {fileID: 7289681851009581468, guid: d8f2373ffb8c1d74b8bafe429c9fa5c6, type: 3}
   - {fileID: 7289681851009581468, guid: a3af95ee5023af2448bbeea49633f47d, type: 3}
   - {fileID: 11400000, guid: b753dfc65b5a541448ca5f1bc62cd050, type: 2}
   - {fileID: 3066612454653962984, guid: 60fe5a07722983144bf629b18c3c2728, type: 3}
-  - {fileID: 6372967502296238417, guid: dec702cdf478ab647b20dd837eb9d885, type: 3}
   - {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
   - {fileID: 7289681851009581468, guid: 93f2f5a12a3373742bc7df3296c08fb1, type: 3}
   - {fileID: 11400000, guid: 3800a94b811231645a0b3142764d594d, type: 2}
   - {fileID: 3066612454653962984, guid: e996855feaaebdd44a38ac085247b5c3, type: 3}
   - {fileID: 7229645929853847128, guid: 4017f2330dda40d45a350b42b598cef0, type: 3}
-  - {fileID: 6372967502296238417, guid: 5ac754ae7ea2c4d4887b194b709ec925, type: 3}
   - {fileID: 7289681851009581468, guid: 3e9891dbda702e74cb3db4f47b80481a, type: 3}
   - {fileID: 11400000, guid: 4014ffbcf24e17648ab4d06ab1803df3, type: 2}
   - {fileID: 3066612454653962984, guid: 27550b43085a7de4882ac02cc56e7667, type: 3}
@@ -592,6 +578,7 @@ PlayerSettings:
   - {fileID: 12800000, guid: ed5b75f48da26e945bd5f3c0b27196de, type: 3}
   - {fileID: 5507437722704318398, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
   - {fileID: -4001200341832254736, guid: 3eded4644fc71c34ab12976e38892864, type: 2}
+  - {fileID: 11400000, guid: 796b492666c48ec42b80c01717a73c04, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -943,7 +930,7 @@ PlayerSettings:
   m_BuildTargetBatching:
   - m_BuildTarget: Standalone
     m_StaticBatching: 1
-    m_DynamicBatching: 1
+    m_DynamicBatching: 0
   m_BuildTargetShaderSettings:
   - m_BuildTarget: Standalone
     m_ChunkSizeInMB: 16
@@ -1286,7 +1273,7 @@ PlayerSettings:
     PS5: 1
     QNX: 1
     Server: 3
-    Standalone: 0
+    Standalone: 3
     VisionOS: 1
     WebGL: 1
     Windows Store Apps: 1
@@ -1305,8 +1292,8 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 3
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Battle Squares U6
-  metroPackageVersion: 
+  metroPackageName: BattleSquaresU6
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -1314,7 +1301,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Battle Squares U6
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Battle Squares
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
@@ -1387,7 +1374,7 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 1
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
   cloudProjectId: 5a60bb84-dc53-46cf-ba6f-9a84e66085d1
   framebufferDepthMemorylessMode: 0

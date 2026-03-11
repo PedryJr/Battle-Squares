@@ -18,33 +18,6 @@ MonoBehaviour:
     launchParticle: {fileID: 4313180367996257349, guid: b845ab410c1de9444b840d541ecd1401, type: 3}
     bounceParticle: {fileID: 4313180367996257349, guid: 8bf3cf56e93dd0747893f356c7b8c4eb, type: 3}
     impactParticle: {fileID: 4313180367996257349, guid: d3c40f3e5137be4448ec2be14d61baac, type: 3}
-    projectileAmmo: 6
-    reloadTime: 1
-    shootingInterval: 0.2
-    projectileSpeed: 20
-    projectileAcceleration: 0
-    lifeTime: 0.2
-    holdable: 1
-    burst: 0
-    burstSpread: 0
-    bounces: 1
-    fluctuation: 0.1
-    noGravity: 1
-    dieOnImpact: 1
-    damageOnImpact: 1
-    sticky: 0
-    aoe: 0
-    skipAoeOnTargetHit: 0
-    knockback: 7
-    speedLimit: 100
-    minSpeed: 70
-    aoeDamage: 0
-    baseDamage: 4
-    damageTimeScale: 0
-    recoil: 8
-    enableMorph: 1
-    targetMorph: {x: 0.1, y: 0.1, z: 1}
-    timeToMorph: 0.2
     morphAnimation:
       serializedVersion: 2
       m_Curve:
@@ -87,14 +60,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    sync: 0
-    syncSpeed: 0
-    stickToSender: 1
-    melee: 0
-    oneTimeHit: 0
-    meleeRange: 0
-    swingDegrees: 0
-    meleeRotation: 0
     meleePosAnimation:
       serializedVersion: 2
       m_Curve: []
@@ -107,31 +72,69 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    flipFlop: 0
-    homing: 0
+    projectileSpawnEvents: []
+    weaponName: FeatureTest
+    targetMorph: {x: 0.1, y: 0.1, z: 1}
+    reloadTime: 1
+    shootingInterval: 0.2
+    projectileSpeed: 20
+    projectileAcceleration: 0
+    lifeTime: 0.2
+    burstSpread: 0
+    fluctuation: 0.1
+    aoe: 0
+    knockback: 7
+    speedLimit: 100
+    minSpeed: 70
+    aoeDamage: 0
+    baseDamage: 4
+    damageTimeScale: 0
+    recoil: 8
+    timeToMorph: 0.2
+    syncSpeed: 0
+    meleeRange: 0
+    swingDegrees: 0
+    meleeRotation: 0
     homingStrength: 0
     homingDistance: 0
     spinSpeed: 0
-    rotationFlipOnImpact: 0
-    dieFromProjectiles: 1
-    dontBlockProjectiles: 0
-    bounceOfPlayers: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 1
     lingeringDamage: 0
     lingeringFrequency: 0
-    alignDirection: 1
-    typeID: 19462
-    clampMorph: 1
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
     spawnOffsetPadding: 1.1
-    hover: 0
     hoverDistance: 0
     hoverStrength: 25.41
     hoverFloorRadius: 1
     hoverDistanceAttenuation: 2
     timeForFullHoverEffect: 0
-    projectileSpawnEvents: []
-    weaponName: FeatureTest
+    morphTimeOnBounce: 0
+    projectileAmmo: 6
+    burst: 0
+    typeID: 19462
+    bounces: 1
+    holdable: 1
+    noGravity: 1
+    dieOnImpact: 1
+    damageOnImpact: 1
+    sticky: 0
+    skipAoeOnTargetHit: 0
+    enableMorph: 1
+    setMorphOnBounce: 0
+    sync: 0
+    stickToSender: 1
+    melee: 0
+    oneTimeHit: 0
+    flipFlop: 0
+    homing: 0
+    rotationFlipOnImpact: 0
+    dieFromProjectiles: 1
+    dontBlockProjectiles: 0
+    bounceOfPlayers: 0
+    alignDirection: 1
+    clampMorph: 1
+    hover: 0
     delistWeapon: 0
+    hitMarkSize: 1.68

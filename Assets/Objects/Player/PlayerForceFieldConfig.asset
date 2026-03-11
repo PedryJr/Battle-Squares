@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerForceFieldConfig
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSensorConfig
   gridSpaceColor:
-    color: {r: 0, g: 0, b: 0, a: 1}
+    color: {r: 0.22352941, g: 0.035294116, b: 0.065312915, a: 0.7607843}
     radius: 10
     saturationBoost: 1
   gridSpaceSensor:
@@ -26,18 +26,18 @@ MonoBehaviour:
       x: 0
       y: 0
     rotation: 0
-    warpSpeed: 5
+    warpSpeed: 10
     chroma: 0.1
     enableBlockerInfluence: 0
     blockerFalloff: 0
     enablePositionWarp: 1
     positionWarpStrength: 1
-    positionWarpFallof: 33.75
+    positionWarpFallof: 30
     positionWarpRadius: 10
     enableScaleWarp: 1
-    scaleWarpStrength: -0.01
-    scaleWarpFalloff: 15
-    scaleWarpRadius: 5
+    scaleWarpStrength: 0.5
+    scaleWarpFalloff: 40
+    scaleWarpRadius: 10
     enableRotationWarp: 0
     rotationWarpStrength: 0
     rotationWarpFalloff: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
     swirlFalloff: 0
     swirlRadius: 0
     enablePulsation: 0
-    pulsationFrequency: 0
-    pulsationAmplitude: 0
-    pulsationFallof: 0
-    pulsationRadius: 0
+    pulsationFrequency: 30
+    pulsationAmplitude: 0.1
+    pulsationFallof: 10
+    pulsationRadius: 10

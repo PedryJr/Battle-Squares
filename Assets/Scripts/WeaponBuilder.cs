@@ -143,6 +143,7 @@ public class WeaponBuilder : ScriptableObject
         public bool hover;
 
         public bool delistWeapon;
+        public float hitMarkSize;
 
         public void SetTypeId(ref Weapon self, ushort typeId) => self.typeID = typeId;
     }

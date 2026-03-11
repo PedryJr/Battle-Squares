@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
+using static PlayerMLAgent;
 
 [Preserve]
 public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
@@ -26,6 +27,8 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     void LogCurrentMMRP() => Debug.Log(new EncryptedDouble(MMRlocation, 1000.0).Value);
 
     public PlayerNeighbours neighbours;
+
+    MLTrainingManager mlTrainingManager;
 
     [SerializeField]
     Light2D playerLight;
@@ -95,15 +98,15 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public bool newColor = true;
     public bool ready = false;
 
-    public Vector2 position;
-    public float rotation;
+    public Vector2 RBPosition { get; private set; }
+    public float RBRotation { get; private set; }
+    public Vector2 velocity { get; private set; }
+    public float angularVelocity { get; private set; }
 
     public Vector2 nozzlePosition;
     public Vector2 localNozzlePosition;
     public float nozzleRotation;
 
-    public Vector2 velocity;
-    public float angularVelocity;
 
     [SerializeField]
     private float hp = 20f;
@@ -120,6 +123,11 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             float before = hp;
             float after = value;
             float delta = after - before;
+
+            if(isLocalPlayer && playerMLAgent != null && delta < 0)
+            {
+                if (playerMLAgent.isTraining) playerMLAgent.OnHpLoss(delta);
+            }
 
             hp = value;
         }
@@ -144,12 +152,14 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Transform nozzleTransform;
     public NozzleBehaviour nozzleBehaviour;
     public PlayerController playerController;
+    public PlayerMLAgent playerMLAgent;
     PlayerSynchronizer playerSynchronizer;
     SpriteRenderer spriteRenderer;
     public Sprite pfp;
     ScoreManager scoreManager;
     MapSynchronizer mapSynchronizer;
     public ChatBubbleBehaviour chatBubbleBehaviour = null;
+    ProjectileManager projectileManager = null;
 
     [SerializeField]
     PlayerSpawnEffectBehaviour playerSpawnEffectBehaviourRef;
@@ -180,13 +190,13 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     Vector2 nozzleInputDirection;
 
     Vector2 lastRBPosition;
+    float lastRBRotation;
 
     float newNozzlePositionTime;
     Vector2 nozzleReferencePosition;
 
     public Vector3 spawnPosition;
     public Vector3 deathPosition;
-
 
     public string playerName;
 
@@ -234,15 +244,19 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public bool spawnBuffer = false;
     Color frozenColor = Color.white;
     public bool newMods;
+    public bool isAI;
+    public float inGamePrepareTimer;
 
-    private void Awake()
+    void Awake()
     {
+        mlTrainingManager = FindAnyObjectByType<MLTrainingManager>();
         lastRBPosition = new Vector2();
         playerTransform = transform;
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         scoreManager = FindAnyObjectByType<ScoreManager>();
         hunter = FindAnyObjectByType<Hunter>();
         mapSynchronizer = FindAnyObjectByType<MapSynchronizer>();
+        projectileManager = FindAnyObjectByType<ProjectileManager>();
         pfp = null;
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
@@ -256,7 +270,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         ApplyColors();
     }
-    private void Start()
+    void Start()
     {
         PlayerColor.SetColorHue(UnityEngine.Random.Range(0f, 1f));
         PlayerColor.AssignMaterialToPlayer(spriteRenderer);
@@ -308,7 +322,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         }
 
     }
-    private void Update()
+    void Update()
     {
 
         if (!steamDataApplied && steamDataAvalible) ApplySteamData();
@@ -330,6 +344,9 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         if (timeSinceHit < 1) timeSinceHit += Time.deltaTime * 3.5f;
         else if (timeSinceHit > 1) timeSinceHit = 1;
+
+        inGamePrepareTimer -= Time.deltaTime;
+        inGamePrepareTimer = Mathf.Max(0f, inGamePrepareTimer);
 
         if (oneSecondTimer >= 1f)
         {
@@ -361,7 +378,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     }
 
-    private void LateUpdate()
+    void LateUpdate()
     {
 
         if (isSpawning)
@@ -397,7 +414,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     }
 
-    private void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
+    void SceneManager_OnLoad(Scene arg0, LoadSceneMode arg1)
     {
         if (this)
         {
@@ -408,6 +425,8 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
                 if (arg0.name == "GameScene")
                 {
                     score = scoreManager.startScore;
+                    RespawnPlayer();
+                    inGamePrepareTimer = 3f;
                 }
 
                 playerSynchronizer.UpdateHealth();
@@ -473,7 +492,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         void SetStats()
         {
 
-            if (isLocalPlayer) mapSynchronizer.SpawnDogTag((byte) gameID, rb.position, rb.rotation, rb.linearVelocity / 2);
+            if (isLocalPlayer) mapSynchronizer.SpawnDogTag(GetGameID(), rb.position, rb.rotation, rb.linearVelocity / 2);
             healthPoints = maxHealthPoints;
             climax = 1;
             isDead = true;
@@ -502,6 +521,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
                 rb.rotation = 0;
                 deathTimer = 0;
                 isSpawning = false;
+                if (playerMLAgent) playerMLAgent.OnPlayerDeath();
             }
         }
         //Always Applied States
@@ -516,6 +536,7 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             if (nozzleBehaviour.spriteRenderer.enabled) nozzleBehaviour.spriteRenderer.enabled = false;
             if (col.enabled) col.enabled = false;
             if (rb.simulated) rb.simulated = false;
+            if (playerMLAgent) if (playerMLAgent.enabled) playerMLAgent.enabled = false;
         }
         else
         {
@@ -526,6 +547,19 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             if (!nozzleBehaviour.spriteRenderer.enabled) nozzleBehaviour.spriteRenderer.enabled = true;
             if (!col.enabled) col.enabled = true;
             if (!rb.simulated)  rb.simulated = true;
+            if (playerMLAgent) if (!playerMLAgent.enabled) playerMLAgent.enabled = true;
+        }
+
+        if (isLocalPlayer && inGamePrepareTimer > 0.01f)
+        {
+            float z = transform.position.z;
+            Vector3 spawnPos = spawnPosition;
+            spawnPos.z = z;
+            transform.position = spawnPos;
+            rb.position = spawnPos;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = 0f;
+            rb.rotation = 0f;
         }
 
         lastDeathState = isDead;
@@ -568,6 +602,31 @@ public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         rb.rotation = 0;
         playerTransform.position = spawnPosition;
     }
+
+    [ContextMenu("Verify WeaponStats")]
+    public void VRF()
+    {
+        WeaponStats weapon = GetWeaponStats(true);
+        Debug.Log($"{weapon.projectileSpeed} | {weapon.projectileAcceleration} | {weapon.isMelee} | {weapon.projectileGravity} | {weapon.maxAmmo} | {weapon.remainingAmmo} | ");
+    }
+
+    public WeaponStats GetWeaponStats(bool primary)
+    {
+        WeaponStats weaponStats = new WeaponStats();
+        WeaponBuilder.Weapon weapon;
+
+        if (primary) weapon = projectileManager.GetWeaponBuilderByTypeID(nozzleBehaviour.primary).weapon;
+        else weapon = projectileManager.GetWeaponBuilderByTypeID(nozzleBehaviour.secondary).weapon;
+
+        weaponStats.projectileSpeed = weapon.projectileSpeed;
+        weaponStats.projectileAcceleration = weapon.projectileAcceleration;
+        weaponStats.isMelee = weapon.melee;
+        weaponStats.projectileGravity = weapon.projectile.rb.gravityScale * (weapon.noGravity ? 0f : 1f);
+        weaponStats.maxAmmo = weapon.projectileAmmo;
+        weaponStats.remainingAmmo = nozzleBehaviour.primaryAmmo - nozzleBehaviour.primaryShots;
+        return weaponStats;
+    }
+
 }
 
 //Identity shit
@@ -580,7 +639,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     }
     public void CreateTextureFromBoolArray10BY10(bool[] boolArray, int frameIndex)
     {
-
+        if (mlTrainingManager.isTraining) return;
         Span<bool> rotatedArray = stackalloc bool[100];
         for (int i = 0; i < 100; i++) rotatedArray[i] = boolArray[99 - i];
         Texture2D texture = new Texture2D(10, 10, UnityEngine.TextureFormat.RGBA32, false);
@@ -602,7 +661,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     public void CreateTextureFromBoolArray4BY4(bool[] boolArray, int frameIndex)
     {
-
+        if (mlTrainingManager.isTraining) return;
         Span<bool> rotatedArray = stackalloc bool[16];
 
         rotatedArray[0] = boolArray[3];
@@ -658,7 +717,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         steamDataApplied = true;
     }
 
-    public async void GetImageData(SteamId steamId)
+    async void GetImageData(SteamId steamId)
     {
         Steamworks.Data.Image? image = await SteamFriends.GetLargeAvatarAsync(steamId);
 
@@ -684,111 +743,52 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 {
 
     float animationTimer;
+    //Skin animation framerate
     public float frameRate = 10;
     int animationIndex;
     int lastAnimationIndex;
-
-    float acceleration;
-    float maxSpeed;
-
-    Vector2 velParam;
-    float xLimiter;
-    float yLimiter;
-    Vector2 forceLimiter;
-    Vector2 jumpVelocity;
-    Vector2 jumpDirection;
-    float jumpLimiter;
-
-    const AimDirection startDirection = AimDirection.North;
-
-    private AimDirection internalAimDirectionEnum = startDirection;
-    private Vector2 cachedDirection = AimDirectionToVector(startDirection);
-    Vector3 nozzlePos = AimDirectionToVector(startDirection);
-
-    public AimDirection aimDirectionEnum
-    {
-        get { return internalAimDirectionEnum; } 
-        set 
-        { 
-            internalAimDirectionEnum = value;
-            cachedDirection = AimDirectionToVector(aimDirectionEnum);
-        }
-    }
-
-    public Vector2 aimDirection
-    {
-        get => cachedDirection;
-        set
-        {
-            AimDirection newDir = VectorToAimDirection(value);
-            if (newDir == aimDirectionEnum) return; 
-            aimDirectionEnum = newDir; 
-            if (isLocalPlayer) playerSynchronizer.UpdateNozzle(GetGameID());
-        }
-    }
-
-    public Vector2 moveDirection;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static Vector2 AimDirectionToVector(AimDirection dir)
-    {
-        return dir switch
-        {
-            AimDirection.East => Vector2.right,
-            AimDirection.NorthEast => new Vector2(1, 1).normalized * 1.145f,
-            AimDirection.North => Vector2.up,
-            AimDirection.NorthWest => new Vector2(-1, 1).normalized * 1.145f,
-            AimDirection.West => Vector2.left,
-            AimDirection.SouthWest => new Vector2(-1, -1).normalized * 1.145f,
-            AimDirection.South => Vector2.down,
-            AimDirection.SouthEast => new Vector2(1, -1).normalized * 1.145f,
-            _ => Vector2.zero
-        };
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private AimDirection VectorToAimDirection(Vector2 v)
-    {
-        if (Mathf.Approximately(v.magnitude, 0)) return aimDirectionEnum;
-        float angle = Mathf.Atan2(v.y, v.x);
-        if (angle < 0) angle += Mathf.PI * 2f;
-        int index = Mathf.RoundToInt(angle / (Mathf.PI / 4f)) % 8;
-        return (AimDirection)index;
-    }
-
-
-    public enum AimDirection : byte
-    {
-        East = 0,
-        NorthEast = 1,
-        North = 2,
-        NorthWest = 3,
-        West = 4, 
-        SouthWest = 5,
-        South = 6,
-        SouthEast = 7
-    }
-
+    const float rbBaseUpdateFrequence = 24f;
+    float rbUpdateTimer = 0f;
 
     [SerializeField]
     public ParticleBehaviour jumpParticleRef;
 
-    private void FixedUpdate()
-    { 
-        flipFlop = !flipFlop;
-        if (flipFlop) return; 
-        if (controlled)
-        {
-            ApplyTargetMovement();
-            ReAdjustMovementValues();
-            if (!Mathf.Approximately(lastRBPosition.sqrMagnitude, rb.position.sqrMagnitude))
-            {
-                playerSynchronizer.UpdateRigidBody(GetGameID());
-                lastRBPosition = rb.position;
-            }
-        } 
+    void FixedUpdate()
+    {
+        FixedMovementUpdate();
+        FixedSyncronizeUpdate();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void FixedSyncronizeUpdate()
+    {
+        rbUpdateTimer = Time.deltaTime * rbBaseUpdateFrequence;
+        if (!controlled) return;
+
+        bool updateFlag = false;
+
+        updateFlag |= rbUpdateTimer > 1f;
+        updateFlag |= !Mathf.Approximately(lastRBPosition.sqrMagnitude, RBPosition.sqrMagnitude);
+        updateFlag |= !Mathf.Approximately(lastRBRotation, RBRotation);
+
+        if (updateFlag) UpdateNetworkRB();
+    }
+
+    void FixedMovementUpdate() //Legacy artifact for smooth player controller =/
+    {
+        RBPosition = rb.position;
+        RBRotation = rb.rotation;
+        angularVelocity = rb.angularVelocity;
+        velocity = rb.linearVelocity;
+
+        flipFlop = !flipFlop;
+        if (flipFlop || !controlled) return;
+
+        ApplyTargetMovement();
+        ReAdjustMovementValues();
+    }
+
+
+    void OnCollisionEnter2D(Collision2D collision)
     {
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Environment") || collision.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -822,10 +822,79 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         }
     }
 
+    const AimDirection startDirection = AimDirection.North;
+    AimDirection internalAimDirectionEnum = startDirection;
+    Vector2 cachedDirection = AimDirectionToVector(startDirection);
+    Vector3 nozzlePos = AimDirectionToVector(startDirection);
+
+    public AimDirection aimDirectionEnum
+    {
+        get { return internalAimDirectionEnum; }
+        set
+        {
+            internalAimDirectionEnum = value;
+            cachedDirection = AimDirectionToVector(aimDirectionEnum);
+            UpdateNetworkRB();
+        }
+    }
+
+    public Vector2 aimDirection
+    {
+        get => cachedDirection;
+        set
+        {
+            AimDirection newDir = VectorToAimDirection(value);
+            if (newDir == aimDirectionEnum) return;
+            aimDirectionEnum = newDir;
+            if (isLocalPlayer) playerSynchronizer.UpdateNozzle(GetGameID());
+        }
+    }
+
+    public Vector2 moveDirection;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static Vector2 AimDirectionToVector(AimDirection dir)
+    {
+        return dir switch
+        {
+            AimDirection.East => Vector2.right,
+            AimDirection.NorthEast => new Vector2(1, 1).normalized * 1.145f,
+            AimDirection.North => Vector2.up,
+            AimDirection.NorthWest => new Vector2(-1, 1).normalized * 1.145f,
+            AimDirection.West => Vector2.left,
+            AimDirection.SouthWest => new Vector2(-1, -1).normalized * 1.145f,
+            AimDirection.South => Vector2.down,
+            AimDirection.SouthEast => new Vector2(1, -1).normalized * 1.145f,
+            _ => Vector2.zero
+        };
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    AimDirection VectorToAimDirection(Vector2 v)
+    {
+        if (Mathf.Approximately(v.magnitude, 0)) return aimDirectionEnum;
+        float angle = Mathf.Atan2(v.y, v.x);
+        if (angle < 0) angle += Mathf.PI * 2f;
+        int index = Mathf.RoundToInt(angle / (Mathf.PI / 4f)) % 8;
+        return (AimDirection)index;
+    }
+
+
+    public enum AimDirection : byte
+    {
+        East = 0,
+        NorthEast = 1,
+        North = 2,
+        NorthWest = 3,
+        West = 4,
+        SouthWest = 5,
+        South = 6,
+        SouthEast = 7
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void PlayNozzleRecoilAnimation() => nozzlePos = Vector3.LerpUnclamped(nozzlePos, Vector3.zero, 1.2f);
 
-    private void AnimateNozzleToAimDirection()
+    void AnimateNozzleToAimDirection()
     {
         float speed = 20f;
 
@@ -838,21 +907,36 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
         nozzleBehaviour.transform.position = transform.position + nozzlePos;
 
-        Vector2 delta = transform.position - nozzleBehaviour.transform.position;
+        Vector2 delta = nozzleBehaviour.transform.position - transform.position;
         float rot = MyExtentions.Vector2ToDegrees(delta);
         nozzleBehaviour.transform.rotation = Quaternion.Euler(0f, 0f, rot);
     }
 
 
+    //Used by the physically based 2D controller.
+    float acceleration;
+    public float maxSpeed { get; private set; }
+    Vector2 velParam;
+    float xLimiter;
+    float yLimiter;
+    Vector2 forceLimiter;
+    Vector2 jumpVelocity;
+    Vector2 jumpDirection;
+    float jumpLimiter;
     void SetMovementParameters(bool newMod)
     {
 
-        if (newMod)
+        //Advanced homebrew formula for 2D physically based controller.
+
+        if (isDead || inGamePrepareTimer > 0.01f)
         {
-            acceleration = 130f * Mods.at[8];
-            maxSpeed = 23.5f * Mods.at[1];
-            newMods = false;
+            playerController.inputJump = false;
+            return;
         }
+
+        acceleration = 130f * Mods.at[8];
+        maxSpeed = 23.5f * Mods.PlayerSpeed;
+        newMods = false;
 
         movementDirection = Vector2.Lerp(movementDirection, moveDirection, math.clamp(Time.deltaTime * 100, 0, 1));
 
@@ -860,21 +944,37 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
         (xLimiter, yLimiter) = (math.clamp(math.abs(movementDirection.x - (velParam.x / maxSpeed)), 0, 1), math.clamp(math.abs(movementDirection.y - (velParam.y / maxSpeed)), 0, 1));
         forceLimiter = new Vector2(xLimiter, yLimiter);
 
-        jumpLimiter = 17.5f - math.clamp(rb.linearVelocityY / 2, -5, 10);
-        jumpDirection = (Vector2.up + (movementDirection * 0.2f)).normalized;
-        jumpVelocity = (jumpDirection * jumpLimiter) * Mods.at[2];
-
-        MyExtentions.GetClosestEnvironmentPoint(rb.position);
         if (playerController.inputJump)
         {
+            jumpLimiter = 17.5f - math.clamp(rb.linearVelocityY / 2, -5, 10);
+            jumpDirection = (Vector2.up + (movementDirection * 0.2f)).normalized;
+
+
+            RaycastHit2D closestEnvironmentPoint = MyExtentions.GetClosestEnvironmentPoint(rb.position, 1f);
+            if (closestEnvironmentPoint.transform)
+            {
+
+                float xDiff = math.abs(math.abs(closestEnvironmentPoint.point.x) - math.abs(rb.position.x));
+                Vector2 toClosestPoint = closestEnvironmentPoint.point - rb.position;
+                if(xDiff > 0.1f)
+                {
+                    //xDiff = math.clamp(xDiff * 4, 0, 1);
+                    jumpDirection = Vector2.Lerp(-toClosestPoint.normalized, jumpDirection, 1 - 0.25f).normalized;
+                }
+            }
+
+            jumpVelocity = (jumpDirection * jumpLimiter) * Mods.JumpForce;
+
             Vector2 calculatedVelocity = rb.linearVelocity + jumpVelocity;
-            if (calculatedVelocity.y < 10f) calculatedVelocity.y = 10f;
+            if (calculatedVelocity.y < 10f) calculatedVelocity.y = 12f;
             rb.linearVelocity = calculatedVelocity;
             Vector2 normalizedDirection = rb.linearVelocity.normalized;
-            playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
             playerController.inputJump = false;
-            //Cheat shoot an update so jump is more responsive
-            playerSynchronizer.UpdateRigidBody(GetGameID());
+            if (!mlTrainingManager.isTraining)
+            {
+                playerSynchronizer.SpawnJumpParticles(rb.position, Mathf.Atan2(normalizedDirection.y, normalizedDirection.x) * Mathf.Rad2Deg, GetGameID());
+            }
+            UpdateNetworkRB();
         }
     }
 
@@ -897,7 +997,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 
     void ApplyPlayerAnimation()
     {
-
+        if (mlTrainingManager.isTraining) return;
         if (animationTimer > 0) animationTimer -= Time.deltaTime * (frameRate / nozzleFrames.Length);
         if (animationTimer < 0) animationTimer = 0;
         if (animationTimer == 0) animationIndex = 0;
@@ -909,6 +1009,15 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
             spriteRenderer.sprite = bodyFrames[animationIndex];
             lastAnimationIndex = animationIndex;
         }
+    }
+
+    void UpdateNetworkRB()
+    {
+        if (!isLocalPlayer) return;
+        rbUpdateTimer = 0f;
+        lastRBPosition = rb.position;
+        lastRBRotation = rb.rotation;
+        playerSynchronizer.UpdateRigidBody(GetGameID());
     }
 }
 //Id shit
@@ -930,6 +1039,7 @@ public partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
     public event Action<IPlayerHandle> OnDestroyed;
     private void OnDestroy()
     {
+        if (playerController) Destroy(playerController.gameObject);
         OnDestroyed?.Invoke(this);
     }
 

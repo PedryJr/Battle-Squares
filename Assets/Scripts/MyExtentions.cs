@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
@@ -333,7 +334,7 @@ public static class MyExtentions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] CompressRigidbody(Rigidbody2D rb)
+    public static byte[] CompressPlayerRigidbody(Rigidbody2D rb)
     {
         byte[] buffer = new byte[TotalBytes];
         Span<byte> span = buffer.AsSpan();
@@ -462,33 +463,76 @@ public static class MyExtentions
         return closestHit;
     }
 
-    public static string RemoveInvisibleChars(string input)
+    public static unsafe string RemoveInvisibleChars(string input)
     {
         if (string.IsNullOrEmpty(input)) return input;
 
-        var span = input.AsSpan().Trim();
+        var span = input.AsSpan();
         if (span.Length == 0) return string.Empty;
 
-        bool hasInvisibleChars = false;
-        foreach (char c in span)
+        fixed (char* pInput = &MemoryMarshal.GetReference(span))
         {
-            if (char.IsControl(c) || c == '\u200B' || c == '\u200C' || c == '\u200D' || c == '\uFEFF')
-            {
-                hasInvisibleChars = true;
-                break;
-            }
+            int pInputLength = span.Length;
+            char* pOutput = stackalloc char[pInputLength];
+            int pOutputLength = 0;
+            RemoveInvisibleCharsInternal(pOutput, ref pOutputLength, pInput, pInputLength);
+            return new string(pOutput, 0, pOutputLength);
         }
-
-        if (!hasInvisibleChars) return span.ToString().Normalize(NormalizationForm.FormC);
-
-        Span<char> buffer = span.Length <= 256 ? stackalloc char[span.Length] : new char[span.Length];
-        int writeIndex = 0;
-        foreach (char c in span)
-        {
-            if (!char.IsControl(c) && c != '\u200B' && c != '\u200C' && c != '\u200D' && c != '\uFEFF') buffer[writeIndex++] = c;
-        }
-
-        return new string(buffer.Slice(0, writeIndex)).Normalize(NormalizationForm.FormC);
     }
 
+    [BurstCompile]
+    public static unsafe void RemoveInvisibleCharsInternal(char* pOutput, ref int pOutputLength, char* pInput, int pInputLength)
+    {
+        char* current = pInput;
+        char* writePtr = pOutput;
+        char* endVec = current + (pInputLength & ~7);
+        char* endPtr = current + pInputLength;
+
+        while (current < endVec)
+        {
+            ulong* src = (ulong*)current;
+            ulong val0 = src[0];
+            ulong val1 = src[1];
+
+            char c0 = (char)(val0 & 0xFFFF);
+            char c1 = (char)((val0 >> 16) & 0xFFFF);
+            char c2 = (char)((val0 >> 32) & 0xFFFF);
+            char c3 = (char)((val0 >> 48) & 0xFFFF);
+            char c4 = (char)(val1 & 0xFFFF);
+            char c5 = (char)((val1 >> 16) & 0xFFFF);
+            char c6 = (char)((val1 >> 32) & 0xFFFF);
+            char c7 = (char)((val1 >> 48) & 0xFFFF);
+
+            int keep0 = (c0 >= 32 && (c0 < 0x7F || c0 > 0x9F) && c0 != 0x200B && c0 != 0x200C && c0 != 0x200D && c0 != 0xFEFF) ? 1 : 0;
+            int keep1 = (c1 >= 32 && (c1 < 0x7F || c1 > 0x9F) && c1 != 0x200B && c1 != 0x200C && c1 != 0x200D && c1 != 0xFEFF) ? 1 : 0;
+            int keep2 = (c2 >= 32 && (c2 < 0x7F || c2 > 0x9F) && c2 != 0x200B && c2 != 0x200C && c2 != 0x200D && c2 != 0xFEFF) ? 1 : 0;
+            int keep3 = (c3 >= 32 && (c3 < 0x7F || c3 > 0x9F) && c3 != 0x200B && c3 != 0x200C && c3 != 0x200D && c3 != 0xFEFF) ? 1 : 0;
+            int keep4 = (c4 >= 32 && (c4 < 0x7F || c4 > 0x9F) && c4 != 0x200B && c4 != 0x200C && c4 != 0x200D && c4 != 0xFEFF) ? 1 : 0;
+            int keep5 = (c5 >= 32 && (c5 < 0x7F || c5 > 0x9F) && c5 != 0x200B && c5 != 0x200C && c5 != 0x200D && c5 != 0xFEFF) ? 1 : 0;
+            int keep6 = (c6 >= 32 && (c6 < 0x7F || c6 > 0x9F) && c6 != 0x200B && c6 != 0x200C && c6 != 0x200D && c6 != 0xFEFF) ? 1 : 0;
+            int keep7 = (c7 >= 32 && (c7 < 0x7F || c7 > 0x9F) && c7 != 0x200B && c7 != 0x200C && c7 != 0x200D && c7 != 0xFEFF) ? 1 : 0;
+
+            writePtr[0] = c0; writePtr += keep0;
+            writePtr[0] = c1; writePtr += keep1;
+            writePtr[0] = c2; writePtr += keep2;
+            writePtr[0] = c3; writePtr += keep3;
+            writePtr[0] = c4; writePtr += keep4;
+            writePtr[0] = c5; writePtr += keep5;
+            writePtr[0] = c6; writePtr += keep6;
+            writePtr[0] = c7; writePtr += keep7;
+
+            current += 8;
+        }
+
+        while (current < endPtr)
+        {
+            char c = *current;
+            int keep = (c >= 32 && (c < 0x7F || c > 0x9F) && c != 0x200B && c != 0x200C && c != 0x200D && c != 0xFEFF) ? 1 : 0;
+            *writePtr = c;
+            writePtr += keep;
+            current++;
+        }
+
+        pOutputLength = (int)(writePtr - pOutput);
+    }
 }

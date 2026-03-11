@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Scortcher
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: cd89ef000a636064cb47ec96ce7d5381, type: 3}
+    icon: {fileID: 21300000, guid: 7c2b4caf77b087342b57aa17bdbe0360, type: 3}
     projectile: {fileID: 3230000773134604271, guid: 7a460261f861aa64c82e30c947c476e1, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: 752d8ec26064b1e47892dcc12571f6c3, type: 3}
     bounceParticle: {fileID: 0}
@@ -55,7 +55,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     projectileSpawnEvents: []
-    weaponName: Scortcher
+    weaponName: Scorcher
     targetMorph: {x: 0.55, y: 0.55, z: 1}
     reloadTime: 3.2
     shootingInterval: 0.08
@@ -82,8 +82,8 @@ MonoBehaviour:
     spinSpeed: 0
     slowDownAmount: 0
     senderSpeedOnDeath: 0
-    lingeringDamage: 2.5
-    lingeringFrequency: 2
+    lingeringDamage: 1
+    lingeringFrequency: 5
     bounceSpeedLoss: 0
     bounceAngleTilt: 0
     spawnOffsetPadding: 0.5
@@ -119,3 +119,4 @@ MonoBehaviour:
     clampMorph: 1
     hover: 0
     delistWeapon: 0
+    hitMarkSize: 0

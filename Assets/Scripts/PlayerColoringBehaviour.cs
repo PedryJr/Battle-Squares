@@ -44,6 +44,17 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         mainModuleForParticles.startColor = ParticleColor;
     }
 
+    public void AssignMaterialToParticleRendererVariant2(in ParticleSystemRenderer particleRenderer, in ParticleSystem particleSystem)
+    {
+        particleMaterial.color = Color.white;
+        particleRenderer.sharedMaterial = particleMaterial;
+        particleRenderer.trailMaterial = particleMaterial;
+        particleRenderer.applyActiveColorSpace = false;
+
+        MainModule mainModuleForParticles = particleSystem.main;
+        mainModuleForParticles.startColor = ParticleColorVariant2;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetColorHue(in float hue)
     {
@@ -70,6 +81,9 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
 
     [SerializeField] ColorComponent particleColor;
     public Color ParticleColor => particleColor.ActiveColor;
+
+    [SerializeField] ColorComponent particleColorVariant2;
+    public Color ParticleColorVariant2 => particleColorVariant2.ActiveColor;
 
     [SerializeField] ColorComponent chatBubbleColor;
     public Color ChatBoxColor => chatBubbleColor.ActiveColor;
@@ -131,6 +145,7 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         nozzleColor.SetHue(hue);
         projectileColor.SetHue(hue);
         particleColor.SetHue(hue);
+        particleColorVariant2.SetHue(hue);
         chatBubbleColor.SetHue(hue);
         dogTagColor.SetHue(hue);
         hitMarkColor.SetHue(hue);

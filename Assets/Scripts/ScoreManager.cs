@@ -18,6 +18,7 @@ public sealed class ScoreManager : NetworkBehaviour
     List<ScoreBoard> scores;
 
     PlayerSynchronizer playerSynchronizer;
+    MLTrainingManager mLTrainingManager;
 
     [SerializeField]
     public Mode gameMode;
@@ -30,6 +31,8 @@ public sealed class ScoreManager : NetworkBehaviour
     private void Awake()
     {
         
+        endScore = 99999;
+        mLTrainingManager = FindAnyObjectByType<MLTrainingManager>();
         scores = new List<ScoreBoard>();
         hunter = GetComponent<Hunter>();
         SceneManager.sceneLoaded += LoadGameScene;

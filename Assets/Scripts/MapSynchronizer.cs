@@ -279,11 +279,12 @@ public sealed class MapSynchronizer : NetworkBehaviour
         dogTags.Remove(dogTagToCollect);
         dogTagToCollect.RunCollected(collectorId);
 
-        if (collectorId != NetworkManager.Singleton.LocalClientId) return;
-
+        PlayerBehaviour collector = playerSynchronizer.GetPlayerById(collectorId);
+        if (!collector) return;
+        if (!collector.isLocalPlayer) return;
         if (collectorId == dogTagToCollect.owningPlayer.GetGameID()) return;
 
-        playerSynchronizer.localSquare.score++;
+        collector.score++;
         playerSynchronizer.UpdateScore();
 
     }

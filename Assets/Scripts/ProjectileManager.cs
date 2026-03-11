@@ -8,6 +8,7 @@ using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 using static BinaryVectors;
 using static UnityEngine.Analytics.IAnalytic;
 using static WeaponBuilder;
@@ -31,11 +32,13 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     public PlayerSynchronizer playerSynchronizer;
     RuntimePrefabTemplates runtimePrefabTemplates;
+    public MLTrainingManager mLTrainingManager;
 
     float timer;
 
     private void Awake()
     {
+        mLTrainingManager = FindAnyObjectByType<MLTrainingManager>();
         runtimePrefabTemplates = GetComponent<RuntimePrefabTemplates>();
         weapons = new Dictionary<ushort, WeaponBuilder>();
         projectiles = new List<ProjectileBehaviour>();
@@ -82,7 +85,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector2 correctedPositionToGround = position;
         Vector2 simulatedNozzlePosition = position + (direction * weapon.spawnOffsetPadding);
 
-        RaycastHit2D groundHit = Physics2D.Linecast(position, simulatedNozzlePosition, ProjectileBehaviour.ENVIRONTMENT_MASK);
+        RaycastHit2D groundHit = Physics2D.Linecast(position, simulatedNozzlePosition, PhysicsMasks.ENVIRONTMENT_MASK);
         if (groundHit.transform)
         {
             float padding = weapon.spawnOffsetPadding;
@@ -119,9 +122,8 @@ public sealed class ProjectileManager : NetworkBehaviour
     {
         Weapon weapon = GetRawWeaponByTypeID(typeID);
 
-
         Vector2 correctedPositionToGround = position;
-        RaycastHit2D groundHit = Physics2D.Linecast(shootingPlayer.transform.position, position, ProjectileBehaviour.ENVIRONTMENT_MASK);
+        RaycastHit2D groundHit = Physics2D.Linecast(shootingPlayer.transform.position, position, PhysicsMasks.ENVIRONTMENT_MASK);
         if (groundHit.transform)
         {
             float padding = weapon.spawnOffsetPadding;
@@ -209,11 +211,11 @@ public sealed class ProjectileManager : NetworkBehaviour
         projectileBehaviour.ownerId = owningPlayer.GetGameID();
         projectileBehaviour.InitializeBullet(ref data);
 
-        multiplier1 = weapon.recoil * Mods.at[13];
+        multiplier1 = weapon.recoil * Mods.Recoil;
         multiplier2 = MyExtentions.EaseOutQuad(math.clamp(1 - (playerSynchronizer.localSquare.rb.linearVelocity.magnitude / 28), 0, 1));
 
         forceToAdd = -direction.normalized * multiplier1 * multiplier2;
-        owningPlayer.rb.AddForce(forceToAdd, ForceMode2D.Impulse);
+        if(!mLTrainingManager.isTraining) owningPlayer.rb.AddForce(forceToAdd, ForceMode2D.Impulse);
         owningPlayer.AnimatePlayer();
         owningPlayer.PlayNozzleRecoilAnimation();
     }
@@ -287,6 +289,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         data.setMorphOnBounce = weapon.setMorphOnBounce;
         data.morphTimeOnBounce = weapon.morphTimeOnBounce;
         data.typeID = weapon.typeID;
+        data.hitMarkSize = weapon.hitMarkSize;
     }
 
 
@@ -323,7 +326,7 @@ public sealed class ProjectileManager : NetworkBehaviour
 
     public void SpawnNozzleParticles(in Vector3 particlePosition, in Quaternion particleRotation, in ushort projectileType, byte ownerID)
     {
-
+        if (mLTrainingManager.isTraining) return;
         SByte3 sByte3 = GetParticleCompressor;
 
         Vector3 rawData = new Vector3(particlePosition.x, particlePosition.y, Mathf.Repeat(particleRotation.eulerAngles.z, 360f));
@@ -351,7 +354,7 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector3 particlePosition = new Vector3(rawData.x, rawData.y, 0);
         Quaternion particleRotation = Quaternion.Euler(0, 0, rawData.z);
 
-        ParticleBehaviour newParticle = ParticlePool.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
+        ParticleBehaviour newParticle = AutoPooledPool<ParticleBehaviour>.Spawn(GetNozzleParticle(projectileType), particlePosition, particleRotation, null);
         PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ownerId);
 
         for (int i = 0; i < newParticle.ParticleSystems.Length; i++)
@@ -420,12 +423,12 @@ public sealed class ProjectileManager : NetworkBehaviour
         Vector3 particlePosition = new Vector3(rawData.x, rawData.y, 0);
         Quaternion particleRotation = Quaternion.Euler(0, 0, rawData.z);
 
-        ParticleBehaviour newParticle = ParticlePool.Spawn(GetBounceParticle(projectileType), particlePosition, particleRotation, null);
+        ParticleBehaviour newParticle = AutoPooledPool<ParticleBehaviour>.Spawn(GetBounceParticle(projectileType), particlePosition, particleRotation, null);
         PlayerBehaviour shootingPlayer = playerSynchronizer.GetPlayerById(ownerId);
 
         for (int i = 0; i < newParticle.ParticleSystems.Length; i++)
         {
-            shootingPlayer.PlayerColor.AssignMaterialToParticleRenderer(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
+            shootingPlayer.PlayerColor.AssignMaterialToParticleRendererVariant2(newParticle.ParticleSystemRenderers[i], newParticle.ParticleSystems[i]);
         }
     }
 
@@ -448,34 +451,6 @@ public sealed class ProjectileManager : NetworkBehaviour
         deletedProjectile.OnDespawn(hit);
         projectiles.Remove(deletedProjectile);
     }
-
-/*    [ClientRpc(Delivery = RpcDelivery.Reliable)]
-    public void DespawnProjectileClientRpc(uint projectileID, bool hit)
-    {
-
-        if (IsHost) return;
-
-        ProjectileBehaviour deletedProjectile = null;
-
-        foreach (ProjectileBehaviour instance in projectiles)
-        {
-
-            if (instance.projectileID == projectileID)
-            {
-
-                if (instance != null) instance.OnDespawn(hit);
-
-                deletedProjectile = instance;
-
-                break;
-
-            }
-
-        }
-
-        if (deletedProjectile != null) projectiles.Remove(deletedProjectile);
-
-    }*/
 
     public void HitRegProjectile(uint projectileID)
     {
@@ -504,59 +479,33 @@ public sealed class ProjectileManager : NetworkBehaviour
         }
     }
 
-
     public void UpdateProjectile(ProjectileBehaviour instance)
     {
 
-        /*        Vector2 pos, vel;
-                float rot, ang;
+        float angularVelocity = instance.rb.angularVelocity;
+        float angle = instance.rb.rotation;
+        Vector2 velocity = instance.rb.linearVelocity;
+        Vector2 position = instance.rb.position;
 
-                pos = instance.rb.position;
-                vel = instance.rb.linearVelocity;
-                rot = instance.rb.rotation;
-                ang = instance.rb.angularVelocity;
 
-                byte[] compPos = MyExtentions.EncodePosition(pos.x + 64, pos.y + 64);
-                byte[] compVel = MyExtentions.EncodePosition(vel.x + 64, vel.y + 64);
-                byte[] compRot = MyExtentions.EncodeRotation(rot);
-                byte[] compRotVel = MyExtentions.EncodeFloat(ang);
-
-                byte[] data = new byte[14]
-                {
-                    compPos[0], compPos[1], compPos[2], compPos[3],
-                    compVel[0], compVel[1], compVel[2], compVel[3],
-                    compRot[0], compRot[1],
-                    compRotVel[0], compRotVel[1], compRotVel[2],
-                    (byte) NetworkManager.Singleton.LocalClientId
-                };*/
-
-        byte[] data = MyExtentions.CompressRigidbody(instance.rb);
-
-        NewUpdateProjectileRpc(data, instance.projectileID);
-
+        NewUpdateProjectileRpc(angularVelocity, angle, velocity, position, instance.projectileID);
     }
 
     [Rpc(SendTo.NotMe, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Unreliable)]
-    public void NewUpdateProjectileRpc(byte[] data, uint projectileId)
+    public void NewUpdateProjectileRpc(float angularVelocity, float angle, Vector2 velocity, Vector2 position, uint projectileId)
     {
-
         ProjectileBehaviour projectileToSync = GetProjectileByID(projectileId);
-
         if (!projectileToSync) return;
-
-        MyExtentions.DecompressRigidbody(data, projectileToSync.rb, projectileToSync.data.syncSpeed);
-
+        projectileToSync.rb.angularVelocity = angularVelocity;
+        projectileToSync.rb.rotation = angle;
+        projectileToSync.rb.linearVelocity = velocity;
+        projectileToSync.rb.position = position;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ProjectileBehaviour GetProjectileByID(uint projectileID)
     {
-        foreach (ProjectileBehaviour instance in projectiles)
-        {
-            if (instance.projectileID == projectileID)
-            {
-                return instance;
-            }
-        }
+        foreach (ProjectileBehaviour instance in projectiles) if (instance.projectileID == projectileID) return instance;
         return null;
     }
 
@@ -570,13 +519,13 @@ public sealed class ProjectileManager : NetworkBehaviour
     internal ushort GetSecondWeaponTypeId() => weapons.ElementAt(1).Key;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal string GetWeaponName(ushort typeId1) => GetRawWeaponByTypeID(typeId1).weaponName;
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal ushort GetNextAvailibleID()
     {
         for(ushort i = 1; i < ushort.MaxValue; i++) if (!weapons.ContainsKey(i)) return i;
         return 0;
     }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void CreateWeaponFromMod(ref ProjectileCreator creator)
     {
         WeaponBuilder weapon = runtimePrefabTemplates.CreateNewWeaponPrefab(ref creator);

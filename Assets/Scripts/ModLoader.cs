@@ -257,7 +257,18 @@ public class ModContext : IModContext
             handle = projectile
         };
 
-        foreach (var handler in projectileSpawnEvents) handler(ref projectileSpawnData);
+        foreach (var handler in projectileSpawnEvents) 
+        {
+            try
+            {
+                handler(ref projectileSpawnData);
+            }
+            catch (Exception error)
+            {
+                Debug.Log(error.Message);
+            }
+        }
+
         ModProjectileConverter.Apply(ref data, projectileSpawnData.creationData);
     }
 

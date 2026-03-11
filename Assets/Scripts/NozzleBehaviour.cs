@@ -121,6 +121,8 @@ public sealed class NozzleBehaviour : MonoBehaviour
             secondaryTimeSinceEmpty = secondaryReloadTime;
         }
 
+        if (playerBehaviour.isDead) return;
+        if (playerBehaviour.inGamePrepareTimer > 0.01f) return;
         if (!playerController.shootPrimary && !playerController.shootSecondary) return;
         
         relativePositionToPlayer = playerBehaviour.toPos;
@@ -158,14 +160,14 @@ public sealed class NozzleBehaviour : MonoBehaviour
         }
     }
 
-    bool ShootWeapon(ushort type)
+    bool ShootWeapon(ushort weaponType)
     {
 
         intensity += 0.2f;
 
         bool fire = false;
 
-        if (type == primary) 
+        if (weaponType == primary) 
         {
 
             if (primaryShots == primaryAmmo)
@@ -185,7 +187,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
             }
 
         }
-        if (type == secondary)
+        if (weaponType == secondary)
         {
 
             if (secondaryShots == secondaryAmmo)
@@ -208,7 +210,7 @@ public sealed class NozzleBehaviour : MonoBehaviour
         {
 
             projectileManager.SpawnProjectile(
-                type,
+                weaponType,
                 GetFirePoint(),
                 playerBehaviour.aimDirection,
                 playerBehaviour);

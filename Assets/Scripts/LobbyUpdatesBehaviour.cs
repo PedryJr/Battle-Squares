@@ -54,30 +54,30 @@ public sealed class LobbyUpdatesBehaviour : MonoBehaviour
     {
         foreach (PlayerData player in playerSynchronizer.playerIdentities)
         {
-            if (player.square.rb.gravityScale != (3f * Mods.at[0])) player.square.rb.gravityScale = 3f * Mods.at[0];
+            if (player.square.rb.gravityScale != (3f * Mods.PlayerGravity)) player.square.rb.gravityScale = 3f * Mods.PlayerGravity;
 
 
-            if (player.square.maxHealthPoints != Mods.at[10])
+            if (player.square.maxHealthPoints != Mods.PlayerHealth)
             {
-                player.square.healthPoints = player.square.healthPoints / player.square.maxHealthPoints * Mods.at[10];
-                player.square.maxHealthPoints = Mods.at[10];
+                player.square.healthPoints = player.square.healthPoints / player.square.maxHealthPoints * Mods.PlayerHealth;
+                player.square.maxHealthPoints = Mods.PlayerHealth;
             }
 
-            if (player.square.rb.sharedMaterial.bounciness != Mods.at[14])
+            if (player.square.rb.sharedMaterial.bounciness != Mods.Bounce)
             {
                 foreach (PlayerData player2 in playerSynchronizer.playerIdentities)
                 {
-                    player2.square.physMat.bounciness = Mods.at[14];
+                    player2.square.physMat.bounciness = Mods.Bounce;
                     player2.square.rb.sharedMaterial = player.square.physMat;
                     player2.square.col.sharedMaterial = player.square.physMat;
                 }
             }
 
-            if (player.square.rb.sharedMaterial.friction != Mods.at[15])
+            if (player.square.rb.sharedMaterial.friction != Mods.Friction)
             {
                 foreach (PlayerData player2 in playerSynchronizer.playerIdentities)
                 {
-                    player2.square.physMat.friction = Mods.at[15];
+                    player2.square.physMat.friction = Mods.Friction;
                     player2.square.rb.sharedMaterial = player.square.physMat;
                     player2.square.col.sharedMaterial = player.square.physMat;
                 }

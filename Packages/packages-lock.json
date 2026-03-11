@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.h8man.2d.navmeshplus": {
+      "version": "https://github.com/h8man/NavMeshPlus.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "725349b17aad2dff5153a2ea66970028813fbeed"
+    },
     "com.matthias.proximitychat": {
       "version": "https://github.com/matthiasbroske/ProximityChat-UnityPackage.git",
       "depth": 0,
@@ -115,6 +122,26 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.ai.navigation": {
+      "version": "2.0.10",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.ai": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.barracuda": {
+      "version": "3.0.2",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.6.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.burst": {
       "version": "1.8.27",
       "depth": 1,
@@ -202,6 +229,17 @@
         "com.unity.mathematics": "1.2.1",
         "com.unity.profiling.core": "1.0.0",
         "com.unity.editorcoroutines": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ml-agents": {
+      "version": "2.0.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.barracuda": "2.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },

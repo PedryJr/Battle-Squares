@@ -39,6 +39,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1625723881570478094
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -84,6 +85,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -93,7 +95,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &3230000773134604271
 MonoBehaviour:
@@ -136,7 +137,7 @@ MonoBehaviour:
   sync: 0
   flipFlop: 0
   builtIndAudio: 1
-  hitMark: {fileID: 7378723969388511367, guid: 8cec5e615eff25d4783f982df3926e9f, type: 3}
+  hitMark: {fileID: 8294959907817521048, guid: b02c29eeef1469b4c984ba94a4d46981, type: 3}
   trailParticles: {fileID: 227063848627397678}
   trailParticleSystem: {fileID: 8440552164618030048}
   spriteRenderer: {fileID: 1625723881570478094}
@@ -393,7 +394,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!199 &227063848627397678
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -439,6 +440,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -470,7 +472,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!114 &2444747554998878834
 MonoBehaviour:
   m_ObjectHideFlags: 0

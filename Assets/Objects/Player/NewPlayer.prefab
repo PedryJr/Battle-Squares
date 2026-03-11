@@ -35,6 +35,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &9003449554754366807
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -80,6 +81,7 @@ SpriteRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 6
+  m_MaskInteraction: 1
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -89,7 +91,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 1
   m_SpriteSortPoint: 0
 --- !u!114 &2469646295513191688
 MonoBehaviour:
@@ -177,7 +178,7 @@ MonoBehaviour:
   m_NormalMapDistance: 0
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
-  m_ShadowsEnabled: 1
+  m_ShadowsEnabled: 0
   m_ShadowIntensity: 1
   m_ShadowSoftness: 1
   m_ShadowSoftnessFalloffIntensity: 0.5
@@ -309,12 +310,13 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4479520223757404588}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6551420707577298823
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -359,7 +361,8 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingOrder: 6
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -369,7 +372,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &2067117489913102363
 MonoBehaviour:
@@ -389,13 +391,11 @@ MonoBehaviour:
   owningPlayerColor: {r: 0, g: 0, b: 0, a: 0}
   owningPlayerDarkerColor: {r: 0, g: 0, b: 0, a: 0}
   intensity: 0
-  primaryTimeSinceShot: 0
-  primaryFireTime: 0
-  secondaryTimeSinceShot: 0
-  secondaryFireTime: 0
-  primaryTimeSinceEmpty: 0
+  primaryAmmo: 0
+  secondaryAmmo: 0
+  primaryShots: 0
+  secondaryShots: 0
   primaryReloadTime: 0
-  secondaryTimeSinceEmpty: 0
   secondaryReloadTime: 0
   primaryHoldable: 0
   secondaryHoldable: 0
@@ -444,6 +444,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4023225474620334197
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -489,6 +490,7 @@ SpriteRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 3
+  m_MaskInteraction: 1
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -498,7 +500,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 1
   m_SpriteSortPoint: 0
 --- !u!50 &4599508856865403600
 Rigidbody2D:
@@ -1115,6 +1116,7 @@ SpriteMask:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 0}
   m_MaskAlphaCutoff: 0.2
   m_FrontSortingLayerID: 0
@@ -1158,13 +1160,9 @@ MonoBehaviour:
   newDataAvalible: 0
   newColor: 1
   ready: 0
-  position: {x: 0, y: 0}
-  rotation: 0
   nozzlePosition: {x: 0, y: 0}
   localNozzlePosition: {x: 0, y: 0}
   nozzleRotation: 0
-  velocity: {x: 0, y: 0}
-  angularVelocity: 0
   hp: 20
   maxHealthPoints: 20
   hpBarScale: {x: 0, y: 0, z: 0}
@@ -1173,6 +1171,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   nozzleBehaviour: {fileID: 2067117489913102363}
   playerController: {fileID: 0}
+  playerMLAgent: {fileID: 0}
   pfp: {fileID: 0}
   chatBubbleBehaviour: {fileID: 0}
   playerSpawnEffectBehaviourRef: {fileID: -2567077957820087699, guid: bcfae4763fbea3f47bdf1d080e686df8, type: 3}
@@ -1213,9 +1212,11 @@ MonoBehaviour:
     Path: event:/PlayerSounds/PlayerStep
   spawnBuffer: 0
   newMods: 0
+  isAI: 0
+  inGamePrepareTimer: 0
   frameRate: 10
-  moveDirection: {x: 0, y: 0}
   jumpParticleRef: {fileID: 8567238288229006168, guid: 414f2ce96a088454aafac90bbb09133b, type: 3}
+  moveDirection: {x: 0, y: 0}
 --- !u!114 &2995831169349222189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1230,8 +1231,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hue: 0.5264285
   playerMaterial: {fileID: -876546973899608171, guid: a1488dad8c03ba443a818f6b8ce37a0f, type: 3}
-  projectileMaterial: {fileID: -876546973899608171, guid: fbed87eedacfac4429ace8489234b829, type: 3}
-  particleMaterial: {fileID: -876546973899608171, guid: dad808b10b3ac2044a76c5ed232a1e80, type: 3}
+  projectileMaterial: {fileID: 2100000, guid: b5bd41709d0b55f46a4764b38241f02c, type: 2}
+  particleMaterial: {fileID: 2100000, guid: 36373f57203063e4dae15c1bb968807f, type: 2}
   primaryColor:
     colorCorrectionType: 0
     hue: 0
@@ -1251,10 +1252,10 @@ MonoBehaviour:
     value: 0.628
     alpha: 0.314
   nozzleColor:
-    colorCorrectionType: 1
-    hue: 0
-    saturation: 0.35
-    value: 1
+    colorCorrectionType: 0
+    hue: 0.77734375
+    saturation: 0.464
+    value: 0.862
     alpha: 1
   projectileColor:
     colorCorrectionType: 2
@@ -1264,9 +1265,15 @@ MonoBehaviour:
     alpha: 1
   particleColor:
     colorCorrectionType: 0
-    hue: 0
-    saturation: 0.75
-    value: 0.75
+    hue: 0.32
+    saturation: 0.675
+    value: 0.761
+    alpha: 1
+  particleColorVariant2:
+    colorCorrectionType: 2
+    hue: 0.32
+    saturation: 0.74
+    value: 0.878
     alpha: 1
   chatBubbleColor:
     colorCorrectionType: 2
@@ -1275,10 +1282,10 @@ MonoBehaviour:
     value: 1
     alpha: 1
   dogTagColor:
-    colorCorrectionType: 0
-    hue: 0
-    saturation: 0.75
-    value: 0.75
+    colorCorrectionType: 2
+    hue: 0.378
+    saturation: 0.819
+    value: 1
     alpha: 1
   hitMarkColor:
     colorCorrectionType: 0

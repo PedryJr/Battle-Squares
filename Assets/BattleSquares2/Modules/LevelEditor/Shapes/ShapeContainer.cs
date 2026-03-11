@@ -146,7 +146,7 @@ public sealed class ShapeContainer : MonoBehaviour
             _meshMirrorX = new Mesh();
             _meshMirrorX.MarkDynamic();
             _shapeMimicBehaviourMirrorX = _mimicMirrorX.GetComponent<ShapeMimicBehaviour>();
-            _shapeMimicBehaviourMirrorX.AssignShapeContainer(this);
+            _shapeMimicBehaviourMirrorX.AssignShapeContainer(this, true, false);
             EnableSensorOnMimic(_mimicProximityPixelsX);
         }
 
@@ -159,7 +159,7 @@ public sealed class ShapeContainer : MonoBehaviour
             _meshMirrorY = new Mesh();
             _meshMirrorY.MarkDynamic();
             _shapeMimicBehaviourMirrorY = _mimicMirrorY.GetComponent<ShapeMimicBehaviour>();
-            _shapeMimicBehaviourMirrorY.AssignShapeContainer(this);
+            _shapeMimicBehaviourMirrorY.AssignShapeContainer(this, false, true);
             EnableSensorOnMimic(_mimicProximityPixelsY);
         }
 
@@ -172,14 +172,14 @@ public sealed class ShapeContainer : MonoBehaviour
             _meshMirrorXY = new Mesh();
             _meshMirrorXY.MarkDynamic();
             _shapeMimicBehaviourMirrorXY = _mimicMirrorXY.GetComponent<ShapeMimicBehaviour>();
-            _shapeMimicBehaviourMirrorXY.AssignShapeContainer(this);
+            _shapeMimicBehaviourMirrorXY.AssignShapeContainer(this, true, true);
             EnableSensorOnMimic(_mimicProximityPixelsXY);
         }
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void DisableSensorsOnMimic(ProximityPixelSenssor[] sensors)
     {
-        if(sensors != null) foreach (var s in sensors) if(s) s.enabled = false;
+        if(sensors != null) foreach (var s in sensors) if(s) Destroy(s.gameObject);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -233,6 +233,11 @@ public sealed class ShapeContainer : MonoBehaviour
     mirrorX ? GetMimicOffset(_shapeMimicBehaviourMirrorX) : new CustomVec3(),
     mirrorY ? GetMimicOffset(_shapeMimicBehaviourMirrorY) : new CustomVec3(),
     mirrorX && mirrorY ? GetMimicOffset(_shapeMimicBehaviourMirrorXY) : new CustomVec3());
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetAllMimicOffsets(Tuple<CustomVec3, CustomVec3, CustomVec3, CustomVec3> offsets) => 
+        SetAllMimicOffsets(offsets.Item1, offsets.Item2, offsets.Item3, offsets.Item4);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetAllMimicOffsets(CustomVec3 oOffsetPos, CustomVec3 xOffsetPos, CustomVec3 yOffsetPos, CustomVec3 xyOffsetPos)
     {
         SetMimicOffset(_shapeMimicBehaviour, oOffsetPos);
@@ -249,7 +254,7 @@ public sealed class ShapeContainer : MonoBehaviour
         };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void SetMimicOffset(ShapeMimicBehaviour shapeMimicBehaviour, CustomVec3 offset) => shapeMimicBehaviour.offsetPosition = offset.AsVector3();
+    private void SetMimicOffset(ShapeMimicBehaviour shapeMimicBehaviour, CustomVec3 offset) => shapeMimicBehaviour.LockInOffset(offset.AsVector3());
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int GetMimicID(ShapeMimicBehaviour mimic) => mimic.ShapeID;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -369,11 +374,7 @@ public sealed class ShapeContainer : MonoBehaviour
         return combined;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Triangulate(Vector3[] points, out Vector3[] vertices, out int[] triangles)
-    {
-        PolygonTriangulator.Triangulate8(points, out vertices, out triangles);
-        //for (int i = 0; i < vertices.Length; i++) vertices[i] *= snappingOnGenerate;
-    }
+    private void Triangulate(Vector3[] points, out Vector3[] vertices, out int[] triangles) => PolygonTriangulator.Triangulate8(points, out vertices, out triangles);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void InitializeMimicVertices()
@@ -418,10 +419,8 @@ public sealed class ShapeContainer : MonoBehaviour
 
         if(mirrorX)
         {
-
             pos = _mimicInstance.position;
             pos.x *= -1;
-
             _mimicMirrorX.position = pos;
             _mimicMirrorX.rotation = _mimicInstance.rotation;
             _mimicMirrorX.localScale = _mimicInstance.localScale;
@@ -429,11 +428,8 @@ public sealed class ShapeContainer : MonoBehaviour
 
         if (mirrorY)
         {
-
-
             pos = _mimicInstance.position;
             pos.y *= -1;
-
             _mimicMirrorY.position = pos;
             _mimicMirrorY.rotation = _mimicInstance.rotation;
             _mimicMirrorY.localScale = _mimicInstance.localScale;
@@ -441,7 +437,6 @@ public sealed class ShapeContainer : MonoBehaviour
 
         if (mirrorX && mirrorY)
         {
-
             pos = _mimicInstance.position;
             pos.y *= -1;
             pos.x *= -1;
@@ -456,7 +451,6 @@ public sealed class ShapeContainer : MonoBehaviour
     [MethodImpl(512)]
     private void UpdateVertexPositions()
     {
-
         int vertexCount = Mathf.Min(_mimicVertices.Length, _vertices.Length);
         for (int i = 0; i < vertexCount; i++)
         {

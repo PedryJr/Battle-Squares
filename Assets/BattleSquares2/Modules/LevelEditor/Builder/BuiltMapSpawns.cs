@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Unity.Netcode;
 using UnityEngine;
 using static PlayerSynchronizer;
 
@@ -37,11 +38,11 @@ public sealed class BuiltMapSpawns : MonoBehaviour
         foreach (var item in spawns) item.SetParent(transform.parent, true);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Vector2 GetSpawn(byte playerId) => spawns[(int)((spawnCycle * 2) + PlayerIdToListIndex(playerId)) % spawns.Length].position;
+    public Vector2 GetSpawn(byte playerId) => spawns[(int)((spawnCycle / 4) + PlayerIdToListIndex(playerId)) % spawns.Length].position;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Update()
     {
-        spawnCycle += Time.deltaTime;
+        spawnCycle = NetworkManager.Singleton.ServerTime.TimeAsFloat;
         for (int i = 0; i < playerSynchronizer.playerIdentities.Count; i++)
         {
             PlayerBehaviour player = playerSynchronizer.playerIdentities[i].square;

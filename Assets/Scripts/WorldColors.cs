@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class WorldColors : MonoBehaviour
+public sealed class WorldColors : MonoBehaviour
 {
+
+    public static List<BuiltShapeBehaviour> builtShapes;
 
     List<Light2D> lights;
 
@@ -26,6 +29,7 @@ public class WorldColors : MonoBehaviour
 
     private void Awake()
     {
+        builtShapes = new List<BuiltShapeBehaviour>();
         lights = new List<Light2D>();
     }
 
@@ -47,4 +51,25 @@ public class WorldColors : MonoBehaviour
 
     }
 
+#if UNITY_EDITOR
+    [SerializeField] bool editInPlaymode = true;
+
+    private void Update()
+    {
+
+        if (!editInPlaymode) return;
+        for (int i = lights.Count - 1; i >= 0; i--)
+        {
+            if (!lights[i]) lights.RemoveAt(i);
+            else
+            {
+                lights[i].color = lightColor;
+                lights[i].intensity = maxLightStrength * lightDensity;
+                lights[i].shadowIntensity = shadowDesnity;
+            }
+        }
+        pixelEffectMaterial.SetColor("_Color", pixeleffectColor);
+        arenaMaterial.SetColor("_ColorOverride", arenaColor);
+    }
+#endif
 }

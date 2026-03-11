@@ -1,4 +1,5 @@
-using Steamworks; 
+using Steamworks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
@@ -17,6 +18,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
     ScoreManager scoreManager;
     PlayerSynchronizer playerSynchronizer;
+    PlayerControllerManager playerControllerManager;
     public static PlayerFactorySynchronizer Instance;
 
     List<M_SkinInit> initEvents;
@@ -27,8 +29,12 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
     [SerializeField]
     private PlayerController controllerPrefab;
 
+    [SerializeField]
+    private PlayerController AIControllerPrefab;
+
     private void Awake()
     {
+        playerControllerManager = GetComponent<PlayerControllerManager>();
         Instance = this;
         scoreManager = GetComponent<ScoreManager>();
         playerSynchronizer = GetComponent<PlayerSynchronizer>();
@@ -38,10 +44,79 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         finishedEvents = new List<M_SkinFinished>();
     }
 
+    [SerializeField]
+    int AmountOfAIToTrain = 0;
+
+    List<Action> deleteAIAgents = new List<Action>();
+
+    public PlayerController SpawnAgent()
+    {
+        playerIDIncrementor++;
+
+        PlayerFactoryDataPacket playerData = default;
+        playerData.MMR = 1000;
+        playerData.steamId = SteamClient.SteamId.Value;
+        playerData.networkId = (byte)NetworkManager.LocalClientId;
+        playerData.gameID = playerIDIncrementor;
+        playerData.isAI = true;
+        playerData.selectedMap = playerSynchronizer.localSquare.selectedMap;
+
+        PlayerBehaviour newPlayer = Instantiate(playerSynchronizer.square);
+        newPlayer.rb.simulated = false;
+        newPlayer.transform.position = Vector3.zero;
+        newPlayer.rb.position = Vector2.zero;
+        newPlayer.rb.simulated = true;
+
+        SetPlayerInitialData(ref newPlayer, ref playerData);
+        SetPlayerLocality(ref newPlayer, ref playerData);
+        SetPlayerSyncData(ref newPlayer, ref playerData);
+        //SpawnPlayer(ref newPlayer);
+
+        if (!IsHost && newPlayer.GetNetworkID() == NetworkManager.LocalClientId)
+        {
+            if (MapStreamSynchronizer.Instance) MapStreamSynchronizer.Instance.RestreamMapByForce();
+        }
+
+        playerSynchronizer.UpdateColor();
+        playerSynchronizer.UpdateRigidBody(playerData.gameID);
+        playerSynchronizer.UpdateHealth();
+        playerSynchronizer.UpdatePlayerReady(playerSynchronizer.localSquare.ready);
+
+        if (IsHost) scoreManager.UpdateModeAsHost(scoreManager.gameMode);
+
+        playerSynchronizer.playerIdentities.Sort((a, b) => a.square.GetGameID().CompareTo(b.square.GetGameID()));
+
+        ManagedValue<byte> managedValue = new ManagedValue<byte>();
+        managedValue.Value = playerData.gameID;
+
+        deleteAIAgents.Add(
+            () =>
+            {
+                for (int j = playerSynchronizer.playerIdentities.Count - 1; j >= 0; j--)
+                {
+                    PlayerData pData = playerSynchronizer.playerIdentities[j];
+                    PlayerBehaviour player = pData.square;
+                    if (player == null) playerSynchronizer.playerIdentities.RemoveAt(j);
+                    if (player.GetGameID() == managedValue.Value)
+                    {
+                        playerSynchronizer.playerIdentities.RemoveAt(j);
+                        Destroy(player.gameObject);
+                    }
+                }
+            }
+        );
+
+        return newPlayer.playerController;
+    }
+
     private void FixedUpdate()
     {
-        CheckLocalCoop();
         SkinDownload();
+    }
+
+    void Update()
+    {
+        CheckLocalCoop();
     }
 
     void CheckLocalCoop()
@@ -49,7 +124,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         if (SceneManager.GetActiveScene().name != "LobbyScene") return;
         foreach (var item in Gamepad.all)
         {
-            if (PlayerController.consumedDeviceIDs.Contains(item.deviceId)) continue;
+            if (!playerControllerManager.IsDeviceValidForRegistrationEXTERN(item)) continue;
             if (item.startButton.wasPressedThisFrame) CreateNewPlayerFromControllerRpc(NetworkManager.LocalClientId);
         }
     }
@@ -139,6 +214,25 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         CreateNewPlayer(networkID);
     }
 
+    [ContextMenu("Create AI")]
+    public void CreateAI()
+    {
+        byte networkID = (byte)NetworkManager.LocalClientId;
+        byte gameID = playerIDIncrementor;
+        playerIDIncrementor++;
+
+        if (!IsHost) return;
+        GameStateDataPacket currentGameState = new GameStateDataPacket();
+
+        currentGameState.newGameID = gameID;
+        currentGameState.newNetworkID = networkID;
+        currentGameState.currentGameMode = scoreManager.gameMode;
+        currentGameState.mods = (float[])Mods.at.Clone();
+        currentGameState.isAI = true;
+
+        RoundTripCollectorClientRpc(currentGameState);
+    }
+
     public void CreateNewPlayer(ulong id)
     {
         byte networkID = (byte)id;
@@ -152,6 +246,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         currentGameState.newNetworkID = networkID;
         currentGameState.currentGameMode = scoreManager.gameMode;
         currentGameState.mods = (float[])Mods.at.Clone();
+        currentGameState.isAI = false;
 
         RoundTripCollectorClientRpc(currentGameState);
     }
@@ -171,7 +266,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         //Ensure the player that triggered the "create player" function is created.
         if(currentGameState.newNetworkID == NetworkManager.LocalClientId)
         {
-            PlayerFactory(currentGameState.selectedMap, currentGameState.newNetworkID, currentGameState.newGameID, SteamClient.SteamId);
+            PlayerFactory(currentGameState.selectedMap, currentGameState.newNetworkID, currentGameState.newGameID, SteamClient.SteamId, currentGameState.isAI);
         }
 
         //Ensure all local players are created on clients that might have them missing.
@@ -181,14 +276,14 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
             for(int i = 0; i < playerIdentities.Count; i++)
             {
                 PlayerBehaviour player = playerIdentities[i].square;
-                if (!player.isLocalPlayer) return;
-                if (player.isLocalPlayer) PlayerFactory(currentGameState.selectedMap, player.GetNetworkID(), player.GetGameID(), player.SteamID);
+                if (!player.isLocalPlayer) continue;
+                if (player.isLocalPlayer) PlayerFactory(currentGameState.selectedMap, player.GetNetworkID(), player.GetGameID(), player.SteamID, player.isAI);
             }
         }
     }
 
     //Generates a player on all clients, should that player not exist..
-    void PlayerFactory(int selectedMap, byte networkID, byte gameID, ulong steamID)
+    void PlayerFactory(int selectedMap, byte networkID, byte gameID, ulong steamID, bool isAI)
     {
 
         PlayerFactoryDataPacket playerFactoryData = new PlayerFactoryDataPacket();
@@ -197,6 +292,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         playerFactoryData.MMR = new EncryptedDouble(PlayerBehaviour.MMRlocation, 1000.0).Value;
         playerFactoryData.networkId = networkID;
         playerFactoryData.gameID = gameID;
+        playerFactoryData.isAI = isAI;
 
         //Dispatch player creation on all clients
         PlayerFactoryRpc(playerFactoryData);
@@ -256,7 +352,19 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         {
             newPlayer.isLocalPlayer = true;
             if (!playerSynchronizer.localSquare) playerSynchronizer.localSquare = newPlayer;
-            Instantiate<PlayerController>(controllerPrefab).SetTargetController(newPlayer);
+            PlayerController contrl = Instantiate<PlayerController>(playerData.isAI ? AIControllerPrefab : controllerPrefab);
+            contrl.SetTargetController(newPlayer);
+            if(!playerData.isAI)
+            {
+                playerControllerManager.SpawnController(contrl);
+            }
+            else
+            {
+                PlayerMLAgent playerMLAgent = contrl.GetComponent<PlayerMLAgent>();
+                playerMLAgent.mLTrainingManager = GetComponent<MLTrainingManager>();
+                playerMLAgent.isTraining = false;
+                GetComponent<MLTrainingManager>().spawnedAgents.Add(playerMLAgent);
+            }
         }
     }
 
@@ -273,6 +381,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
 
     private void SetPlayerInitialData(ref PlayerBehaviour newPlayer, ref PlayerFactoryDataPacket playerData)
     {
+        newPlayer.isAI = playerData.isAI;
         newPlayer.SetGameID(playerData.gameID);
         newPlayer.SetNetworkID(playerData.networkId);
         newPlayer.selectedMap = playerData.selectedMap;
@@ -528,6 +637,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         public byte gameID;
         public double MMR;
         public int selectedMap;
+        public bool isAI;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -536,6 +646,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
             serializer.SerializeValue(ref gameID);
             serializer.SerializeValue(ref MMR);
             serializer.SerializeValue(ref selectedMap);
+            serializer.SerializeValue(ref isAI);
         }
     }
 
@@ -546,6 +657,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
         public int selectedMap;
         public float[] mods;
         public ScoreManager.Mode currentGameMode;
+        internal bool isAI;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -554,6 +666,7 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
             serializer.SerializeValue(ref selectedMap);
             serializer.SerializeValue(ref mods);
             serializer.SerializeValue(ref currentGameMode);
+            serializer.SerializeValue(ref isAI);
         }
     }
 

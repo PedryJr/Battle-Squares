@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.LowLevel;
 using UnityEngine.SceneManagement;
 using static BinaryVectors;
 
@@ -35,7 +36,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     float serverUpdateTimer;
 
     [SerializeField]
-    GameObject deathParticles;
+    ParticleBehaviour deathParticles;
 
     Hunter hunter;
 
@@ -62,6 +63,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         projectileManager = GetComponent<ProjectileManager>();
         localSteamData = GetComponent<LocalSteamData>();
         playerFactorySynchronizer = GetComponent<PlayerFactorySynchronizer>();
+        playerPool = new List<PlayerBehaviour>();
 
         networkManager.OnConnectionEvent += NetworkManager_OnConnectionEvent;
         networkManager.ConnectionApprovalCallback += ConnectionApproval;
@@ -355,6 +357,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
     public void UpdateRigidBody(byte playerId)
     {
         PlayerBehaviour player = GetPlayerById(playerId);
+        if (!player) return;
         if (!player.isLocalPlayer) return;
 
         Vector2 pos = player.rb.position;
@@ -490,11 +493,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         {
             if (!item.square.isLocalPlayer) continue;
             byte sourceId = item.square.GetGameID();
-            byte data = (byte)localSquare.score;
-
+            byte data = (byte)item.square.score;
             UpdateScoreRpc(sourceId, data);
         }
-
     }
 
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
@@ -632,7 +633,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 if (responsiblePlayer) affectedPlayer.killStreak++;
 
                 kill = true;
-                PlayerDeathEffect(affectedPlayer);
+                if(!projectileManager.mLTrainingManager.isTraining)
+                {
+                    PlayerDeathEffect(affectedPlayer);
+                }
                 hunter.Kill(victimId, responsibleId);
                 affectedPlayer.KillPlayer();
 
@@ -665,7 +669,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         localSquare.deathSoundInstance.setVolume(MySettings.Volume);
         localSquare.deathSoundInstance.start();
 
-        GameObject newParticle = Instantiate(deathParticles, deadPlayer.rb.position, Quaternion.Euler(0, 0, 0), null);
+        ParticleBehaviour newParticle = AutoPooledPool<ParticleBehaviour>.Spawn(deathParticles, deadPlayer.rb.position, Quaternion.Euler(0, 0, 0), null);
 
         ParticleSystemRenderer[] particleSystemRenderers = newParticle.GetComponentsInChildren<ParticleSystemRenderer>();
         ParticleSystem[] particleSystems = newParticle.GetComponentsInChildren<ParticleSystem>();
@@ -786,23 +790,119 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
 
     }
 
-    public PlayerBehaviour GetClosestPlayer(Vector2 from)
+    public PlayerBehaviour GetClosestPlayer(Vector2 from, bool includeDead = true)
     {
+        if (!mlTrainer) mlTrainer = GetComponent<MLTrainingManager>();
         PlayerBehaviour closest = null;
-        float closestDistSqr = Mathf.Infinity;
-
-        for (int i = 0; i < playerIdentities.Count; i++)
+        float closestDistSqr = float.MaxValue;
+        var players = playerIdentities;
+        int count = players.Count;
+        PlayerBehaviour player;
+        for (int i = 0; i < count; i++)
         {
-            Vector2 playerPos = playerIdentities[i].square.rb.position;
-            float distSqr = (playerPos - from).sqrMagnitude;
-
+            player = players[i].square;
+            if (mlTrainer.isTraining && localSquare.GetGameID() == player.GetGameID()) continue;
+            if (!includeDead && player.isDead) continue;
+            Vector2 playerPos = player.RBPosition;
+            float diffX = from.x - playerPos.x;
+            float diffY = from.y - playerPos.y;
+            float distSqr = diffX * diffX + diffY * diffY;
             if (distSqr < closestDistSqr)
             {
                 closestDistSqr = distSqr;
-                closest = playerIdentities[i].square;
+                closest = player;
             }
         }
+        return closest;
+    }
 
+    MLTrainingManager mlTrainer = null;
+
+    List<PlayerBehaviour> playerPool;
+
+    public PlayerBehaviour GetRandomPlayer(Vector2 _ignore, byte exclude, bool includeDead = true)
+    {
+        if (!mlTrainer) mlTrainer = GetComponent<MLTrainingManager>();
+
+        // 1. Create a temporary list to hold players who pass the filters
+        playerPool.Clear();
+
+        var players = playerIdentities;
+        int count = players.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            PlayerBehaviour player = players[i].square;
+
+            // Apply your existing filters
+            if (mlTrainer.isTraining && localSquare.GetGameID() == player.GetGameID()) continue;
+            if (player.GetGameID() == exclude) continue;
+            if (!includeDead && player.isDead) continue;
+
+            // 2. If they pass, add them to the pool
+            playerPool.Add(player);
+        }
+
+        // 3. Return a random entry from the valid pool, or null if empty
+        if (playerPool.Count == 0) return null;
+
+        int randomIndex = UnityEngine.Random.Range(0, playerPool.Count);
+        return playerPool[randomIndex];
+    }
+
+    public PlayerBehaviour GetFarthestPlayer(Vector2 from, byte exclude, bool includeDead = true)
+    {
+        if (!mlTrainer) mlTrainer = GetComponent<MLTrainingManager>();
+
+        PlayerBehaviour furthest = null;
+        float furthestDistSqr = float.MinValue;
+        var players = playerIdentities;
+        int count = players.Count;
+        PlayerBehaviour player;
+        for (int i = 0; i < count; i++)
+        {
+            player = players[i].square;
+            if (mlTrainer.isTraining && localSquare.GetGameID() == player.GetGameID()) continue;
+            if (player.GetGameID() == exclude) continue;
+            if (!includeDead && player.isDead) continue;
+            Vector2 playerPos = player.RBPosition;
+            float diffX = from.x - playerPos.x;
+            float diffY = from.y - playerPos.y;
+            float distSqr = diffX * diffX + diffY * diffY;
+            if (distSqr > furthestDistSqr)
+            {
+                furthestDistSqr = distSqr;
+                furthest = player;
+            }
+        }
+        return furthest;
+    }
+
+    public PlayerBehaviour GetClosestPlayer(Vector2 from, byte exclude, bool includeDead = true)
+    {
+        if(!mlTrainer) mlTrainer = GetComponent<MLTrainingManager>();
+
+        PlayerBehaviour closest = null;
+        float closestDistSqr = float.MaxValue;
+        var players = playerIdentities;
+        int count = players.Count;
+        PlayerBehaviour player;
+        for (int i = 0; i < count; i++)
+        {
+            player = players[i].square;
+            if (mlTrainer.isTraining && localSquare.GetGameID() == player.GetGameID()) continue;
+            if (player.GetGameID() == exclude) continue;
+            if (!includeDead && player.isDead) continue;
+            Vector2 playerPos = player.RBPosition;
+            float diffX = from.x - playerPos.x;
+            float diffY = from.y - playerPos.y;
+            float distSqr = diffX * diffX + diffY * diffY;
+            if (distSqr < closestDistSqr)
+            {
+                closestDistSqr = distSqr;
+                closest = player;
+            }
+        }
         return closest;
     }
 
@@ -890,7 +990,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         ParticleBehaviour particleBehaviour = player.jumpParticleRef;
         Vector3 position = new Vector2(decom.x, decom.y);
         Quaternion rotation = Quaternion.Euler(0, 0, decom.z);
-        particleBehaviour = ParticlePool.Spawn(particleBehaviour, position, rotation);
+        particleBehaviour = AutoPooledPool<ParticleBehaviour>.Spawn(particleBehaviour, position, rotation);
         int l = particleBehaviour.ParticleSystemRenderers.Length;
         for (int i = 0; i < l; i++)
         {

@@ -2,6 +2,7 @@ using BattleSquaresSDK;
 using System;
 using UnityEngine;
 using static AssetWrappers;
+using static UnityEngine.Rendering.STP;
 using static WeaponBuilder;
 
 public class RuntimePrefabTemplates : MonoBehaviour
@@ -30,15 +31,13 @@ public class RuntimePrefabTemplates : MonoBehaviour
         ParticleBehaviour launchParticlesOBJ = Instantiate(fullFeatureWeapon.weapon.launchParticle);
         ParticleBehaviour bounceParticlesOBJ = Instantiate(fullFeatureWeapon.weapon.bounceParticle);
         ParticleBehaviour hitParticlesOBJ = Instantiate(fullFeatureWeapon.weapon.impactParticle);
-        HitMarkBehaviour hitMarker = Instantiate(fullFeatureWeapon.weapon.projectile.hitMark);
 
         DontDestroyOnLoad(newProjectile.gameObject);
         DontDestroyOnLoad(launchParticlesOBJ.gameObject);
         DontDestroyOnLoad(bounceParticlesOBJ.gameObject);
         DontDestroyOnLoad(hitParticlesOBJ.gameObject);
-        DontDestroyOnLoad(hitMarker.gameObject);
 
-        AssignProjectileConfig(newProjectile, hitMarker, creator.projectileObjConfig);
+        AssignProjectileConfig(newProjectile, creator.projectileObjConfig);
 
         if (creator.projectileObjConfig.trailMode == TrailMode.Internal)
         {
@@ -51,16 +50,16 @@ public class RuntimePrefabTemplates : MonoBehaviour
             DontDestroyOnLoad(externalTrailParticlesOBJ.gameObject);
             PopulateParticleGroup(externalTrailParticlesOBJ, creator.externalTrailParticles.particles);
             newWeaponBuilder.specs.projectile.externalTrailRef = externalTrailParticlesOBJ;
-            externalTrailParticlesOBJ.RefreshComp();
+            externalTrailParticlesOBJ.Refresh();
         }
 
         PopulateParticleGroup(launchParticlesOBJ, creator.fireParticles.particles);
         PopulateParticleGroup(bounceParticlesOBJ, creator.bounceParticles.particles);
         PopulateParticleGroup(hitParticlesOBJ, creator.hitParticles.particles);
 
-        launchParticlesOBJ.RefreshComp();
-        bounceParticlesOBJ.RefreshComp();
-        hitParticlesOBJ.RefreshComp();
+        launchParticlesOBJ.Refresh();
+        bounceParticlesOBJ.Refresh();
+        hitParticlesOBJ.Refresh();
 
         newWeaponBuilder.specs.projectile = newProjectile;
         newWeaponBuilder.specs.bounceParticle = bounceParticlesOBJ;
@@ -70,11 +69,9 @@ public class RuntimePrefabTemplates : MonoBehaviour
         return newWeaponBuilder;
     }
 
-    void AssignProjectileConfig(ProjectileBehaviour projectile, HitMarkBehaviour hitMark, in ProjectileObjConfig config)
+    void AssignProjectileConfig(ProjectileBehaviour projectile, in ProjectileObjConfig config)
     {
         projectile.transform.localScale = new Vector3(config.projectileStartSize.X, config.projectileStartSize.Y, 1f);
-        hitMark.transform.localScale = new Vector3(config.hitmarkSize.X, config.hitmarkSize.Y, 1f);
-        projectile.hitMark = hitMark;
         Rigidbody2D projectileRB = projectile.GetComponent<Rigidbody2D>();
         Collider2D projectileCol = projectile.GetComponent<Collider2D>();
         projectileRB.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
@@ -151,6 +148,9 @@ public class RuntimePrefabTemplates : MonoBehaviour
         weapon.sync = mod.sync;
         weapon.hover = mod.hover;
         weapon.syncSpeed = mod.syncSpeed;
+
+        //weapon.hitMarkSize = mod.hitmarkSize; Add later
+        weapon.hitMarkSize = 1f;
 
         return weapon;
     }

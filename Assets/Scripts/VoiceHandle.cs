@@ -70,7 +70,7 @@ public sealed class VoiceHandle : NetworkBehaviour
 
     private void Update()
     {
-
+        return;
         if (!attatchedPlayer)
         {
 
