@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public sealed class LevelEditorButton : MonoBehaviour
+public sealed class LevelEditorButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
 
 
@@ -236,7 +236,7 @@ public sealed class LevelEditorButton : MonoBehaviour
 
     private void SetupEventTriggers()
     {
-        EventTrigger eventTrigger = GetComponent<EventTrigger>();
+/*        EventTrigger eventTrigger = GetComponent<EventTrigger>();
 
         if (!eventTrigger) eventTrigger = gameObject.AddComponent<EventTrigger>();
 
@@ -250,7 +250,7 @@ public sealed class LevelEditorButton : MonoBehaviour
 
         eventTrigger.triggers.Add(pointerEnterEntry);
         eventTrigger.triggers.Add(pointerExitEntry);
-        eventTrigger.triggers.Add(pointerClickEntry);
+        eventTrigger.triggers.Add(pointerClickEntry);*/
     }
 
     public void RemoveTriggers()
@@ -322,6 +322,21 @@ public sealed class LevelEditorButton : MonoBehaviour
                 clickEvent?.Invoke();
             }
         }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        ButtonClick();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        OnHover();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        ExitHover();
     }
 
     private enum AnimationType

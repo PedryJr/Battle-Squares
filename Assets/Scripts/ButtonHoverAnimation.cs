@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public sealed class ButtonHoverAnimation : MonoBehaviour
+public sealed class ButtonHoverAnimation : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public static bool NavigatingUI;
 
@@ -368,7 +368,7 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
     private void SetupEventTriggers()
     {
-        EventTrigger trigger = GetComponent<EventTrigger>();
+/*        EventTrigger trigger = GetComponent<EventTrigger>();
         if (!trigger)
             trigger = gameObject.AddComponent<EventTrigger>();
 
@@ -376,14 +376,14 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
 
         AddTrigger(trigger, EventTriggerType.PointerEnter, _ => OnHover());
         AddTrigger(trigger, EventTriggerType.PointerExit, _ => ExitHover());
-        AddTrigger(trigger, EventTriggerType.PointerClick, _ => ButtonClick());
+        AddTrigger(trigger, EventTriggerType.PointerClick, _ => ButtonClick());*/
     }
 
     private void RemoveEventTriggers()
     {
-        EventTrigger trigger = GetComponent<EventTrigger>();
+/*        EventTrigger trigger = GetComponent<EventTrigger>();
         if (trigger)
-            trigger.triggers.Clear();
+            trigger.triggers.Clear();*/
     }
 
     private static void AddTrigger(EventTrigger trigger, EventTriggerType type, Action<BaseEventData> action)
@@ -481,4 +481,20 @@ public sealed class ButtonHoverAnimation : MonoBehaviour
     private enum AnimationType { Stretch, Expand }
     private enum SoundInteractionHoverType { Normal, HighPitch, LowPitch, None }
     private enum SoundInteractionClickType { Normal, HighPitch, LowPitch, None }
+
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        ButtonClick();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        OnHover();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        ExitHover();
+    }
 }
