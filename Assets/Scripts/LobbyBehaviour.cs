@@ -14,6 +14,9 @@ public sealed class LobbyBehaviour : MonoBehaviour
     public TextMeshProUGUI lobbyName;
 
     [SerializeField]
+    public TextMeshProUGUI populationText;
+
+    [SerializeField]
     public UnityEngine.UI.Image lobbyIcon;
 
     public LobbyLoader lobbyLoader;
@@ -159,6 +162,7 @@ public sealed class LobbyBehaviour : MonoBehaviour
     {
         avalibilityUpdateTime += Time.deltaTime;
         if (avalibilityUpdateTime > 0.05f) UpdateAvalible();
+        populationText.text = $"{lobbyPopulation} / 4";
     }
 
     public void UpdateAvalible()

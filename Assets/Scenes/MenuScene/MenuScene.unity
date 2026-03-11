@@ -353,6 +353,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -531,6 +532,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 37194329}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -762,7 +765,7 @@ GameObject:
   m_IsActive: 1
 --- !u!199 &66875590
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -808,6 +811,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -195
+  m_MaskInteraction: 0
   m_RenderMode: 3
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -839,7 +843,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!198 &66875591
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -5712,6 +5715,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5993,6 +5997,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!212 &93095259
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6038,6 +6043,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -60
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 0.23179455, g: 0.24287297, b: 0.25157225, a: 1}
   m_FlipX: 0
@@ -6047,7 +6053,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!224 &104700893 stripped
 RectTransform:
@@ -6223,6 +6228,8 @@ MonoBehaviour:
   clickEvent:
     m_PersistentCalls:
       m_Calls: []
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
@@ -6373,6 +6380,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6480,7 +6488,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4292467161
   m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -6509,6 +6517,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6645,6 +6654,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6753,6 +6763,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 264309519}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -7488,6 +7500,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7609,6 +7622,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 321838108}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -7731,6 +7746,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 367214620}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -7866,6 +7883,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 396877839}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -7988,6 +8007,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 430721358}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -8228,6 +8249,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8364,6 +8386,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8500,6 +8523,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8750,7 +8774,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4292467161
   m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -8779,6 +8803,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9166,6 +9191,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9318,6 +9344,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9427,6 +9454,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 627421721}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -9864,6 +9893,8 @@ MonoBehaviour:
   clickEvent:
     m_PersistentCalls:
       m_Calls: []
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
@@ -9948,6 +9979,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 735314504}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -10070,6 +10103,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 750401022}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 0.85030836, g: 1.0230267, b: 1.4775852, a: 1}
@@ -10233,6 +10268,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10525,6 +10561,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10671,6 +10708,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
@@ -10781,6 +10820,8 @@ MonoBehaviour:
   clickEvent:
     m_PersistentCalls:
       m_Calls: []
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
@@ -10936,7 +10977,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4292467161
   m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -10965,6 +11006,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -11028,6 +11070,7 @@ GameObject:
   m_IsActive: 1
 --- !u!212 &847592638
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -11073,6 +11116,7 @@ SpriteRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 300
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -4750761433519615375, guid: 13906d6fc89df734f83f3b0b75008551, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -11082,7 +11126,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &847592639
 MonoBehaviour:
@@ -11732,6 +11775,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -11869,6 +11913,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12048,7 +12093,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4292467161
   m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -12077,6 +12122,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12199,6 +12245,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!212 &906813693
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -12244,6 +12291,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -60
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 0.23179455, g: 0.24287297, b: 0.25157225, a: 1}
   m_FlipX: 0
@@ -12253,7 +12301,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &906965315
 GameObject:
@@ -12352,6 +12399,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12427,6 +12475,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &918354528
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -12472,6 +12521,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 25
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
   m_FlipX: 0
@@ -12481,7 +12531,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &932986896
 GameObject:
@@ -13038,6 +13087,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -13172,6 +13222,8 @@ MonoBehaviour:
   clickEvent:
     m_PersistentCalls:
       m_Calls: []
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
@@ -13372,6 +13424,8 @@ MonoBehaviour:
   clickEvent:
     m_PersistentCalls:
       m_Calls: []
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
@@ -13879,6 +13933,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 1236373326}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -14019,6 +14075,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!212 &1263126298
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -14064,6 +14121,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -60
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 0.23179455, g: 0.24287297, b: 0.25157225, a: 1}
   m_FlipX: 0
@@ -14073,7 +14131,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1278965511
 GameObject:
@@ -14370,6 +14427,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 1308986682}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -14522,6 +14581,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14660,6 +14720,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14872,6 +14933,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15300,6 +15362,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15669,6 +15732,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15829,6 +15893,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 1420192882}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -15965,6 +16031,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!212 &1421074880
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -16010,6 +16077,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -60
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 0.23179455, g: 0.24287297, b: 0.25157225, a: 1}
   m_FlipX: 0
@@ -16019,7 +16087,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1442331280
 GameObject:
@@ -16056,7 +16123,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 355, y: 369.49994}
+  m_AnchoredPosition: {x: 325, y: 369.49994}
   m_SizeDelta: {x: 485, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1442331282
@@ -16164,6 +16231,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 1443465548}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -16314,6 +16383,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 24.8
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16448,6 +16518,8 @@ MonoBehaviour:
   clickEvent:
     m_PersistentCalls:
       m_Calls: []
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
@@ -16560,6 +16632,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16668,6 +16741,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 1525269224}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -16820,6 +16895,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16956,6 +17032,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17310,6 +17387,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 1588233645}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17744,6 +17823,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 1628089855}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17896,6 +17977,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18110,7 +18192,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4292467161
   m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -18139,6 +18221,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18409,7 +18492,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4292467161
   m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -18438,6 +18521,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18574,6 +18658,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18790,6 +18875,7 @@ GameObject:
   m_IsActive: 1
 --- !u!212 &1841509427
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -18835,6 +18921,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -200
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.05, g: 0.05, b: 0.05, a: 1}
   m_FlipX: 0
@@ -18844,7 +18931,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1841509428
 Transform:
@@ -19088,7 +19174,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4292467161
   m_fontColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -19117,6 +19203,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19251,6 +19338,8 @@ MonoBehaviour:
   clickEvent:
     m_PersistentCalls:
       m_Calls: []
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
@@ -19547,6 +19636,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 1970698837}
   offHoveredColor: {r: 1, g: 1, b: 1, a: 1}
   onHoveredColor: {r: 1, g: 1, b: 1, a: 1}
@@ -19710,6 +19801,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19867,6 +19959,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20198,6 +20291,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 24.8
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20435,7 +20529,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.00091552734}
   m_SizeDelta: {x: -0.18, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &86024434523988009
@@ -20474,8 +20568,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 14.0099945, y: -28.433014}
-  m_SizeDelta: {x: -28.17, y: -56.79}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!4 &465716615836803120
 Transform:
@@ -20526,8 +20620,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 355, y: -49.34}
-  m_SizeDelta: {x: 486, y: 762.25}
+  m_AnchoredPosition: {x: 325, y: -75}
+  m_SizeDelta: {x: 550, y: 762.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &659266210894127224
 MonoBehaviour:
@@ -20546,10 +20640,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 15
     m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: 15
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildAlignment: 1
+  m_Spacing: 7.5
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
@@ -20664,6 +20758,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -21142,6 +21237,7 @@ MonoBehaviour:
   lobbyIdSHOW: 0
   ownerIdSHOW: 0
   lobbyName: {fileID: 1088194074000866452}
+  populationText: {fileID: 0}
   lobbyIcon: {fileID: 2967289794757295815}
   lobbyLoader: {fileID: 0}
   lobbyCapacity: 0
