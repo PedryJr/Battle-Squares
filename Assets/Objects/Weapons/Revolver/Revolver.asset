@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Revolver
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: 1171c9acbd4def3498ea0e39bbc56a77, type: 3}
+    icon: {fileID: 21300000, guid: a297a959b9e86cd42bca77a29c6fa2eb, type: 3}
     projectile: {fileID: 3230000773134604271, guid: 1484733a76041e247bad07d9e0c99dcc, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: 6784c58aca5da3644917ab374eec1c9d, type: 3}
     bounceParticle: {fileID: 0}

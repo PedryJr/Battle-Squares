@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cruiser
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: 0632f557ce949434c884e45dc24a7806, type: 3}
+    icon: {fileID: 21300000, guid: 989183ddde21f264a92dd3c0d9ac8350, type: 3}
     projectile: {fileID: 3230000773134604271, guid: c734cba96a2141e4e99a908216f67e67, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: 843a75b13e37fa34f876d5748dacfefd, type: 3}
     bounceParticle: {fileID: 0}

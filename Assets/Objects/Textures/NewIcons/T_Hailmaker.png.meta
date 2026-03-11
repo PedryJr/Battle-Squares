@@ -1,0 +1,403 @@
+fileFormatVersion: 2
+guid: 9916919aee8bfc9489a89743df399dae
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8929744611888131792
+    second: T_Hailmaker_0
+  - first:
+      213: 8774168156111913678
+    second: T_Hailmaker_1
+  - first:
+      213: -3036089197720791579
+    second: T_Hailmaker_2
+  - first:
+      213: 7995237754526367594
+    second: T_Hailmaker_3
+  - first:
+      213: 5215771356906509933
+    second: T_Hailmaker_4
+  - first:
+      213: 2768654127288677433
+    second: T_Hailmaker_5
+  - first:
+      213: -3048959201285959879
+    second: T_Hailmaker_6
+  - first:
+      213: -7319747896971481231
+    second: T_Hailmaker_7
+  - first:
+      213: -2175726570078743728
+    second: T_Hailmaker_8
+  - first:
+      213: -743330502705072279
+    second: T_Hailmaker_9
+  - first:
+      213: 2491976315905452592
+    second: T_Hailmaker_10
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 2
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: T_Hailmaker_0
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 454
+        width: 1275
+        height: 1257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0deec86a963dceb70800000000000000
+      internalID: 8929744611888131792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_1
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 1442
+        width: 98
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec24890537b14c970800000000000000
+      internalID: 8774168156111913678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_2
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 1306
+        width: 128
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e59377e5f4add5d0800000000000000
+      internalID: -3036089197720791579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_3
+      rect:
+        serializedVersion: 2
+        x: 1656
+        y: 401
+        width: 206
+        height: 1151
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6ff55d806ac4fe60800000000000000
+      internalID: 7995237754526367594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_4
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 1170
+        width: 128
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d66d11e2a64226840800000000000000
+      internalID: 5215771356906509933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_5
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 1033
+        width: 128
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 934f5f2824c3c6620800000000000000
+      internalID: 2768654127288677433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_6
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 897
+        width: 128
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93f01b0b2cbefa5d0800000000000000
+      internalID: -3048959201285959879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_7
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 761
+        width: 128
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17f2a93c1180b6a90800000000000000
+      internalID: -7319747896971481231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_8
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 625
+        width: 128
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 053d31646344ec1e0800000000000000
+      internalID: -2175726570078743728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_9
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 488
+        width: 128
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9673d8b98d82fa5f0800000000000000
+      internalID: -743330502705072279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Hailmaker_10
+      rect:
+        serializedVersion: 2
+        x: 1515
+        y: 454
+        width: 100
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03a2b3a9147459220800000000000000
+      internalID: 2491976315905452592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      T_Hailmaker_0: 8929744611888131792
+      T_Hailmaker_1: 8774168156111913678
+      T_Hailmaker_10: 2491976315905452592
+      T_Hailmaker_2: -3036089197720791579
+      T_Hailmaker_3: 7995237754526367594
+      T_Hailmaker_4: 5215771356906509933
+      T_Hailmaker_5: 2768654127288677433
+      T_Hailmaker_6: -3048959201285959879
+      T_Hailmaker_7: -7319747896971481231
+      T_Hailmaker_8: -2175726570078743728
+      T_Hailmaker_9: -743330502705072279
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ricochet
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
-    icon: {fileID: 21300000, guid: 1171c9acbd4def3498ea0e39bbc56a77, type: 3}
+    icon: {fileID: 21300000, guid: 8a96a0c1115eab84d9d1a1290cc744dd, type: 3}
     projectile: {fileID: 3230000773134604271, guid: 00650469aa02ad9489e3ad7d2be1886a, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: c1aadf80cfcfef94189ba6eb4428c9e6, type: 3}
     bounceParticle: {fileID: 4313180367996257349, guid: 8bf3cf56e93dd0747893f356c7b8c4eb, type: 3}
