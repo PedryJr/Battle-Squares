@@ -58,13 +58,6 @@ public sealed class LevelAnimationGroup : MonoBehaviour
         MoveToward(targetPosition);
     }
 
-/*    private void Update()
-    {
-        if (!constructed) return;
-        animationTimer = NetworkManager.Singleton.ServerTime.TimeAsFloat * animationSpeed;
-        Vector2 targetPosition = animationPath.Evaluate(Mathf.Repeat(animationTimer + animationOffset, 1f));
-    }*/
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!collision.gameObject.TryGetComponent(out PlayerBehaviour playerBehaviour)) return;
