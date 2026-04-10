@@ -12953,6 +12953,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7919e7cddf516674f85f572c71476ab3, type: 2}
   - {fileID: 11400000, guid: 08084139298ccb04491265d45c7c935c, type: 2}
   - {fileID: 11400000, guid: 4014ffbcf24e17648ab4d06ab1803df3, type: 2}
+  - {fileID: 11400000, guid: 67790aa86e818ab4a9047dc3370db0bd, type: 2}
+  - {fileID: 11400000, guid: 3e460bd0185dd6a478c28a56a7cf3fbe, type: 2}
   nozzleParticles: {fileID: 7289681851009581468, guid: d5708c37ce8342349a0ef39281023399, type: 3}
   projectiles: []
   localNozzle: {fileID: 0}
