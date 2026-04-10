@@ -119,12 +119,12 @@ MonoBehaviour:
       m_RotationOrder: 4
     projectileSpawnEvents: []
     weaponName: Greatsword
-    targetMorph: {x: 4, y: 4, z: 1}
+    targetMorph: {x: 3.2, y: 3.2, z: 1}
     reloadTime: 1.35
     shootingInterval: 0.3
     projectileSpeed: 20
     projectileAcceleration: 0
-    lifeTime: 0.165
+    lifeTime: 0.185
     burstSpread: 0
     fluctuation: 0.1
     aoe: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
     baseDamage: 8
     damageTimeScale: 0
     recoil: -12
-    timeToMorph: 0.2
+    timeToMorph: 0.25
     syncSpeed: 0
     meleeRange: 2.5
     swingDegrees: 120

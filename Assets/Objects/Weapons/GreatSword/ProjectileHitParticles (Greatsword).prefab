@@ -43,7 +43,7 @@ ParticleSystem:
   m_GameObject: {fileID: 7289681851009581468}
   serializedVersion: 8
   lengthInSec: 0.05
-  simulationSpeed: 1
+  simulationSpeed: 0.1
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -4871,7 +4871,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &7985869621744959770
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4917,11 +4917,12 @@ ParticleSystemRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 1
+  m_MaskInteraction: 2
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 1
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 1
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -4948,7 +4949,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 2
 --- !u!114 &4313180367996257349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4961,10 +4961,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e715116cddfc282488fa6dc4d84ac7dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  supportObjectPooling: 1
+  variantID: 5800221936809502377
   particleSystems:
   - {fileID: 3819964968668371686}
   particleSystemsRenderers:
   - {fileID: 7985869621744959770}
-  supportObjectPooling: 1
-  variantID: 8734737515733354795
+  stopBehaviour: 0
   lifeTime: 1.4
+  emissionStopTimePadding: 1
+  attatchmentLifeTime: 1.4
+  attatchment: {fileID: 0}
