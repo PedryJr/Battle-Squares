@@ -64,22 +64,22 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0.05096074
       - serializedVersion: 3
-        time: 0.65546155
-        value: 0.768811
-        inSlope: -1.0170552
-        outSlope: -1.0170552
+        time: 0.5923757
+        value: 0.68395376
+        inSlope: -0.98631245
+        outSlope: -0.98631245
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.057448164
-        outWeight: 0.23243922
+        outWeight: 0.21196407
       - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: -3.579158
-        outSlope: -3.579158
+        time: 0.85
+        value: 0.35
+        inSlope: -1.9132156
+        outSlope: -1.9132156
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.022756185
+        inWeight: 0.1622656
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -119,7 +119,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     projectileSpawnEvents: []
     weaponName: Greatsword
-    targetMorph: {x: 3.2, y: 1, z: 1}
+    targetMorph: {x: 4, y: 4, z: 1}
     reloadTime: 1.35
     shootingInterval: 0.3
     projectileSpeed: 20
@@ -138,8 +138,8 @@ MonoBehaviour:
     timeToMorph: 0.2
     syncSpeed: 0
     meleeRange: 2.5
-    swingDegrees: 85
-    meleeRotation: 180
+    swingDegrees: 120
+    meleeRotation: 0
     homingStrength: 0
     homingDistance: 0
     spinSpeed: 0

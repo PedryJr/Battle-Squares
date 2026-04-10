@@ -118,7 +118,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     projectileSpawnEvents: []
-    weaponName: Greatsword
+    weaponName: GreatswordBACKUP
     targetMorph: {x: 3.2, y: 1, z: 1}
     reloadTime: 1.35
     shootingInterval: 0.3
@@ -158,7 +158,7 @@ MonoBehaviour:
     morphTimeOnBounce: 0
     projectileAmmo: 3
     burst: 0
-    typeID: 65535
+    typeID: 65485
     bounces: 0
     holdable: 0
     noGravity: 1

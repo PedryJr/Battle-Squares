@@ -110,7 +110,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     projectileSpawnEvents: []
     weaponName: Smasher
-    targetMorph: {x: 3.2, y: 1, z: 1}
+    targetMorph: {x: 3, y: 3, z: 1}
     reloadTime: 1.5
     shootingInterval: 0.3
     projectileSpeed: 20
