@@ -23,21 +23,30 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.3
-        inSlope: 2
-        outSlope: 2
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.4992615
+        value: 0.49889228
+        inSlope: 1.4999967
+        outSlope: 1.4999967
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.97471493
+        value: 0
+        inSlope: -5.340091
+        outSlope: -5.340091
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.017448382
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -48,20 +57,29 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: -1
-        outSlope: -1
-        tangentMode: 34
+        inSlope: -0.070553444
+        outSlope: -0.070553444
+        tangentMode: 0
         weightedMode: 0
         inWeight: 0
+        outWeight: 0.07963438
+      - serializedVersion: 3
+        time: 0.42286253
+        value: 0.9915251
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0
-        inSlope: -1
-        outSlope: -1
-        tangentMode: 34
+        value: 0.05
+        inSlope: -0.1055321
+        outSlope: -0.1055321
+        tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
+        inWeight: 0.0223851
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -72,20 +90,29 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: -1
-        outSlope: -1
-        tangentMode: 34
+        inSlope: -0.070553444
+        outSlope: -0.070553444
+        tangentMode: 0
         weightedMode: 0
         inWeight: 0
+        outWeight: 0.07963438
+      - serializedVersion: 3
+        time: 0.42286253
+        value: 0.9915251
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0
-        inSlope: -1
-        outSlope: -1
-        tangentMode: 34
+        value: 0.05
+        inSlope: -0.1055321
+        outSlope: -0.1055321
+        tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
+        inWeight: 0.0223851
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -97,7 +124,7 @@ MonoBehaviour:
     shootingInterval: 0.3
     projectileSpeed: 20
     projectileAcceleration: 0
-    lifeTime: 0.28
+    lifeTime: 0.39
     burstSpread: 0
     fluctuation: 0.1
     aoe: 0
@@ -107,10 +134,10 @@ MonoBehaviour:
     aoeDamage: 0
     baseDamage: 8.5
     damageTimeScale: 0
-    recoil: -12
-    timeToMorph: 0.25
+    recoil: -8
+    timeToMorph: 0.5
     syncSpeed: 0
-    meleeRange: 2
+    meleeRange: 1.85
     swingDegrees: 130
     meleeRotation: 130
     homingStrength: 0
@@ -145,7 +172,7 @@ MonoBehaviour:
     stickToSender: 0
     melee: 1
     oneTimeHit: 1
-    flipFlop: 0
+    flipFlop: 1
     homing: 0
     rotationFlipOnImpact: 0
     dieFromProjectiles: 0
