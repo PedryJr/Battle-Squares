@@ -110,20 +110,20 @@ MonoBehaviour:
       m_RotationOrder: 4
     projectileSpawnEvents: []
     weaponName: Smasher
-    targetMorph: {x: 3, y: 3, z: 1}
+    targetMorph: {x: 1, y: 1, z: 1}
     reloadTime: 1.5
-    shootingInterval: 0.3
+    shootingInterval: 0.08
     projectileSpeed: 20
     projectileAcceleration: 0
     lifeTime: 0.165
     burstSpread: 0
     fluctuation: 0.1
-    aoe: 2.8
+    aoe: 2
     knockback: 12
     speedLimit: 100
     minSpeed: 0
-    aoeDamage: 4.5
-    baseDamage: 4
+    aoeDamage: 2
+    baseDamage: 1.5
     damageTimeScale: 0
     recoil: -2
     timeToMorph: 0.2
@@ -147,7 +147,7 @@ MonoBehaviour:
     hoverDistanceAttenuation: 0
     timeForFullHoverEffect: 0
     morphTimeOnBounce: 0
-    projectileAmmo: 1
+    projectileAmmo: 3
     burst: 1
     typeID: 6664
     bounces: 0

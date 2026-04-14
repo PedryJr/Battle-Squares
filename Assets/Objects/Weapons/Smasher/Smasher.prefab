@@ -71,6 +71,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1625723881570478094
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -116,6 +117,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 90799df17dc8ba24691a09d49ed0facf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -125,7 +127,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &3230000773134604271
 MonoBehaviour:
@@ -168,7 +169,6 @@ MonoBehaviour:
   sync: 0
   flipFlop: 0
   builtIndAudio: 1
-  hitMark: {fileID: 0}
   trailParticles: {fileID: 4105216396092676545}
   trailParticleSystem: {fileID: 3128384884913573580}
   spriteRenderer: {fileID: 1625723881570478094}
@@ -279,6 +279,7 @@ MonoBehaviour:
     alignDirection: 0
     clampMorph: 0
     hover: 0
+    hitMarkSize: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0
@@ -356,7 +357,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.3, y: 2.2}
+  m_Size: {x: 0.7, y: 1.1}
   m_EdgeRadius: 0
 --- !u!61 &6532073882242602851
 BoxCollider2D:
@@ -365,7 +366,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3066612454653962984}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 6200000, guid: 176a05e135a7fe543a3e06fb07d512d0, type: 2}
@@ -392,7 +393,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.13, y: 0}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -402,7 +403,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.6, y: 10.09}
+  m_Size: {x: 0.7, y: 1.1}
   m_EdgeRadius: 0
 --- !u!1 &8047464109496563407
 GameObject:
@@ -446,7 +447,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8047464109496563407}
   serializedVersion: 8
-  lengthInSec: 0.165
+  lengthInSec: 0.18
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -5199,7 +5200,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &4105216396092676545
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5246,6 +5247,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 5
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5277,7 +5279,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!114 &4704396953996140267
 MonoBehaviour:
   m_ObjectHideFlags: 0
