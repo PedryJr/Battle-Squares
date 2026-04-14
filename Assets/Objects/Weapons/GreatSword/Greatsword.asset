@@ -24,29 +24,38 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: 3.0680413
+        outSlope: 3.0680413
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0
+        outWeight: 0.12729347
       - serializedVersion: 3
-        time: 0.4992615
-        value: 0.49889228
-        inSlope: 1.4999967
-        outSlope: 1.4999967
+        time: 0.5061201
+        value: 0.3490868
+        inSlope: 3.0022702
+        outSlope: 3.0022702
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.12831661
+        outWeight: 0.1540306
+      - serializedVersion: 3
+        time: 0.9405486
+        value: 0.97893703
+        inSlope: -0.5672516
+        outSlope: -0.5672516
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 0.49619937
       - serializedVersion: 3
-        time: 0.97471493
+        time: 1
         value: 0
-        inSlope: -5.340091
-        outSlope: -5.340091
-        tangentMode: 0
+        inSlope: -16.466173
+        outSlope: -16.466173
+        tangentMode: 34
         weightedMode: 0
-        inWeight: 0.017448382
+        inWeight: 0.33333334
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -55,31 +64,22 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: -0.070553444
-        outSlope: -0.070553444
+        time: 0.000859621
+        value: 1.8784561
+        inSlope: 1.5371944
+        outSlope: 1.5371944
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.07963438
+        outWeight: 0.1652778
       - serializedVersion: 3
-        time: 0.42286253
-        value: 0.9915251
+        time: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1
-        value: 0.05
-        inSlope: -0.1055321
-        outSlope: -0.1055321
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.0223851
+        inWeight: 0
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -88,43 +88,43 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
+        time: 0.000859621
         value: 1
-        inSlope: -0.070553444
-        outSlope: -0.070553444
+        inSlope: 1.5371944
+        outSlope: 1.5371944
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.07963438
+        outWeight: 0.1652778
       - serializedVersion: 3
-        time: 0.42286253
-        value: 0.9915251
-        inSlope: 0
-        outSlope: 0
+        time: 0.612186
+        value: 0.8846197
+        inSlope: -1.9081981
+        outSlope: -1.9081981
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.05
-        inSlope: -0.1055321
-        outSlope: -0.1055321
+        value: 0
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.0223851
+        inWeight: 0
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     projectileSpawnEvents: []
     weaponName: Greatsword
-    targetMorph: {x: 2, y: 0.22, z: 0.1}
+    targetMorph: {x: 2.25, y: 0.22, z: 0.1}
     reloadTime: 1.45
-    shootingInterval: 0.3
+    shootingInterval: 0.65
     projectileSpeed: 20
     projectileAcceleration: 0
-    lifeTime: 0.39
+    lifeTime: 0.65
     burstSpread: 0
     fluctuation: 0.1
     aoe: 0
@@ -134,12 +134,12 @@ MonoBehaviour:
     aoeDamage: 0
     baseDamage: 8.5
     damageTimeScale: 0
-    recoil: -8
-    timeToMorph: 0.5
+    recoil: -14
+    timeToMorph: 0.65
     syncSpeed: 0
     meleeRange: 1.85
-    swingDegrees: 130
-    meleeRotation: 130
+    swingDegrees: 145
+    meleeRotation: 145
     homingStrength: 0
     homingDistance: 0
     spinSpeed: 0
