@@ -132,7 +132,7 @@ MonoBehaviour:
     speedLimit: 100
     minSpeed: 0
     aoeDamage: 0
-    baseDamage: 8.5
+    baseDamage: 10
     damageTimeScale: 0
     recoil: -14
     timeToMorph: 0.65
