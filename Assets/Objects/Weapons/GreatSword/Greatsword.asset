@@ -24,35 +24,53 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 3.0680413
-        outSlope: 3.0680413
+        inSlope: 7.310817
+        outSlope: 7.310817
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.12729347
+        outWeight: 0.08570261
       - serializedVersion: 3
-        time: 0.5061201
-        value: 0.3490868
-        inSlope: 3.0022702
-        outSlope: 3.0022702
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.12831661
-        outWeight: 0.1540306
-      - serializedVersion: 3
-        time: 0.9405486
-        value: 0.97893703
-        inSlope: -0.5672516
-        outSlope: -0.5672516
+        time: 0.1782253
+        value: 0.5110786
+        inSlope: 0.012728113
+        outSlope: 0.012728113
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.49619937
+        outWeight: 0.3546816
+      - serializedVersion: 3
+        time: 0.52012444
+        value: 0.5423379
+        inSlope: 1.0022005
+        outSlope: 1.0022005
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.16342065
+        outWeight: 0.27511618
+      - serializedVersion: 3
+        time: 0.7007222
+        value: 0.96933186
+        inSlope: 3.272077
+        outSlope: 3.272077
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.30026427
+        outWeight: 0.33881566
+      - serializedVersion: 3
+        time: 0.86911416
+        value: 0.9531611
+        inSlope: -7.165634
+        outSlope: -7.165634
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33749712
       - serializedVersion: 3
         time: 1
         value: 0
-        inSlope: -16.466173
-        outSlope: -16.466173
+        inSlope: -7.2823853
+        outSlope: -7.2823853
         tangentMode: 34
         weightedMode: 0
         inWeight: 0.33333334
@@ -137,9 +155,9 @@ MonoBehaviour:
     recoil: -14
     timeToMorph: 0.65
     syncSpeed: 0
-    meleeRange: 1.85
-    swingDegrees: 145
-    meleeRotation: 145
+    meleeRange: 2.6
+    swingDegrees: 151.3
+    meleeRotation: 155
     homingStrength: 0
     homingDistance: 0
     spinSpeed: 0
