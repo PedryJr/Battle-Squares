@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77195e97f54716a4db76e428b51c5470, type: 3}
+  m_Name: Thing
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSensorConfig
+  gridSpaceColor:
+    color: {r: 1, g: 1, b: 1, a: 1}
+    radius: 12
+    saturationBoost: 0.63
+  gridSpaceSensor:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
+    origin:
+      x: 0
+      y: 0
+    rotation: 0
+    warpSpeed: 0.76
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 0
+    enablePositionWarp: 1
+    positionWarpStrength: 1
+    positionWarpFallof: 1
+    positionWarpRadius: 1
+    enableScaleWarp: 1
+    scaleWarpStrength: 1
+    scaleWarpFalloff: 1
+    scaleWarpRadius: 1
+    enableRotationWarp: 1
+    rotationWarpStrength: 1
+    rotationWarpFalloff: 1
+    rotationWarpRadius: 1
+    enableSwirl: 1
+    swirlStrength: 1
+    swirlFalloff: 1
+    swirlRadius: 1
+    enablePulsation: 1
+    pulsationFrequency: 1
+    pulsationAmplitude: 1
+    pulsationFallof: 1
+    pulsationRadius: 1

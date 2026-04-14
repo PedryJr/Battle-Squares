@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1318672349436966710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7485977866876493482}
+  - component: {fileID: 7766589634209696279}
+  m_Layer: 0
+  m_Name: TestEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7485977866876493482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318672349436966710}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.84083, y: 0.76274, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7766589634209696279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318672349436966710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d4faaa49eb6584c82b89448ab3997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSenssor
+  proximityPixelSensor: {fileID: 11400000, guid: d2b6d89b38350954594f1e288948ff90, type: 2}
+  gridSpaceColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    radius: 0
+    saturationBoost: 0
+  gridSpaceSensor:
+    colorValue:
+      x: 0
+      y: 0
+      z: 0
+    colorRadius: 0
+    origin:
+      x: 0.84083
+      y: 0.76274
+    rotation: 0
+    warpSpeed: 0
+    chroma: 0
+    enableBlockerInfluence: 0
+    blockerFalloff: 0
+    enablePositionWarp: 0
+    positionWarpStrength: 0
+    positionWarpFallof: 0
+    positionWarpRadius: 0
+    enableScaleWarp: 0
+    scaleWarpStrength: 0
+    scaleWarpFalloff: 0
+    scaleWarpRadius: 0
+    enableRotationWarp: 0
+    rotationWarpStrength: 0
+    rotationWarpFalloff: 0
+    rotationWarpRadius: 0
+    enableSwirl: 0
+    swirlStrength: 0
+    swirlFalloff: 0
+    swirlRadius: 0
+    enablePulsation: 0
+    pulsationFrequency: 0
+    pulsationAmplitude: 0
+    pulsationFallof: 0
+    pulsationRadius: 0

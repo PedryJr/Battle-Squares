@@ -1,18 +1,32 @@
 using System;
 using System.Buffers.Binary;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Unity.Burst;
+using Unity.Burst.Intrinsics;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static BinaryVectors;
+
+[BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+    DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+    FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
 public static class MyExtentions
 {
+
+    public const bool compileSynchronously = false;
+    public const bool debug = false;
+    public const bool disableDirectCall = false;
+    public const bool disableSafetyChecks = true;
+    public const FloatMode floatMode = FloatMode.Fast;
+    public const FloatPrecision floatPrecision = FloatPrecision.Low;
+    public const OptimizeFor optimizeFor = OptimizeFor.Performance;
 
     public static int scoreCapture;
 
@@ -352,7 +366,6 @@ public static class MyExtentions
         float usedFrequency
     )
     {
-        // --- Decode authoritative state ---
         Vector2 serverPos =
             DecompressPlayerPosition(
                 Slice(data, PositionBufferOffset, PlayerPositionBytes)
@@ -380,13 +393,11 @@ public static class MyExtentions
 
         double highPrecisionLatency = now - remote;
         float lateness = (float) highPrecisionLatency;
-        lateness = Mathf.Clamp(lateness, 0f, 0.25f); // safety clamp
+        lateness = Mathf.Clamp(lateness, 0f, 0.25f); 
 
-        // --- Predict ---
         Vector2 predictedPos = serverPos + serverVel * lateness;
         float predictedRot = serverRot + serverAngVel * lateness;
 
-        // --- Error-based smoothing ---
         float error = Vector2.Distance(rb.position, predictedPos);
 
         float positionSharpness = Mathf.Lerp(
@@ -398,7 +409,6 @@ public static class MyExtentions
         if (error > 1f)
             positionSharpness = 1f;
 
-        // --- Apply ---
         rb.position = Vector2.Lerp(
             rb.position,
             predictedPos,
@@ -475,18 +485,27 @@ public static class MyExtentions
             int pInputLength = span.Length;
             char* pOutput = stackalloc char[pInputLength];
             int pOutputLength = 0;
-            RemoveInvisibleCharsInternal(pOutput, ref pOutputLength, pInput, pInputLength);
+
+            // Cast char* → ushort* to satisfy Burst
+            RemoveInvisibleCharsInternal(
+                (ushort*)pOutput, ref pOutputLength,
+                (ushort*)pInput, pInputLength);
+
             return new string(pOutput, 0, pOutputLength);
         }
     }
 
-    [BurstCompile]
-    public static unsafe void RemoveInvisibleCharsInternal(char* pOutput, ref int pOutputLength, char* pInput, int pInputLength)
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    public static unsafe void RemoveInvisibleCharsInternal(
+        ushort* pOutput, ref int pOutputLength,
+        ushort* pInput, int pInputLength)
     {
-        char* current = pInput;
-        char* writePtr = pOutput;
-        char* endVec = current + (pInputLength & ~7);
-        char* endPtr = current + pInputLength;
+        ushort* current = pInput;
+        ushort* writePtr = pOutput;
+        ushort* endVec = current + (pInputLength & ~7);
+        ushort* endPtr = current + pInputLength;
 
         while (current < endVec)
         {
@@ -494,14 +513,14 @@ public static class MyExtentions
             ulong val0 = src[0];
             ulong val1 = src[1];
 
-            char c0 = (char)(val0 & 0xFFFF);
-            char c1 = (char)((val0 >> 16) & 0xFFFF);
-            char c2 = (char)((val0 >> 32) & 0xFFFF);
-            char c3 = (char)((val0 >> 48) & 0xFFFF);
-            char c4 = (char)(val1 & 0xFFFF);
-            char c5 = (char)((val1 >> 16) & 0xFFFF);
-            char c6 = (char)((val1 >> 32) & 0xFFFF);
-            char c7 = (char)((val1 >> 48) & 0xFFFF);
+            ushort c0 = (ushort)(val0 & 0xFFFF);
+            ushort c1 = (ushort)((val0 >> 16) & 0xFFFF);
+            ushort c2 = (ushort)((val0 >> 32) & 0xFFFF);
+            ushort c3 = (ushort)((val0 >> 48) & 0xFFFF);
+            ushort c4 = (ushort)(val1 & 0xFFFF);
+            ushort c5 = (ushort)((val1 >> 16) & 0xFFFF);
+            ushort c6 = (ushort)((val1 >> 32) & 0xFFFF);
+            ushort c7 = (ushort)((val1 >> 48) & 0xFFFF);
 
             int keep0 = (c0 >= 32 && (c0 < 0x7F || c0 > 0x9F) && c0 != 0x200B && c0 != 0x200C && c0 != 0x200D && c0 != 0xFEFF) ? 1 : 0;
             int keep1 = (c1 >= 32 && (c1 < 0x7F || c1 > 0x9F) && c1 != 0x200B && c1 != 0x200C && c1 != 0x200D && c1 != 0xFEFF) ? 1 : 0;
@@ -526,7 +545,7 @@ public static class MyExtentions
 
         while (current < endPtr)
         {
-            char c = *current;
+            ushort c = *current;
             int keep = (c >= 32 && (c < 0x7F || c > 0x9F) && c != 0x200B && c != 0x200C && c != 0x200D && c != 0xFEFF) ? 1 : 0;
             *writePtr = c;
             writePtr += keep;
@@ -534,5 +553,301 @@ public static class MyExtentions
         }
 
         pOutputLength = (int)(writePtr - pOutput);
+    }
+    public static void GizmoDrawCircle(Vector2 center, float radius, Color color)
+    {
+        Color oldGizmoColor = Gizmos.color;
+        Gizmos.color = color;
+
+        const int segments = 32;
+        float angleStep = Mathf.PI * 2f / segments;
+
+        for (int i = 0; i < segments; i++)
+        {
+            float a1 = i * angleStep;
+            float a2 = (i + 1) * angleStep;
+            Vector2 p1 = center + new Vector2(Mathf.Cos(a1) * radius, Mathf.Sin(a1) * radius);
+            Vector2 p2 = center + new Vector2(Mathf.Cos(a2) * radius, Mathf.Sin(a2) * radius);
+            Gizmos.DrawLine(p1, p2);
+        }
+        Gizmos.color = oldGizmoColor;
+    }
+
+    public static void DebugDrawCircle(Vector2 center, float radius, Color color, float duration)
+    {
+        const int segments = 32;
+        float angleStep = Mathf.PI * 2f / segments;
+
+        for (int i = 0; i < segments; i++)
+        {
+            float a1 = i * angleStep;
+            float a2 = (i + 1) * angleStep;
+            Vector2 p1 = center + new Vector2(Mathf.Cos(a1) * radius, Mathf.Sin(a1) * radius);
+            Vector2 p2 = center + new Vector2(Mathf.Cos(a2) * radius, Mathf.Sin(a2) * radius);
+            Debug.DrawLine(p1, p2, color, duration);
+        }
+    }
+
+    public static Texture2D LoadTexture(string FilePath)
+    {
+        Texture2D Tex2D = new Texture2D(2, 2);
+        byte[] FileData;
+
+        if (File.Exists(FilePath))
+        {
+            FileData = File.ReadAllBytes(FilePath);
+            if (Tex2D.LoadImage(FileData)) return Tex2D;
+        }
+        return Tex2D;
+    }
+
+    public static unsafe string Format(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+
+        int inputLen = input.Length;
+
+        char* output = stackalloc char[inputLen * 32];
+        char* closeTags = stackalloc char[inputLen * 8];
+
+        int outPos = 0;
+        int closePos = 0;
+
+        fixed (char* inputPtr = input) FormatPtr(inputLen, (ushort*)output, (ushort*)closeTags, (ushort*)inputPtr, ref outPos, ref closePos);
+
+        return new string(output, 0, outPos);
+    }
+
+    [BurstCompile(CompileSynchronously = compileSynchronously, Debug = debug, DisableDirectCall = disableDirectCall,
+        DisableSafetyChecks = disableSafetyChecks, FloatMode = floatMode,
+        FloatPrecision = floatPrecision, OptimizeFor = optimizeFor)]
+    private static unsafe void FormatPtr(int inputLen, ushort* output, ushort* closeTags, ushort* inputPtr, ref int outPos, ref int closePos)
+    {
+        for (int i = 0; i < inputLen; i++)
+        {
+            ushort c = inputPtr[i];
+
+            if ((c == '§' || c == '&') && i + 1 < inputLen)
+            {
+                ushort code = inputPtr[++i];
+
+                if (code == 'r')
+                {
+                    for (int j = closePos - 1; j >= 0; j--) output[outPos++] = closeTags[j]; closePos = 0;
+                }
+                else
+                {
+                    bool isColor = false;
+
+                    switch (code)
+                    {
+                        case '0':
+                            WriteColor(output, ref outPos, '#', '0', '0', '0', '0', '0', '0');
+                            isColor = true;
+                            break;
+                        case '1':
+                            WriteColor(output, ref outPos, '#', '0', '0', '0', '0', 'A', 'A');
+                            isColor = true;
+                            break;
+                        case '2':
+                            WriteColor(output, ref outPos, '#', '0', '0', 'A', 'A', '0', '0');
+                            isColor = true;
+                            break;
+                        case '3':
+                            WriteColor(output, ref outPos, '#', '0', '0', 'A', 'A', 'A', 'A');
+                            isColor = true;
+                            break;
+                        case '4':
+                            WriteColor(output, ref outPos, '#', 'A', 'A', '0', '0', '0', '0');
+                            isColor = true;
+                            break;
+                        case '5':
+                            WriteColor(output, ref outPos, '#', 'A', 'A', '0', '0', 'A', 'A');
+                            isColor = true;
+                            break;
+                        case '6':
+                            WriteColor(output, ref outPos, '#', 'F', 'F', 'A', 'A', '0', '0');
+                            isColor = true;
+                            break;
+                        case '7':
+                            WriteColor(output, ref outPos, '#', 'A', 'A', 'A', 'A', 'A', 'A');
+                            isColor = true;
+                            break;
+                        case '8':
+                            WriteColor(output, ref outPos, '#', '5', '5', '5', '5', '5', '5');
+                            isColor = true;
+                            break;
+                        case '9':
+                            WriteColor(output, ref outPos, '#', '5', '5', '5', '5', 'F', 'F');
+                            isColor = true;
+                            break;
+                        case 'a':
+                            WriteColor(output, ref outPos, '#', '5', '5', 'F', 'F', '5', '5');
+                            isColor = true;
+                            break;
+                        case 'b':
+                            WriteColor(output, ref outPos, '#', '5', '5', 'F', 'F', 'F', 'F');
+                            isColor = true;
+                            break;
+                        case 'c':
+                            WriteColor(output, ref outPos, '#', 'F', 'F', '5', '5', '5', '5');
+                            isColor = true;
+                            break;
+                        case 'd':
+                            WriteColor(output, ref outPos, '#', 'F', 'F', '5', '5', 'F', 'F');
+                            isColor = true;
+                            break;
+                        case 'e':
+                            WriteColor(output, ref outPos, '#', 'F', 'F', 'F', 'F', '5', '5');
+                            isColor = true;
+                            break;
+                        case 'f':
+                            WriteColor(output, ref outPos, '#', 'F', 'F', 'F', 'F', 'F', 'F');
+                            isColor = true;
+                            break;
+                        case 'g':
+                            WriteColor(output, ref outPos, '#', 'D', 'D', 'D', '6', '0', '5');
+                            isColor = true;
+                            break;
+                        case 'h':
+                            WriteColor(output, ref outPos, '#', 'E', '3', 'D', '4', 'D', '1');
+                            isColor = true;
+                            break;
+                        case 'i':
+                            WriteColor(output, ref outPos, '#', 'C', 'E', 'C', 'A', 'C', 'A');
+                            isColor = true;
+                            break;
+                        case 'j':
+                            WriteColor(output, ref outPos, '#', '4', '4', '3', 'A', '3', 'B');
+                            isColor = true;
+                            break;
+                        case 'm':
+                            WriteColor(output, ref outPos, '#', '9', '7', '1', '6', '0', '7');
+                            isColor = true;
+                            break;
+                        case 'n':
+                            WriteColor(output, ref outPos, '#', 'B', '4', '6', '8', '4', 'D');
+                            isColor = true;
+                            break;
+                        case 'p':
+                            WriteColor(output, ref outPos, '#', 'D', 'E', 'B', '1', '2', 'D');
+                            isColor = true;
+                            break;
+                        case 'q':
+                            WriteColor(output, ref outPos, '#', '4', '7', 'A', '0', '3', '6');
+                            isColor = true;
+                            break;
+                        case 's':
+                            WriteColor(output, ref outPos, '#', '2', 'C', 'B', 'A', 'A', '8');
+                            isColor = true;
+                            break;
+                        case 't':
+                            WriteColor(output, ref outPos, '#', '2', '1', '4', '9', '7', 'B');
+                            isColor = true;
+                            break;
+                        case 'u':
+                            WriteColor(output, ref outPos, '#', '9', 'A', '5', 'C', 'C', '6');
+                            isColor = true;
+                            break;
+                        case 'v':
+                            WriteColor(output, ref outPos, '#', 'E', 'B', '7', '1', '1', '4');
+                            isColor = true;
+                            break;
+                    }
+
+                    if (isColor)
+                    {
+                        closeTags[closePos++] = '>';
+                        closeTags[closePos++] = 'r';
+                        closeTags[closePos++] = 'o';
+                        closeTags[closePos++] = 'l';
+                        closeTags[closePos++] = 'o';
+                        closeTags[closePos++] = 'c';
+                        closeTags[closePos++] = '/';
+                        closeTags[closePos++] = '<';
+                    }
+                    else
+                    {
+                        switch (code)
+                        {
+                            case 'l':
+                                output[outPos++] = '<';
+                                output[outPos++] = 'b';
+                                output[outPos++] = '>';
+                                closeTags[closePos++] = '>';
+                                closeTags[closePos++] = 'b';
+                                closeTags[closePos++] = '/';
+                                closeTags[closePos++] = '<';
+                                break;
+
+                            case 'o':
+                                output[outPos++] = '<';
+                                output[outPos++] = 'i';
+                                output[outPos++] = '>';
+                                closeTags[closePos++] = '>';
+                                closeTags[closePos++] = 'i';
+                                closeTags[closePos++] = '/';
+                                closeTags[closePos++] = '<';
+                                break;
+                            default: output[outPos++] = c; break;
+                        }
+                    }
+                }
+            }
+            else output[outPos++] = c;
+        }
+
+        for (int j = closePos - 1; j >= 0; j--) output[outPos++] = closeTags[j];
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        void WriteColor(ushort* buffer, ref int pos, ushort c0, ushort c1, ushort c2, ushort c3, ushort c4, ushort c5, ushort c6)
+        {
+            v256* asV256 = (v256*)(buffer + pos);
+            asV256->ULong0 = 0x006C006F0063003CUL;
+            asV256->ULong1 = ((ulong)c0 << 48) | 0x00003D0072006FUL;
+            asV256->ULong2 = ((ulong)c4 << 48) | ((ulong)c3 << 32) | ((ulong)c2 << 16) | c1;
+            asV256->ULong3 = ((uint)c6 << 16) | c5;
+            buffer[pos + 14] = 62;
+            pos += 15;
+        }
+    }
+
+    public static Color CodeToColor(char code)
+    {
+        return code switch
+        {
+            '0' => C(0x00, 0x00, 0x00),
+            '1' => C(0x00, 0x00, 0xAA),
+            '2' => C(0x00, 0xAA, 0x00),
+            '3' => C(0x00, 0xAA, 0xAA),
+            '4' => C(0xAA, 0x00, 0x00),
+            '5' => C(0xAA, 0x00, 0xAA),
+            '6' => C(0xFF, 0xAA, 0x00),
+            '7' => C(0xAA, 0xAA, 0xAA),
+            '8' => C(0x55, 0x55, 0x55),
+            '9' => C(0x55, 0x55, 0xFF),
+            'a' => C(0x55, 0xFF, 0x55),
+            'b' => C(0x55, 0xFF, 0xFF),
+            'c' => C(0xFF, 0x55, 0x55),
+            'd' => C(0xFF, 0x55, 0xFF),
+            'e' => C(0xFF, 0xFF, 0x55),
+            'f' => C(0xFF, 0xFF, 0xFF),
+            'g' => C(0xDD, 0xD6, 0x05),
+            'h' => C(0xE3, 0xD4, 0xD1),
+            'i' => C(0xCE, 0xCA, 0xCA),
+            'j' => C(0x44, 0x3A, 0x3B),
+            'm' => C(0x97, 0x16, 0x07),
+            'n' => C(0xB4, 0x68, 0x4D),
+            'p' => C(0xDE, 0xB1, 0x2D),
+            'q' => C(0x47, 0xA0, 0x36),
+            's' => C(0x2C, 0xBA, 0xA8),
+            't' => C(0x21, 0x49, 0x7B),
+            'u' => C(0x9A, 0x5C, 0xC6),
+            'v' => C(0xEB, 0x71, 0x14),
+            _ => Color.white
+        };
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static Color C(byte r, byte g, byte b) => new Color32(r, g, b, 255);
     }
 }
