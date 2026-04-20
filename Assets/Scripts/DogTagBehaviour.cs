@@ -43,11 +43,9 @@ public sealed class DogTagBehaviour : MonoBehaviour
             if (  player.square.GetGameID() == playerId) owningPlayer = player.square;
         }
 
-        spriteRenderer.color = owningPlayer.PlayerColor.DogTagColor;
 
-        Material particleMaterial = dogTagParticles.material;
-        dogTagParticles.material = particleMaterial;
-        dogTagParticles.material.color = owningPlayer.PlayerColor.ParticleColor;
+        owningPlayer.AssignMaterialToParticleRenderer(dogTagParticles, dogTagParticles.GetComponent<ParticleSystem>());
+        spriteRenderer.color = owningPlayer.PlayerColor.DogTagColor;
 
         rb.linearVelocity = startVelocity;
 
@@ -55,6 +53,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
 
     private void Update()
     {
+
         if (isCollected) return;
         target = Vector2.zero;
 

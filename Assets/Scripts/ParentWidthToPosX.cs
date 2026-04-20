@@ -16,6 +16,7 @@ public class ParentWidthToPosX : MonoBehaviour
     RectTransform parent;
     private void Update()
     {
+        if (Application.isPlaying) return;
         parent = (RectTransform)transform.parent;
         rectTransform = (RectTransform)transform;
 

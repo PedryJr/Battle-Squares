@@ -493,11 +493,9 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
         {
             if (!item.square.isLocalPlayer) continue;
             byte sourceId = item.square.GetGameID();
-            byte data = (byte)localSquare.score;
-
+            byte data = (byte)item.square.score;
             UpdateScoreRpc(sourceId, data);
         }
-
     }
 
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone, Delivery = RpcDelivery.Reliable)]
@@ -635,7 +633,10 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
                 if (responsiblePlayer) affectedPlayer.killStreak++;
 
                 kill = true;
-                PlayerDeathEffect(affectedPlayer);
+                if(!projectileManager.mLTrainingManager.isTraining)
+                {
+                    PlayerDeathEffect(affectedPlayer);
+                }
                 hunter.Kill(victimId, responsibleId);
                 affectedPlayer.KillPlayer();
 
@@ -802,7 +803,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             player = players[i].square;
             if (mlTrainer.isTraining && localSquare.GetGameID() == player.GetGameID()) continue;
             if (!includeDead && player.isDead) continue;
-            Vector2 playerPos = player.position;
+            Vector2 playerPos = player.RBPosition;
             float diffX = from.x - playerPos.x;
             float diffY = from.y - playerPos.y;
             float distSqr = diffX * diffX + diffY * diffY;
@@ -864,7 +865,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             if (mlTrainer.isTraining && localSquare.GetGameID() == player.GetGameID()) continue;
             if (player.GetGameID() == exclude) continue;
             if (!includeDead && player.isDead) continue;
-            Vector2 playerPos = player.position;
+            Vector2 playerPos = player.RBPosition;
             float diffX = from.x - playerPos.x;
             float diffY = from.y - playerPos.y;
             float distSqr = diffX * diffX + diffY * diffY;
@@ -892,7 +893,7 @@ public sealed class PlayerSynchronizer : NetworkBehaviour
             if (mlTrainer.isTraining && localSquare.GetGameID() == player.GetGameID()) continue;
             if (player.GetGameID() == exclude) continue;
             if (!includeDead && player.isDead) continue;
-            Vector2 playerPos = player.position;
+            Vector2 playerPos = player.RBPosition;
             float diffX = from.x - playerPos.x;
             float diffY = from.y - playerPos.y;
             float distSqr = diffX * diffX + diffY * diffY;

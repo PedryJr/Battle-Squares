@@ -354,7 +354,17 @@ public class PlayerFactorySynchronizer : NetworkBehaviour
             if (!playerSynchronizer.localSquare) playerSynchronizer.localSquare = newPlayer;
             PlayerController contrl = Instantiate<PlayerController>(playerData.isAI ? AIControllerPrefab : controllerPrefab);
             contrl.SetTargetController(newPlayer);
-            if(!playerData.isAI) playerControllerManager.SpawnController(contrl);
+            if(!playerData.isAI)
+            {
+                playerControllerManager.SpawnController(contrl);
+            }
+            else
+            {
+                PlayerMLAgent playerMLAgent = contrl.GetComponent<PlayerMLAgent>();
+                playerMLAgent.mLTrainingManager = GetComponent<MLTrainingManager>();
+                playerMLAgent.isTraining = false;
+                GetComponent<MLTrainingManager>().spawnedAgents.Add(playerMLAgent);
+            }
         }
     }
 

@@ -13188,11 +13188,11 @@ MonoBehaviour:
   m_OverrideTileSize: 1
   m_TileSize: 16
   m_OverrideVoxelSize: 1
-  m_VoxelSize: 0.5
+  m_VoxelSize: 0.33333
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0.1
   m_HideEditorLogs: 1
-  m_NavMeshData: {fileID: 23800000, guid: c96f910fb89a4fb459987d66243b7711, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!4 &1635059280
 Transform:
   m_ObjectHideFlags: 0
@@ -13220,7 +13220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d9c2e2440cb24e4c9a9fe586e9226be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  navMeshSurface: {fileID: 0}
+  navMeshSurface: {fileID: 1635059279}
 --- !u!224 &1657175006 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3438982358745700994, guid: 8b47ba03619f50d43aa2310bc304d374, type: 3}

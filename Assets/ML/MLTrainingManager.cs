@@ -13,7 +13,21 @@ using static PlayerMLAgent;
 /// </summary>
 public class MLTrainingManager : MonoBehaviour
 {
-    
+
+    [SerializeField]
+    Transform[] targetJourneySCAN;
+
+    [SerializeField]
+    Vector2[] targetJourneyRESULT;
+
+    [ContextMenu("Save targets as journey")]
+    void STAJ()
+    {
+        targetJourneyRESULT = new Vector2[targetJourneySCAN.Length];
+        for (int i = 0; i < targetJourneyRESULT.Length; i++) targetJourneyRESULT[i] = targetJourneySCAN[i].position;
+    }
+
+
     [Header("Spawn Layout")]
     [SerializeField] private Vector2 spawnAreaSize = new Vector2(50, 50);
     [SerializeField] private Vector2 spawnAreaCenter = Vector2.zero;
@@ -48,7 +62,7 @@ public class MLTrainingManager : MonoBehaviour
     }
     [SerializeField]
     private DebugVisualization debugFlags = DebugVisualization.None;
-    private List<PlayerMLAgent> spawnedAgents = new List<PlayerMLAgent>();
+    public List<PlayerMLAgent> spawnedAgents = new List<PlayerMLAgent>();
     private List<GameObject> spawnedTargets = new List<GameObject>();
     PlayerSynchronizer playerSynchronizer;
     private float globalEpisodeTimer = 0f;
@@ -109,15 +123,15 @@ public class MLTrainingManager : MonoBehaviour
 
         if (weaponSelections.Length > 0)
         {
-            int weaponSelectionIndex = index % weaponSelections.Length;
+/*            int weaponSelectionIndex = index % weaponSelections.Length;
             agentObj.playerBehaviour.nozzleBehaviour.primary = weaponSelections[weaponSelectionIndex].primary.typeID;
-            agentObj.playerBehaviour.nozzleBehaviour.secondary = weaponSelections[weaponSelectionIndex].secondary.typeID;
+            agentObj.playerBehaviour.nozzleBehaviour.secondary = weaponSelections[weaponSelectionIndex].secondary.typeID;*/
         }
 
         PlayerMLAgent agent = agentObj.GetComponent<PlayerMLAgent>();
         agent.mLTrainingManager = this;
         agent.isTraining = isTraining;
-
+        agent.PopulateTargetsForJourney(targetJourneyRESULT);
 
         spawnedAgents.Add(agent);
     }
@@ -241,9 +255,10 @@ public class MLTrainingManager : MonoBehaviour
     private void Update()
     {
 
-        if(Input.GetKeyDown(KeyCode.F6) && SceneManager.GetActiveScene().name == "GameScene")
+        if(Input.GetKeyDown(KeyCode.F6) && SceneManager.GetActiveScene().name == "LobbyScene")
         {
-            SpawnAllAgents();
+            GetComponent<PlayerFactorySynchronizer>().CreateAI();
+            //SpawnAllAgents();
         }
 
         UpdateAgents();
@@ -358,7 +373,7 @@ public class MLTrainingManager : MonoBehaviour
     }
 
     [SerializeField]
-    WeaponSelectionOrder[] weaponSelections;
+    public WeaponSelectionOrder[] weaponSelections;
 
     [Serializable]
     public struct WeaponSelectionOrder

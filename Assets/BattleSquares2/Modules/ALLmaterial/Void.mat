@@ -28,8 +28,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DistortionNoise:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EnergyTexture:
         m_Texture: {fileID: 2800000, guid: 6dd1c634d00455848bb333353163c976, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FeaturePointsTex:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -56,14 +64,29 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: []
+    m_Ints:
+    - _Octaves: 4
     m_Floats:
-    - _ArtificialLight: 0.3
+    - _AnimationSpeed: 0.1
+    - _AnimationSpeedLacunarity: 0.8
+    - _ArtificialLight: 1
+    - _Brightness: 1
+    - _CausticSharpness: 3
     - _ColorStrength: 5.53
     - _ColorToEffect: 0.1
+    - _Contrast: 1
+    - _DistortionStrength: 1
+    - _DomainWarpStrength: 0.3
     - _EnableExternalAlpha: 0
     - _ExponentialNoise: 0.31
+    - _FracTiling: 1
+    - _Invert: 0
+    - _Lacunarity: 0.8
+    - _Persistence: 1.2
+    - _Sample1Mul: 1
+    - _Sample2Mul: 1
     - _Tiling: 16.7
+    - _UseF2MinusF1: 0
     - _ZWrite: 1
     - _fallofExponential: 15
     - _maxIntensity: 3

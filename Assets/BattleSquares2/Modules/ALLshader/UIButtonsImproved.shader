@@ -211,8 +211,8 @@ Shader "*MyShaders/UIBUTTON"
 				float edgeDetection = LaplacianOfGaussian9x9(_MainTex, uvDelta, float2(1, 1));
 				color.a = edgeDetection > 0.1 ? 1 : 0;
 
-
-				color *= GetLighting(IN.ssPosPixel.xy);
+				color = 0;
+				//color *= GetLighting(IN.ssPosPixel.xy);
 
 				#if UNITY_UI_CLIP_RECT
 					half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);

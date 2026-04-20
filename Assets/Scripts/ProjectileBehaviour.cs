@@ -28,16 +28,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
     [SerializeField] Transform boom;
 
     public float damageScaleOverTime;
-
     public float damage;
     public float aoeDamage;
-
     public float syncTimer;
-
     public float speedModifier;
-
     public uint projectileID;
-
     public bool IsLocalProjectile;
 
     [SerializeField]
@@ -360,8 +355,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     Vector2 GetSetStreamClosestPlayer(Vector2 oldDirection, Vector2 oldPosition)
     {
-        if (this && rb) return (projectileManager.playerSynchronizer.GetClosestPlayer(rb.position).position - rb.position).normalized;
-        else return (projectileManager.playerSynchronizer.GetClosestPlayer(oldPosition).position - oldPosition).normalized;
+        if (this && rb) return (projectileManager.playerSynchronizer.GetClosestPlayer(rb.position).RBPosition - rb.position).normalized;
+        else return (projectileManager.playerSynchronizer.GetClosestPlayer(oldPosition).RBPosition - oldPosition).normalized;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     Vector2 GetSetStreamClosestGround(Vector2 oldDirection, Vector2 oldPosition)
@@ -418,7 +413,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                     ParticleBehaviour externalTrail = AutoPooledPool<ParticleBehaviour>.Spawn(externalTrailRef, transform.position, transform.rotation, null);
                     int pLength = externalTrail.ParticleSystems.Length;
                     for (int i = 0; i < pLength; i++) owningPlayer.PlayerColor.AssignMaterialToParticleRenderer(externalTrail.ParticleSystemRenderers[i], externalTrail.ParticleSystems[i]);
-                    //if (externalTrail) externalTrail.Play(owningPlayer.PlayerColor.ParticleColor, owningPlayer.id, owningPlayer);
                     externalTrailSpawnTimer -= externalTrailSpawnRate;
                 }
             }
@@ -430,46 +424,31 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
             closestPlayer = null;
 
             foreach (PlayerData playerData in projectileManager.playerSynchronizer.playerIdentities)
-            {
-
+            { 
                 if (closestPlayer)
-                {
-
+                { 
                     if (Vector2.Distance(rb.position, playerData.square.rb.position) < Vector2.Distance(rb.position, closestPlayer.rb.position))
-                    {
-
-                        closestPlayer = playerData.square;
-
-                    }
-
+                    { 
+                        closestPlayer = playerData.square; 
+                    } 
                 }
                 else
-                {
-
+                { 
                     if (Vector2.Distance(rb.position, playerData.square.rb.position) < data.homingDistance)
-                    {
-
-                        closestPlayer = playerData.square;
-
-                    }
-
-                }
-
+                    { 
+                        closestPlayer = playerData.square; 
+                    } 
+                } 
             }
 
             if (closestPlayer)
-            {
-
-                homingDirection = (closestPlayer.rb.position - rb.position).normalized;
-
-                if (closestPlayer == owningPlayer) homingDirection /= 2;
-
+            { 
+                homingDirection = (closestPlayer.rb.position - rb.position).normalized; 
+                if (closestPlayer == owningPlayer) homingDirection /= 2; 
             }
-            else homingDirection = Vector2.zero;
-
+            else homingDirection = Vector2.zero; 
         }
-        else homingDirection = Vector2.zero;
-
+        else homingDirection = Vector2.zero; 
     }
 
     Vector3 chargePlayerEndScale;
@@ -518,15 +497,35 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
             rb.AddForce(homingDirection * data.homingStrength * Time.deltaTime * 50);
         }
 
+        /*        if (data.hover)
+                {
+                    RaycastHit2D hitPoint = GetClosestEnvironmentPointDown(rb.position, data.hoverDistance, data.hoverFloorRadius);
+                    if (hitPoint.transform)
+                    {
+                        float distance = Vector2.Distance(hitPoint.point, rb.position);
+                        float totalStength = data.hoverStrength * (data.hoverDistanceAttenuation > 0 ? (distance / data.hoverDistanceAttenuation) : 1);
+                        Vector2 pointToRb = (rb.position - hitPoint.point).normalized;
+                        rb.AddForce(pointToRb * totalStength * Time.deltaTime * (Mathf.Clamp01(timeAlive / data.timeForFullHoverEffect)));
+                    }
+                }*/
+
         if (data.hover)
         {
-            RaycastHit2D hitPoint = GetClosestEnvironmentPointDown(rb.position, data.hoverDistance, data.hoverFloorRadius);
+            RaycastHit2D hitPoint = GetClosestEnvironmentPoint(rb.position, data.hoverDistance);
             if (hitPoint.transform)
             {
                 float distance = Vector2.Distance(hitPoint.point, rb.position);
-                float totalStength = data.hoverStrength * (data.hoverDistanceAttenuation > 0 ? (distance / data.hoverDistanceAttenuation) : 1);
+                float error = data.hoverDistance - distance;
+
+                float springForce = error * data.hoverStrength;
+
+                float verticalVelocity = Vector2.Dot(rb.linearVelocity, (rb.position - hitPoint.point).normalized);
+                float dampingForce = -verticalVelocity * data.hoverDistanceAttenuation;
+
+                float totalForce = (springForce + dampingForce) * Mathf.Clamp01(timeAlive / data.timeForFullHoverEffect);
+
                 Vector2 pointToRb = (rb.position - hitPoint.point).normalized;
-                rb.AddForce(pointToRb * totalStength * Time.deltaTime * (Mathf.Clamp01(timeAlive / data.timeForFullHoverEffect)));
+                rb.AddForce(pointToRb * totalForce * Time.deltaTime * 50f);
             }
         }
 
@@ -673,33 +672,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
                     );
 
 
-                }
-
-                foreach (FlagBehaviour flag in FindObjectsByType<FlagBehaviour>(FindObjectsSortMode.None))
-                {
-
-                    if (Vector2.Distance(rb.position, flag.rb.position) > data.aoe) continue;
-                    if (Physics2D.Linecast(rb.position, flag.rb.position, LayerMask.GetMask("Environment")).collider != null) continue;
-                    if (flagHit) if (skipAoeOnHit && flag == flagHit) continue;
-
-                    bool skipHit = false;
-
-                    if (flag.activityState == FlagActivityState.Idle)
-                    {
-                        if (flag.ownerId == ownerId) skipHit = true;
-                    }
-                    else if (flag.activityState == FlagActivityState.FollowTarget)
-                    {
-                        if (flag.playerBehaviour.GetGameID() == ownerId) skipHit = true;
-                    }
-                    else skipHit = true;
-
-                    if (skipHit) continue;
-
-                    flag.RegisterHit(this);
-
-                }
-
+                } 
             }
 
             instaDestroy = true;
@@ -756,6 +729,13 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
     private void OnTriggerExit2D(Collider2D collision) => CollisionCancell(collision.gameObject);
 
 
+
+    List<PlayerBehaviour> playersCollidingWith;
+    bool flipRotation = true;
+    Vector3 pointStuckAt;
+    Vector2 stickySurfaceNormal;
+    float stickyNormalAngle;
+    bool hasStuckToPoint;
     void CollisionCheck(GameObject collidedWith)
     {
         if (destroyed) return;
@@ -767,17 +747,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
         bool environment = collidedWith.layer == LayerMask.NameToLayer("Environment");
 
-
-
-
-
-
-
-
-
         if (playerBehaviour)
         {
-            //Self hit, lets not.
             if (playerBehaviour.GetGameID() == owningPlayer.GetGameID()) return;
             if (!playerBehaviour.isLocalPlayer && !owningPlayer.isLocalPlayer) return;
 
@@ -793,16 +764,11 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
             ProjectileCollisionCheck(projectileBehaviour);
         }
     }
-
-    List<PlayerBehaviour> playersCollidingWith;
     void CollisionCancell(GameObject collidedWith)
-    {
-
+    { 
         PlayerBehaviour playerBehaviour = collidedWith.GetComponent<PlayerBehaviour>();
-        if (playerBehaviour) playersCollidingWith.Remove(playerBehaviour);
-
+        if (playerBehaviour) playersCollidingWith.Remove(playerBehaviour); 
     }
-
     void PlayerCollisionCheck(PlayerBehaviour playerBehaviour)
     {
         playerHit = playerBehaviour;
@@ -818,32 +784,16 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         {
             if (playerHit)
             {
-
-                if (data.oneTimeHit && !playersHit.Contains(playerHit))
+                if (!data.oneTimeHit || !playersHit.Contains(playerHit))
                 {
-
                     if (data.melee || stickToSender) damage *= Mods.MeleeDamage;
 
                     Vector2 direction = (playerHit.rb.position - rb.position).normalized;
                     projectileManager.playerSynchronizer.UpdatePlayerHealth(playerHit.GetGameID(), damage, data.slowDownAmount, ownerId, direction * data.knockback);
                     playerHit.timeSinceHit = 0.25f;
                     projectileManager.HitRegProjectile(projectileID);
-
                 }
-                else if (!data.oneTimeHit)
-                {
-
-                    if (data.melee || stickToSender) damage *= Mods.MeleeDamage;
-
-                    Vector2 direction = (playerHit.rb.position - rb.position).normalized;
-                    projectileManager.playerSynchronizer.UpdatePlayerHealth(playerHit.GetGameID(), damage, data.slowDownAmount, ownerId, direction * data.knockback);
-                    playerHit.timeSinceHit = 0.25f;
-                    projectileManager.HitRegProjectile(projectileID);
-
-                }
-
             }
-
         }
 
         if (playerBehaviour)
@@ -862,7 +812,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         }
 
     }
-
     void ProjectileCollisionCheck(ProjectileBehaviour projectileBehaviour)
     {
 
@@ -876,7 +825,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         }
 
     }
-
     void FlagCollisionCheck(FlagBehaviour flag)
     {
 
@@ -916,14 +864,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         }
 
     }
-
-    bool flipRotation = true;
-    Vector3 pointStuckAt;
-    Vector2 stickySurfaceNormal;
-    float stickyNormalAngle;
-    bool hasStuckToPoint;
-
-
     void EnvironmentCollisionCheck()
     {
 
@@ -1029,14 +969,19 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
             RaycastHit2D point = GetClosestEnvironmentPoint(boom.position);
             float angle = math.degrees(math.atan2(-point.normal.y, -point.normal.x));
 
-            ParticleBehaviour impactParticles = AutoPooledPool<ParticleBehaviour>.Spawn(data.impactParticle, boom.transform.position, Quaternion.Euler(0, 0, angle), null);
-
-            for (int i = 0; i < impactParticles.ParticleSystems.Length; i++)
+            if (!projectileManager.mLTrainingManager.isTraining)
             {
-                owningPlayer.PlayerColor.AssignMaterialToParticleRendererVariant2(impactParticles.ParticleSystemRenderers[i], impactParticles.ParticleSystems[i]);
-            }
 
-            SpawnHitMark(aoe);
+                ParticleBehaviour impactParticles = AutoPooledPool<ParticleBehaviour>.Spawn(data.impactParticle, boom.transform.position, Quaternion.Euler(0, 0, angle), null);
+
+                for (int i = 0; i < impactParticles.ParticleSystems.Length; i++)
+                {
+                    owningPlayer.PlayerColor.AssignMaterialToParticleRendererVariant2(impactParticles.ParticleSystemRenderers[i], impactParticles.ParticleSystems[i]);
+                }
+
+                SpawnHitMark(aoe);
+
+            }
 
         }
 
@@ -1047,7 +992,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
     public void SpawnHitMark(bool aoe)
     {
-
         if (!owningPlayer) return;
         RaycastHit2D point;
         Transform toParent = null;
@@ -1104,26 +1048,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
         return Physics2D.CircleCast(origin, floorRadius, new Vector2(0f, -1f), maxDistance, PhysicsMasks.ENVIRONTMENT_MASK);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, float maxDistance = 100f)
-    {
-        Span<Vector2> DIRS_8 = stackalloc Vector2[DIRS_COUNT];
-        SetDirSpanContents(ref DIRS_8);
-
-        float shortestDistance = float.PositiveInfinity;
-        RaycastHit2D closestHit = default;
-
-        for (int i = 0; i < DIRS_COUNT; i++)
-        {
-            int hitCount = Physics2D.RaycastNonAlloc(origin, DIRS_8[i], hitBuffer, maxDistance, PhysicsMasks.ENVIRONTMENT_MASK);
-            if (hitCount <= 0) continue;
-            float dist = hitBuffer[0].distance;
-            if (dist >= shortestDistance) continue;
-            shortestDistance = dist;
-            closestHit = hitBuffer[0];
-        }
-        return closestHit;
-    }
-
+        => GetClosestEnvironmentPoint(origin, out _, maxDistance);
 
     RaycastHit2D GetClosestEnvironmentPoint(Vector2 origin, out Transform objectHit, float maxDistance = 100f)
     {
@@ -1154,6 +1081,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
     public void HitReg()
     {
+        if (projectileManager.mLTrainingManager.isTraining) return;
         if (builtIndAudio)
         {
             EventInstance eventInstance = RuntimeManager.CreateInstance(hitSoundReference);
@@ -1162,9 +1090,7 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
             eventInstance.start();
             eventInstance.release();
         }
-
         ParticleBehaviour impactParticles = AutoPooledPool<ParticleBehaviour>.Spawn(data.impactParticle, boom.transform.position, transform.rotation, null);
-
         for (int i = 0; i < impactParticles.ParticleSystems.Length; i++)
         {
             owningPlayer.PlayerColor.AssignMaterialToParticleRendererVariant2(impactParticles.ParticleSystemRenderers[i], impactParticles.ParticleSystems[i]);
@@ -1174,9 +1100,6 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
     private void OnDestroy()
     {
-
-        if (playerHit) AIHitReward(true);
-        else AIHitReward(false);
 
         OnDestroyed?.Invoke(this);
 
@@ -1194,14 +1117,8 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
             {
                 aliveInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 aliveInstance.release();
-            } 
+            }
         }
-    }
-
-    public void AIHitReward(bool hitPlayer)
-    {
-        if (!owningPlayer.isAI || !owningPlayer.isLocalPlayer) return;
-        owningPlayer.playerMLAgent.OnCombatHit(hitPlayer);
     }
 
     public void SetPosition(System.Numerics.Vector2 position)

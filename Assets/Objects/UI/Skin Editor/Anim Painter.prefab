@@ -67,17 +67,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
   ignoreHoverColorOptions: 0
+  animateColor: 1
   hoverColorOptions: {fileID: 0}
   overrideMaterial: {fileID: 0}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 1
   enterHoverTransitionTime: 0.13
   exitHoverTransitionTime: 0.17
   clickTransitionTime: 0.085
@@ -86,7 +86,6 @@ MonoBehaviour:
   animationType: 0
   soundInteractionHoverType: 0
   soundInteractionClickType: 0
-  unique: {fileID: 0}
 --- !u!222 &6428525737651698599
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -337,6 +336,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1388,6 +1388,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2069,6 +2070,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2440,9 +2442,8 @@ GameObject:
   - component: {fileID: 2491462802111994595}
   - component: {fileID: 6142268744544209110}
   - component: {fileID: 8106830194986195181}
-  - component: {fileID: 8273776547169693978}
   m_Layer: 5
-  m_Name: FrameRate
+  m_Name: Total Frames
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2533,6 +2534,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2566,19 +2568,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &8273776547169693978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329590663899109697}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e721ebbbbf53c3c418d09b879bec58a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textField: {fileID: 8106830194986195181}
 --- !u!1 &1386406091258043381
 GameObject:
   m_ObjectHideFlags: 0
@@ -2684,17 +2673,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
   ignoreHoverColorOptions: 0
+  animateColor: 1
   hoverColorOptions: {fileID: 0}
   overrideMaterial: {fileID: 0}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 1
   enterHoverTransitionTime: 0.13
   exitHoverTransitionTime: 0.13
   clickTransitionTime: 0.1
@@ -2703,7 +2692,6 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 0
   soundInteractionClickType: 0
-  unique: {fileID: 0}
 --- !u!1 &1524319127579463524
 GameObject:
   m_ObjectHideFlags: 0
@@ -3321,6 +3309,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3458,6 +3447,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5631,6 +5621,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7739,6 +7730,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9242,6 +9234,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12992,6 +12985,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14071,17 +14065,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
   ignoreHoverColorOptions: 0
+  animateColor: 1
   hoverColorOptions: {fileID: 0}
   overrideMaterial: {fileID: 0}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 1
   enterHoverTransitionTime: 0.13
   exitHoverTransitionTime: 0.13
   clickTransitionTime: 0.1
@@ -14090,7 +14084,6 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 0
   soundInteractionClickType: 0
-  unique: {fileID: 0}
 --- !u!1 &7727075686753412258
 GameObject:
   m_ObjectHideFlags: 0
@@ -15738,17 +15731,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
   ignoreHoverColorOptions: 0
+  animateColor: 1
   hoverColorOptions: {fileID: 0}
   overrideMaterial: {fileID: 0}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 1
   enterHoverTransitionTime: 0.13
   exitHoverTransitionTime: 0.17
   clickTransitionTime: 0.085
@@ -15757,7 +15750,6 @@ MonoBehaviour:
   animationType: 0
   soundInteractionHoverType: 0
   soundInteractionClickType: 0
-  unique: {fileID: 0}
 --- !u!222 &708537004016202312
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16053,6 +16045,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

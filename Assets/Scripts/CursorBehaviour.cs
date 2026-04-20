@@ -54,30 +54,6 @@ public sealed class CursorBehaviour : MonoBehaviour
 
     bool isPosessed;
 
-    public void TogglePosessCursor(InputUser user, PlayerController controller)
-    {
-        if (alwaysPosess) return;
-        if (isPosessed)
-        {
-            transform.localScale = Vector3.one * scale;
-            if (this.controller != controller) return;
-            controller.EnableController();
-            inputUser.UnpairDevices();
-            isPosessed = false;
-        }
-        else
-        {
-            transform.localScale = Vector3.one * scale;
-            this.controller = controller;
-            controller.DisableController();
-            InputUser.PerformPairingWithDevice(user.pairedDevices[0], inputUser, InputUserPairingOptions.None);
-            isPosessed = true;
-        }
-    }
-    PosessCursorInput lmaoInputs;
-
-
-
     float h, s, v;
     [BurstCompile]
     private void Awake()
@@ -91,35 +67,6 @@ public sealed class CursorBehaviour : MonoBehaviour
         image.sprite = anim[0];
 
         inputs = new Inputs();
-/*        
-        posessionInputs.PosessionActions.MoveAround.performed += MoveAround_performed;
-        posessionInputs = new PosessCursorInput();
-        posessionInputs.PosessionActions.MoveAround.canceled += MoveAround_canceled;
-
-        posessionInputs.PosessionActions.Click.performed += Click_canceled;
-        posessionInputs.PosessionActions.Click.canceled += Click_performed;*/
-
-
-/*        lmaoInputs = new PosessCursorInput();
-        lmaoInputs.PosessionActions.No.performed += (_) =>
-        {
-            VLog.Log("AtTempting click");
-            MouseClickDown(true, false);
-        };
-        lmaoInputs.PosessionActions.No.canceled += (_) =>
-        {
-            VLog.Log("AtTempting click");
-            MouseClickDown(true, true);
-        };
-        lmaoInputs.Enable();
-
-        posessionInputs.Enable();*/
-
-/*        if (!alwaysPosess)
-        {
-            inputUser = InputUser.CreateUserWithoutPairedDevices();
-            inputUser.AssociateActionsWithUser(posessionInputs);
-        }*/
 
         inputs.Cursor.DoLocation.performed += (context) =>
         {
@@ -153,41 +100,6 @@ public sealed class CursorBehaviour : MonoBehaviour
     private void Application_focusChanged(bool obj)
     {
         isAppFocused = obj;
-    }
-
-
-
-/*    private void MoveAround_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) => moveDirection = Vector2.zero;
-    private void MoveAround_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => moveDirection = obj.ReadValue<Vector2>();*/
-
-/*    private void Click_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if (alwaysPosess) MouseClickDown(true, false);
-        else if (isPosessed && isAppFocused) MouseClickDown(true, false);
-    }
-    private void Click_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if (alwaysPosess) MouseClickDown(true, true);
-        else if (isPosessed && isAppFocused) MouseClickDown(true, true);
-    }*/
-
-
-    private void LateUpdate()
-    {
-
-        /*        bool invPosessCondition = !isPosessed || !isAppFocused;
-                if (alwaysPosess || !invPosessCondition) PosessCursor();*/
-    }
-
-    void PosessCursor()
-    {
-/*        Vector2 posessionMovement = moveDirection * Time.deltaTime * ((Display.main.systemWidth + Display.main.systemHeight) / 2f);
-        MoveMouse(posessionMovement.x, -posessionMovement.y, sensitivity);
-
-        Vector3 debugPosStart = transform.position;
-        debugPosStart.z = Camera.main.transform.position.z + 3f;
-
-        Debug.DrawLine(debugPosStart, debugPosStart + (Vector3)moveDirection, Color.green, Time.deltaTime);*/
     }
 
 
@@ -270,8 +182,7 @@ public sealed class CursorBehaviour : MonoBehaviour
     [BurstCompile]
     void ApplyImage(Sprite newSprite, float scale)
     {
-        image.sprite = newSprite;/*
-        transform.localScale = new Vector3(scale, scale, scale) * this.scale;*/
+        image.sprite = newSprite;
     }
 
 
@@ -303,13 +214,6 @@ public sealed class CursorBehaviour : MonoBehaviour
 
     private void OnDestroy()
     {
-
-/*        posessionInputs.PosessionActions.MoveAround.performed -= MoveAround_performed;
-        posessionInputs.PosessionActions.MoveAround.canceled -= MoveAround_canceled;
-
-        posessionInputs.PosessionActions.Click.performed -= Click_canceled;
-        posessionInputs.PosessionActions.Click.canceled -= Click_performed;*/
-
         inputs.Dispose();
 
     }

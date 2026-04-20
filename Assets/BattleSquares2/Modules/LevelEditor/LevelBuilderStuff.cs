@@ -1,6 +1,7 @@
 using NavMeshPlus.Components;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.Universal;
@@ -91,10 +92,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             var shapeData = loadedSimplifiedShapeData[i];
             bool isStatic = EvaluateShapeStatic(i);
 
-            if (!isStatic)
-            {
-                CreateAnimatedShape(i, shapeData);
-            }
+            if (!isStatic) CreateAnimatedShape(i, shapeData);
         }
 
         FinalizeAnimatedGroups();
@@ -104,25 +102,16 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             var shapeData = loadedSimplifiedShapeData[i];
             bool isStatic = EvaluateShapeStatic(i);
 
-            if (isStatic)
-            {
-                CreateStaticShape(i, shapeData, staticShapeRenderers, staticShapeColliders);
-            }
+            if (isStatic) CreateStaticShape(i, shapeData, staticShapeRenderers, staticShapeColliders);
         }
 
         GroupStaticShapesIntoIslands(staticShapeRenderers, staticShapeColliders);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private bool EvaluateShapeStatic(int shapeIndex)
     {
-        foreach (var animData in simplifiedAnimationDatas)
-        {
-            foreach (var linkedShape in animData.linkedShapes)
-            {
-                if (linkedShape == shapeIndex)
-                    return false;
-            }
-        }
+        foreach (var animData in simplifiedAnimationDatas) foreach (var linkedShape in animData.linkedShapes) if (linkedShape == shapeIndex) return false;
         return true;
     }
 
@@ -190,8 +179,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         return group;
     }
 
-    private void GroupStaticShapesIntoIslands(List<BuiltShapeBehaviour> renderers,
-                                              List<GameObject> colliders)
+    private void GroupStaticShapesIntoIslands(List<BuiltShapeBehaviour> renderers, List<GameObject> colliders)
     {
         if (renderers.Count == 0) return;
 
@@ -363,8 +351,6 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
                     island.transform.SetParent(clusterCollider.transform.parent);
                 }
-
-                //Destroy(clusterCollider.gameObject);
             }
 
             group.Value.CleanupTempColliders();
@@ -389,38 +375,26 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             light.intensity = lightStrength / simplifiedLightData.Length;
 
             var worldColors = FindAnyObjectByType<WorldColors>();
-            if (worldColors != null)
-            {
-                worldColors.RegisterLight(light, lightStrength / simplifiedLightData.Length);
-            }
+            if (worldColors != null) worldColors.RegisterLight(light, lightStrength / simplifiedLightData.Length);
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void BuildAllSpawns()
     {
         var mapSpawns = Instantiate(mapSpawnsPrefab, levelOutput);
-
-        foreach (var spawnCoord in simplifiedSpawnData)
-        {
-            Instantiate(spawnPointPrefab, spawnCoord.GetPosition(), Quaternion.identity, mapSpawns.transform);
-        }
-
+        foreach (var spawnCoord in simplifiedSpawnData) Instantiate(spawnPointPrefab, spawnCoord.GetPosition(), Quaternion.identity, mapSpawns.transform);
         mapSpawns.InitializeSpawns();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private int GetAnimationGroupIndex(int shapeIndex)
     {
-        for (int i = 0; i < simplifiedAnimationDatas.Length; i++)
-        {
-            foreach (var linkedShape in simplifiedAnimationDatas[i].linkedShapes)
-            {
-                if (linkedShape == shapeIndex)
-                    return i;
-            }
-        }
+        for (int i = 0; i < simplifiedAnimationDatas.Length; i++) foreach (var linkedShape in simplifiedAnimationDatas[i].linkedShapes) if (linkedShape == shapeIndex) return i;
         return -1;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private bool IsDataInvalid()
     {
         return loadedSimplifiedShapeData == null ||
@@ -430,7 +404,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
     }
 
     // Helper classes
-    private class ShapeIsland
+    private sealed class ShapeIsland
     {
         public Transform Root { get; set; }
         public Transform RenderersParent { get; set; }
@@ -438,7 +412,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
         public int StencilId { get; set; }
     }
 
-    private class AnimationGroup
+    private sealed class AnimationGroup
     {
         public Transform Root { get; set; }
         public LevelAnimationGroup AnimationGroupComponent { get; set; }
@@ -485,6 +459,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
 
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ConfigureObstacleFromPolygon(
     PolygonCollider2D polygon,
     NavMeshObstacle obstacle,
@@ -512,7 +487,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             obstacle.center = new Vector3(center.x, center.y, 0f);
         }
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public PolygonCollider2D[] GetColliders()
         {
             var colliders = new PolygonCollider2D[colliderObjects.Count];
@@ -522,7 +497,7 @@ public sealed class LevelBuilderStuff : MonoBehaviour
             }
             return colliders;
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void CleanupTempColliders()
         {
             foreach (var colliderObj in colliderObjects)

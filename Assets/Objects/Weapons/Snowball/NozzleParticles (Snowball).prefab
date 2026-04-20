@@ -1702,6 +1702,15 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.15197329
         - serializedVersion: 3
+          time: 0.5011285
+          value: -0.05014035
+          inSlope: 0.07084573
+          outSlope: 0.07084573
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.998166
+        - serializedVersion: 3
           time: 1
           value: 0
           inSlope: 0
@@ -1736,13 +1745,22 @@ ParticleSystem:
           outWeight: 0.26067728
         - serializedVersion: 3
           time: 0.21016663
-          value: -0.9435822
-          inSlope: -0.51311535
-          outSlope: -0.51311535
+          value: -0.93508303
+          inSlope: -1.9775518
+          outSlope: -1.9775518
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.24223055
+          outWeight: 0.1231199
+        - serializedVersion: 3
+          time: 0.50304955
+          value: -0.05556065
+          inSlope: -0.009829713
+          outSlope: -0.009829713
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.3611538
         - serializedVersion: 3
           time: 1
           value: 0
@@ -4915,7 +4933,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &9145842103668394895
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4961,6 +4979,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 2
+  m_MaskInteraction: 2
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 1
@@ -4992,7 +5011,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 2
 --- !u!1 &3869723757186751784
 GameObject:
   m_ObjectHideFlags: 0
@@ -5108,9 +5126,9 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0.5
-      minScalar: 5
+      minMaxState: 3
+      scalar: 0.75
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -9908,7 +9926,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &6800267342632230496
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -9954,6 +9972,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 2
+  m_MaskInteraction: 2
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 1
@@ -9985,7 +10004,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 2
 --- !u!1 &6055420674859090179
 GameObject:
   m_ObjectHideFlags: 0
@@ -10012,13 +10030,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6055420674859090179}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 0, z: -0.7071068, w: -0.7071068}
   m_LocalPosition: {x: 0.3, y: 0, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6031738575890369617}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -270}
 --- !u!198 &6925746775140459686
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -10102,8 +10120,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.75
-      minScalar: 0.5
+      scalar: 0.6
+      minScalar: 0.3
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -11697,7 +11715,7 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.15197329
         - serializedVersion: 3
-          time: 1
+          time: 0.9980469
           value: 0
           inSlope: 0
           outSlope: 0
@@ -11738,6 +11756,15 @@ ParticleSystem:
           weightedMode: 0
           inWeight: 0.33333334
           outWeight: 0.113108054
+        - serializedVersion: 3
+          time: 0.5997834
+          value: 0.0055722613
+          inSlope: -0.024209572
+          outSlope: -0.024209572
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
           value: 0
@@ -14910,7 +14937,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &3926185393429998478
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -14956,6 +14983,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 2
+  m_MaskInteraction: 2
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 1
@@ -14987,7 +15015,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 2
 --- !u!1 &7289681851009581468
 GameObject:
   m_ObjectHideFlags: 0
@@ -15037,6 +15064,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e715116cddfc282488fa6dc4d84ac7dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  supportObjectPooling: 1
+  variantID: 1845156435986298989
   particleSystems:
   - {fileID: 6945213579941293333}
   - {fileID: 4413451875663406485}
@@ -15049,9 +15078,11 @@ MonoBehaviour:
   - {fileID: 3926185393429998478}
   - {fileID: 1990073461620312559}
   - {fileID: 9145842103668394895}
-  supportObjectPooling: 1
-  variantID: 5318700790454187534
+  stopBehaviour: 0
   lifeTime: 1.4
+  emissionStopTimePadding: 1
+  attatchmentLifeTime: 1.4
+  attatchment: {fileID: 0}
 --- !u!1 &8333765852021078253
 GameObject:
   m_ObjectHideFlags: 0
@@ -16754,6 +16785,15 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.15197329
         - serializedVersion: 3
+          time: 0.5011285
+          value: -0.05014035
+          inSlope: 0.07084573
+          outSlope: 0.07084573
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.998166
+        - serializedVersion: 3
           time: 1
           value: 0
           inSlope: 0
@@ -16788,13 +16828,22 @@ ParticleSystem:
           outWeight: 0.26067728
         - serializedVersion: 3
           time: 0.21016663
-          value: -0.9435822
-          inSlope: -0.51311535
-          outSlope: -0.51311535
+          value: -0.93508303
+          inSlope: -1.9775518
+          outSlope: -1.9775518
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.24223055
+          outWeight: 0.1231199
+        - serializedVersion: 3
+          time: 0.50304955
+          value: -0.05556065
+          inSlope: -0.009829713
+          outSlope: -0.009829713
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.3611538
         - serializedVersion: 3
           time: 1
           value: 0
@@ -19967,7 +20016,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &1990073461620312559
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -20013,6 +20062,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 2
+  m_MaskInteraction: 2
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 1
@@ -20044,7 +20094,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 2
 --- !u!1 &9195726132163318705
 GameObject:
   m_ObjectHideFlags: 0
@@ -20160,9 +20209,9 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0.5
-      minScalar: 5
+      minMaxState: 3
+      scalar: 0.75
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -24960,7 +25009,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &7016941087410969895
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -25006,6 +25055,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 1109491671
   m_SortingLayer: 1
   m_SortingOrder: 2
+  m_MaskInteraction: 2
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 1
@@ -25037,4 +25087,3 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 2
