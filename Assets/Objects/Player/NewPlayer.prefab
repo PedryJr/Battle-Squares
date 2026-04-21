@@ -400,6 +400,52 @@ MonoBehaviour:
   primaryHoldable: 0
   secondaryHoldable: 0
   flipFlop: 0
+--- !u!1 &8705223285682941222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 901414495932511819}
+  - component: {fileID: 5218802923112895405}
+  m_Layer: 0
+  m_Name: Snek
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &901414495932511819
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8705223285682941222}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.71173, y: 2.99347, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4479520223757404588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5218802923112895405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8705223285682941222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3b50bfc971ba6148ab34b721cbbedde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  segmentPrefab: {fileID: 8798819626476046668, guid: e81952d425236ed4595dda1666caf24c, type: 3}
+  owner: {fileID: 955279136659326086}
 --- !u!1 &9203004307750521883
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,6 +482,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 901414495932511819}
   - {fileID: 1861820195661065170}
   - {fileID: 4518612954886327583}
   - {fileID: 6766273076154194077}
@@ -1140,6 +1187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e8715782671e842b02add1aaa05c1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  snekTail: {fileID: 0}
   overrideMMR: 1432.36886156104
   neighbours: {fileID: 0}
   playerLight: {fileID: 3159344491717468697}
@@ -1249,8 +1297,8 @@ MonoBehaviour:
     colorCorrectionType: 0
     hue: 0
     saturation: 0.835
-    value: 0.628
-    alpha: 0.314
+    value: 0.2
+    alpha: 1
   nozzleColor:
     colorCorrectionType: 0
     hue: 0.77734375

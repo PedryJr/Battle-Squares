@@ -15,6 +15,8 @@ using static PlayerMLAgent;
 [Preserve]
 public sealed partial class PlayerBehaviour : MonoBehaviour, IPlayerHandle
 {
+    [SerializeField] public SnekTailBehaviour snekTail;
+
     [SerializeField] double overrideMMR = 0;
     [ContextMenu("Override my mmr")]
     void OverrideMyMMR()
