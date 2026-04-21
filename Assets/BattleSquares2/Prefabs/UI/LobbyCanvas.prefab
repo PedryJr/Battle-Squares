@@ -20433,8 +20433,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4102881931814431538}
   - component: {fileID: 6214949660774461889}
-  - component: {fileID: 1672152474908112796}
-  - component: {fileID: 3925395108933880175}
   m_Layer: 5
   m_Name: TopLeftInterface
   m_TagString: Untagged
@@ -20472,32 +20470,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4750901549861105179}
   m_CullTransparentMesh: 1
---- !u!114 &1672152474908112796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4750901549861105179}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca701ced512128647a95595f82e8e52d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destroy: 1
---- !u!114 &3925395108933880175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4750901549861105179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e01c05d0c6499448e354986e55d377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HostOnlyBehaviour
-  destroy: 0
 --- !u!1 &4777408628041811383
 GameObject:
   m_ObjectHideFlags: 0
