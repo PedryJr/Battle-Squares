@@ -7,7 +7,9 @@ public sealed class LobbyStateBehaviour : MonoBehaviour
 {
 
     [SerializeField]
-    TMP_Text accessField;
+    TMP_Text accessFieldHost;
+    [SerializeField]
+    TMP_Text accessFieldClient;
 
     public static bool access = true;
     public static bool pauseAccessUpdate = false;
@@ -65,13 +67,15 @@ public sealed class LobbyStateBehaviour : MonoBehaviour
             {
                 SteamNetwork.currentLobby?.SetJoinable(true);
                 SteamNetwork.currentLobby?.SetData("Avalible", "true");
-                accessField.text = "Public";
+                accessFieldClient.text = "Public";
+                accessFieldHost.text = "Public";
             }
             else
             {
                 SteamNetwork.currentLobby?.SetJoinable(true);
                 SteamNetwork.currentLobby?.SetData("Avalible", "false");
-                accessField.text = "Private";
+                accessFieldClient.text = "Private";
+                accessFieldHost.text = "Private";
             }
 
         }
