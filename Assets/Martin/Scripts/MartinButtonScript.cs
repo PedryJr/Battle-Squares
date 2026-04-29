@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// This replaces the standard Button component
 public class MartinButtonScript : Button
 {
     [Header("Custom Button Settings")]
