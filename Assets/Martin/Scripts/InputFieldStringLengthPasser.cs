@@ -5,8 +5,7 @@ using UnityEngine.UI;
 public class InputFieldStringLengthPasser : MonoBehaviour
 {
     [SerializeField] private WorkshopSectionTitleScript workshopSectionTitle;
-    [SerializeField] private InputField inputField;
-
+    [SerializeField] private TMPro.TMP_InputField inputField;
     public void PassAlongStringLength()
     {
         if (workshopSectionTitle != null && inputField != null)

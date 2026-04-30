@@ -74,6 +74,8 @@ public class UIComponentPercentageScaler : MonoBehaviour
 
     private void OnRectTransformDimensionsChange() => ScaleUI();
 
+
+
     private void OnValidate()
     {
         _referenceRectTransform = null;
@@ -146,8 +148,12 @@ public class UIComponentPercentageScaler : MonoBehaviour
         return 1f;
     }
 
+#if UNITY_EDITOR
+    private void Update() => ScaleUI();
+#else
     private void Update()
     {
         if (HasResolutionChanged()) ScaleUI();
     }
+#endif
 }
