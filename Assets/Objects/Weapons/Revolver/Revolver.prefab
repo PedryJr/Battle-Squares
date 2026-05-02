@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 0, z: 3}
-  m_LocalScale: {x: 0.75, y: 0.2, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4188844385110568294}
@@ -137,7 +137,6 @@ MonoBehaviour:
   sync: 0
   flipFlop: 0
   builtIndAudio: 1
-  hitMark: {fileID: 8294959907817521048, guid: 230b16bb6dae96847a091aa5284e76d4, type: 3}
   trailParticles: {fileID: 227063848627397678}
   trailParticleSystem: {fileID: 8440552164618030048}
   spriteRenderer: {fileID: 1625723881570478094}
@@ -248,6 +247,7 @@ MonoBehaviour:
     alignDirection: 0
     clampMorph: 0
     hover: 0
+    hitMarkSize: 0
   projectileTrailBehaviour: {fileID: 0}
   externalTrailRef: {fileID: 0}
   multiplySpawnrateByLifetime: 0

@@ -23,13 +23,22 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
         outWeight: 0
+      - serializedVersion: 3
+        time: 0.260209
+        value: 0.61931145
+        inSlope: 2.7664561
+        outSlope: 2.7664561
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.071472876
+        outWeight: 0.13670827
       - serializedVersion: 3
         time: 1
         value: 1
@@ -56,7 +65,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     projectileSpawnEvents: []
     weaponName: Revolver
-    targetMorph: {x: 0, y: 0, z: 0}
+    targetMorph: {x: 0.75, y: 0.2, z: 1}
     reloadTime: 1.45
     shootingInterval: 0.04
     projectileSpeed: 35
@@ -72,7 +81,7 @@ MonoBehaviour:
     baseDamage: 4
     damageTimeScale: 0
     recoil: 8
-    timeToMorph: 0
+    timeToMorph: 0.09
     syncSpeed: 0
     meleeRange: 0
     swingDegrees: 0
@@ -103,7 +112,7 @@ MonoBehaviour:
     damageOnImpact: 1
     sticky: 0
     skipAoeOnTargetHit: 0
-    enableMorph: 0
+    enableMorph: 1
     setMorphOnBounce: 0
     sync: 0
     stickToSender: 0
@@ -116,7 +125,7 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 0
     alignDirection: 0
-    clampMorph: 1
+    clampMorph: 0
     hover: 0
     delistWeapon: 0
     hitMarkSize: 1

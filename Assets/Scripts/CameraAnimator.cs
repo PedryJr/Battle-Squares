@@ -10,6 +10,8 @@ using static PlayerSynchronizer;
 public sealed class CameraAnimator : MonoBehaviour
 {
 
+    [SerializeField] float baseScale = 14.5f;
+
     [SerializeField] float vDist;
     [SerializeField] float hDist;
 
@@ -264,7 +266,7 @@ public sealed class CameraAnimator : MonoBehaviour
     private float CalculateRequiredOrthoSize(int localPlayerCount)
     {
         // Base size
-        float baseSize = 14.5f;
+        float baseSize = baseScale;
 
         if (localPlayerCount <= 1)
         {
