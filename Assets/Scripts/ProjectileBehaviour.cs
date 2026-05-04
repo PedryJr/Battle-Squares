@@ -160,6 +160,9 @@ public sealed class ProjectileBehaviour : MonoBehaviour, IProjectileHandle
 
     private void Awake()
     {
+#if UNITY_EDITOR
+        if(!GetComponent<ProjectileDebugBehaviour>()) gameObject.AddComponent<ProjectileDebugBehaviour>();
+#endif
         if (trailParticleSystem) trailMainModule = trailParticleSystem.main;
         cameraAnimator = Camera.main.GetComponent<CameraAnimator>();
         playersHit = new List<PlayerBehaviour>(4);
