@@ -7,17 +7,21 @@ public sealed class EditorSwitchBehaviour : MonoBehaviour
     [SerializeField]
     string LevelEditorSceneName;
 
-    bool editorCanvasOn = false;
-    bool workshopCanvasOn = false;
 
     [SerializeField]
     Canvas mainCanvas;
 
     [SerializeField]
     Canvas editorCanvas;
+    bool editorCanvasOn = false;
 
     [SerializeField]
-    Canvas workshopCanvas;
+    Canvas workshopBrowseCanvas;
+    bool workshopBrowseCanvasOn = false;
+
+    [SerializeField]
+    Canvas workshopUploadCanvas;
+    bool workshopUploadCanvasOn = false;
 
     public void TOGGLEEDITOR(Variant variant)
     {
@@ -40,19 +44,35 @@ public sealed class EditorSwitchBehaviour : MonoBehaviour
 
     }
 
-    public void TOGGLEWORKSHOP()
+    public void TOGGLEWORKSHOP_BROWSE()
     {
-        workshopCanvasOn = !workshopCanvasOn;
+        workshopBrowseCanvasOn = !workshopBrowseCanvasOn;
 
-        if (workshopCanvasOn)
+        if (workshopBrowseCanvasOn)
         {
-            workshopCanvas.gameObject.SetActive(true);
+            workshopBrowseCanvas.gameObject.SetActive(true);
             mainCanvas.gameObject.SetActive(false);
         }
         else
         {
-            workshopCanvas.GetComponentInChildren<WorkshopLoader>().DelistItems();
-            workshopCanvas.gameObject.SetActive(false);
+            workshopBrowseCanvas.GetComponentInChildren<WorkshopLoader>().DelistItems();
+            workshopBrowseCanvas.gameObject.SetActive(false);
+            mainCanvas.gameObject.SetActive(true);
+        }
+    }
+
+    public void TOGGLEWORKSHOP_UPLOAD()
+    {
+        workshopUploadCanvasOn = !workshopUploadCanvasOn;
+
+        if (workshopUploadCanvasOn)
+        {
+            workshopUploadCanvas.gameObject.SetActive(true);
+            mainCanvas.gameObject.SetActive(false);
+        }
+        else
+        {
+            workshopUploadCanvas.gameObject.SetActive(false);
             mainCanvas.gameObject.SetActive(true);
         }
     }

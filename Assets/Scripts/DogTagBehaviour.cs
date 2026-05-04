@@ -45,7 +45,7 @@ public sealed class DogTagBehaviour : MonoBehaviour
 
 
         owningPlayer.AssignMaterialToParticleRenderer(dogTagParticles, dogTagParticles.GetComponent<ParticleSystem>());
-        spriteRenderer.color = owningPlayer.PlayerColor.DogTagColor;
+        spriteRenderer.color = owningPlayer.PlayerColor.ObjectivesColor;
 
         rb.linearVelocity = startVelocity;
 

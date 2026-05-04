@@ -17,6 +17,10 @@ TagManager:
   - Name Stat
   - ShapeCountDebug
   - EditorFadeCell
+  - IngameShapes
+  - HUD
+  - GameLight
+  - EffectRenderer
   layers:
   - Default
   - TransparentFX

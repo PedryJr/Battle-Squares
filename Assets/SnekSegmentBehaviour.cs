@@ -1,13 +1,17 @@
 using System;
 using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem.Utilities;
+using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 public partial class SnekSegmentBehaviour : AutoPooledBehaviour
 {
 
     Rigidbody2D rb;
-    CircleCollider2D col;
+    Collider2D col;
+    SpriteRenderer sr;
+    ProximityPixelSenssor sensor;
 
     Transform target;
     PlayerBehaviour owner;
@@ -21,8 +25,10 @@ public partial class SnekSegmentBehaviour : AutoPooledBehaviour
 
     private void Awake()
     {
+        sensor = GetComponent<ProximityPixelSenssor>();
+        sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
-        col = GetComponent<CircleCollider2D>();
+        col = GetComponent<Collider2D>();
         target = transform; //Just for safety, will be set to player or next segment.
     }
 
@@ -94,25 +100,27 @@ public partial class SnekSegmentBehaviour : AutoPooledBehaviour
     {
         Vector3 targetScale = new Vector3(currentParams.targetScale.x, currentParams.targetScale.y, 1f);
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, currentParams.scalingSpeed * Time.deltaTime);
+
+        sr.color = Color.Lerp(sr.color, owner.PlayerColor.ObjectivesColor, currentParams.colorChangeSpeed * Time.deltaTime);
+        sensor.gridSpaceColor.color = Color.Lerp(sensor.gridSpaceColor.color, owner.PlayerColor.PrimaryColor, currentParams.colorChangeSpeed * Time.deltaTime);
     }
     void RunTargetingFU(StateParameters currentParams)
     {
-
-        float distanceToTarget = Vector2.Distance(rb.position, target.position);
-
         Vector2 toTarget = ((Vector2)target.position) - rb.position;
-        Vector2 breakVec = toTarget.normalized * currentParams.targetDistance;
+        float distanceToTarget = toTarget.magnitude;
 
+        Vector2 steerDirection = UpdateNavigationPath(target.position, rb.position);
+
+        Vector2 breakVec = toTarget.normalized * currentParams.targetDistance;
         float overShoot = breakVec.magnitude;
 
-        if(overShoot > distanceToTarget)
+        if (overShoot > distanceToTarget)
         {
             rb.AddForce(-rb.linearVelocity * currentParams.breakingForce, ForceMode2D.Force);
         }
         else
         {
-
-            Vector2 calculatedForce = (toTarget - breakVec) * currentParams.followSpeed;
+            Vector2 calculatedForce = steerDirection.normalized * (toTarget - breakVec).magnitude * currentParams.followSpeed;
             rb.AddForce(calculatedForce, ForceMode2D.Force);
         }
 
@@ -121,7 +129,26 @@ public partial class SnekSegmentBehaviour : AutoPooledBehaviour
         float breakingFrac = Mathf.Pow(resultingSpeed / currentParams.maxSpeed, currentParams.maxSpeedExpo);
 
         rb.AddForce(-resultingVelocity * breakingFrac);
+    }
 
+    public Vector2 UpdateNavigationPath(Vector2 targetPosition, Vector2 segmentPosition)
+    {
+
+        Vector2 directDirection = targetPosition - segmentPosition;
+        NavMeshPath navMeshPath = new NavMeshPath();
+        bool pathSuccess = NavMesh.CalculatePath(segmentPosition, targetPosition, 1 << 0, navMeshPath);
+
+        if (!pathSuccess || navMeshPath.status == NavMeshPathStatus.PathInvalid || navMeshPath.corners == null || navMeshPath.corners.Length == 0)
+        {
+            return directDirection;
+        }
+        else
+        {
+            Vector2[] navigationPath = navigationPath = new Vector2[navMeshPath.corners.Length];
+            for (int i = 0; i < navMeshPath.corners.Length; i++) navigationPath[i] = navMeshPath.corners[i];
+            if (navigationPath.Length >= 2) return (navigationPath[1] - segmentPosition);
+            else return directDirection;
+        }
     }
 }
 

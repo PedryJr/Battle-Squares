@@ -31,17 +31,26 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.8
-        value: 0
-        inSlope: 0
-        outSlope: 0
+        time: 0.23315163
+        value: 1.0401402
+        inSlope: -0.5719319
+        outSlope: -0.5719319
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0
+        outWeight: 0.18395257
       - serializedVersion: 3
-        time: 1
-        value: 1
+        time: 0.758882
+        value: 1.2908744
+        inSlope: 4.6265063
+        outSlope: 4.6265063
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.06272591
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.9978992
+        value: 0.01015228
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -65,7 +74,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     projectileSpawnEvents: []
     weaponName: Shotgun
-    targetMorph: {x: 0, y: 0, z: 0}
+    targetMorph: {x: 0.32, y: 0.32, z: 0}
     reloadTime: 1.5
     shootingInterval: 0.04
     projectileSpeed: 60

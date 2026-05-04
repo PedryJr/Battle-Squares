@@ -224,7 +224,7 @@ public sealed unsafe class ProximityPixelationSystem : MonoBehaviour
         while (accumulator >= fixedDT)
         {
             registerDT = fixedDT; 
-            foreach (var item in sensorObjects) item.CustomUpdate();
+            foreach (var item in sensorObjects) if(item.enabled) item.CustomUpdate();
             CalculateProximityPixels();
             accumulator -= fixedDT;
         }
