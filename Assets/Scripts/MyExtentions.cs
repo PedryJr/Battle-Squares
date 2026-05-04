@@ -850,4 +850,151 @@ public static class MyExtentions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static Color C(byte r, byte g, byte b) => new Color32(r, g, b, 255);
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool FlagIsSet<T>(T flags, T flag)
+        where T : struct, Enum
+    {
+        return EnumFlagOps<T>.IsSet(flags, flag);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void FlagSet<T>(ref T flags, T flag)
+        where T : struct, Enum
+    {
+        flags = EnumFlagOps<T>.Set(flags, flag);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void FlagUnset<T>(ref T flags, T flag)
+        where T : struct, Enum
+    {
+        flags = EnumFlagOps<T>.Unset(flags, flag);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void FlagFlip<T>(ref T flags, T flag)
+        where T : struct, Enum
+    {
+        flags = EnumFlagOps<T>.Flip(flags, flag);
+    }
+
+    private static class EnumFlagOps<T>
+        where T : struct, Enum
+    {
+        private static readonly int size = Unsafe.SizeOf<T>();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsSet(T flags, T flag)
+        {
+            if (size == 1)
+            {
+                byte a = Unsafe.As<T, byte>(ref flags);
+                byte b = Unsafe.As<T, byte>(ref flag);
+                return (a & b) != 0;
+            }
+
+            if (size == 2)
+            {
+                ushort a = Unsafe.As<T, ushort>(ref flags);
+                ushort b = Unsafe.As<T, ushort>(ref flag);
+                return (a & b) != 0;
+            }
+
+            if (size == 4)
+            {
+                uint a = Unsafe.As<T, uint>(ref flags);
+                uint b = Unsafe.As<T, uint>(ref flag);
+                return (a & b) != 0;
+            }
+
+            {
+                ulong a = Unsafe.As<T, ulong>(ref flags);
+                ulong b = Unsafe.As<T, ulong>(ref flag);
+                return (a & b) != 0;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Set(T flags, T flag)
+        {
+            if (size == 1)
+            {
+                byte result = (byte)(Unsafe.As<T, byte>(ref flags) | Unsafe.As<T, byte>(ref flag));
+                return Unsafe.As<byte, T>(ref result);
+            }
+
+            if (size == 2)
+            {
+                ushort result = (ushort)(Unsafe.As<T, ushort>(ref flags) | Unsafe.As<T, ushort>(ref flag));
+                return Unsafe.As<ushort, T>(ref result);
+            }
+
+            if (size == 4)
+            {
+                uint result = Unsafe.As<T, uint>(ref flags) | Unsafe.As<T, uint>(ref flag);
+                return Unsafe.As<uint, T>(ref result);
+            }
+
+            {
+                ulong result = Unsafe.As<T, ulong>(ref flags) | Unsafe.As<T, ulong>(ref flag);
+                return Unsafe.As<ulong, T>(ref result);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Unset(T flags, T flag)
+        {
+            if (size == 1)
+            {
+                byte result = (byte)(Unsafe.As<T, byte>(ref flags) & ~Unsafe.As<T, byte>(ref flag));
+                return Unsafe.As<byte, T>(ref result);
+            }
+
+            if (size == 2)
+            {
+                ushort result = (ushort)(Unsafe.As<T, ushort>(ref flags) & ~Unsafe.As<T, ushort>(ref flag));
+                return Unsafe.As<ushort, T>(ref result);
+            }
+
+            if (size == 4)
+            {
+                uint result = Unsafe.As<T, uint>(ref flags) & ~Unsafe.As<T, uint>(ref flag);
+                return Unsafe.As<uint, T>(ref result);
+            }
+
+            {
+                ulong result = Unsafe.As<T, ulong>(ref flags) & ~Unsafe.As<T, ulong>(ref flag);
+                return Unsafe.As<ulong, T>(ref result);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Flip(T flags, T flag)
+        {
+            if (size == 1)
+            {
+                byte result = (byte)(Unsafe.As<T, byte>(ref flags) ^ Unsafe.As<T, byte>(ref flag));
+                return Unsafe.As<byte, T>(ref result);
+            }
+
+            if (size == 2)
+            {
+                ushort result = (ushort)(Unsafe.As<T, ushort>(ref flags) ^ Unsafe.As<T, ushort>(ref flag));
+                return Unsafe.As<ushort, T>(ref result);
+            }
+
+            if (size == 4)
+            {
+                uint result = Unsafe.As<T, uint>(ref flags) ^ Unsafe.As<T, uint>(ref flag);
+                return Unsafe.As<uint, T>(ref result);
+            }
+
+            {
+                ulong result = Unsafe.As<T, ulong>(ref flags) ^ Unsafe.As<T, ulong>(ref flag);
+                return Unsafe.As<ulong, T>(ref result);
+            }
+        }
+    }
+
 }

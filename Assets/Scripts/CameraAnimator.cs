@@ -21,7 +21,7 @@ public sealed class CameraAnimator : MonoBehaviour
     [SerializeField] Camera effectRenderer;
 
     private static Camera _effectRenderer;
-    public static Camera EtencilRenderer
+    public static Camera EffectRenderer
     {
         get
         {
@@ -141,12 +141,10 @@ public sealed class CameraAnimator : MonoBehaviour
 
         if (playerSynchronizer.playerIdentities != null)
         {
-            // First pass: collect all local players and check if any are alive
             foreach (PlayerData playerData in playerSynchronizer.playerIdentities)
             {
                 byte networkId = playerData.square.GetNetworkID();
 
-                // Check if this is a local player (same network ID as localSquare)
                 if (playerSynchronizer.localSquare != null && networkId == playerSynchronizer.localSquare.GetNetworkID())
                 {
                     localPlayers.Add(playerData);
@@ -157,19 +155,16 @@ public sealed class CameraAnimator : MonoBehaviour
                 }
             }
 
-            // Second pass: calculate camera target
             foreach (PlayerData playerData in playerSynchronizer.playerIdentities)
             {
                 Vector2 playerPos = playerData.square.rb.position;
 
-                // Always include all local players in camera tracking
                 bool isLocalPlayer = localPlayers.Contains(playerData);
 
                 if (isLocalPlayer)
                 {
                     if (!playerData.square.isDead)
                     {
-                        // Track bounds for local players
                         minBounds.x = Mathf.Min(minBounds.x, playerPos.x);
                         minBounds.y = Mathf.Min(minBounds.y, playerPos.y);
                         maxBounds.x = Mathf.Max(maxBounds.x, playerPos.x);
@@ -182,7 +177,6 @@ public sealed class CameraAnimator : MonoBehaviour
                 }
                 else
                 {
-                    // For non-local players, only include if they're close to the camera center
                     Vector2 cameraCenter = localPlayerCount > 0 ? targetPosition / localPlayerCount : (Vector2)cameraTransform.position;
 
                     xDif = Mathf.Abs(playerPos.x - cameraCenter.x);
@@ -198,7 +192,6 @@ public sealed class CameraAnimator : MonoBehaviour
             }
         }
 
-        // If all local players are dead, focus on spawn
         if (!anyLocalPlayerAlive && localPlayers.Count > 0)
         {
             targetPosition = spawn.position;
@@ -218,7 +211,6 @@ public sealed class CameraAnimator : MonoBehaviour
             transitionTimer = 0;
             fromOrthoSize = aCamera.orthographicSize;
 
-            // Calculate required orthographic size to fit all local players
             float requiredSize = CalculateRequiredOrthoSize(localPlayerCount);
             toOrthoSize = requiredSize;
 
@@ -227,7 +219,6 @@ public sealed class CameraAnimator : MonoBehaviour
 
         cameraLerp = cameraAnimation.Evaluate(transitionTimer);
 
-        // Average velocity of local players for camera smoothing
         float avgVelocity = 0f;
         float avgVerticalVelocity = 0f;
 
@@ -265,40 +256,30 @@ public sealed class CameraAnimator : MonoBehaviour
 
     private float CalculateRequiredOrthoSize(int localPlayerCount)
     {
-        // Base size
         float baseSize = baseScale;
 
         if (localPlayerCount <= 1)
         {
-            // Single player or none - use default behavior
             return baseSize + Mathf.Clamp((i - 1) * 2f, 0, 2.8f);
         }
 
-        // Calculate bounds size
         float boundsWidth = maxBounds.x - minBounds.x;
         float boundsHeight = maxBounds.y - minBounds.y;
 
-        // Add padding (50% extra space around players)
         float paddingMultiplier = 1.5f;
         boundsWidth *= paddingMultiplier;
         boundsHeight *= paddingMultiplier;
 
-        // Calculate required orthographic size to fit the bounds
-        // Ortho size is half-height of the view
         float requiredHeightSize = boundsHeight / 2f;
 
-        // Account for aspect ratio (width constraint)
-        float aspectRatio = 1.777778f; // 16:9
+        float aspectRatio = 1.777778f;
         float requiredWidthSize = boundsWidth / (2f * aspectRatio);
 
-        // Take the larger of the two
         float requiredSize = Mathf.Max(requiredHeightSize, requiredWidthSize);
 
-        // Clamp to reasonable values
         requiredSize = Mathf.Max(requiredSize, baseSize);
-        requiredSize = Mathf.Min(requiredSize, baseSize + 8f); // Max zoom out
+        requiredSize = Mathf.Min(requiredSize, baseSize + 8f);
 
-        // Also consider nearby players for additional zoom
         float nearbyBonus = Mathf.Clamp((i - localPlayerCount) * 1.5f, 0, 2.8f);
 
         return requiredSize + nearbyBonus;
@@ -325,7 +306,6 @@ public sealed class CameraAnimator : MonoBehaviour
             }
         }
 
-        // Average climax across all local players for effects
         if (playerSynchronizer.playerIdentities != null)
         {
             float totalClimax = 0f;
@@ -358,7 +338,6 @@ public sealed class CameraAnimator : MonoBehaviour
         soundUpdateTimer = 0;
         if (!playerSynchronizer.localSquare) return;
 
-        // Use the primary local player (localSquare) for sound parameters
         if (playerSynchronizer.localSquare.transform.position.magnitude < 50)
             battleThemeInstance.setParameterByName("CameraPositionX", playerSynchronizer.localSquare.transform.position.x);
         else

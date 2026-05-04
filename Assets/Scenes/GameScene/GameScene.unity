@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   simSpeed: 1
   captureDestination: Screenshots/
+  visionMask: 30
 --- !u!4 &6871813
 Transform:
   m_ObjectHideFlags: 0
@@ -237,7 +238,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.6850586, y: -4.0751343}
+  m_AnchoredPosition: {x: 2.6850586, y: -4.0751953}
   m_SizeDelta: {x: 36.48996, y: 31.450014}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &79609501
@@ -1541,7 +1542,7 @@ GameObject:
   - component: {fileID: 619371731}
   m_Layer: 0
   m_Name: Effects
-  m_TagString: Untagged
+  m_TagString: EffectRenderer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1836,6 +1837,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6eb65c80a3ef4541ba5b74cfe474948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseScale: 14.5
   vDist: 0
   hDist: 0
   StencilEffectRenderScale: 1
@@ -1889,7 +1891,7 @@ GameObject:
   - component: {fileID: 690775927}
   m_Layer: 5
   m_Name: UI
-  m_TagString: Untagged
+  m_TagString: HUD
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
