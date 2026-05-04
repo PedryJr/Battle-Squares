@@ -16,12 +16,12 @@ MonoBehaviour:
     colorChangeSpeed: 1
     followSpeed: 4.49
     scalingSpeed: 5
-    breakingForce: 0.66
-    maxSpeed: 62.8
-    maxSpeedExpo: 0.26
-    targetDistance: 2
-    maxAccelDistance: 0.83
-    targetScale: {x: 0.75, y: 0.75}
+    breakingForce: 0.1
+    maxSpeed: 30
+    maxSpeedExpo: 0.79
+    targetDistance: 1
+    maxAccelDistance: 5
+    targetScale: {x: 0.5, y: 0.5}
   heldStateParameters:
     colorChangeSpeed: 0
     followSpeed: 0

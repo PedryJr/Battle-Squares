@@ -53,7 +53,7 @@ public class LogElementAnimation : MonoBehaviour
         if (!isAnimating) return;
 
         bool oldExpired = expired;
-        elapsedTime += Time.deltaTime;
+        elapsedTime += Time.unscaledDeltaTime;
 
         if (elapsedTime < timeToFadeIn)
         {

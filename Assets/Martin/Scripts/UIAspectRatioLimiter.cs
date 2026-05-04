@@ -75,6 +75,11 @@ public class UIAspectRatioLimiter : MonoBehaviour
 
     private void OnRectTransformDimensionsChange() => LimitAspectRatio();
 
+    private void OnDrawGizmos() => LimitAspectRatio();
+
+#if UNITY_EDITOR
+    private void Update() => LimitAspectRatio();
+#endif
     private void OnValidate()
     {
         narrowestAspectRatio.x = Mathf.Max(0.1f, narrowestAspectRatio.x);

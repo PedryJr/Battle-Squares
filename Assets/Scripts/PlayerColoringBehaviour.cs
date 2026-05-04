@@ -44,6 +44,7 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         mainModuleForParticles.startColor = ParticleColor;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AssignMaterialToParticleRendererVariant2(in ParticleSystemRenderer particleRenderer, in ParticleSystem particleSystem)
     {
         particleMaterial.color = Color.white;
@@ -88,8 +89,8 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
     [SerializeField] ColorComponent chatBubbleColor;
     public Color ChatBoxColor => chatBubbleColor.ActiveColor;
 
-    [SerializeField] ColorComponent dogTagColor;
-    public Color DogTagColor => dogTagColor.ActiveColor;
+    [SerializeField] ColorComponent objectivesColor;
+    public Color ObjectivesColor => objectivesColor.ActiveColor;
 
     [SerializeField] ColorComponent hitMarkColor;
     public Color HitMarkColor => hitMarkColor.ActiveColor;
@@ -147,7 +148,7 @@ public sealed class PlayerColoringBehaviour : MonoBehaviour
         particleColor.SetHue(hue);
         particleColorVariant2.SetHue(hue);
         chatBubbleColor.SetHue(hue);
-        dogTagColor.SetHue(hue);
+        objectivesColor.SetHue(hue);
         hitMarkColor.SetHue(hue);
         pfpBorderNotReadyColor.SetHue(hue);
         pfpBorderIsReadyColor.SetHue(hue);

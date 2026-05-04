@@ -37,7 +37,7 @@ public sealed class FlagPost : MonoBehaviour, IObjective
         foreach (FlagBehaviour flag in flags)
         {
             flag.ownerId = player.square.GetGameID();
-            flag.color = player.square.PlayerColor.DogTagColor;
+            flag.color = player.square.PlayerColor.ObjectivesColor;
             flag.darkColor = player.square.PlayerColor.ParticleColor;
 
             flag.rb.simulated = true;

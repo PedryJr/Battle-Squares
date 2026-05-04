@@ -20,7 +20,34 @@ MonoBehaviour:
     impactParticle: {fileID: 4313180367996257349, guid: 93f2f5a12a3373742bc7df3296c08fb1, type: 3}
     morphAnimation:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.16358416
+        value: 0.28966573
+        inSlope: 3.2000427
+        outSlope: 3.2000427
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.36041364
+        outWeight: 0.0681528
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -38,7 +65,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     projectileSpawnEvents: []
     weaponName: Sniper
-    targetMorph: {x: 0, y: 0, z: 0}
+    targetMorph: {x: 1, y: 0.2, z: 1}
     reloadTime: 2.5
     shootingInterval: 0.04
     projectileSpeed: 67
@@ -54,7 +81,7 @@ MonoBehaviour:
     baseDamage: 4
     damageTimeScale: 38
     recoil: 16.5
-    timeToMorph: 0
+    timeToMorph: 0.1
     syncSpeed: 0
     meleeRange: 0
     swingDegrees: 0
@@ -85,7 +112,7 @@ MonoBehaviour:
     damageOnImpact: 1
     sticky: 0
     skipAoeOnTargetHit: 0
-    enableMorph: 0
+    enableMorph: 1
     setMorphOnBounce: 0
     sync: 0
     stickToSender: 0
@@ -98,7 +125,7 @@ MonoBehaviour:
     dontBlockProjectiles: 0
     bounceOfPlayers: 0
     alignDirection: 0
-    clampMorph: 1
+    clampMorph: 0
     hover: 0
     delistWeapon: 0
     hitMarkSize: 1.5

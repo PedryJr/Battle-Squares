@@ -50,7 +50,7 @@ public class SnekTailBehaviour : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.Semicolon))
         {
             Vector2 mousePosition = Input.mousePosition;
             Vector2 mousePosInWS = Camera.main.ScreenToWorldPoint(mousePosition, Camera.MonoOrStereoscopicEye.Left);

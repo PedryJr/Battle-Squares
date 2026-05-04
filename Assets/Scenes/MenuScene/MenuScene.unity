@@ -6628,9 +6628,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1814822198987935597, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 349.52924
+      objectReference: {fileID: 0}
     - target: {fileID: 2012253706067378313, guid: da1e24282913c244f8a491876355dce7, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2464217966272621658, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 349.52924
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804336971474067173, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 435.94928
+      objectReference: {fileID: 0}
+    - target: {fileID: 3612688996403286139, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 435.94928
       objectReference: {fileID: 0}
     - target: {fileID: 4644181092962656119, guid: da1e24282913c244f8a491876355dce7, type: 3}
       propertyPath: m_Name
@@ -6640,11 +6656,32 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6436136187610903820, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1.0840149
+      objectReference: {fileID: 0}
+    - target: {fileID: 6674268295958201721, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1.0840149
+      objectReference: {fileID: 0}
+    - target: {fileID: 7149662739571088524, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 349.52924
+      objectReference: {fileID: 0}
+    - target: {fileID: 9033575605854180591, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 435.94928
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da1e24282913c244f8a491876355dce7, type: 3}
+--- !u!223 &208770450 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 1010914320546234343, guid: da1e24282913c244f8a491876355dce7, type: 3}
+  m_PrefabInstance: {fileID: 208770449}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &215684902
 GameObject:
   m_ObjectHideFlags: 0
@@ -7467,7 +7504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LevelEditorSceneName: EditorScene
-  mainCanvas: {fileID: 634847412}
+  mainCanvas: {fileID: 208770450}
   editorCanvas: {fileID: 1363578022}
   workshopCanvas: {fileID: 1633196841}
 --- !u!1 &314079434
@@ -8962,7 +8999,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5801379440829103333, guid: f23f90bf3553cc247b2ea42931c683ae, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6775969546642879254, guid: f23f90bf3553cc247b2ea42931c683ae, type: 3}
       propertyPath: delayInSeconds

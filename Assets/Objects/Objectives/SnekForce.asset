@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProximityPixelSensorConfig
   gridSpaceColor:
     color: {r: 0.22352941, g: 0.03529412, b: 0.06666667, a: 0.7607843}
-    radius: 10
+    radius: 5
     saturationBoost: 1
   gridSpaceSensor:
     colorValue:
@@ -26,15 +26,15 @@ MonoBehaviour:
       x: 0
       y: 0
     rotation: 0
-    warpSpeed: 1
-    chroma: 0.1
+    warpSpeed: 10
+    chroma: 0
     enableBlockerInfluence: 0
     blockerFalloff: 0
     enablePositionWarp: 1
-    positionWarpStrength: 0.54
-    positionWarpFallof: 0.42
-    positionWarpRadius: 2
-    enableScaleWarp: 0
+    positionWarpStrength: 0.5
+    positionWarpFallof: 30
+    positionWarpRadius: 10
+    enableScaleWarp: 1
     scaleWarpStrength: 0.5
     scaleWarpFalloff: 40
     scaleWarpRadius: 10

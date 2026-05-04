@@ -12646,6 +12646,7 @@ GameObject:
   - component: {fileID: 1938180157}
   - component: {fileID: 1938180160}
   - component: {fileID: 1938180161}
+  - component: {fileID: 1938180162}
   m_Layer: 0
   m_Name: Network
   m_TagString: Net
@@ -12723,7 +12724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44dd247a00edbfa44b77868d755af6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steamAppId: 3180450
+  steamAppId: 480
   targetSteamId: 0
   userSteamId: 0
 --- !u!114 &1938180161
@@ -12738,6 +12739,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 242349bb448499249bf909417c2a5355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1938180162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938180156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2faac1435b6158247addaf9a2fc14e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  appIdMode: 480
 --- !u!1 &1960488642
 GameObject:
   m_ObjectHideFlags: 0
