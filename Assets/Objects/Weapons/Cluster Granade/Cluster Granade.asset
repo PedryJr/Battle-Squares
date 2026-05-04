@@ -17,7 +17,7 @@ MonoBehaviour:
     projectile: {fileID: 3230000773134604271, guid: cad4485b5d1f23a40a2d262d07303006, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
     bounceParticle: {fileID: 0}
-    impactParticle: {fileID: 4313180367996257349, guid: 583089f6a9f1798448c0057490bd76a0, type: 3}
+    impactParticle: {fileID: 4313180367996257349, guid: 35b86309c6837a14a99f8b127e14c8b4, type: 3}
     morphAnimation:
       serializedVersion: 2
       m_Curve:
@@ -86,8 +86,8 @@ MonoBehaviour:
       manager: {fileID: 0}
       spawnDirection: {x: 0, y: 0}
       spawnPosition: {x: 0, y: 0}
-      eventDirection: 2
-      flipDirection: 0
+      eventDirection: 0
+      flipDirection: 1
       eventType: 0
       eventDelay: 0.08
       toSpawn: {fileID: 11400000, guid: 237b879084a37df4aa34589cc3ac8d4b, type: 2}
@@ -95,8 +95,8 @@ MonoBehaviour:
       manager: {fileID: 0}
       spawnDirection: {x: 0, y: 0}
       spawnPosition: {x: 0, y: 0}
-      eventDirection: 2
-      flipDirection: 0
+      eventDirection: 0
+      flipDirection: 1
       eventType: 0
       eventDelay: 0.18
       toSpawn: {fileID: 11400000, guid: 237b879084a37df4aa34589cc3ac8d4b, type: 2}
@@ -104,8 +104,8 @@ MonoBehaviour:
       manager: {fileID: 0}
       spawnDirection: {x: 0, y: 0}
       spawnPosition: {x: 0, y: 0}
-      eventDirection: 2
-      flipDirection: 0
+      eventDirection: 0
+      flipDirection: 1
       eventType: 0
       eventDelay: 0.28
       toSpawn: {fileID: 11400000, guid: 237b879084a37df4aa34589cc3ac8d4b, type: 2}
@@ -113,7 +113,7 @@ MonoBehaviour:
     targetMorph: {x: 0, y: 0, z: 0}
     reloadTime: 2.7
     shootingInterval: 0.15
-    projectileSpeed: 25
+    projectileSpeed: 27
     projectileAcceleration: 0
     lifeTime: 1
     burstSpread: 0

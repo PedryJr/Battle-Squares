@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBuilder
   specs:
     icon: {fileID: 21300000, guid: aa425987937a3604787ad5669aa7a66b, type: 3}
-    projectile: {fileID: 3230000773134604271, guid: cad4485b5d1f23a40a2d262d07303006, type: 3}
+    projectile: {fileID: 3230000773134604271, guid: f5a883eb18c5ca04d866d321e83a250b, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
     bounceParticle: {fileID: 0}
-    impactParticle: {fileID: 4313180367996257349, guid: 583089f6a9f1798448c0057490bd76a0, type: 3}
+    impactParticle: {fileID: 4313180367996257349, guid: 2a088846d948ed140bd8c1ed7bad0161, type: 3}
     morphAnimation:
       serializedVersion: 2
       m_Curve:
@@ -86,13 +86,13 @@ MonoBehaviour:
     targetMorph: {x: 0, y: 0, z: 0}
     reloadTime: 2.7
     shootingInterval: 0.5
-    projectileSpeed: 5
-    projectileAcceleration: 10
+    projectileSpeed: 10
+    projectileAcceleration: 3
     lifeTime: 0.2
     burstSpread: 0
-    fluctuation: 1
+    fluctuation: 6.28
     aoe: 3
-    knockback: 5
+    knockback: 10
     speedLimit: 100
     minSpeed: 0
     aoeDamage: 2
