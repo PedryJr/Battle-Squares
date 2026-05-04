@@ -91,7 +91,7 @@ MonoBehaviour:
     lifeTime: 0.2
     burstSpread: 0
     fluctuation: 6.28
-    aoe: 3
+    aoe: 2
     knockback: 10
     speedLimit: 100
     minSpeed: 0

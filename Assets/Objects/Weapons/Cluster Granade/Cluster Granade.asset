@@ -125,7 +125,7 @@ MonoBehaviour:
     aoeDamage: 5
     baseDamage: 1
     damageTimeScale: 0
-    recoil: 5
+    recoil: 0
     timeToMorph: 1.5
     syncSpeed: 20
     meleeRange: 0
