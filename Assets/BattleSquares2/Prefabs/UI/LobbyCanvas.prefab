@@ -768,10 +768,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4019609626244051364}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 238.79, y: 50}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7181539077323805942
 CanvasRenderer:
@@ -801,7 +801,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Arena
+  m_text: My Long Text Example (client)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
   m_sharedMaterial: {fileID: -607137550700216403, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
@@ -828,7 +828,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34.95
+  m_fontSize: 37.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -847,7 +847,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 3
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -867,7 +867,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 8.61261, y: 8.159035, z: 6.980957, w: 8.827644}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -28178,7 +28178,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 280, y: 0}
+  m_SizeDelta: {x: 300, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &265698088316085305
 CanvasRenderer:
@@ -34798,7 +34798,59 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
       propertyPath: m_text
-      value: Map
+      value: MyLongTextExample(Host)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_fontSize
+      value: 19.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_margin.w
+      value: 8.827644
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_margin.x
+      value: 8.61261
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_margin.y
+      value: 8.159035
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_margin.z
+      value: 6.980957
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 72
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_overflowMode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_enableKerning
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: m_ActiveFontFeatures.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794999530548624712, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 5930099664594941846, guid: 881c28ae39ce87842bfeb5ff6543d973, type: 3}
       propertyPath: m_AnchorMax.x

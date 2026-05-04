@@ -8999,7 +8999,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5801379440829103333, guid: f23f90bf3553cc247b2ea42931c683ae, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6775969546642879254, guid: f23f90bf3553cc247b2ea42931c683ae, type: 3}
       propertyPath: delayInSeconds
