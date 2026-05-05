@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   supportObjectPooling: 1
-  variantID: 18070641874868082916
+  variantID: 16619351668568144067
   particleSystems:
   - {fileID: 3945671865177332809}
   - {fileID: 8921688042344909332}
@@ -160,18 +160,6 @@ PrefabInstance:
     - target: {fileID: 4125842807995734508, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
       propertyPath: m_Name
       value: DiagA
-      objectReference: {fileID: 0}
-    - target: {fileID: 5609975501322842256, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.85
-      objectReference: {fileID: 0}
-    - target: {fileID: 5609975501322842256, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.85
-      objectReference: {fileID: 0}
-    - target: {fileID: 5609975501322842256, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 5609975501322842256, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
       propertyPath: m_LocalPosition.x
