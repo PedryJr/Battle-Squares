@@ -199,5 +199,5 @@ MonoBehaviour:
     alignDirection: 0
     clampMorph: 0
     hover: 0
-    delistWeapon: 0
+    delistWeapon: 1
     hitMarkSize: 0
