@@ -12,7 +12,7 @@ public static class Translation_Manager
 	private const string LatestUpdatedVersion = "Download";
 
 
-	static int language = 5;
+	static int language = 4;
 	public static string[] languages; //= new string[] { "English", "Swedish", "Norwegian", "Japanese", "French", "German", "Spanish", "Portuguese", "Italian", "Chinese", "Korean", "Dutch" }; 
 	public static string[] percentages;
 	const string savedInfoPath = "/infomation/gameInfo.txt";
@@ -58,18 +58,19 @@ public static class Translation_Manager
 			Debug.Log(languages[i + 1] + "_" +  percentages[i] + "%");
 		}
 		string thisLine = reader.ReadLine();
-		string[] sections = thisLine.Split('\t')[1..];
+		string[] sections = thisLine.Split('\t')[2..];
 
 		MaxIndex = 0;
 		translations.Clear();
 		while (string.IsNullOrEmpty(thisLine) == false)
 		{
 			Debug.Log(thisLine);
-			translations.Add(sections);
+			if (string.IsNullOrEmpty(sections[0]) == false) 
+				translations.Add(sections);
 			if (reader.EndOfStream)
 				break;
 			thisLine = reader.ReadLine();
-			sections = thisLine.Split('\t')[1..];
+			sections = thisLine.Split('\t')[2..];
 			MaxIndex++;
 		}
 		reader.Close();
