@@ -40,8 +40,8 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.7994638
-        value: -0.05974119
+        time: 0.82786816
+        value: 0.0041721985
         inSlope: -2.525735
         outSlope: -2.525735
         tangentMode: 0
@@ -90,7 +90,7 @@ MonoBehaviour:
     projectileAcceleration: 3
     lifeTime: 0.2
     burstSpread: 0
-    fluctuation: 6.28
+    fluctuation: 8
     aoe: 2
     knockback: 8
     speedLimit: 100
