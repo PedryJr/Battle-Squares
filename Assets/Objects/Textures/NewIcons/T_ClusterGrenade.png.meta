@@ -1,0 +1,559 @@
+fileFormatVersion: 2
+guid: 3fc28639584e47b408ff963385ff8bd8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5104003717244904563
+    second: T_ClusterGrenade_0
+  - first:
+      213: -1118333071525266913
+    second: T_ClusterGrenade_1
+  - first:
+      213: -3392053155221444833
+    second: T_ClusterGrenade_2
+  - first:
+      213: 2270441013196244390
+    second: T_ClusterGrenade_3
+  - first:
+      213: -3454624339872019356
+    second: T_ClusterGrenade_4
+  - first:
+      213: 8429669805976428756
+    second: T_ClusterGrenade_5
+  - first:
+      213: 7047475338652252939
+    second: T_ClusterGrenade_6
+  - first:
+      213: 8377025990458080184
+    second: T_ClusterGrenade_7
+  - first:
+      213: -4308797430559416599
+    second: T_ClusterGrenade_8
+  - first:
+      213: -7047352858648524109
+    second: T_ClusterGrenade_9
+  - first:
+      213: 2410069299692429116
+    second: T_ClusterGrenade_10
+  - first:
+      213: 3578740007538201369
+    second: T_ClusterGrenade_11
+  - first:
+      213: -9017334824561651455
+    second: T_ClusterGrenade_12
+  - first:
+      213: -9169677780800717830
+    second: T_ClusterGrenade_13
+  - first:
+      213: -3862631822134680134
+    second: T_ClusterGrenade_14
+  - first:
+      213: -5891879808167273261
+    second: T_ClusterGrenade_15
+  - first:
+      213: 7558047885954316742
+    second: T_ClusterGrenade_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 2
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: T_ClusterGrenade_0
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 332
+        width: 67
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 374e7a2b65015d640800000000000000
+      internalID: 5104003717244904563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_1
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 381
+        width: 58
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1a3a232ff1ea70f0800000000000000
+      internalID: -1118333071525266913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_2
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 331
+        width: 81
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1768cf80a10de0d0800000000000000
+      internalID: -3392053155221444833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_3
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 293
+        width: 43
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a54a0b721a328f10800000000000000
+      internalID: 2270441013196244390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_4
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 190
+        width: 122
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46c828d5775be00d0800000000000000
+      internalID: -3454624339872019356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_5
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 328
+        width: 26
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d0af07b6043cf470800000000000000
+      internalID: 8429669805976428756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_6
+      rect:
+        serializedVersion: 2
+        x: 314
+        y: 295
+        width: 28
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0b71bb3b79adc160800000000000000
+      internalID: 7047475338652252939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_7
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 226
+        width: 84
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bbf77341cc214470800000000000000
+      internalID: 8377025990458080184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_8
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 238
+        width: 50
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9eed36ed0931434c0800000000000000
+      internalID: -4308797430559416599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_9
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 234
+        width: 49
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bacb6dd9e5c23e90800000000000000
+      internalID: -7047352858648524109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_10
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 223
+        width: 84
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3fdd3c4249427120800000000000000
+      internalID: 2410069299692429116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_11
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 110
+        width: 80
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9131bcc631d3aa130800000000000000
+      internalID: 3578740007538201369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_12
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 170
+        width: 40
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1015e31c0cdfbd280800000000000000
+      internalID: -9017334824561651455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_13
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 136
+        width: 34
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afbb49234a2ceb080800000000000000
+      internalID: -9169677780800717830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_14
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 170
+        width: 39
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab5ea87a2dc256ac0800000000000000
+      internalID: -3862631822134680134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_15
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 95
+        width: 67
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dc94eee786db3ea0800000000000000
+      internalID: -5891879808167273261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ClusterGrenade_16
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 43
+        width: 59
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c9f2bd028493e860800000000000000
+      internalID: 7558047885954316742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      T_ClusterGrenade_0: 5104003717244904563
+      T_ClusterGrenade_1: -1118333071525266913
+      T_ClusterGrenade_10: 2410069299692429116
+      T_ClusterGrenade_11: 3578740007538201369
+      T_ClusterGrenade_12: -9017334824561651455
+      T_ClusterGrenade_13: -9169677780800717830
+      T_ClusterGrenade_14: -3862631822134680134
+      T_ClusterGrenade_15: -5891879808167273261
+      T_ClusterGrenade_16: 7558047885954316742
+      T_ClusterGrenade_2: -3392053155221444833
+      T_ClusterGrenade_3: 2270441013196244390
+      T_ClusterGrenade_4: -3454624339872019356
+      T_ClusterGrenade_5: 8429669805976428756
+      T_ClusterGrenade_6: 7047475338652252939
+      T_ClusterGrenade_7: 8377025990458080184
+      T_ClusterGrenade_8: -4308797430559416599
+      T_ClusterGrenade_9: -7047352858648524109
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
