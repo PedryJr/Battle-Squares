@@ -24,8 +24,9 @@ public static class Translation_Manager
 	{
 		string fullPath = Application.dataPath + savedInfoPath;
 		// When(if) we add more information to the infopath, we need to change this to go through them and call the appropreate functions using them
-		if (Application.version != PlayerPrefs.GetString(LatestUpdatedVersion) || File.Exists(fullPath) == false) // this has the latest information. no need to download tsv file
+		//if (Application.version != PlayerPrefs.GetString(LatestUpdatedVersion) || File.Exists(fullPath) == false) // this has the latest information. no need to download tsv file
 		{
+			// For now we download each time, since there are a lot of changes, but add this back before launch
 			EnsureAssetPathExists(fullPath);
 			Debug.Log("Infomation not downloaded or old. Downloads translation files");
 			using (UnityWebRequest request = UnityWebRequest.Get(url))
@@ -53,10 +54,10 @@ public static class Translation_Manager
 		StreamReader reader = new StreamReader(fullPath); // we still need to initialized all the languages as they are not saved in memory
 		percentages = reader.ReadLine().Split('\t')[3..]; // english is considered full, so that one does not have a %age check
 		languages = reader.ReadLine().Split('\t')[2..]; // Take the names of the languages and add them into an array for displaying things. Means that if we change them it will update
-		for (int i = 0; i < percentages.Length; i++)
+		/*for (int i = 0; i < percentages.Length; i++)
 		{
 			Debug.Log(languages[i + 1] + "_" +  percentages[i] + "%");
-		}
+		}*/
 		string thisLine = reader.ReadLine();
 		string[] sections = thisLine.Split('\t')[2..];
 
@@ -76,12 +77,12 @@ public static class Translation_Manager
 		reader.Close();
 		language %= languages.Length;
 		PlayerPrefs.SetString(LatestUpdatedVersion, Application.version);
-		Debug.Log(PlayerPrefs.GetString(LatestUpdatedVersion) + "_" + Application.version);
+		//Debug.Log(PlayerPrefs.GetString(LatestUpdatedVersion) + "_" + Application.version);
 	}
 	public static string GetTranslation(int index)
 	{
 		index %= MaxIndex;
-		if ( index >= translations[ index ].Length )
+		if ( index >= translations[ index ].Length ) 
 			return translations[ index ][ 0 ];
 		if ( string.IsNullOrEmpty( translations[ index ][ language ] ) )
 			return translations[ index ][ 0 ];
@@ -90,7 +91,17 @@ public static class Translation_Manager
 	public static string GetTranslationCompletion(int languageIndex)
 	{
 		languageIndex %= translations.Count;
-		return translations[languageIndex][0];
+		return percentages[languageIndex];
+	}
+	public static void ChangeLanguage(int languageID)
+	{
+		language = languageID;
+		ForceUpdateAllActiveText();
+	}
+	public static void ForceUpdateAllActiveText() // In case we want this 
+	{
+		foreach (GetTranslation stuff in GameObject.FindObjectsByType<GetTranslation>(0))
+			stuff.SetText();
 	}
 	public static void EnsureAssetPathExists(string fullPath)
 	{
@@ -103,7 +114,7 @@ public static class Translation_Manager
 			string folderName = folders[i];
 			string nextPath = $"{currentPath}/{folderName}";
 
-			if (!AssetDatabase.IsValidFolder(nextPath))
+			if (AssetDatabase.IsValidFolder(nextPath) == false)
 			{
 				AssetDatabase.CreateFolder(currentPath, folderName);
 			}
