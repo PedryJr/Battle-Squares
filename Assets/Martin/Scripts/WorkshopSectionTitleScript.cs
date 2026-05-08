@@ -6,7 +6,6 @@ public class WorkshopSectionTitleScript : MonoBehaviour
 {
     public enum Status { Green, Yellow, Red }
     [SerializeField] private Status status = Status.Green;
-    [SerializeField] private string titleText = "Section Title";
 
     [Tooltip("The maximum quantity allowed for this section. Set to -1 for unlimited.")]
     [SerializeField] private int quantityLimit = -1;
@@ -22,7 +21,6 @@ public class WorkshopSectionTitleScript : MonoBehaviour
     [SerializeField] private Sprite errorIcon;
     [SerializeField] private Image statusIconImage;
     [SerializeField] private TextMeshProUGUI quantityTMPComponent;
-    [SerializeField] private TextMeshProUGUI titleTMPComponent;
 
     private void OnValidate() => UpdateTitle();
     private void OnEnable() => UpdateTitle();
@@ -53,7 +51,6 @@ public class WorkshopSectionTitleScript : MonoBehaviour
         }
 
         // 3. Apply Title and Icon
-        titleTMPComponent.text = titleText;
         SetStatusIcon(effectiveStatus);
     }
 
