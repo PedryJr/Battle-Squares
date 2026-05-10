@@ -11,12 +11,12 @@ public static class Translation_Manager
 	private const string url = "https://docs.google.com/spreadsheets/d/" + k_GoogleSheetDocID + "/export?format=tsv";
 	private const string LatestUpdatedVersion = "Download";
 
-
-	static int language = 4;
+	private static bool isInitialized;
+	public static int language = 4;
 	public static string[] languages; //= new string[] { "English", "Swedish", "Norwegian", "Japanese", "French", "German", "Spanish", "Portuguese", "Italian", "Chinese", "Korean", "Dutch" }; 
 	public static string[] percentages;
 	const string savedInfoPath = "/infomation/gameInfo.txt";
-	static List<string[]> translations = new List<string[]>();
+	static Dictionary<int, string[]> translations = new ();
 	public static int MaxIndex = 0;
 	public static Action done;
 	[RuntimeInitializeOnLoadMethod]
@@ -59,34 +59,40 @@ public static class Translation_Manager
 			Debug.Log(languages[i + 1] + "_" +  percentages[i] + "%");
 		}*/
 		string thisLine = reader.ReadLine();
-		string[] sections = thisLine.Split('\t')[2..];
+		string[] sections = thisLine.Split('\t')[1..];
+		int currIndex = int.Parse(sections[0]);
 
 		MaxIndex = 0;
 		translations.Clear();
 		while (string.IsNullOrEmpty(thisLine) == false)
 		{
+			currIndex = int.Parse(sections[0]);
 			Debug.Log(thisLine);
-			if (string.IsNullOrEmpty(sections[0]) == false) 
-				translations.Add(sections);
+			if (currIndex >= 0 || string.IsNullOrEmpty(sections[1]) == false)
+				translations.Add(currIndex, sections[1..]);
 			if (reader.EndOfStream)
 				break;
 			thisLine = reader.ReadLine();
-			sections = thisLine.Split('\t')[2..];
+			sections = thisLine.Split('\t')[1..];
 			MaxIndex++;
 		}
 		reader.Close();
 		language %= languages.Length;
 		PlayerPrefs.SetString(LatestUpdatedVersion, Application.version);
 		//Debug.Log(PlayerPrefs.GetString(LatestUpdatedVersion) + "_" + Application.version);
+		isInitialized = true;
 	}
 	public static string GetTranslation(int index)
 	{
-		index %= MaxIndex;
-		if ( index >= translations[ index ].Length ) 
-			return translations[ index ][ 0 ];
-		if ( string.IsNullOrEmpty( translations[ index ][ language ] ) )
-			return translations[ index ][ 0 ];
-		return translations[ index ][ language ];
+		if (translations.ContainsKey(index) == false)
+			return "N/A";
+		return translations[index][language];
+	}
+	public static string GetEnglishVersion(int index)
+	{
+		if (translations.ContainsKey(index) == false)
+			return "N/A";
+		return translations[ index ][ 0 ];
 	}
 	public static string GetTranslationCompletion(int languageIndex)
 	{
@@ -120,5 +126,11 @@ public static class Translation_Manager
 			}
 			currentPath = nextPath;
 		}
+	}
+
+	public static void ForceInit()
+	{
+		if (isInitialized == false) 
+			Init();
 	}
 }

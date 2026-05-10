@@ -5,16 +5,17 @@ using UnityEngine.UI;
 
 public class DisplayWeapons : MonoBehaviour, IPointerClickHandler
 {
+	[SerializeField]
+	WeaponSelector weaponSelector;
 	public WeaponBuilder[] WeaponBuilder;
 	public WeaponBuilder[] WorkShop;
 	private void Awake()
 	{
-		for (int i = 0; i < WeaponBuilder.Length; i++)
+		ProjectileManager projectileManager = FindAnyObjectByType<ProjectileManager>();
+		foreach (WeaponBuilder item in projectileManager.weapons.Values)
 		{
-			Image weapon = new GameObject(WeaponBuilder[i].WeaponName).AddComponent<Image>();
-			weapon.sprite = WeaponBuilder[i].GetIcon;
-			weapon.transform.SetParent(transform);
-			weapon.transform.localScale = Vector3.one;
+			if (item.weapon.delistWeapon) continue;
+			Instantiate(weaponSelector, transform).Initialize(item);
 		}
 	}
 

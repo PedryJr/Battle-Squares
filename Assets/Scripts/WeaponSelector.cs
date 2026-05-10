@@ -18,11 +18,9 @@ public sealed class WeaponSelector : MonoBehaviour
 
     private void Awake()
     {
-        
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
         hoverAnimation = GetComponent<ButtonHoverAnimation>();
         selectorImage = GetComponent<Image>();
-
     }
 
     public void Initialize(WeaponBuilder weapon)
