@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public sealed class SkinEditorBehaviour : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public sealed class SkinEditorBehaviour : MonoBehaviour
 
     [SerializeField]
     TMP_Text buttonText;
+    [SerializeField]
+    int AnimOnID, AnimOffID;
 
     PaintAreaBehaviour activePainter;
 
@@ -26,11 +29,11 @@ public sealed class SkinEditorBehaviour : MonoBehaviour
         animate = playerSynchronizer.skinData.animate;
         if (animate)
         {
-            if (buttonText) buttonText.text = "Animation - ON";
+            if (buttonText) buttonText.text = Translation_Manager.GetTranslation(AnimOnID);
         }
         else
         {
-            if (buttonText) buttonText.text = "Animation - Off";
+            if (buttonText) buttonText.text = Translation_Manager.GetTranslation(AnimOffID);
         }
 
     }
@@ -42,12 +45,12 @@ public sealed class SkinEditorBehaviour : MonoBehaviour
 
         if (animate)
         {
-            if(buttonText) buttonText.text = "Animation - ON";
+            if(buttonText) buttonText.text = Translation_Manager.GetTranslation(AnimOnID);
             EnableAnimationEditor();
         }
         else
         {
-            if (buttonText) buttonText.text = "Animation - Off";
+            if (buttonText) buttonText.text = Translation_Manager.GetTranslation(AnimOffID);
             DisableAnimationEditor();
         }
 

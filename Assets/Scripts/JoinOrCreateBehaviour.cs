@@ -9,6 +9,8 @@ public sealed class JoinOrCreateBehaviour : MonoBehaviour
 
     [SerializeField]
     LobbyBehaviour preview;
+    [SerializeField]
+    int CreateID, JoinID;
 
     float timer = 0;
     string loadingString = "Loading...";
@@ -46,7 +48,7 @@ public sealed class JoinOrCreateBehaviour : MonoBehaviour
 
             if (preview.lobby.OwnerId == SteamNetwork.currentLobby.Value.Owner.Id)
             {
-                textField.text = "Create Lobby";
+                textField.text = Translation_Manager.GetTranslation(CreateID);
             }
             else
             {
@@ -60,7 +62,7 @@ public sealed class JoinOrCreateBehaviour : MonoBehaviour
                 else
                 {
 
-                    textField.text = "Join Lobby";
+                    textField.text = Translation_Manager.GetTranslation(JoinID);
 
                 }
 

@@ -6,6 +6,8 @@ public sealed class EditorFrameRateBehaviour : MonoBehaviour
 
     [SerializeField]
     TMP_Text textField;
+    [SerializeField]
+    int FrameID;
 
     PlayerSynchronizer playerSynchronizer;
 
@@ -17,7 +19,7 @@ public sealed class EditorFrameRateBehaviour : MonoBehaviour
         playerSynchronizer = FindAnyObjectByType<PlayerSynchronizer>();
 
         frameRate = playerSynchronizer.skinData.frameRate;
-        textField.text = $"Framerate - {Mathf.RoundToInt(frameRate)}";
+        textField.text = Translation_Manager.GetTranslation(FrameID) + $"- {Mathf.RoundToInt(frameRate)}";
 
     }
 
@@ -27,7 +29,7 @@ public sealed class EditorFrameRateBehaviour : MonoBehaviour
         if(frameRate != playerSynchronizer.skinData.frameRate)
         {
             playerSynchronizer.skinData.frameRate = frameRate;
-            textField.text = $"Framerate - {Mathf.RoundToInt(frameRate)}";
+            textField.text = Translation_Manager.GetTranslation(FrameID) + $"- {Mathf.RoundToInt(frameRate)}";
         }
 
     }

@@ -352,17 +352,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
   ignoreHoverColorOptions: 0
+  animateColor: 1
   hoverColorOptions: {fileID: 0}
   overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 1
   enterHoverTransitionTime: 0.13
   exitHoverTransitionTime: 0.13
   clickTransitionTime: 0.1
@@ -371,7 +371,6 @@ MonoBehaviour:
   animationType: 0
   soundInteractionHoverType: 2
   soundInteractionClickType: 2
-  unique: {fileID: 0}
 --- !u!1 &2465978575730133853
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,17 +447,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0, g: 0, b: 0, a: 0}
   ignoreHoverColorOptions: 1
+  animateColor: 0
   hoverColorOptions: {fileID: 0}
   overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 0
   enterHoverTransitionTime: 0.13
   exitHoverTransitionTime: 0.13
   clickTransitionTime: 0.1
@@ -467,7 +466,6 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 0
   soundInteractionClickType: 0
-  unique: {fileID: 0}
 --- !u!114 &5976841115024129343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,6 +507,7 @@ GameObject:
   - component: {fileID: 4139389547456427875}
   - component: {fileID: 194525874226706879}
   - component: {fileID: 3006906532348028468}
+  - component: {fileID: 167894789729005523}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -563,7 +562,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Delete
+  m_text: Delete_
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
   m_sharedMaterial: {fileID: -607137550700216403, guid: dd749eb59d2580340bda1e7187f9703f, type: 2}
@@ -601,6 +600,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -634,6 +634,34 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &167894789729005523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2653088823309539150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c44470abd2c0f024683df466886f98b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GetTranslation
+  PopulateTextfield:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3006906532348028468}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: SetText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  WantedIndex: 1309
 --- !u!1 &3856117336243051869
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,6 +765,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -875,17 +904,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
   ignoreHoverColorOptions: 0
+  animateColor: 1
   hoverColorOptions: {fileID: 0}
   overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 1
   enterHoverTransitionTime: 0.13
   exitHoverTransitionTime: 0.13
   clickTransitionTime: 0.1
@@ -894,7 +923,6 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 1
   soundInteractionClickType: 1
-  unique: {fileID: 0}
 --- !u!1 &4142831415834890126
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,6 +1026,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1136,17 +1165,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSelected: 0
+  enableSelectUp: 0
   image: {fileID: 0}
   offHoveredColor: {r: 0, g: 0, b: 0, a: 0}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
-  fromColor: {r: 0, g: 0, b: 0, a: 0}
-  toColor: {r: 0, g: 0, b: 0, a: 0}
   onHoveredColor: {r: 0.3137255, g: 0.32156864, b: 0.32941177, a: 1}
   ignoreHoverColorOptions: 0
+  animateColor: 1
   hoverColorOptions: {fileID: 0}
   overrideMaterial: {fileID: 2100000, guid: 82188cd29c23b3648ad7618672be8e80, type: 2}
+  toColor: {r: 0, g: 0, b: 0, a: 0}
   isHovering: 0
-  animateColor: 1
   enterHoverTransitionTime: 0.13
   exitHoverTransitionTime: 0.13
   clickTransitionTime: 0.1
@@ -1155,7 +1184,6 @@ MonoBehaviour:
   animationType: 1
   soundInteractionHoverType: 1
   soundInteractionClickType: 1
-  unique: {fileID: 0}
 --- !u!1 &7406288861777217911
 GameObject:
   m_ObjectHideFlags: 0

@@ -86,7 +86,9 @@ public static class Translation_Manager
 	{
 		if (translations.ContainsKey(index) == false)
 			return "N/A";
-		return translations[index][language];
+		if (string.IsNullOrEmpty(translations[index][language]))
+			return translations[index][0];
+        return translations[index][language];
 	}
 	public static string GetEnglishVersion(int index)
 	{

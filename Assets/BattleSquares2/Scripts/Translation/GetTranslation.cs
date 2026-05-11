@@ -21,7 +21,11 @@ public class GetTranslation : MonoBehaviour
 		chosenEnglishText = Translation_Manager.GetTranslation(WantedIndex);
 	}
 
-	private void Awake()
+	public void ChangeLanguage(int wantedIndex)
+	{
+		Translation_Manager.ChangeLanguage(wantedIndex);
+	}
+	private void OnEnable()
 	{
 		SetText();
 	}

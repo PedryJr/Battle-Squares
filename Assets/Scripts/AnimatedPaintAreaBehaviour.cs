@@ -29,6 +29,8 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
     public RectTransform selector;
     [SerializeField]
     public TMP_Text indicatorInSelector;
+    [SerializeField]
+    int FramesID;
 
     private PlayerSynchronizer playerSynchronizer;
 
@@ -257,6 +259,6 @@ public sealed class AnimatedPaintAreaBehaviour : PaintAreaBehaviour
 
     private void UpdateFrameCounter()
     {
-        frameCountIndicator.text = $"Total Frames - {skinFrames.Count}";
+        frameCountIndicator.text = Translation_Manager.GetTranslation(FramesID) + $" - {skinFrames.Count}";
     }
 }
