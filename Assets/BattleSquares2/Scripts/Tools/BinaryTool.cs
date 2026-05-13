@@ -53,6 +53,7 @@ public unsafe static class BinaryTool
     {
         fixed (byte* ptr = buffer) CompressFloatCore(value, min, max, ptr, bytes);
     }
+
     [MethodImpl(impl)]
     public static float2 DecompressVector2(byte[] buffer, int xBytes, int yBytes, float2 min, float2 max)
     {
@@ -81,6 +82,7 @@ public unsafe static class BinaryTool
         if (buffer == null || buffer.Length != bufferSize) buffer = new byte[bufferSize];
         fixed (byte* ptr = buffer) CompressVector2Core(ptr, in value, xBytes, yBytes, in min, in max);
     }
+
     [MethodImpl(impl)]
     public static float3 DecompressVector3(byte[] buffer, int xBytes, int yBytes, int zBytes, float3 min, float3 max)
     {
@@ -109,6 +111,7 @@ public unsafe static class BinaryTool
         if (buffer == null || buffer.Length != bufferSize) buffer = new byte[bufferSize];
         fixed (byte* ptr = buffer) CompressVector3Core(ptr, in value, xBytes, yBytes, zBytes, in min, in max);
     }
+
     [MethodImpl(impl)]
     public static float4 DecompressVector4(byte[] buffer, int xBytes, int yBytes, int zBytes, int wBytes, float4 min, float4 max)
     {

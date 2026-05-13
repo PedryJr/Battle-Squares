@@ -17,7 +17,7 @@ MonoBehaviour:
     projectile: {fileID: 3230000773134604271, guid: f5a883eb18c5ca04d866d321e83a250b, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
     bounceParticle: {fileID: 0}
-    impactParticle: {fileID: 4313180367996257349, guid: 2a088846d948ed140bd8c1ed7bad0161, type: 3}
+    impactParticle: {fileID: 4313180367996257349, guid: 35b86309c6837a14a99f8b127e14c8b4, type: 3}
     morphAnimation:
       serializedVersion: 2
       m_Curve:
@@ -40,8 +40,8 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.7994638
-        value: -0.05974119
+        time: 0.80786717
+        value: -0.15263414
         inSlope: -2.525735
         outSlope: -2.525735
         tangentMode: 0
@@ -49,14 +49,23 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.9807109
-        value: -0.30530506
-        inSlope: -3.1031842
-        outSlope: -3.1031842
+        time: 0.85957277
+        value: -0.29501617
+        inSlope: -0.16485512
+        outSlope: -0.16485512
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.10323884
+        outWeight: 0.8470665
+      - serializedVersion: 3
+        time: 0.96932787
+        value: -0.5418773
+        inSlope: 14.199763
+        outSlope: 14.199763
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.22872941
+        outWeight: 1
       - serializedVersion: 3
         time: 1
         value: 1
@@ -99,7 +108,7 @@ MonoBehaviour:
     baseDamage: 0
     damageTimeScale: 0
     recoil: 0
-    timeToMorph: 1.5
+    timeToMorph: 0.2
     syncSpeed: 20
     meleeRange: 0
     swingDegrees: 0

@@ -21,6 +21,7 @@ TagManager:
   - HUD
   - GameLight
   - EffectRenderer
+  - Ignore
   layers:
   - Default
   - TransparentFX

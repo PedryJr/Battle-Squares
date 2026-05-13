@@ -6628,6 +6628,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1566685135706933555, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 208770453}
+    - target: {fileID: 1566685135706933555, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TOGGLE
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566685135706933555, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MenuToggleButton, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1814822198987935597, guid: da1e24282913c244f8a491876355dce7, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 349.52924
@@ -6646,7 +6658,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3612688996403286139, guid: da1e24282913c244f8a491876355dce7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 435.94928
+      value: 435.94934
       objectReference: {fileID: 0}
     - target: {fileID: 4644181092962656119, guid: da1e24282913c244f8a491876355dce7, type: 3}
       propertyPath: m_Name
@@ -6675,13 +6687,45 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8806478978046817331, guid: da1e24282913c244f8a491876355dce7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 208770453}
   m_SourcePrefab: {fileID: 100100000, guid: da1e24282913c244f8a491876355dce7, type: 3}
 --- !u!223 &208770450 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 1010914320546234343, guid: da1e24282913c244f8a491876355dce7, type: 3}
   m_PrefabInstance: {fileID: 208770449}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &208770451 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2115761962294527201, guid: da1e24282913c244f8a491876355dce7, type: 3}
+  m_PrefabInstance: {fileID: 208770449}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &208770452 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8806478978046817331, guid: da1e24282913c244f8a491876355dce7, type: 3}
+  m_PrefabInstance: {fileID: 208770449}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &208770453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208770452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e9fe19c70e4a2b468109a660f8b6662, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuToggleButton
+  modsOnObjects:
+  - {fileID: 208770451}
+  modsOffObjects: []
+  oneWay: 1
+  onName: 
+  offName: 
+  changeName: 0
 --- !u!1 &215684902
 GameObject:
   m_ObjectHideFlags: 0
@@ -7506,7 +7550,8 @@ MonoBehaviour:
   LevelEditorSceneName: EditorScene
   mainCanvas: {fileID: 208770450}
   editorCanvas: {fileID: 1363578022}
-  workshopCanvas: {fileID: 1633196841}
+  workshopBrowseCanvas: {fileID: 0}
+  workshopUploadCanvas: {fileID: 0}
 --- !u!1 &314079434
 GameObject:
   m_ObjectHideFlags: 0
@@ -8999,7 +9044,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5801379440829103333, guid: f23f90bf3553cc247b2ea42931c683ae, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6775969546642879254, guid: f23f90bf3553cc247b2ea42931c683ae, type: 3}
       propertyPath: delayInSeconds
