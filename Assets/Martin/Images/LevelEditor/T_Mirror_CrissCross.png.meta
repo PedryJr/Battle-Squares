@@ -1,0 +1,455 @@
+fileFormatVersion: 2
+guid: 28b9c897ae846cc448403f8fde6d35a8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6963311361971045981
+    second: T_Mirror_CrissCross_0
+  - first:
+      213: -3922505681255324406
+    second: T_Mirror_CrissCross_1
+  - first:
+      213: -4903288480122937867
+    second: T_Mirror_CrissCross_2
+  - first:
+      213: -1223392056220101784
+    second: T_Mirror_CrissCross_3
+  - first:
+      213: 3846190339341214072
+    second: T_Mirror_CrissCross_4
+  - first:
+      213: 7119537426926541981
+    second: T_Mirror_CrissCross_5
+  - first:
+      213: -5867254077000095924
+    second: T_Mirror_CrissCross_6
+  - first:
+      213: -3639867841138311795
+    second: T_Mirror_CrissCross_7
+  - first:
+      213: 7126946848122449845
+    second: T_Mirror_CrissCross_8
+  - first:
+      213: 3891545352006326227
+    second: T_Mirror_CrissCross_9
+  - first:
+      213: 5289447711517938924
+    second: T_Mirror_CrissCross_10
+  - first:
+      213: -2215000137468085765
+    second: T_Mirror_CrissCross_11
+  - first:
+      213: -991696178557660831
+    second: T_Mirror_CrissCross_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 2
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_0
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 291
+        width: 142
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d56c9be5ac6a2a060800000000000000
+      internalID: 6963311361971045981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_1
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 403
+        width: 32
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a05235f7dd57099c0800000000000000
+      internalID: -3922505681255324406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_2
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 291
+        width: 142
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fdd1072b1504fbb0800000000000000
+      internalID: -4903288480122937867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_3
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 314
+        width: 32
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86357fb1863a50fe0800000000000000
+      internalID: -1223392056220101784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_4
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 240
+        width: 61
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 871e8f25cb9606530800000000000000
+      internalID: 3846190339341214072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_5
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 240
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9c1e01a19dadc260800000000000000
+      internalID: 7119537426926541981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_6
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 224
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c476275c083539ea0800000000000000
+      internalID: -5867254077000095924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_7
+      rect:
+        serializedVersion: 2
+        x: 314
+        y: 240
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8d359bbb779c7dc0800000000000000
+      internalID: -3639867841138311795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_8
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 240
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bfad6fe56008e260800000000000000
+      internalID: 7126946848122449845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_9
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 79
+        width: 142
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d7d8ad11eb810630800000000000000
+      internalID: 3891545352006326227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_10
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 135
+        width: 32
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce4970f3ba4e76940800000000000000
+      internalID: 5289447711517938924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_11
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 79
+        width: 142
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf9f5cc4c1db241e0800000000000000
+      internalID: -2215000137468085765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Mirror_CrissCross_12
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 47
+        width: 32
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16155ff6499cc32f0800000000000000
+      internalID: -991696178557660831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      T_Mirror_CrissCross_0: 6963311361971045981
+      T_Mirror_CrissCross_1: -3922505681255324406
+      T_Mirror_CrissCross_10: 5289447711517938924
+      T_Mirror_CrissCross_11: -2215000137468085765
+      T_Mirror_CrissCross_12: -991696178557660831
+      T_Mirror_CrissCross_2: -4903288480122937867
+      T_Mirror_CrissCross_3: -1223392056220101784
+      T_Mirror_CrissCross_4: 3846190339341214072
+      T_Mirror_CrissCross_5: 7119537426926541981
+      T_Mirror_CrissCross_6: -5867254077000095924
+      T_Mirror_CrissCross_7: -3639867841138311795
+      T_Mirror_CrissCross_8: 7126946848122449845
+      T_Mirror_CrissCross_9: 3891545352006326227
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
