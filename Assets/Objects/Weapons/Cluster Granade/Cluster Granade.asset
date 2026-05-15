@@ -98,7 +98,7 @@ MonoBehaviour:
       eventDirection: 0
       flipDirection: 1
       eventType: 0
-      eventDelay: 0.08
+      eventDelay: 0.1
       toSpawn: {fileID: 11400000, guid: 237b879084a37df4aa34589cc3ac8d4b, type: 2}
     - shootingPlayer: {fileID: 0}
       manager: {fileID: 0}
@@ -107,7 +107,7 @@ MonoBehaviour:
       eventDirection: 0
       flipDirection: 1
       eventType: 0
-      eventDelay: 0.18
+      eventDelay: 0.2
       toSpawn: {fileID: 11400000, guid: 237b879084a37df4aa34589cc3ac8d4b, type: 2}
     - shootingPlayer: {fileID: 0}
       manager: {fileID: 0}
@@ -116,7 +116,7 @@ MonoBehaviour:
       eventDirection: 0
       flipDirection: 1
       eventType: 0
-      eventDelay: 0.28
+      eventDelay: 0.3
       toSpawn: {fileID: 11400000, guid: 237b879084a37df4aa34589cc3ac8d4b, type: 2}
     weaponName: Cluster Grenade
     targetMorph: {x: 0, y: 0, z: 0}
@@ -182,4 +182,4 @@ MonoBehaviour:
     clampMorph: 0
     hover: 0
     delistWeapon: 0
-    hitMarkSize: 3
+    hitMarkSize: 2

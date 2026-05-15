@@ -17,7 +17,7 @@ MonoBehaviour:
     projectile: {fileID: 3230000773134604271, guid: f5a883eb18c5ca04d866d321e83a250b, type: 3}
     launchParticle: {fileID: 4313180367996257349, guid: ccc5f0c67b7a267439723ef82b7b8e29, type: 3}
     bounceParticle: {fileID: 0}
-    impactParticle: {fileID: 4313180367996257349, guid: 35b86309c6837a14a99f8b127e14c8b4, type: 3}
+    impactParticle: {fileID: 4313180367996257349, guid: 2a088846d948ed140bd8c1ed7bad0161, type: 3}
     morphAnimation:
       serializedVersion: 2
       m_Curve:
@@ -100,7 +100,7 @@ MonoBehaviour:
     lifeTime: 0.2
     burstSpread: 0
     fluctuation: 6.28
-    aoe: 3
+    aoe: 2
     knockback: 10
     speedLimit: 100
     minSpeed: 0
@@ -155,4 +155,4 @@ MonoBehaviour:
     clampMorph: 0
     hover: 0
     delistWeapon: 1
-    hitMarkSize: 3
+    hitMarkSize: 1

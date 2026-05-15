@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   supportObjectPooling: 1
-  variantID: 7085845792195559875
+  variantID: 11174409341558396708
   particleSystems:
   - {fileID: 3945671865177332809}
   - {fileID: 3090923273056778610}
@@ -73,6 +73,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6031738575890369617}
     m_Modifications:
+    - target: {fileID: 835169907238941907, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4125842807995734508, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
       propertyPath: m_Name
       value: DiagA (2)
@@ -145,6 +149,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6031738575890369617}
     m_Modifications:
+    - target: {fileID: 835169907238941907, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4125842807995734508, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
       propertyPath: m_Name
       value: DiagA (1)
@@ -217,6 +225,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6031738575890369617}
     m_Modifications:
+    - target: {fileID: 835169907238941907, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4125842807995734508, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
       propertyPath: m_Name
       value: DiagA
@@ -289,6 +301,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6031738575890369617}
     m_Modifications:
+    - target: {fileID: 835169907238941907, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4125842807995734508, guid: 2edc8e1f764edc4499e7814b8e94342b, type: 3}
       propertyPath: m_Name
       value: DiagA (3)
