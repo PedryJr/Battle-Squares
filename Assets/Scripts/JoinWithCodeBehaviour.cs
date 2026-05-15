@@ -63,7 +63,7 @@ public sealed class JoinWithCodeBehaviour : MonoBehaviour
         Friend friend = new Friend(ulong.Parse(newLobby.GetData("OwnerId").ToString()));
         await friend.RequestInfoAsync();
 
-        lobbyBehaviour.lobbyCapacity = 4;
+        lobbyBehaviour.lobbyCapacity = SteamNetwork.GetLobbyCapacity;
         lobbyBehaviour.lobbyPopulation = newLobby.MemberCount;
 
         lobbyBehaviour.lobbyName.text = friend.Name;
