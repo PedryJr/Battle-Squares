@@ -114,10 +114,12 @@ public static class Translation_Manager
 			string folderName = folders[i];
 			string nextPath = $"{currentPath}/{folderName}";
 
+#if UNITY_EDITOR
 			if (AssetDatabase.IsValidFolder(nextPath) == false)
 			{
 				AssetDatabase.CreateFolder(currentPath, folderName);
 			}
+#endif
 			currentPath = nextPath;
 		}
 	}
