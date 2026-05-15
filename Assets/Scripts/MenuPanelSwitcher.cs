@@ -17,6 +17,9 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
     TMP_Text[] initButtons;
 
     [SerializeField]
+    int MVolumeID, VSyncID, OffID, OnID, FullscreenID, WindowedID, FPSCapID;
+
+    [SerializeField]
     bool ignoreInit;
 
     private void Awake()
@@ -24,19 +27,19 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
 
         string value;
 
-        initButtons[0].text = $"Volume: {Mathf.RoundToInt(MySettings.Volume * 10)}";
+        initButtons[0].text = Translation_Manager.GetTranslation(MVolumeID) + $": {Mathf.RoundToInt(MySettings.Volume * 10)}";
 
-        value = MySettings.Vsync == 0 ? "Off" : "On";
-        initButtons[1].text = $"Vsync: {value}";
+        value = MySettings.Vsync == 0 ? Translation_Manager.GetTranslation(OffID) : Translation_Manager.GetTranslation(OnID);
+        initButtons[1].text = Translation_Manager.GetTranslation(VSyncID) + $": {value}";
 
-        value = "Off";
-        initButtons[2].text = $"FPS Cap: {value}";
+        value = Translation_Manager.GetTranslation(OffID);
+        initButtons[2].text = Translation_Manager.GetTranslation(FPSCapID) + $": {value}";
 
         switch (MySettings.FullscreenMode)
         {
-            case 0: value = "Fullscreen"; break;
-            case 1: value = "Windowed"; break;
-            default: value = "Windowed"; break;
+            case 0: value = Translation_Manager.GetTranslation(FullscreenID); break;
+            case 1: value = Translation_Manager.GetTranslation(WindowedID); break;
+            default: value = Translation_Manager.GetTranslation(WindowedID); break;
         }
         initButtons[3].text = $"{value}";
 
@@ -65,7 +68,7 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
         eventInstance.start();
         eventInstance.release();
 
-        Tmp.text = $"Volume: {Mathf.RoundToInt(MySettings.Volume * 10)}";
+        Tmp.text = Translation_Manager.GetTranslation(MVolumeID) + $": {Mathf.RoundToInt(MySettings.Volume * 10)}";
 
     }
 
@@ -75,9 +78,9 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
         if (MySettings.Vsync == 1) MySettings.SetVsync(0);
         else MySettings.SetVsync(1);
 
-        string value = MySettings.Vsync == 0 ? "Off" : "On";
+        string value = MySettings.Vsync == 0 ? Translation_Manager.GetTranslation(OffID) : Translation_Manager.GetTranslation(OnID);
 
-        Tmp.text = $"Vsync: {value}";
+        Tmp.text = Translation_Manager.GetTranslation(VSyncID) + $": {value}";
 
     }
 
@@ -87,18 +90,18 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
         if (MySettings.Fps == 4) MySettings.SetFps(0);
         else MySettings.SetFps(MySettings.Fps + 1);
 
-        string value = "Off";
+        string value = Translation_Manager.GetTranslation(OffID);
 
         switch (MySettings.Fps)
         {
-            case 0: value = "Off"; break;
+            case 0: value = Translation_Manager.GetTranslation(OffID); break;
             case 1: value = "30"; break;
             case 2: value = "60"; break;
             case 3: value = "144"; break;
             case 4: value = "240"; break;
         }
 
-        Tmp.text = $"FPS Cap: {value}";
+        Tmp.text = Translation_Manager.GetTranslation(FPSCapID) + $": {value}";
 
     }
 
@@ -108,12 +111,12 @@ public sealed class MenuPanelSwitcher : MonoBehaviour
         if (MySettings.FullscreenMode == 1) MySettings.SetFullscreen(0);
         else MySettings.SetFullscreen(MySettings.FullscreenMode + 1);
 
-        string value = "Fullscreen";
+        string value = Translation_Manager.GetTranslation(FullscreenID);
 
         switch (MySettings.FullscreenMode)
         {
-            case 0: value = "Fullscreen"; break;
-            case 1: value = "Windowed"; break;
+            case 0: value = Translation_Manager.GetTranslation(FullscreenID); break;
+            case 1: value = Translation_Manager.GetTranslation(WindowedID); ; break;
         }
 
         Tmp.text = $"{value}";
