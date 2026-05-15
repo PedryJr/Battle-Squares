@@ -21,11 +21,19 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
     public static Lobby? currentLobby;
     public ulong? lastLobbyId;
 
+    [SerializeField]
+    private int lobbyCapacity = 4;
+    private static int LobbyCapacity = 4;
+    public static int GetLobbyCapacity => LobbyCapacity;
+
+    
+
     int playerCount = -2;
 
     float activePlayersTimer;
     private void Awake()
     {
+        LobbyCapacity = lobbyCapacity;
         localSteamData = GetComponent<LocalSteamData>();
         SetupSteamClient();
         CreateNewLobby();
@@ -142,7 +150,7 @@ public sealed class SteamNetwork : MonoBehaviour, IConnectionManager
         //currentLobby?.Refresh();
         currentLobby = null;
 
-        currentLobby = await SteamMatchmaking.CreateLobbyAsync(4);
+        currentLobby = await SteamMatchmaking.CreateLobbyAsync(LobbyCapacity);
 
         //currentLobby?.Join();
         currentLobby?.SetPublic();

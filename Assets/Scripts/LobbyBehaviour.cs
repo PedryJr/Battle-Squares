@@ -162,7 +162,7 @@ public sealed class LobbyBehaviour : MonoBehaviour
     {
         avalibilityUpdateTime += Time.deltaTime;
         if (avalibilityUpdateTime > 0.05f) UpdateAvalible();
-        populationText.text = $"{lobbyPopulation} / 4";
+        populationText.text = $"{lobbyPopulation} / {lobbyCapacity}";
     }
 
     public void UpdateAvalible()
