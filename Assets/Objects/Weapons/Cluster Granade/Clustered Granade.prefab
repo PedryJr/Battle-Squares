@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: -3438963122069973725}
   - component: {fileID: -3239611196284048636}
   m_Layer: 7
-  m_Name: Clustered Granade
+  m_Name: Cluster Granade 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,8 +61,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 0, z: 3}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.5}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.26, y: 0.26, z: 0.65000004}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6785218482549879096}
   - {fileID: 5503486941279643142}
@@ -404,14 +404,14 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8047464109496563407}
   serializedVersion: 8
-  lengthInSec: 0.05
+  lengthInSec: 0.15
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 0
+  looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
