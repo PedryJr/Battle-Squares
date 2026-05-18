@@ -84,7 +84,7 @@ public class WorkshopContextSectionBehaviour : MonoBehaviour
         if (FindIssue()) return;
         contextDescriptor.spriteAsset = symbols;
         int count = FetchCount();
-        contextDescriptor.text = new StringBuilder(128).Append(GetStatusSymbol).Append("  ").Append(descriptorPrefix).Append(":  ").Append(count).Append('/').Append(maxCount).ToString();
+        contextDescriptor.text = new StringBuilder(128).Append(descriptorPrefix).Append(":  ").Append(count).Append('/').Append(maxCount).Append("   ").Append(GetStatusSymbol).ToString();
     }
 
     private void Update()
